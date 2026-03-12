@@ -2653,6 +2653,10 @@
       <input id="rosterAddInput" class="roster-name-input" placeholder="Add player name&#x2026;" maxlength="24">
       <button class="roster-add-btn" onclick="rosterAddFromInput()">+ Add</button>
     </div>
+    <div style="margin:0 0 10px 0;padding:10px 13px;background:rgba(200,170,80,0.07);border:1px solid rgba(200,170,80,0.2);border-radius:6px;font-size:11px;line-height:1.6;color:#c8aa5088;">
+      <span style="color:#c8aa50;font-weight:bold;">&#x1F4C1; Link Folder</span> lets you back up your roster to a folder on your computer. Click it, choose any folder, and the tracker will automatically save a <code style="background:rgba(255,255,255,0.08);padding:1px 4px;border-radius:3px;font-size:10px;">yugioh-roster.json</code> file there every time your roster changes. To restore on a new device or browser, link the same folder again — the tracker will load from that file automatically.<br>
+      <span style="color:#c8aa5066;">⚠ Desktop Chrome/Edge only. Not supported on mobile or Safari.</span>
+    </div>
     <div class="roster-io-row">
       <button class="roster-io-btn folder" id="rosterFolderBtn" onclick="rosterLinkFolder()" title="Link a folder on your computer — tracker auto-saves yugioh-roster.json there">&#x1F4C1; Link Folder</button>
       <span class="roster-io-label" id="rosterFolderLabel"></span>
