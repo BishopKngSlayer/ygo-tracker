@@ -241,11 +241,20 @@
     border-radius: 6px; padding: 14px;
     position: relative;
     transition: border-color 0.4s, box-shadow 0.4s, background 0.4s, transform 0.2s;
-    transform-origin: center top;
+    transform-origin: center center;
     display: flex;
     flex-direction: column;
     overflow-y: auto;
   }
+  .player-card.rotate-90  { transform: rotate(90deg)  scale(0.92); }
+  .player-card.rotate-180 { transform: rotate(180deg) scale(0.92); }
+  .player-card.rotate-270 { transform: rotate(270deg) scale(0.92); }
+  .btn-rotate {
+    background: none; border: 1px solid rgba(255,255,255,0.1); border-radius: 3px;
+    color: var(--dim); font-size: 11px; cursor: pointer; padding: 2px 5px;
+    transition: all 0.2s; line-height: 1; opacity: 0.5;
+  }
+  .btn-rotate:hover { opacity: 1; color: var(--gold); border-color: rgba(201,162,39,0.4); }
   .player-card:not(.eliminated):hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 20px rgba(0,0,0,0.4);
@@ -881,6 +890,19 @@
   .match-history-record .w { color:#88ffbb; }
   .match-history-record .l { color:#ff8888; }
   .match-history-sub { font-family:'Rajdhani',sans-serif; font-size:9px; letter-spacing:2px; color:var(--dim); margin-top:4px; }
+  /* Duel history log */
+  .mh-mode-banner { font-family:'Cinzel',serif; font-size:10px; letter-spacing:2px; color:var(--gold); text-align:center; padding:10px 12px 4px; }
+  .mh-duel-card { background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.07); border-radius:5px; padding:10px 12px; margin-bottom:8px; }
+  .mh-duel-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+  .mh-duel-num { font-family:'Cinzel',serif; font-size:9px; letter-spacing:3px; color:var(--gold); }
+  .mh-duel-meta { font-family:'Rajdhani',sans-serif; font-size:10px; color:var(--dim); }
+  .mh-player-row { display:flex; align-items:center; gap:8px; padding:4px 0; }
+  .mh-winner-row { border-radius:3px; background:rgba(100,220,140,0.05); }
+  .mh-crown { font-size:12px; width:18px; text-align:center; flex-shrink:0; }
+  .mh-pname { font-family:'Cinzel',serif; font-size:10px; flex:1; color:var(--text); }
+  .mh-lp { font-family:'Rajdhani',sans-serif; font-size:11px; font-weight:700; }
+  .mh-lp-win { color:#88ffbb; }
+  .mh-lp-loss { color:#ff8888; }
 
   #logModal {
     display: none; position: fixed; inset: 0;
@@ -1855,24 +1877,8 @@
   #soundVolumeVal { font-family: 'Cinzel', serif; font-size: 10px; color: var(--dim); min-width: 36px; text-align: right; }
 
 
-  /* Sync Modal */
-  #syncModal {
-    display:none; position:fixed; inset:0; z-index:500;
-    background:rgba(0,0,0,0.88); backdrop-filter:blur(14px);
-    align-items:center; justify-content:center;
-  }
-  #syncModal.open { display:flex; animation:fadeIn 0.2s ease; }
-  .sync-wrap {
-    background:rgba(8,8,20,0.98); border:1px solid rgba(255,80,80,0.3);
-    border-radius:8px; width:min(480px,96vw); max-height:88vh;
-    display:flex; flex-direction:column; overflow:hidden;
-  }
-  .sync-header {
-    display:flex; align-items:center; justify-content:space-between;
-    padding:14px 18px; border-bottom:1px solid rgba(255,255,255,0.06);
-  }
-  .sync-title { font-family:'Cinzel Decorative',serif; font-size:13px; color:#ff8888; letter-spacing:3px; }
-  .sync-close { background:none; border:none; color:var(--dim); font-size:18px; cursor:pointer; padding:4px 8px; }
+  /* Sync Panel (inside Mode Modal) */
+
   .sync-body { padding:18px; overflow-y:auto; flex:1; display:flex; flex-direction:column; gap:14px; }
   .sync-section {
     background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06);
@@ -1919,15 +1925,7 @@
     text-shadow:0 0 20px rgba(201,162,39,0.5);
   }
 
-  /* Sync indicator dot in header */
-  #syncDot {
-    display:none; width:8px; height:8px; border-radius:50%;
-    background:#ff4444; position:absolute; top:6px; right:6px;
-    animation: syncPulse 1.5s ease-in-out infinite;
-  }
-  #syncDot.live { background:#44ff88; }
-  #syncDot.viewing { background:#44aaff; }
-  @keyframes syncPulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+
 
   /* ── Card Search Modal ── */
   #cardSearchModal {
@@ -2323,42 +2321,7 @@
   .rulings-tab-panel.active { display:flex; }
 
   /* Bug Report Modal */
-  #bugModal {
-    display:none; position:fixed; inset:0; z-index:510;
-    background:rgba(0,0,0,0.88); backdrop-filter:blur(14px);
-    align-items:center; justify-content:center;
-  }
-  #bugModal.open { display:flex; animation:fadeIn 0.2s ease; }
-  .bug-wrap {
-    background:rgba(8,8,20,0.98); border:1px solid rgba(255,100,80,0.3);
-    border-radius:8px; width:min(460px,96vw); display:flex; flex-direction:column; overflow:hidden;
-  }
-  .bug-header {
-    display:flex; align-items:center; justify-content:space-between;
-    padding:14px 18px; border-bottom:1px solid rgba(255,255,255,0.06);
-  }
-  .bug-title { font-family:'Cinzel Decorative',serif; font-size:13px; color:#ff8888; letter-spacing:3px; }
-  .bug-close { background:none; border:none; color:var(--dim); font-size:18px; cursor:pointer; padding:4px 8px; }
-  .bug-body { padding:18px; display:flex; flex-direction:column; gap:12px; }
-  .bug-body label { font-family:'Cinzel',serif; font-size:9px; letter-spacing:2px; color:var(--dim); display:block; margin-bottom:4px; }
-  .bug-textarea {
-    width:100%; box-sizing:border-box; min-height:100px; resize:vertical;
-    background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
-    border-radius:3px; color:var(--text); font-family:'Rajdhani',sans-serif; font-size:13px;
-    padding:10px; outline:none; line-height:1.5;
-  }
-  .bug-textarea:focus { border-color:rgba(255,80,80,0.5); }
-  .bug-webhook-row {
-    display:flex; gap:8px; align-items:center;
-  }
-  .bug-footer { display:flex; gap:8px; justify-content:flex-end; padding:12px 18px; border-top:1px solid rgba(255,255,255,0.05); }
-  .bug-send-btn {
-    font-family:'Cinzel',serif; font-size:10px; letter-spacing:2px; padding:8px 20px;
-    border-radius:3px; cursor:pointer; transition:all 0.2s;
-    border:1px solid rgba(255,80,80,0.5); color:#ff8888; background:rgba(255,80,80,0.08);
-  }
-  .bug-send-btn:hover { background:rgba(255,80,80,0.2); }
-  .bug-status { font-family:'Cinzel',serif; font-size:10px; letter-spacing:1px; color:var(--dim); align-self:center; }
+
 
 </style>
   <!-- Firebase SDK -->
@@ -2371,7 +2334,7 @@
 <header>
   <h1>⬡ Your Unified Gameplay Identifier and Operation Hub</h1>
   <div class="subtitle">Life Point Command Center</div>
-  <button onclick="openBugReport()" style="position:absolute;top:10px;right:12px;background:none;border:1px solid rgba(255,255,255,0.12);border-radius:3px;color:var(--dim);font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;padding:4px 10px;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.color='#ff8888';this.style.borderColor='rgba(255,80,80,0.4)'" onmouseout="this.style.color='';this.style.borderColor=''">&#x1F41B; Report Bug</button>
+  <a href="https://github.com/BishopKngSlayer/ygo-tracker/issues/new" target="_blank" style="position:absolute;top:10px;right:12px;background:none;border:1px solid rgba(255,255,255,0.12);border-radius:3px;color:var(--dim);font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;padding:4px 10px;cursor:pointer;transition:all 0.2s;text-decoration:none;" onmouseover="this.style.color='#ff8888';this.style.borderColor='rgba(255,80,80,0.4)'" onmouseout="this.style.color='';this.style.borderColor=''">&#x1F41B; Report Bug</a>
 </header>
 
 
@@ -2386,8 +2349,7 @@
     <span class="timer-value" id="turnTimerDisplay">00:00</span>
   </div>
   <div class="timer-sep"></div>
-  <button class="timer-btn start" id="timerStartBtn" onclick="timerStart()">▶ Start</button>
-  <button class="timer-btn pause" id="timerPauseBtn" onclick="timerPause()" style="display:none">⏸ Pause</button>
+  <button class="timer-btn start" id="timerToggleBtn" onclick="timerToggle()">▶ Start</button>
   <button class="timer-btn" onclick="resetGame()" style="border-color:rgba(255,80,80,0.35);color:#ff8888;">✕ New Game</button>
   <button class="timer-btn phase" onclick="advancePhase()">⟶ Next Phase <kbd style="font-family:monospace;font-size:9px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:3px;padding:1px 5px;margin-left:4px;letter-spacing:0;">Space</kbd></button>
   <button class="timer-btn fs" onclick="toggleFullscreen()" title="Fullscreen">⛶</button>
@@ -2397,7 +2359,6 @@
 <div class="controls">
   <button class="btn btn-gold" onclick="openPlayersModal()">👤 Players</button>
   <button class="btn btn-mode" onclick="openModeModal()">&#x1F3C6; Mode</button>
-  <button class="btn" id="syncBtn" onclick="openSyncModal()" style="border-color:rgba(255,80,80,0.4);color:#ff8888;" title="Real-time sync">&#x1F534; Sync</button>
   <button class="btn btn-gold" onclick="openCalc()" style="letter-spacing:1px;">🧮 Calculator</button>
   <button class="btn btn-dim"  onclick="openLog()">📜 Game Log</button>
   <button class="btn btn-dim"  onclick="openRoster()">👥 Roster</button>
@@ -2414,7 +2375,6 @@
 <div class="grid" id="playerGrid"></div>
 
 <div class="turn-controls">
-  <button class="btn btn-dim"  onclick="prevTurn()">◀ Prev Turn</button>
   <span id="turnLabel" style="font-family:'Cinzel',serif;font-size:11px;color:var(--dim);letter-spacing:3px;align-self:center;"></span>
   <button class="btn btn-dim"  onclick="advancePhase()">⟶ Next Phase <kbd style="font-family:monospace;font-size:9px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.18);border-radius:3px;padding:1px 5px;margin-left:4px;letter-spacing:0;">Space</kbd></button>
   <button class="btn btn-gold" onclick="nextTurn()">Next Turn ▶ <kbd style="font-family:monospace;font-size:9px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.18);border-radius:3px;padding:1px 5px;margin-left:4px;letter-spacing:0;">→</kbd></button>
@@ -2626,7 +2586,13 @@
       <button class="cd-btn coin" onclick="flipCoin()">🪙 Flip Coin</button>
       <button class="cd-btn dice" onclick="rollDice(6)">⚄ d6</button>
       <button class="cd-btn dice" onclick="rollDice(20)">🎲 d20</button>
+      <button class="cd-btn dice" onclick="closeCoinDice();openRandomizer()" title="Randomize turn order">🔀 Randomize Order</button>
       <button class="cd-btn close" onclick="closeCoinDice()">✕ Close</button>
+    </div>
+    <!-- Who goes first? — shown after a flip/roll -->
+    <div id="cdFirstPick" style="display:none;margin-top:14px;border-top:1px solid rgba(255,255,255,0.08);padding-top:14px;">
+      <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:3px;color:var(--dim);text-align:center;margin-bottom:10px;">WHO GOES FIRST?</div>
+      <div id="cdFirstPickBtns" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;"></div>
     </div>
   </div>
 </div>
@@ -2700,6 +2666,7 @@
       <button class="mode-tab"        id="mtab-tournament" onclick="switchModeTab('tournament');renderModeModal();renderTournamentSlots()">&#x1F3C6; Tournament</button>
       <button class="mode-tab"        id="mtab-team"       onclick="switchModeTab('team');renderModeModal()">&#x1F91D; Team Battle</button>
       <button class="mode-tab"        id="mtab-rules"      onclick="switchModeTab('rules')">&#x2696;&#xFE0F; Rules</button>
+      <button class="mode-tab"        id="mtab-sync"       onclick="switchModeTab('sync');openSyncModalPanel()">&#x1F534; Sync</button>
     </div>
 
     <!-- Best of X -->
@@ -2846,6 +2813,64 @@
       </div>
 
     </div>
+
+    <!-- Sync Panel -->
+    <div class="mode-panel" id="mpanel-sync">
+      <div class="mode-section-title">📡 Remote Duel</div>
+
+      <!-- Idle: not in a room -->
+      <div id="syncRoomIdle">
+        <p class="sync-info" style="text-align:center;margin-bottom:16px;line-height:1.7;">
+          Host a room and send your opponent the join link.<br>
+          <span style="color:var(--dim);font-size:10px;">Each player controls their own LP. Turn &amp; phase controlled by host.</span>
+        </p>
+        <div class="sync-row" style="margin-bottom:14px;justify-content:center;">
+          <button class="sync-btn host" style="padding:12px 28px;font-size:12px;" onclick="hostRoom()">⚡ Host Duel</button>
+        </div>
+        <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:var(--dim);text-align:center;margin:10px 0;">— OR JOIN WITH A CODE —</div>
+        <div class="sync-row" style="margin-bottom:8px;">
+          <input class="sync-input mono" id="joinCodeInput" placeholder="ROOM CODE" maxlength="6"
+            style="flex:1;text-transform:uppercase;letter-spacing:4px;font-size:16px;text-align:center;" oninput="this.value=this.value.replace(/\D/g,'')">
+          <button class="sync-btn join" onclick="joinRoom()">Join</button>
+        </div>
+        <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:var(--dim);text-align:center;margin:10px 0;">— OR PASTE THE JOIN LINK —</div>
+        <div class="sync-row">
+          <input class="sync-input mono" id="joinLinkInput" placeholder="https://...?room=123456"
+            style="flex:1;font-size:10px;letter-spacing:0;">
+          <button class="sync-btn join" onclick="joinFromLink()">Join</button>
+        </div>
+      </div>
+
+      <!-- Connected: in a room -->
+      <div id="syncRoomConnected" style="display:none;">
+        <div class="room-code-display" id="syncRoomCodeDisplay"></div>
+
+        <div id="syncHostStatus" style="display:none;">
+          <!-- Copyable join link -->
+          <div style="margin:10px 0 4px;">
+            <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:var(--dim);margin-bottom:6px;text-align:center;">SEND THIS LINK TO YOUR OPPONENT</div>
+            <div class="sync-row" style="gap:6px;">
+              <input class="sync-input mono" id="syncShareLink" readonly
+                style="flex:1;font-size:10px;letter-spacing:0;color:#88ccff;cursor:text;">
+              <button class="sync-btn join" id="syncCopyBtn" onclick="copyJoinLink()" style="white-space:nowrap;">⎘ Copy Link</button>
+            </div>
+          </div>
+          <div class="sync-status connected" style="margin-top:8px;">🟢 HOSTING — your LP pushes live</div>
+          <div id="syncGuestStatus" class="sync-status idle" style="margin-top:6px;">⏳ Waiting for opponent to join…</div>
+        </div>
+
+        <div id="syncViewStatus" style="display:none;">
+          <div class="sync-status viewing" style="margin-top:10px;">🔵 JOINED — you control your LP (right card)</div>
+          <p class="sync-info" style="text-align:center;margin-top:8px;">
+            Turn &amp; phase are controlled by the host.<br>Adjust your own LP freely — it syncs live.
+          </p>
+        </div>
+
+        <div style="margin-top:16px;display:flex;justify-content:center;">
+          <button class="sync-btn leave" onclick="leaveRoom()">✕ Leave Room</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 <div id="bracketModal">
@@ -2977,83 +3002,9 @@
 </div>
 
 <!-- Sync Modal -->
-<div id="syncModal">
-  <div class="sync-wrap">
-    <div class="sync-header">
-      <span class="sync-title">&#x1F534; Live Sync</span>
-      <button class="sync-close" onclick="closeSyncModal()">&#x2715;</button>
-    </div>
-    <div class="sync-body">
 
-      <!-- Firebase Config -->
-      <div class="sync-section" id="syncConfigSection">
-        <div class="sync-section-title">&#x1F525; Firebase Config</div>
-        <p class="sync-info">Paste your Firebase project config below. <a href="https://console.firebase.google.com" target="_blank" style="color:#88ccff;">console.firebase.google.com</a> → Project Settings → Your apps → Config.</p>
-        <div class="sync-field">
-          <label>Config JSON</label>
-          <textarea class="sync-input mono" id="fbConfigInput" rows="5" placeholder='{"apiKey":"...","authDomain":"...","databaseURL":"...","projectId":"..."}'></textarea>
-        </div>
-        <div class="sync-row">
-          <button class="sync-btn save" onclick="saveFbConfig()">&#x2714; Save Config</button>
-          <span id="fbConfigStatus" class="sync-status idle"></span>
-        </div>
-      </div>
 
-      <!-- Room Controls -->
-      <div class="sync-section" id="syncRoomSection">
-        <div class="sync-section-title">&#x1F3AE; Room</div>
-        <div id="syncRoomConnected" style="display:none;">
-          <div class="room-code-display" id="syncRoomCodeDisplay"></div>
-          <p class="sync-info" style="text-align:center;margin:4px 0 10px;">Share this code with everyone at the table</p>
-          <div id="syncHostStatus" class="sync-status connected" style="display:none;">&#x1F7E2; HOSTING — board changes sync live</div>
-          <div id="syncViewStatus" class="sync-status viewing" style="display:none;">&#x1F535; VIEWING — board updates automatically</div>
-          <div style="margin-top:12px;display:flex;gap:8px;justify-content:center;">
-            <button class="sync-btn leave" onclick="leaveRoom()">&#x2715; Leave Room</button>
-          </div>
-        </div>
-        <div id="syncRoomIdle">
-          <div class="sync-row" style="margin-bottom:8px;">
-            <button class="sync-btn host" onclick="hostRoom()">&#x2B50; Host New Room</button>
-          </div>
-          <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:var(--dim);text-align:center;margin:6px 0;">— OR —</div>
-          <div class="sync-row">
-            <input class="sync-input mono" id="joinCodeInput" placeholder="Enter room code" maxlength="6" style="flex:1;text-transform:uppercase;letter-spacing:4px;font-size:14px;">
-            <button class="sync-btn join" onclick="joinRoom()">Join</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
-<!-- Bug Report Modal -->
-<div id="bugModal">
-  <div class="bug-wrap">
-    <div class="bug-header">
-      <span class="bug-title">&#x1F41B; Report Bug</span>
-      <button class="bug-close" onclick="closeBugReport()">&#x2715;</button>
-    </div>
-    <div class="bug-body">
-      <div>
-        <label>Discord Webhook URL</label>
-        <div class="bug-webhook-row">
-          <input class="sync-input mono" id="discordWebhookInput" placeholder="https://discord.com/api/webhooks/..." style="flex:1;font-size:10px;">
-          <button class="sync-btn save" onclick="saveWebhook()" style="white-space:nowrap;padding:8px 12px;">Save</button>
-        </div>
-        <div style="font-family:'Rajdhani',sans-serif;font-size:11px;color:var(--dim);margin-top:4px;">Server Settings → Integrations → Webhooks → Copy URL</div>
-      </div>
-      <div>
-        <label>Describe the bug</label>
-        <textarea class="bug-textarea" id="bugDescription" placeholder="What happened? What were you doing when it occurred?"></textarea>
-      </div>
-    </div>
-    <div class="bug-footer">
-      <span class="bug-status" id="bugSendStatus"></span>
-      <button class="sync-btn leave" onclick="closeBugReport()">Cancel</button>
-      <button class="bug-send-btn" onclick="sendBugReport()">&#x1F4E4; Send Report</button>
-    </div>
-  </div>
-</div>
 
 
 <script>
@@ -3079,6 +3030,8 @@
   let dueling = false;  // has the game started (first LP change)
   let duels = [];       // completed duel stats for summary
   let biggestHit = [];  // per player max single damage received
+  let _duelHistory = []; // per-session duel log [{duelNum, winner, loser, finalLP, duration}]
+  let cardRotations = []; // per-player card rotation index 0-3 (x90°)
 
   // ── Game Mode State ──
   let gameMode  = "standard"; // standard | bestof | tournament | team
@@ -3108,16 +3061,28 @@
   })();
 
   /* ── Firebase Sync ── */
-  var _fbApp      = null;   // firebase app instance
-  var _fbDb       = null;   // database reference
-  var _fbRoom     = null;   // current room code string
-  var _fbIsHost   = false;  // true = we push state, false = we receive
-  var _fbListener = null;   // unsubscribe handle
-  var _fbPushTimer= null;   // debounce timer
-  var _fbConfig   = null;   // stored firebase config
+  var _fbApp         = null;   // firebase app instance
+  var _fbDb          = null;   // database reference
+  var _fbRoom        = null;   // current room code string
+  var _fbIsHost      = false;  // true = we push state, false = we receive
+  var _fbListener    = null;   // host→guest state listener handle
+  var _fbGuestListener = null; // guest→host LP listener handle
+  var _fbPushTimer   = null;   // debounce timer
+  var _fbMySlot      = 0;      // which player index am I? host=0, guest=1
+  var _fbGuestSlot   = 1;      // which slot is the remote guest? always 1
+  // Hardcoded Firebase config — no setup needed
+  var _fbConfig = {
+    apiKey: "AIzaSyC0U5MUfEm4cgcYxDc7Dg5tJZIdw_TJZsA",
+    authDomain: "yugiandohub.firebaseapp.com",
+    databaseURL: "https://yugiandohub-default-rtdb.firebaseio.com",
+    projectId: "yugiandohub",
+    storageBucket: "yugiandohub.firebasestorage.app",
+    messagingSenderId: "230073343143",
+    appId: "1:230073343143:web:a2e939228e2a3f95b8cf82"
+  };
 
   /* ── Discord ── */
-  var _discordWebhook = localStorage.getItem('yugioh_discord_webhook') || '';
+
 
   /* ── Sound System ── */
   var _soundBuffers = {};   // name -> AudioBuffer
@@ -3173,6 +3138,7 @@
     duels = [];
     currentPhase = 1; // Turn 1: skip Draw Phase
     teamLP = []; // reset team pools (populated by startTeamBattle)
+    cardRotations = Array(count).fill(0);
     render();
   }
 
@@ -3181,6 +3147,16 @@
     // refresh calc selects if open
     const calc = document.getElementById('calcModal');
     if (calc && calc.classList.contains('open')) openCalc();
+  }
+
+  function rotateCard(i) {
+    if (!cardRotations[i] && cardRotations[i] !== 0) cardRotations[i] = 0;
+    cardRotations[i] = (cardRotations[i] + 1) % 4;
+    const card = document.getElementById('card-' + i);
+    if (!card) return;
+    card.className = card.className.replace(/\brotate-\d+\b/g, '').trim();
+    const cls = ['','rotate-90','rotate-180','rotate-270'][cardRotations[i]];
+    if (cls) card.classList.add(cls);
   }
 
   /* ── Helpers ──────────────────────────── */
@@ -3226,7 +3202,8 @@
         if (matchCtx.teams[0].indexOf(i) !== -1) teamClass = 'team-a';
         else if (matchCtx.teams[1].indexOf(i) !== -1) teamClass = 'team-b';
       }
-      card.className = `player-card ${i === activeTurn ? 'active' : ''} ${p.eliminated ? 'eliminated' : ''} ${isWinner ? 'winner' : ''} ${isLowLP ? 'low-lp' : ''} ${teamClass}`.trim(); 
+      const rotClass = ['','rotate-90','rotate-180','rotate-270'][cardRotations[i]||0];
+      card.className = `player-card ${i === activeTurn ? 'active' : ''} ${p.eliminated ? 'eliminated' : ''} ${isWinner ? 'winner' : ''} ${isLowLP ? 'low-lp' : ''} ${teamClass} ${rotClass}`.trim(); 
       card.id = `card-${i}`;
       card.innerHTML = `
         <div class="player-header">
@@ -3236,6 +3213,7 @@
               onchange="rosterOnNameChange(${i},this.value)">
           </div>
           ${(() => { const isW = !p.eliminated && players.length > 1 && players.filter(pl => !pl.eliminated).length === 1; return isW ? '<span class="winner-crown">👑</span>' : ''; })()}
+          <button class="btn-rotate" onclick="rotateCard(${i})" title="Rotate card (tabletop mode)">⟳</button>
           <button class="btn-elim" onclick="toggleElim(${i})">${p.eliminated ? '↩' : '💀'}</button>
         </div>
 
@@ -3477,6 +3455,9 @@
         playSound('eliminate');
         checkWinCondition();
       }
+      // Sync: host pushes full state; guest pushes their own slot
+      if (_fbRoom && _fbIsHost) fbPushState();
+      if (_fbRoom && !_fbIsHost && i === _fbMySlot) fbPushGuestState();
     }
   }
 
@@ -3612,6 +3593,8 @@
     if (currentPhase === PHASES.length - 1) {
       nextTurn();
     } else {
+      // Auto-start timer: first time we leave Standby on turn 1 (game has truly begun)
+      if (globalTurnNum === 1 && currentPhase === 1 && !timerRunning) timerStart();
       currentPhase++;
       render();
     }
@@ -3627,6 +3610,7 @@
     var inp = document.getElementById('startingLPInput');
     if (inp) MAX_LP = parseInt(inp.value) || MAX_LP;
     gameMode = "standard"; matchCtx = null;
+    _duelHistory = [];
     updateMatchBanner();
     initPlayers(players.length);
   }
@@ -3801,12 +3785,15 @@
     }
   }
 
+  function timerToggle() {
+    if (timerRunning) timerPause(); else timerStart();
+  }
   function timerStart() {
     if (timerRunning) return;
     timerRunning = true;
     timerInterval = setInterval(timerTick, 1000);
-    document.getElementById('timerStartBtn').style.display = 'none';
-    document.getElementById('timerPauseBtn').style.display = '';
+    var btn = document.getElementById('timerToggleBtn');
+    if (btn) { btn.textContent = '⏸ Pause'; btn.classList.remove('start'); btn.classList.add('pause'); }
     document.getElementById('gameTimerDisplay').classList.add('running');
     document.getElementById('turnTimerDisplay').classList.add('running');
   }
@@ -3816,8 +3803,8 @@
     timerRunning = false;
     clearInterval(timerInterval);
     timerInterval = null;
-    document.getElementById('timerStartBtn').style.display = '';
-    document.getElementById('timerPauseBtn').style.display = 'none';
+    var btn = document.getElementById('timerToggleBtn');
+    if (btn) { btn.textContent = '▶ Start'; btn.classList.remove('pause'); btn.classList.add('start'); }
     document.getElementById('gameTimerDisplay').classList.remove('running');
     document.getElementById('turnTimerDisplay').classList.remove('running');
   }
@@ -4318,6 +4305,58 @@
   function renderMatchHistory() {
     var body = document.getElementById('matchHistoryBody');
     if (!body) return;
+
+    // If we have session duel history, show that prominently
+    if (_duelHistory.length > 0) {
+      var modeLabel = '';
+      if (gameMode === 'bestof' && matchCtx) {
+        var s = matchCtx.scores || [0,0];
+        modeLabel = '<div class="mh-mode-banner">Best of ' + matchCtx.format
+          + ' &nbsp;·&nbsp; <span style="color:#88ffbb">' + matchCtx.names[0] + ' ' + s[0] + '</span>'
+          + ' &nbsp;–&nbsp; <span style="color:#ff8888">' + s[1] + ' ' + matchCtx.names[1] + '</span></div>';
+      } else if (gameMode === 'tournament' && matchCtx) {
+        modeLabel = '<div class="mh-mode-banner">Tournament' + (matchCtx.champion ? ' &nbsp;·&nbsp; 🏆 ' + matchCtx.champion : '') + '</div>';
+      }
+
+      var duelsHtml = _duelHistory.slice().reverse().map(function(d) {
+        var dur = d.duration > 0 ? (Math.floor(d.duration/60) + 'm ' + (d.duration%60) + 's') : '—';
+        var playerRows = d.players.map(function(p) {
+          return '<div class="mh-player-row' + (p.isWinner ? ' mh-winner-row' : '') + '">'
+            + (p.isWinner ? '<span class="mh-crown">👑</span>' : '<span class="mh-crown" style="opacity:0">👑</span>')
+            + '<span class="mh-pname">' + p.name + '</span>'
+            + '<span class="mh-lp ' + (p.isWinner ? 'mh-lp-win' : 'mh-lp-loss') + '">' + p.lp.toLocaleString() + ' LP</span>'
+            + '</div>';
+        }).join('');
+        return '<div class="mh-duel-card">'
+          + '<div class="mh-duel-header">'
+          + '<span class="mh-duel-num">DUEL ' + d.duelNum + '</span>'
+          + '<span class="mh-duel-meta">' + d.turns + ' turns &nbsp;·&nbsp; ' + dur + ' &nbsp;·&nbsp; ' + d.timestamp + '</span>'
+          + '</div>'
+          + playerRows
+          + '</div>';
+      }).join('');
+
+      body.innerHTML = modeLabel + '<div style="padding:8px;">' + duelsHtml + '</div>';
+
+      // All-time roster stats below
+      var rosterHtml = '<div style="font-family:\'Cinzel\',serif;font-size:9px;letter-spacing:3px;color:var(--dim);padding:4px 12px 8px;border-top:1px solid rgba(255,255,255,0.05);margin-top:4px;">ALL-TIME RECORDS</div>'
+        + '<div class="match-history-grid">'
+        + Object.values(roster).sort(function(a,b){ return (b.duels||0)-(a.duels||0)||a.name.localeCompare(b.name); }).map(function(r) {
+          var total = (r.w||0)+(r.l||0);
+          var pct   = total > 0 ? Math.round(r.w/total*100) : 0;
+          return '<div class="match-history-card">'
+            + '<div class="match-history-name">' + r.name + '</div>'
+            + '<div class="match-history-record"><span class="w">'+(r.w||0)+'</span>'
+            + '<span style="color:var(--dim)"> &middot; </span>'
+            + '<span class="l">'+(r.l||0)+'</span></div>'
+            + '<div class="match-history-sub">'+pct+'% WIN &middot; '+(r.duels||0)+' DUELS</div>'
+            + '</div>';
+        }).join('') + '</div>';
+      body.innerHTML += rosterHtml;
+      return;
+    }
+
+    // No session history — just show roster stats
     var entries = Object.values(roster).sort(function(a,b) {
       return (b.duels||0)-(a.duels||0) || a.name.localeCompare(b.name);
     });
@@ -4325,7 +4364,7 @@
       body.innerHTML = '<div class="log-empty" style="padding:16px;">No matches completed yet</div>';
       return;
     }
-    body.innerHTML = entries.map(function(r) {
+    body.innerHTML = '<div class="match-history-grid">' + entries.map(function(r) {
       var total = (r.w||0)+(r.l||0);
       var pct   = total > 0 ? Math.round(r.w/total*100) : 0;
       return '<div class="match-history-card">'
@@ -4335,7 +4374,7 @@
         + '<span class="l">'+(r.l||0)+'</span></div>'
         + '<div class="match-history-sub">'+pct+'% WIN &middot; '+(r.duels||0)+' DUELS</div>'
         + '</div>';
-    }).join('');
+    }).join('') + '</div>';
   }
   function closeLog() {
     document.getElementById('logModal').classList.remove('open');
@@ -4524,6 +4563,19 @@
       if (i === wi) roster[k].w++; else roster[k].l++;
       roster[k].name = p.name.trim();
     });
+    // Record to session duel history
+    var duelNum = matchCtx && matchCtx.duelNum ? matchCtx.duelNum : (_duelHistory.length + 1);
+    _duelHistory.push({
+      duelNum: duelNum,
+      winner: winner.name,
+      players: players.map(function(p, i) {
+        return { name: p.name, lp: p.lp, isWinner: i === wi };
+      }),
+      duration: gameSeconds,
+      turns: globalTurnNum - 1,
+      mode: gameMode,
+      timestamp: new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})
+    });
     matchRecord = players.map(function(p) {
       var k = p.name.trim().toLowerCase();
       return roster[k] ? {w:roster[k].w, l:roster[k].l} : {w:0, l:0};
@@ -4573,6 +4625,7 @@
   function openCoinDice() {
     document.getElementById('cdResult').innerHTML = '&#x1F3B2;';
     document.getElementById('cdLabel').textContent = 'Choose below';
+    document.getElementById('cdFirstPick').style.display = 'none';
     document.getElementById('coinDiceModal').classList.add('open');
   }
   function closeCoinDice() {
@@ -4582,12 +4635,32 @@
     var el = document.getElementById('cdResult');
     el.style.animation = 'none'; void el.offsetWidth; el.style.animation = '';
   }
+  function _showFirstPick() {
+    var fp = document.getElementById('cdFirstPick');
+    var btns = document.getElementById('cdFirstPickBtns');
+    if (!fp || !btns) return;
+    btns.innerHTML = players.filter(function(p){ return !p.eliminated; }).map(function(p, i) {
+      var idx = players.indexOf(p);
+      return '<button class="cd-btn coin" style="min-width:90px;" onclick="_setFirstPlayer(' + idx + ')">'
+        + '▶ ' + (p.name || ('Player ' + (idx+1)))
+        + '</button>';
+    }).join('');
+    fp.style.display = 'block';
+  }
+  function _setFirstPlayer(idx) {
+    activeTurn = idx;
+    currentPhase = 1;
+    render();
+    closeCoinDice();
+  }
   function flipCoin() {
     playSound('coin');
     var heads = Math.random() < 0.5;
     document.getElementById('cdResult').innerHTML = heads ? '&#x1FA99;' : '&#x26AB;';
     document.getElementById('cdLabel').textContent  = heads ? 'HEADS' : 'TAILS';
     _cdAnimate();
+    _showFirstPick();
+    if (!timerRunning) timerStart();
   }
   function rollDice(sides) {
     playSound('dice');
@@ -4596,6 +4669,8 @@
     document.getElementById('cdResult').innerHTML  = sides === 6 ? d6face[val - 1] : String(val);
     document.getElementById('cdLabel').textContent = 'ROLLED ' + val + (sides !== 6 ? ' (d' + sides + ')' : '');
     _cdAnimate();
+    _showFirstPick();
+    if (!timerRunning) timerStart();
   }
 
   /* ━━ FULLSCREEN ━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
@@ -5824,10 +5899,7 @@
   /* ━━ FIREBASE REAL-TIME SYNC ━━━━━━━━━━━━━━━ */
 
   function _fbInit() {
-    var stored = localStorage.getItem('yugioh_fb_config');
-    if (!stored) return false;
     try {
-      _fbConfig = JSON.parse(stored);
       if (!firebase.apps.length) {
         _fbApp = firebase.initializeApp(_fbConfig);
       } else {
@@ -5841,45 +5913,74 @@
     }
   }
 
+  // Auto-init on load
+  (function() { try { _fbInit(); } catch(e) {} })();
+
+  function openSyncModalPanel() {
+    _renderSyncPanel();
+  }
   function openSyncModal() {
-    // pre-fill config if saved
-    var stored = localStorage.getItem('yugioh_fb_config');
-    if (stored) {
-      document.getElementById('fbConfigInput').value = stored;
-      document.getElementById('fbConfigStatus').textContent = '✔ Config saved';
-      document.getElementById('fbConfigStatus').className = 'sync-status connected';
-    }
-    // pre-fill join code if in a room
-    if (_fbRoom) {
-      document.getElementById('syncRoomCodeDisplay').textContent = _fbRoom;
-      document.getElementById('syncRoomConnected').style.display = 'block';
-      document.getElementById('syncRoomIdle').style.display = 'none';
-      document.getElementById('syncHostStatus').style.display = _fbIsHost ? 'block' : 'none';
-      document.getElementById('syncViewStatus').style.display = !_fbIsHost ? 'block' : 'none';
-    } else {
-      document.getElementById('syncRoomConnected').style.display = 'none';
-      document.getElementById('syncRoomIdle').style.display = 'block';
-    }
-    document.getElementById('syncModal').classList.add('open');
+    openModeModal();
+    switchModeTab('sync');
+    _renderSyncPanel();
   }
   function closeSyncModal() {
-    document.getElementById('syncModal').classList.remove('open');
+    closeModeModal();
   }
 
-  function saveFbConfig() {
-    var raw = document.getElementById('fbConfigInput').value.trim();
-    var status = document.getElementById('fbConfigStatus');
-    try {
-      var cfg = JSON.parse(raw);
-      if (!cfg.apiKey || !cfg.databaseURL) throw new Error('Missing apiKey or databaseURL');
-      localStorage.setItem('yugioh_fb_config', JSON.stringify(cfg));
-      status.textContent = '✔ Saved — ready to host/join';
-      status.className = 'sync-status connected';
-      _fbInit();
-    } catch(e) {
-      status.textContent = '✘ Invalid JSON: ' + e.message;
-      status.className = 'sync-status idle';
+  function _renderSyncPanel() {
+    var idle = document.getElementById('syncRoomIdle');
+    var conn = document.getElementById('syncRoomConnected');
+    if (!idle || !conn) return;
+    if (_fbRoom) {
+      idle.style.display = 'none';
+      conn.style.display = 'block';
+      var codeEl = document.getElementById('syncRoomCodeDisplay');
+      if (codeEl) codeEl.textContent = _fbRoom;
+      var linkEl = document.getElementById('syncShareLink');
+      if (linkEl) linkEl.value = _buildJoinLink(_fbRoom);
+      var hs = document.getElementById('syncHostStatus');
+      var vs = document.getElementById('syncViewStatus');
+      var gs = document.getElementById('syncGuestStatus');
+      if (hs) hs.style.display = _fbIsHost ? 'block' : 'none';
+      if (vs) vs.style.display = !_fbIsHost ? 'block' : 'none';
+      if (gs) gs.style.display = _fbIsHost ? 'block' : 'none';
+    } else {
+      idle.style.display = 'block';
+      conn.style.display = 'none';
     }
+  }
+
+  function _buildJoinLink(code) {
+    return location.origin + location.pathname + '?room=' + code;
+  }
+
+  function copyJoinLink() {
+    var el = document.getElementById('syncShareLink');
+    if (!el) return;
+    navigator.clipboard.writeText(el.value).then(function() {
+      var btn = document.getElementById('syncCopyBtn');
+      if (btn) { btn.textContent = '✔ Copied!'; setTimeout(function(){ btn.textContent = '⎘ Copy Link'; }, 2000); }
+    }).catch(function() {
+      el.select(); document.execCommand('copy');
+    });
+  }
+
+  function joinFromLink() {
+    var inp = document.getElementById('joinLinkInput');
+    if (!inp) return;
+    var val = inp.value.trim();
+    // Accept full URL or bare code
+    var code = null;
+    try {
+      var url = new URL(val);
+      code = url.searchParams.get('room');
+    } catch(e) {
+      // Not a URL — maybe they pasted just the code
+      if (/^\d{6}$/.test(val)) code = val;
+    }
+    if (!code || code.length !== 6) { alert('Paste the full join link, e.g. https://...?room=123456'); return; }
+    joinRoom(code.toUpperCase());
   }
 
   function _genRoomCode() {
@@ -5907,11 +6008,27 @@
       _fbDb.ref('rooms/' + _fbRoom + '/state').set(_getGameSnapshot()).catch(function(e) {
         console.warn('Firebase push failed:', e);
       });
-    }, 120); // 120ms debounce
+    }, 120);
+  }
+
+  // Guest pushes only their own slot back to host
+  function fbPushGuestState() {
+    if (_fbIsHost || !_fbDb || !_fbRoom) return;
+    var p = players[_fbMySlot];
+    if (!p) return;
+    _fbDb.ref('rooms/' + _fbRoom + '/guest').set({
+      lp:        p.lp,
+      eliminated:p.eliminated,
+      name:      p.name,
+      ts:        Date.now()
+    }).catch(function(e) { console.warn('Guest push failed:', e); });
   }
 
   function _applySnapshot(snap) {
     if (!snap) return;
+    // Guest preserves their own LP/eliminated — host's snapshot may be stale for their slot
+    var savedLP   = (!_fbIsHost && _fbRoom && players[_fbMySlot]) ? players[_fbMySlot].lp        : null;
+    var savedElim = (!_fbIsHost && _fbRoom && players[_fbMySlot]) ? players[_fbMySlot].eliminated : null;
     players       = snap.players      || players;
     activeTurn    = snap.activeTurn   != null ? snap.activeTurn : activeTurn;
     currentPhase  = snap.currentPhase != null ? snap.currentPhase : currentPhase;
@@ -5920,6 +6037,11 @@
     matchCtx      = snap.matchCtx     || null;
     teamLP        = snap.teamLP       || [];
     if (snap.MAX_LP) MAX_LP = snap.MAX_LP;
+    // Restore guest's own LP so it doesn't get overwritten by stale host data
+    if (savedLP !== null && players[_fbMySlot]) {
+      players[_fbMySlot].lp        = savedLP;
+      players[_fbMySlot].eliminated = savedElim;
+    }
     render();
     updateMatchBanner();
     renderTurnLabel();
@@ -5934,150 +6056,95 @@
   }
 
   function hostRoom() {
-    if (!_fbInit()) {
-      alert('Save your Firebase config first.');
-      return;
-    }
+    if (!_fbInit()) { alert('Firebase connection failed. Check your internet connection.'); return; }
     var code = _genRoomCode();
     _fbRoom   = code;
     _fbIsHost = true;
-    // push current state immediately
+    _fbMySlot = 0;
+    // Ensure 2 players for remote duel
+    if (players.length < 2) { initPlayers(2); }
     fbPushState();
-    _updateSyncDot();
-    document.getElementById('syncRoomCodeDisplay').textContent = code;
-    document.getElementById('syncRoomConnected').style.display = 'block';
-    document.getElementById('syncRoomIdle').style.display = 'none';
-    document.getElementById('syncHostStatus').style.display = 'block';
-    document.getElementById('syncViewStatus').style.display = 'none';
-    document.getElementById('syncBtn').style.color = '#44ff88';
-    document.getElementById('syncBtn').style.borderColor = 'rgba(100,220,140,0.5)';
-    document.getElementById('syncBtn').textContent = '🟢 Live';
-  }
-
-  function joinRoom() {
-    if (!_fbInit()) {
-      alert('Save your Firebase config first.');
-      return;
-    }
-    var code = document.getElementById('joinCodeInput').value.trim().toUpperCase();
-    if (code.length !== 6) { alert('Enter a 6-digit room code'); return; }
-    _fbRoom   = code;
-    _fbIsHost = false;
-    _fbListener = _fbDb.ref('rooms/' + code + '/state').on('value', function(snapshot) {
+    // Listen for guest LP updates
+    _fbGuestListener = _fbDb.ref('rooms/' + code + '/guest').on('value', function(snapshot) {
       var data = snapshot.val();
-      if (data) _applySnapshot(data);
+      if (!data || !players[_fbGuestSlot]) return;
+      players[_fbGuestSlot].lp        = data.lp        != null ? data.lp        : players[_fbGuestSlot].lp;
+      players[_fbGuestSlot].eliminated = data.eliminated != null ? data.eliminated : players[_fbGuestSlot].eliminated;
+      if (data.name) players[_fbGuestSlot].name = data.name;
+      // Update guest connected indicator
+      var gs = document.getElementById('syncGuestStatus');
+      if (gs) { gs.textContent = '🟢 ' + (data.name || 'Guest') + ' connected'; gs.className = 'sync-status connected'; }
+      updateLPDisplay(_fbGuestSlot);
+      render();
     });
     _updateSyncDot();
-    document.getElementById('syncRoomCodeDisplay').textContent = code;
-    document.getElementById('syncRoomConnected').style.display = 'block';
-    document.getElementById('syncRoomIdle').style.display = 'none';
-    document.getElementById('syncHostStatus').style.display = 'none';
-    document.getElementById('syncViewStatus').style.display = 'block';
-    document.getElementById('syncBtn').style.color = '#44aaff';
-    document.getElementById('syncBtn').style.borderColor = 'rgba(100,180,255,0.5)';
-    document.getElementById('syncBtn').textContent = '🔵 Viewing';
+    _renderSyncPanel();
+    var stab = document.getElementById('mtab-sync');
+    if (stab) { stab.style.color = '#44ff88'; stab.style.borderBottomColor = '#44ff88'; stab.textContent = '🟢 Live'; }
+  }
+
+  function joinRoom(codeOverride) {
+    if (!_fbInit()) { alert('Firebase connection failed. Check your internet connection.'); return; }
+    var code = codeOverride || (document.getElementById('joinCodeInput') ? document.getElementById('joinCodeInput').value.trim().toUpperCase() : '');
+    if (!code || code.length !== 6) { alert('Enter a valid 6-digit room code'); return; }
+    _fbRoom   = code;
+    _fbIsHost = false;
+    _fbMySlot = 1;
+    // Listen to host state
+    _fbListener = _fbDb.ref('rooms/' + code + '/state').on('value', function(snapshot) {
+      var data = snapshot.val();
+      if (data) {
+        _applySnapshot(data);
+        // After applying, overwrite our own slot with local values (guest owns their LP)
+        // (host will sync from /guest path)
+      }
+    });
+    // Push our current slot info so host sees us connected
+    fbPushGuestState();
+    _updateSyncDot();
+    _renderSyncPanel();
     closeSyncModal();
+    var stab2 = document.getElementById('mtab-sync');
+    if (stab2) { stab2.style.color = '#44aaff'; stab2.style.borderBottomColor = '#44aaff'; stab2.textContent = '🔵 Joined'; }
   }
 
   function leaveRoom() {
-    if (_fbDb && _fbRoom && _fbListener) {
-      _fbDb.ref('rooms/' + _fbRoom + '/state').off('value', _fbListener);
+    if (_fbDb && _fbRoom) {
+      if (_fbListener) _fbDb.ref('rooms/' + _fbRoom + '/state').off('value', _fbListener);
+      if (_fbGuestListener) _fbDb.ref('rooms/' + _fbRoom + '/guest').off('value', _fbGuestListener);
     }
-    _fbRoom = null; _fbIsHost = false; _fbListener = null;
+    _fbRoom = null; _fbIsHost = false; _fbListener = null; _fbGuestListener = null; _fbMySlot = 0;
     _updateSyncDot();
-    var btn = document.getElementById('syncBtn');
-    btn.style.color = ''; btn.style.borderColor = '';
-    btn.textContent = '🔴 Sync';
-    document.getElementById('syncRoomConnected').style.display = 'none';
-    document.getElementById('syncRoomIdle').style.display = 'block';
+    _renderSyncPanel();
+    var stab3 = document.getElementById('mtab-sync');
+    if (stab3) { stab3.style.color = ''; stab3.style.borderBottomColor = ''; stab3.textContent = '🔴 Sync'; }
+    closeModeModal();
   }
 
   function _updateSyncDot() {
-    var dot = document.getElementById('syncDot');
-    if (!dot) return;
-    if (_fbRoom && _fbIsHost)  { dot.style.display='block'; dot.className='live'; }
-    else if (_fbRoom)          { dot.style.display='block'; dot.className='viewing'; }
-    else                       { dot.style.display='none';  dot.className=''; }
-  }
-
-  document.getElementById('syncModal').addEventListener('click', function(e) {
-    if (e.target === this) closeSyncModal();
-  });
-
-  /* ━━ DISCORD BUG REPORTS ━━━━━━━━━━━━━━━━━━━ */
-
-  function openBugReport() {
-    var inp = document.getElementById('discordWebhookInput');
-    if (inp && _discordWebhook) inp.value = _discordWebhook;
-    document.getElementById('bugSendStatus').textContent = '';
-    document.getElementById('bugDescription').value = '';
-    document.getElementById('bugModal').classList.add('open');
-  }
-  function closeBugReport() {
-    document.getElementById('bugModal').classList.remove('open');
-  }
-  function saveWebhook() {
-    var val = document.getElementById('discordWebhookInput').value.trim();
-    _discordWebhook = val;
-    localStorage.setItem('yugioh_discord_webhook', val);
-  }
-
-  function sendBugReport() {
-    saveWebhook();
-    if (!_discordWebhook) {
-      alert('Paste your Discord webhook URL first.');
-      return;
+    var tab = document.getElementById('mtab-sync');
+    if (!tab) return;
+    if (_fbRoom && _fbIsHost) {
+      tab.style.color = '#44ff88'; tab.style.borderBottomColor = '#44ff88'; tab.textContent = '🟢 Live';
+    } else if (_fbRoom) {
+      tab.style.color = '#44aaff'; tab.style.borderBottomColor = '#44aaff'; tab.textContent = '🔵 Joined';
+    } else {
+      tab.style.color = ''; tab.style.borderBottomColor = ''; tab.textContent = '🔴 Sync';
     }
-    var desc    = document.getElementById('bugDescription').value.trim();
-    if (!desc)  { alert('Please describe the bug.'); return; }
-    var status  = document.getElementById('bugSendStatus');
-    status.textContent = 'Sending…';
-
-    var playerSummary = players.map(function(p, i) {
-      return (i+1) + '. ' + p.name + ' — ' + (p.lp||0).toLocaleString() + ' LP' + (p.eliminated?' (elim)':'');
-    }).join('\n');
-
-    var payload = {
-      username: 'YU-GI-OH Tracker',
-      avatar_url: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/72x72/1f0cf.png',
-      embeds: [{
-        title: '🐛 Bug Report',
-        color: 0xff5555,
-        description: desc,
-        fields: [
-          { name: 'Game Mode',   value: gameMode || 'standard', inline: true },
-          { name: 'Players',     value: String(players.length),  inline: true },
-          { name: 'Turn',        value: String(globalTurnNum),   inline: true },
-          { name: 'Phase',       value: PHASES[currentPhase] || '?', inline: true },
-          { name: 'Browser',     value: navigator.userAgent.substring(0,80), inline: false },
-          { name: 'Board State', value: '```\n' + playerSummary + '\n```', inline: false },
-        ],
-        footer: { text: 'Yu-Gi-Oh Tracker · ' + new Date().toLocaleString() }
-      }]
-    };
-
-    fetch(_discordWebhook, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    }).then(function(r) {
-      if (r.ok) {
-        status.textContent = '✔ Sent!';
-        status.style.color = '#88ffaa';
-        setTimeout(closeBugReport, 1200);
-      } else {
-        status.textContent = '✘ Failed (' + r.status + ')';
-        status.style.color = '#ff8888';
-      }
-    }).catch(function() {
-      status.textContent = '✘ Network error';
-      status.style.color = '#ff8888';
-    });
   }
 
-  document.getElementById('bugModal').addEventListener('click', function(e) {
-    if (e.target === this) closeBugReport();
-  });
+  // Auto-join from URL param on load
+  (function() {
+    try {
+      var params = new URLSearchParams(window.location.search);
+      var roomCode = params.get('room');
+      if (roomCode && roomCode.length === 6) {
+        setTimeout(function() { joinRoom(roomCode.toUpperCase()); }, 800);
+      }
+    } catch(e) {}
+  })();
+
+
 
 
   /* ━━ CARD DATABASE (IDB cache + live API fallback) ━━━━━━━━━━━ */
@@ -6906,7 +6973,7 @@
   /* ── PWA Service Worker Registration ── */
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
-      navigator.serviceWorker.register('/service-worker.js')
+      navigator.serviceWorker.register('./service-worker.js', { scope: './' })
         .then(function(reg) { console.log('SW registered:', reg.scope); })
         .catch(function(err) { console.warn('SW registration failed:', err); });
     });
