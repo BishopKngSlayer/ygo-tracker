@@ -59,6 +59,18 @@
     border-bottom: 1px solid rgba(201,162,39,0.15);
     position: relative;
     background: linear-gradient(180deg, rgba(201,162,39,0.04) 0%, transparent 100%);
+    transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), padding 0.4s ease, opacity 0.3s ease;
+    overflow: hidden;
+    max-height: 200px;
+    opacity: 1;
+  }
+  header.hidden {
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    opacity: 0;
+    pointer-events: none;
+    border-bottom-color: transparent;
   }
   header::after {
     content: '';
@@ -165,7 +177,21 @@
     border-bottom: 1px solid rgba(255,255,255,0.04);
     background: rgba(0,0,0,0.2);
     backdrop-filter: blur(6px);
+    transition: max-height 0.3s cubic-bezier(0.4,0,0.2,1), padding 0.3s ease, opacity 0.25s ease;
+    overflow: hidden;
+    max-height: 200px;
+    opacity: 1;
   }
+  .controls.collapsed {
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .timer-btn.menu-toggle { color: var(--dim); border-color: rgba(96,96,160,0.35); }
+  .timer-btn.menu-toggle:hover { color: var(--text); background: rgba(96,96,160,0.1); }
+  .timer-btn.menu-toggle.open { color: var(--gold); border-color: rgba(201,162,39,0.5); background: rgba(201,162,39,0.08); }
   .btn {
     font-family: 'Cinzel', serif;
     font-size: 11px; font-weight: 600;
@@ -274,7 +300,7 @@
     50%       { box-shadow: 0 0 0 1px rgba(100,100,255,0.5), 0 0 50px rgba(68,68,204,0.45), inset 0 0 50px rgba(68,68,204,0.08); }
   }
   .player-card.active::before {
-    content: '▶ TURN';
+    content: '\u25b6 TURN';
     position: absolute; top: -1px; right: 14px;
     font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 2px;
     color: #aaaaff; background: var(--active);
@@ -380,7 +406,7 @@
     gap: 2px; margin-bottom: 6px;
   }
   .phase-badge-icon {
-    font-size: clamp(28px, 4vw, 44px);
+    font-size: clamp(56px, 8vw, 88px);
     line-height: 1;
     filter: drop-shadow(0 0 10px rgba(201,162,39,0.6));
     animation: phaseBadgePulse 2s ease-in-out infinite;
@@ -473,6 +499,26 @@
   }
   .minus-panel .panel-label { color: #ff8888; }
   .plus-panel  .panel-label { color: #88ffbb; }
+
+  .panel-label-row {
+    display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;
+  }
+  .panel-label-row .panel-label { margin-bottom: 0; }
+  .undo-btn {
+    font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 1px;
+    padding: 2px 6px; border-radius: 2px; cursor: pointer;
+    background: transparent; border: 1px solid rgba(255,255,255,0.1);
+    color: var(--dim); transition: all 0.15s;
+  }
+  .undo-btn:hover { color: var(--gold); border-color: rgba(201,162,39,0.4); background: rgba(201,162,39,0.06); }
+  .undo-btn:active { transform: scale(0.95); }
+
+  .preset-row {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; margin-bottom: 5px;
+  }
+  .minus-panel .preset-row { grid-template-columns: auto repeat(4, 1fr) auto; }
+  .hit-all-btn { color: #ffcc88 !important; border-color: rgba(255,160,40,0.4) !important; letter-spacing: 0 !important; }
+  .hit-all-btn:hover { background: rgba(255,160,40,0.15) !important; box-shadow: 0 0 8px rgba(255,140,0,0.2) !important; }
 
   .preset-btn {
     font-family: 'Cinzel', serif; font-size: 11px; font-weight: 600; letter-spacing: 1px;
@@ -1231,7 +1277,14 @@
   /* ── Match Record badge ── */
   .match-record {
     font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 2px;
-    color: var(--gold); opacity: 0.7; text-align: center; margin-top: 2px;
+    color: var(--gold); opacity: 0; text-align: center; margin-top: 2px;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+  }
+  .player-card.winner .match-record,
+  .player-card.eliminated .match-record {
+    opacity: 0.9;
+    pointer-events: auto;
   }
   .match-record span.wins  { color: #88ffbb; }
   .match-record span.losses{ color: #ff8888; }
@@ -1949,6 +2002,11 @@
   /* Body = search column + optional deck panel side by side */
   .csearch-body { display:flex; flex:1; overflow:hidden; }
   .csearch-main { display:flex; flex-direction:column; flex:1; overflow:hidden; min-width:0; }
+  @media(max-width:700px) {
+    .csearch-body { flex-direction:column; overflow-y:auto; }
+    .csearch-deck-panel { width:100%; border-left:none; border-top:1px solid rgba(201,162,39,0.2); }
+    .csearch-deck-panel.open { max-height:340px; }
+  }
   .csearch-row {
     display:flex; gap:14px; padding:20px 32px; border-bottom:1px solid rgba(255,255,255,0.05); flex-shrink:0;
   }
@@ -2533,6 +2591,139 @@
   /* Bug Report Modal */
 
 
+
+  /* ── Toast notifications ── */
+  #toastContainer { position:fixed; bottom:80px; left:50%; transform:translateX(-50%); z-index:9999; display:flex; flex-direction:column; gap:8px; align-items:center; pointer-events:none; }
+  .toast { font-family:'Cinzel',serif; font-size:12px; letter-spacing:1.5px; padding:8px 18px; border-radius:4px; border:1px solid; opacity:0; transform:translateY(10px); transition:all 0.3s; white-space:nowrap; }
+  .toast.show { opacity:1; transform:translateY(0); }
+  .toast.damage  { background:rgba(180,30,30,0.92); border-color:rgba(255,80,80,0.5); color:#ffcccc; }
+  .toast.heal    { background:rgba(20,130,60,0.92); border-color:rgba(60,220,120,0.5); color:#ccffdd; }
+  .toast.warning { background:rgba(160,110,0,0.92); border-color:rgba(255,200,50,0.5); color:#fff3bb; }
+  .toast.info    { background:rgba(20,60,130,0.92); border-color:rgba(80,150,255,0.5); color:#cce0ff; }
+
+  /* ── LP Diff badge ── */
+  .lp-diff { font-family:'Rajdhani',sans-serif; font-size:11px; font-weight:700; letter-spacing:1px; opacity:0.7; margin-top:2px; }
+  .lp-diff:contains('▲') { color:#88ffbb; } /* fallback, handled in JS */
+
+  /* ── Biggest hit badge ── */
+  .biggest-hit-badge { font-family:'Rajdhani',sans-serif; font-size:10px; letter-spacing:1px; color:rgba(255,160,100,0.75); margin-top:2px; }
+
+  /* ── Surrender / collapse / half / transfer buttons ── */
+  .btn-surrender { background:none; border:1px solid rgba(255,255,255,0.12); border-radius:3px; color:var(--dim); cursor:pointer; font-size:11px; padding:2px 5px; transition:all 0.15s; }
+  .btn-surrender:hover { color:#ffaaaa; border-color:rgba(255,100,100,0.4); background:rgba(255,60,60,0.1); }
+  .btn-collapse { background:none; border:1px solid rgba(255,255,255,0.12); border-radius:3px; color:var(--dim); cursor:pointer; font-size:10px; padding:2px 5px; transition:all 0.15s; }
+  .btn-collapse:hover { color:var(--gold); border-color:rgba(201,162,39,0.4); }
+  .half-btn { color:#ffcc88 !important; border-color:rgba(255,180,40,0.35) !important; font-size:13px !important; }
+  .half-btn:hover { background:rgba(255,160,40,0.15) !important; }
+  .transfer-btn { width:100%; margin-top:5px; font-family:'Cinzel',serif; font-size:9px; letter-spacing:1.5px; padding:5px; border-radius:3px; border:1px solid rgba(120,180,255,0.25); color:#99ccff; background:transparent; cursor:pointer; transition:all 0.15s; }
+  .transfer-btn:hover { background:rgba(100,160,255,0.1); border-color:rgba(120,180,255,0.5); }
+
+  /* ── Counter tokens ── */
+  .counter-tokens { padding:4px 0 2px; display:flex; flex-wrap:wrap; gap:4px; min-height:0; }
+  .counter-token { display:inline-flex; align-items:center; gap:3px; background:rgba(201,162,39,0.1); border:1px solid rgba(201,162,39,0.25); border-radius:3px; font-family:'Cinzel',serif; font-size:9px; letter-spacing:1px; color:var(--gold); padding:2px 5px; }
+  .token-adj { background:none; border:none; color:var(--dim); cursor:pointer; font-size:11px; padding:0 2px; line-height:1; }
+  .token-adj:hover { color:var(--gold); }
+  .add-token-btn { font-family:'Cinzel',serif; font-size:8px; letter-spacing:1px; padding:2px 7px; border-radius:3px; border:1px dashed rgba(255,255,255,0.15); color:var(--dim); background:transparent; cursor:pointer; transition:all 0.15s; }
+  .add-token-btn:hover { border-color:rgba(201,162,39,0.4); color:var(--gold); }
+
+  /* ── Player color dot ── */
+  .player-color-dot { width:10px; height:10px; border-radius:50%; border:1px solid rgba(255,255,255,0.2); cursor:pointer; flex-shrink:0; transition:transform 0.15s; }
+  .player-color-dot:hover { transform:scale(1.3); }
+
+  /* ── Shortcut modal ── */
+  #shortcutModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:3000; align-items:center; justify-content:center; }
+  #shortcutModal.open { display:flex; }
+  .shortcut-wrap { background:var(--card-bg); border:1px solid var(--border); border-radius:8px; padding:28px 32px; max-width:400px; width:90%; }
+  .shortcut-title { font-family:'Cinzel',serif; font-size:14px; letter-spacing:3px; color:var(--gold); margin-bottom:18px; text-align:center; }
+  .shortcut-row { display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.05); font-family:'Rajdhani',sans-serif; font-size:14px; }
+  .shortcut-row:last-child { border-bottom:none; }
+  .shortcut-key { font-family:monospace; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); border-radius:3px; padding:2px 8px; font-size:12px; color:var(--text); }
+  .shortcut-close { display:block; margin:18px auto 0; font-family:'Cinzel',serif; font-size:10px; letter-spacing:2px; padding:7px 20px; border:1px solid var(--border); border-radius:4px; background:transparent; color:var(--dim); cursor:pointer; }
+  .shortcut-close:hover { color:var(--gold); border-color:rgba(201,162,39,0.4); }
+
+  /* ── Transfer modal ── */
+  #transferModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:3000; align-items:center; justify-content:center; }
+  #transferModal.open { display:flex; }
+  .transfer-wrap { background:var(--card-bg); border:1px solid var(--border); border-radius:8px; padding:24px 28px; max-width:340px; width:90%; }
+  .transfer-title { font-family:'Cinzel',serif; font-size:13px; letter-spacing:2px; color:var(--gold); margin-bottom:16px; text-align:center; }
+  .transfer-row { display:flex; gap:8px; align-items:center; margin-bottom:10px; }
+  .transfer-select { flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:3px; color:var(--text); font-family:'Rajdhani',sans-serif; font-size:13px; padding:6px 8px; }
+  .transfer-input { flex:1; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:3px; color:var(--text); font-family:'Rajdhani',sans-serif; font-size:14px; font-weight:700; padding:6px 8px; text-align:center; }
+  .transfer-go { width:100%; font-family:'Cinzel',serif; font-size:10px; letter-spacing:2px; padding:9px; border-radius:4px; border:1px solid rgba(100,180,255,0.4); background:rgba(100,160,255,0.1); color:#99ccff; cursor:pointer; margin-top:4px; }
+  .transfer-go:hover { background:rgba(100,160,255,0.2); }
+  .transfer-cancel { display:block; margin:8px auto 0; background:none; border:none; color:var(--dim); font-family:'Cinzel',serif; font-size:9px; cursor:pointer; letter-spacing:1px; }
+
+  /* ── Recent cards strip ── */
+  #recentCardsRow { display:none; padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.06); }
+  #recentCardsRow.has-cards { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .recent-label { font-family:'Cinzel',serif; font-size:9px; letter-spacing:2px; color:var(--dim); white-space:nowrap; }
+  .recent-card-chip { display:inline-flex; align-items:center; gap:5px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:3px; padding:3px 8px; cursor:pointer; transition:all 0.15s; }
+  .recent-card-chip:hover { border-color:rgba(201,162,39,0.4); color:var(--gold); }
+  .recent-card-chip img { width:18px; height:18px; object-fit:cover; border-radius:2px; }
+  .recent-card-chip span { font-family:'Rajdhani',sans-serif; font-size:12px; max-width:100px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+  /* ── Confirm dialog ── */
+  #confirmModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:3000; align-items:center; justify-content:center; }
+  #confirmModal.open { display:flex; }
+  .confirm-wrap { background:var(--card-bg); border:1px solid var(--border); border-radius:8px; padding:28px 32px; max-width:320px; width:90%; text-align:center; }
+  .confirm-msg { font-family:'Rajdhani',sans-serif; font-size:16px; font-weight:600; margin-bottom:20px; }
+  .confirm-btns { display:flex; gap:10px; justify-content:center; }
+  .confirm-yes { font-family:'Cinzel',serif; font-size:10px; letter-spacing:2px; padding:8px 20px; border-radius:4px; border:1px solid rgba(255,100,100,0.4); background:rgba(200,50,50,0.15); color:#ff9999; cursor:pointer; }
+  .confirm-no  { font-family:'Cinzel',serif; font-size:10px; letter-spacing:2px; padding:8px 20px; border-radius:4px; border:1px solid rgba(255,255,255,0.15); background:transparent; color:var(--dim); cursor:pointer; }
+
+  /* ── Match timer ── */
+  #matchTimerDisplay { font-size:16px; min-width:52px; color:rgba(180,220,255,0.8); }
+
+  /* ── Collapsed player card ── */
+  .player-card.collapsed .panels-container,
+  .player-card.collapsed .lp-bar-track,
+  .player-card.collapsed .lp-sparkline,
+  .player-card.collapsed .phase-indicator,
+  .player-card.collapsed .counter-tokens,
+  .player-card.collapsed .match-record,
+  .player-card.collapsed .biggest-hit-badge,
+  .player-card.collapsed .lp-diff { display:none; }
+  .player-card.collapsed { min-height:0; }
+
+  /* ── Player color ring on active card ── */
+  .player-card[style*="--pcolor"] { border-top:2px solid var(--pcolor, var(--gold)); }
+
+  /* ── Voice Control ── */
+  #voiceBtn { position:relative; transition:all 0.2s; }
+  #voiceBtn.listening { color:#ff4444; border-color:rgba(255,60,60,0.6); background:rgba(255,40,40,0.12); animation:voice-pulse 1s ease-in-out infinite; }
+  #voiceBtn.listening::after { content:''; position:absolute; inset:-3px; border-radius:4px; border:2px solid rgba(255,60,60,0.5); animation:voice-ring 1s ease-in-out infinite; pointer-events:none; }
+  @keyframes voice-pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
+  @keyframes voice-ring  { 0%{transform:scale(1);opacity:0.8} 100%{transform:scale(1.4);opacity:0} }
+
+  #voiceHUD {
+    display:none; position:fixed; bottom:60px; left:50%; transform:translateX(-50%);
+    z-index:8000; background:rgba(10,12,20,0.96); border:1px solid rgba(255,255,255,0.12);
+    border-radius:8px; padding:10px 18px 10px 14px; min-width:260px; max-width:500px;
+    font-family:'Rajdhani',sans-serif; box-shadow:0 4px 24px rgba(0,0,0,0.6);
+    flex-direction:column; gap:4px;
+  }
+  #voiceHUD.active { display:flex; }
+  #voiceHUD .vh-row1 { display:flex; align-items:center; gap:8px; }
+  #voiceHUD .vh-dot  { width:8px; height:8px; border-radius:50%; background:#ff4444; flex-shrink:0; animation:voice-pulse 1s ease-in-out infinite; }
+  #voiceHUD .vh-label { font-size:9px; letter-spacing:2px; color:var(--dim); font-family:'Cinzel',serif; text-transform:uppercase; flex:1; }
+  #voiceHUD .vh-close { background:none; border:none; color:var(--dim); cursor:pointer; font-size:14px; padding:0 2px; line-height:1; }
+  #voiceHUD .vh-close:hover { color:var(--gold); }
+  #voiceHUD .vh-heard { font-size:15px; font-weight:600; color:#fff; min-height:20px; letter-spacing:0.5px; }
+  #voiceHUD .vh-result { font-size:12px; color:var(--dim); min-height:16px; }
+  #voiceHUD .vh-result.ok  { color:#88ffbb; }
+  #voiceHUD .vh-result.err { color:#ff8888; }
+
+  #voiceCmdModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:3000; align-items:center; justify-content:center; }
+  #voiceCmdModal.open { display:flex; }
+  .vcmd-wrap { background:var(--card-bg); border:1px solid var(--border); border-radius:8px; padding:24px 28px; max-width:460px; width:92%; max-height:85vh; overflow-y:auto; }
+  .vcmd-title { font-family:'Cinzel',serif; font-size:13px; letter-spacing:3px; color:var(--gold); margin-bottom:14px; text-align:center; }
+  .vcmd-section { font-family:'Cinzel',serif; font-size:9px; letter-spacing:2px; color:var(--dim); margin:12px 0 6px; }
+  .vcmd-row { display:flex; gap:12px; align-items:baseline; padding:4px 0; border-bottom:1px solid rgba(255,255,255,0.04); font-family:'Rajdhani',sans-serif; font-size:13px; }
+  .vcmd-row:last-child { border-bottom:none; }
+  .vcmd-example { flex:1; color:var(--gold); font-style:italic; }
+  .vcmd-desc { flex:1.2; color:var(--dim); font-size:12px; }
+  .vcmd-close { display:block; margin:16px auto 0; font-family:'Cinzel',serif; font-size:10px; letter-spacing:2px; padding:7px 20px; border:1px solid var(--border); border-radius:4px; background:transparent; color:var(--dim); cursor:pointer; }
+  .vcmd-close:hover { color:var(--gold); border-color:rgba(201,162,39,0.4); }
 </style>
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -2541,7 +2732,7 @@
 <body>
 <canvas id="bg-canvas"></canvas>
 
-<header>
+<header id="siteHeader">
   <h1>⬡ Your Unified Gameplay Identifier and Operation Hub</h1>
   <div class="subtitle">Life Point Command Center</div>
   <a href="https://github.com/BishopKngSlayer/ygo-tracker/issues/new" target="_blank" style="position:absolute;top:10px;right:12px;background:none;border:1px solid rgba(255,255,255,0.12);border-radius:3px;color:var(--dim);font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;padding:4px 10px;cursor:pointer;transition:all 0.2s;text-decoration:none;" onmouseover="this.style.color='#ff8888';this.style.borderColor='rgba(255,80,80,0.4)'" onmouseout="this.style.color='';this.style.borderColor=''">&#x1F41B; Report Bug</a>
@@ -2559,14 +2750,27 @@
     <span class="timer-value" id="turnTimerDisplay">00:00</span>
   </div>
   <div class="timer-sep"></div>
+  <div class="timer-block" title="Turn number">
+    <span class="timer-label">Turn</span>
+    <span class="timer-value" id="turnCounterDisplay" style="font-size:20px;min-width:40px;">0</span>
+  </div>
+  <div class="timer-block" title="Total match time">
+    <span class="timer-label">Match</span>
+    <span class="timer-value" id="matchTimerDisplay" style="font-size:16px;min-width:52px;color:rgba(180,220,255,0.8);">00:00</span>
+  </div>
+  <div class="timer-sep"></div>
   <button class="timer-btn start" id="timerToggleBtn" onclick="timerToggle()">▶ Start</button>
-  <button class="timer-btn" onclick="resetGame()" style="border-color:rgba(255,80,80,0.35);color:#ff8888;">✕ New Game</button>
+  <button class="timer-btn" onclick="confirmNewGame()" style="border-color:rgba(255,80,80,0.35);color:#ff8888;">✕ New Game</button>
   <button class="timer-btn phase" onclick="advancePhase()">⟶ Next Phase <kbd style="font-family:monospace;font-size:9px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:3px;padding:1px 5px;margin-left:4px;letter-spacing:0;">Space</kbd></button>
   <button class="timer-btn fs" onclick="toggleFullscreen()" title="Fullscreen">⛶</button>
   <button class="timer-btn fs" onclick="openCoinDice()" title="Coin / Dice">🎲</button>
+  <button class="timer-btn fs" onclick="openShortcutModal()" title="Keyboard shortcuts">?</button>
+  <button class="timer-btn fs" id="voiceBtn" onclick="toggleVoice()" title="Voice control (click to speak)">🎤</button>
+  <div class="timer-sep"></div>
+  <button class="timer-btn menu-toggle" id="menuToggleBtn" onclick="toggleGameMenu()" title="Menu">☰ Menu</button>
 </div>
 <input type="hidden" id="startingLPInput" value="8000">
-<div class="controls">
+<div class="controls collapsed" id="gameMenu">
   <button class="btn btn-gold" onclick="openPlayersModal()">👤 Players</button>
   <button class="btn btn-mode" onclick="openModeModal()">&#x1F3C6; Mode</button>
   <button class="btn btn-gold" onclick="openCalc()" style="letter-spacing:1px;">🧮 Calculator</button>
@@ -2814,6 +3018,7 @@
   <div class="summary-sub" id="summarySubtitle" style="font-family:'Cinzel',serif;font-size:10px;color:var(--dim);letter-spacing:3px;margin-bottom:8px;text-align:center;"></div>
   <div class="summary-buttons" id="summaryButtons">
     <button class="summary-btn gold" onclick="closeSummary(false)">↩ Review Board</button>
+    <button class="summary-btn dim"  onclick="openRoster();closeSummary(false);">👥 Match Record</button>
     <button class="summary-btn dim"  onclick="closeSummary(true)">✕ New Game</button>
   </div>
 </div>
@@ -3210,6 +3415,7 @@
             <button class="csearch-filter-clear" onclick="clearCardFilters()">&#x2715; Clear Filters</button>
           </div>
         </div>
+        <div id="recentCardsRow"><span class="recent-label">RECENT:</span><span id="recentCardsChips"></span></div>
         <div class="csearch-status" id="cardSearchStatus"></div>
         <div class="csearch-spinner" id="cardSearchSpinner"></div>
         <div class="csearch-grid" id="cardSearchGrid"></div>
@@ -3252,6 +3458,7 @@
         <button class="cdetail-action-btn field" onclick="addCardToRulingsField(_currentDetailCard)">⛨ Add to Field</button>
         <button class="cdetail-action-btn chain" onclick="addCardToRulingsChain(_currentDetailCard)">⛓ Add to Chain</button>
         <button class="cdetail-action-btn deck"  onclick="addToDeck(_currentDetailCard); _updateDeckBadges()">➕ Add to Deck</button>
+        <button class="cdetail-action-btn" style="background:rgba(80,120,200,0.1);border:1px solid rgba(80,120,200,0.3);color:#aabbee;" onclick="addToDeckSide(_currentDetailCard); _updateDeckBadges()">🔄 Side Deck</button>
       </div>
     </div>
   </div>
@@ -3327,10 +3534,14 @@
           AI IS THINKING…
         </div>
         <div class="rulings-results" id="rulingsResults">
-          <div class="rulings-placeholder">
+          <div class="rulings-placeholder" id="rulingsPlaceholder">
             ⛓ BUILD YOUR CHAIN ABOVE, THEN HIT ANALYZE<br>
             <span style="font-size:9px;letter-spacing:2px;opacity:0.5;">MANUAL RULINGS TAKE PRIORITY WHEN MATCHED</span>
           </div>
+        </div>
+        <div id="rulingsGhNotice" style="display:none;margin:10px 0;padding:12px 16px;border-radius:8px;background:rgba(255,180,50,0.08);border:1px solid rgba(255,180,50,0.25);font-family:'Cinzel',serif;font-size:10px;letter-spacing:1px;color:#ffcc66;line-height:1.8;">
+          ⚠️ AI RULINGS UNAVAILABLE ON GITHUB PAGES<br>
+          <span style="opacity:0.7;font-size:9px;">This feature requires a secure API proxy. It works natively inside Claude.ai.<br>Manual Rulings (✍️ tab) are fully available.</span>
         </div>
 
       </div>
@@ -3384,8 +3595,14 @@
   let dueling = false;  // has the game started (first LP change)
   let duels = [];       // completed duel stats for summary
   let biggestHit = [];  // per player max single damage received
+  let firstBlood  = null; // index of first player to take damage
   let _duelHistory = []; // per-session duel log [{duelNum, winner, loser, finalLP, duration}]
-  let cardRotations = []; // per-player card rotation index 0-3 (x90°)
+  let cardRotations  = []; // per-player card rotation index 0-3 (x90°)
+  let cardCollapsed  = []; // per-player collapse state
+  let counterTokens  = []; // per-player [{name, count}]
+  let playerColors   = []; // per-player accent color
+  let matchStartTime = null; // Date.now() when match begins
+  const PLAYER_COLOR_PRESETS = ['#c9a227','#e05555','#5599ff','#55cc88','#cc77ff','#ff9944'];
 
   // ── Game Mode State ──
   let gameMode  = "standard"; // standard | bestof | tournament | team
@@ -3455,6 +3672,7 @@
   };
   let logEventId = 0;
   let dmgTypeState = {}; // key: "i" -> 'battle'|'effect', default 'effect'
+  let lpHistory    = {}; // key: i -> [{lp, teamLP}] for undo
 
   const PRESETS = [100, 500, 1000, 2000];
 
@@ -3488,11 +3706,17 @@
     rosterSave();
     lpOverTime  = Array(players.length).fill(null).map(() => [MAX_LP]);
     biggestHit  = Array(players.length).fill(0);
+    firstBlood  = null;
     dueling = false;
     duels = [];
     currentPhase = 1; // Turn 1: skip Draw Phase
     teamLP = []; // reset team pools (populated by startTeamBattle)
     cardRotations = Array(count).fill(0);
+    cardCollapsed = Array(count).fill(false);
+    counterTokens = Array(count).fill(null).map(() => []);
+    playerColors  = Array(count).fill(null).map((_, i) => PLAYER_COLOR_PRESETS[i % PLAYER_COLOR_PRESETS.length]);
+    lpHistory     = {};
+    matchStartTime = Date.now();
     render();
   }
 
@@ -3530,6 +3754,14 @@
   }
 
   /* ── Render ───────────────────────────── */
+  function updateHeaderVisibility() {
+    const header = document.getElementById('siteHeader');
+    if (!header) return;
+    // Hide when a game is in progress (players have been set up with LP)
+    const gameActive = players.length > 0 && players.some(p => p.lp < MAX_LP || activeTurn >= 0);
+    header.classList.toggle('hidden', gameActive);
+  }
+
   function render() {
     const grid = document.getElementById('playerGrid');
     grid.innerHTML = '';
@@ -3557,8 +3789,9 @@
         else if (matchCtx.teams[1].indexOf(i) !== -1) teamClass = 'team-b';
       }
       const rotClass = ['','rotate-90','rotate-180','rotate-270'][cardRotations[i]||0];
-      card.className = `player-card ${i === activeTurn ? 'active' : ''} ${p.eliminated ? 'eliminated' : ''} ${isWinner ? 'winner' : ''} ${isLowLP ? 'low-lp' : ''} ${teamClass} ${rotClass}`.trim(); 
+      card.className = `player-card ${i === activeTurn ? 'active' : ''} ${p.eliminated ? 'eliminated' : ''} ${isWinner ? 'winner' : ''} ${isLowLP ? 'low-lp' : ''} ${teamClass} ${rotClass}`.trim();
       card.id = `card-${i}`;
+
       card.innerHTML = `
         <div class="player-header">
           <div class="player-name-wrap">
@@ -3567,6 +3800,9 @@
               onchange="rosterOnNameChange(${i},this.value)">
           </div>
           ${(() => { const isW = !p.eliminated && players.length > 1 && players.filter(pl => !pl.eliminated).length === 1; return isW ? '<span class="winner-crown">👑</span>' : ''; })()}
+          ${!p.eliminated ? `<button class="btn-surrender" onclick="surrenderPlayer(${i})" title="Surrender (concede)">🏳️</button>` : ''}
+          ${i !== activeTurn && !p.eliminated ? `<button class="btn-collapse" onclick="toggleCardCollapse(${i})" title="Collapse/expand card" id="collapse-btn-${i}">${cardCollapsed[i] ? '▼' : '▲'}</button>` : ''}
+          <div class="player-color-dot" style="background:${(playerColors&&playerColors[i])||PLAYER_COLOR_PRESETS[i%PLAYER_COLOR_PRESETS.length]}" onclick="cyclePlayerColor(${i})" title="Click to change accent color"></div>
           <button class="btn-rotate" onclick="rotateCard(${i})" title="Rotate card (tabletop mode)">⟳</button>
           <button class="btn-elim" onclick="toggleElim(${i})">${p.eliminated ? '↩' : '💀'}</button>
         </div>
@@ -3590,7 +3826,9 @@
         <div class="lp-display">
           <div class="lp-value ${getLPClass(p.lp)}" id="lp-val-${i}">${(function(){ if(gameMode==='team'&&teamLP.length&&matchCtx&&matchCtx.teams){return(matchCtx.teams[0].indexOf(i)!==-1?teamLP[0]:teamLP[1]).toLocaleString();}return p.lp.toLocaleString();})()}</div>
           <div class="lp-label">Life Points</div>
+          ${i !== activeTurn && !p.eliminated && players[activeTurn] && !players[activeTurn].eliminated ? `<div class="lp-diff" id="lp-diff-${i}">${(()=>{const me=(gameMode==='team'&&teamLP.length&&matchCtx&&matchCtx.teams)?(matchCtx.teams[0].indexOf(activeTurn)!==-1?teamLP[0]:teamLP[1]):players[activeTurn].lp;const them=(gameMode==='team'&&teamLP.length&&matchCtx&&matchCtx.teams)?(matchCtx.teams[0].indexOf(i)!==-1?teamLP[0]:teamLP[1]):p.lp;const d=them-me;return (d>0?'▲+':'▼')+d.toLocaleString();})()}</div>` : ''}
           <div class="match-record">${(() => { var k=p.name.trim().toLowerCase(); var r=roster[k]||{w:0,l:0}; return '<span class="wins">'+r.w+'W</span> &middot; <span class="losses">'+r.l+'L</span>'; })()} </div>
+          ${biggestHit[i] > 0 ? `<div class="biggest-hit-badge" title="Biggest hit taken this duel">💥 ${biggestHit[i].toLocaleString()}</div>` : ''}
         </div>
 
         <div class="lp-sparkline"><canvas id="spark-${i}" height="28"></canvas></div>
@@ -3619,7 +3857,7 @@
           <div class="battle-result" id="bres-${i}" style="display:none;"></div>
           <div class="battle-panel-row" style="margin-top:6px;gap:6px;">
             <select class="battle-target-select" id="btgt-${i}">
-              ${players.map((pl,pi) => pi !== i ? `<option value="${pi}">${pl.name}</option>` : '').join('')}
+              ${players.map((pl,pi) => pi !== i && !pl.eliminated ? `<option value="${pi}">${pl.name}</option>` : '').join('')}
             </select>
             <button class="battle-apply-btn" onclick="applyCardBattle(${i})">Apply</button>
           </div>
@@ -3637,31 +3875,50 @@
         <div class="panels-container ${anyOpen ? 'visible' : ''}" id="panels-${i}">
 
           <div class="lp-panel minus-panel ${minusOpen ? '' : 'hidden-panel'}" id="minus-panel-${i}">
-            <div class="panel-label">Damage</div>
+            <div class="panel-label-row">
+              <span class="panel-label">Damage</span>
+              <button class="undo-btn" onclick="undoLP(${i})" title="Undo last change">↩ Undo</button>
+            </div>
             <div class="dmg-type-row">
               <button class="dmg-type-btn ${(dmgTypeState[i]||'effect')==='effect'?'selected':''}" data-type="effect" onclick="setDmgType(${i},'effect')">Effect</button>
               <button class="dmg-type-btn ${(dmgTypeState[i]||'effect')==='battle'?'selected':''}" data-type="battle" onclick="setDmgType(${i},'battle')">Battle</button>
             </div>
+            <div class="preset-row">
+              <button class="preset-btn half-btn" onclick="applyHalfLP(${i})" title="Deal half current LP">½</button>
+              ${[500,1000,2000,3000].map(v=>`<button class="preset-btn" onclick="applyPreset(${i},-${v})">${v}</button>`).join('')}
+              <button class="preset-btn hit-all-btn" onclick="applyAllPreset(${i})" title="Deal to all active players">All</button>
+            </div>
             <select class="source-select" id="src-${i}">
               <option value="">— Source Player —</option>
-              ${players.map((pl,pi) => pi !== i ? `<option value="${pi}">${pl.name}</option>` : '').join('')}
+              ${players.map((pl,pi) => pi !== i && !pl.eliminated ? `<option value="${pi}">${pl.name}</option>` : '').join('')}
             </select>
             <div class="panel-custom">
-              <input type="number" class="panel-input" id="cm-${i}" placeholder="Amt" min="0">
+              <input type="number" class="panel-input" id="cm-${i}" placeholder="Amt" min="0" onkeydown="if(event.key==='Enter')applyCustomWithSource(${i},-1,'cm-${i}')">
               <button class="panel-apply" onclick="applyCustomWithSource(${i},-1,'cm-${i}')">Apply</button>
             </div>
+            <button class="transfer-btn" onclick="openTransfer(${i})" title="Transfer LP to another player">⇄ Transfer</button>
           </div>
 
           <div class="lp-panel plus-panel ${plusOpen ? '' : 'hidden-panel'}" id="plus-panel-${i}">
-            <div class="panel-label">Heal</div>
+            <div class="panel-label-row">
+              <span class="panel-label">Heal</span>
+              <button class="undo-btn" onclick="undoLP(${i})" title="Undo last change">↩ Undo</button>
+            </div>
+            <div class="preset-row">
+              ${[500,1000,2000,3000].map(v=>`<button class="preset-btn" onclick="applyPreset(${i},${v})">${v}</button>`).join('')}
+            </div>
             <div class="panel-custom">
-              <input type="number" class="panel-input" id="cp-${i}" placeholder="Amt" min="0">
+              <input type="number" class="panel-input" id="cp-${i}" placeholder="Amt" min="0" onkeydown="if(event.key==='Enter')applyCustom(${i},1,'cp-${i}')">
               <button class="panel-apply" onclick="applyCustom(${i},1,'cp-${i}')">Apply</button>
             </div>
           </div>
 
         </div>
 
+        <div class="counter-tokens" id="tokens-${i}">
+          ${(counterTokens[i]||[]).map((t,ti)=>`<span class="counter-token" title="${t.name}">${t.name} <strong>${t.count}</strong> <button class="token-adj" onclick="adjToken(${i},${ti},1)">+</button><button class="token-adj" onclick="adjToken(${i},${ti},-1)">−</button><button class="token-adj" onclick="removeToken(${i},${ti})">✕</button></span>`).join('')}
+          <button class="add-token-btn" onclick="promptAddToken(${i})">+ Counter</button>
+        </div>
         ${i === activeTurn ? `
         <div class="phase-indicator">
           <div class="phase-label-row">Phase</div>
@@ -3669,10 +3926,15 @@
             ${PHASES.map((ph, pi) => `<button class="phase-step ${pi === currentPhase ? 'current' : ''}" onclick="setPhase(${pi})">${ph}</button>`).join('')}
           </div>
         </div>` : ''}
-      `;
+      `
+      // Apply per-player accent color and collapse state
+      const _pColor = (playerColors && playerColors[i]) ? playerColors[i] : PLAYER_COLOR_PRESETS[i % PLAYER_COLOR_PRESETS.length];
+      card.style.borderTop = '2px solid ' + _pColor;
+      if (cardCollapsed[i] && i !== activeTurn) card.classList.add('collapsed');
       grid.appendChild(card);
     });
     updateTurnLabel();
+    updateHeaderVisibility();
   }
 
   /* ── Panel toggle ─────────────────────── */
@@ -3712,6 +3974,12 @@
       // Set damage type based on current phase: Battle phase = battle, else = effect
       const autoType = (currentPhase === 3) ? 'battle' : 'effect';
       setDmgType(i, autoType);
+
+      // Auto-focus the amount input
+      setTimeout(() => { const inp = document.getElementById('cm-' + i); if (inp) inp.focus(); }, 50);
+    }
+    if (side === 'plus' && plusOpen) {
+      setTimeout(() => { const inp = document.getElementById('cp-' + i); if (inp) inp.focus(); }, 50);
     }
   }
 
@@ -3719,6 +3987,11 @@
   // type: 'battle' | 'effect' | 'heal' | 'calc-damage' | 'calc-heal'
   // sourceIdx: player index who dealt it, or null
   function adjustLP(i, delta, type, sourceIdx) {
+    // Save undo snapshot
+    if (!lpHistory[i]) lpHistory[i] = [];
+    if (lpHistory[i].length > 20) lpHistory[i].shift(); // cap at 20
+    lpHistory[i].push({ lp: players[i] ? players[i].lp : 0, teamLP: teamLP.length ? [...teamLP] : null });
+
     // In team mode, damage/heal the shared team pool instead of individual LP
     if (gameMode === 'team' && matchCtx && matchCtx.teams && teamLP.length) {
       var teamIdx = matchCtx.teams[0].indexOf(i) !== -1 ? 0 : 1;
@@ -3794,8 +4067,8 @@
         newLP:     p.lp
       });
       dueling = true;
+      if (delta < 0 && firstBlood === null) { firstBlood = i; showToast(p.name + " takes first blood! 🩸", "damage"); }
       if (!timerRunning) timerStart(); // auto-start timer on first action
-      if (delta < 0) biggestHit[i] = Math.max(biggestHit[i]||0, Math.abs(delta));
       if (!lpOverTime[i]) lpOverTime[i] = [MAX_LP];
       lpOverTime[i].push(p.lp);
       flashCard(i, delta > 0);
@@ -3804,6 +4077,15 @@
       spawnDeltaFloat(i, delta);
       drawSparkline(i);
       playSound(delta < 0 ? 'damage' : 'heal');
+      // Overkill display
+      if (delta < 0 && old + delta < 0) { showToast('⚡ Overkill! ' + Math.abs(old + delta).toLocaleString() + ' excess damage', 'damage'); }
+      // Low LP toast
+      if (delta < 0 && p.lp > 0 && p.lp <= Math.round(MAX_LP * 0.25) && old > Math.round(MAX_LP * 0.25)) { showToast('⚠️ ' + p.name + ' is in danger zone! (' + p.lp.toLocaleString() + ' LP)', 'warning'); }
+      // Milestone toasts
+      const milestones = [4000, 2000, 1000];
+      milestones.forEach(m => { if (delta < 0 && old > m && p.lp <= m) showToast(p.name + ' crossed ' + m.toLocaleString() + ' LP', 'info'); });
+      // Haptic feedback
+      if (navigator.vibrate) navigator.vibrate(delta < 0 ? [30, 10, 30] : [20]);
       if (p.lp === 0) {
         p.eliminated = true; panelState[i] = null; render();
         playSound('eliminate');
@@ -3813,6 +4095,45 @@
       if (_fbRoom && _fbIsHost) fbPushState();
       if (_fbRoom && !_fbIsHost && i === _fbMySlot) fbPushGuestState();
     }
+  }
+
+  function applyPreset(i, delta) {
+    const type = delta < 0 ? (dmgTypeState[i] || 'effect') : 'heal';
+    const src  = delta < 0 ? getSourceIdx(i) : null;
+    adjustLP(i, delta, type, src);
+  }
+
+  function applyAllPreset(i) {
+    const el  = document.getElementById('cm-' + i);
+    const val = parseInt(el ? el.value : '');
+    if (!isNaN(val) && val > 0) {
+      const type = dmgTypeState[i] || 'effect';
+      let affected = 0;
+      players.forEach((p, pi) => { if (pi !== i && !p.eliminated) { adjustLP(pi, -val, type, i); affected++; } });
+      if (el) el.value = '';
+      if (affected > 0) showToast('💥 Hit All: -' + val.toLocaleString() + ' LP × ' + affected + ' players', 'damage');
+    } else {
+      const inp = document.getElementById('cm-' + i);
+      if (inp) { inp.style.borderColor = 'rgba(255,100,100,0.8)'; setTimeout(() => inp.style.borderColor = '', 800); inp.focus(); }
+      showToast('Enter an amount first', 'warning');
+    }
+  }
+
+  function undoLP(i) {
+    if (!lpHistory[i] || lpHistory[i].length === 0) {
+      showToast('Nothing to undo', 'info');
+      return;
+    }
+    const snap = lpHistory[i].pop();
+    if (gameMode === 'team' && matchCtx && matchCtx.teams && snap.teamLP) {
+      teamLP[0] = snap.teamLP[0];
+      teamLP[1] = snap.teamLP[1];
+    } else if (players[i]) {
+      players[i].lp = snap.lp;
+      if (players[i].lp > 0 && players[i].eliminated) players[i].eliminated = false;
+    }
+    render();
+    showToast('↩ Undone', 'info');
   }
 
   function applyCustom(i, sign, inputId) {
@@ -3924,6 +4245,9 @@
   function updateTurnLabel() {
     const el = document.getElementById('turnLabel');
     fbPushState(); // sync after every render
+    // Update turn counter display
+    const tc = document.getElementById('turnCounterDisplay');
+    if (tc) tc.textContent = globalTurnNum - 1;
     if (el && players[activeTurn]) el.textContent = `TURN: ${players[activeTurn].name.toUpperCase()}`;
   }
 
@@ -3967,6 +4291,8 @@
     _duelHistory = [];
     updateMatchBanner();
     initPlayers(players.length);
+    const header = document.getElementById('siteHeader');
+    if (header) header.classList.remove('hidden');
   }
 
   function setStartingLP(val) {
@@ -4582,19 +4908,7 @@
       if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
       nextTurn();
     }
-  });
-
-  // Also intercept Tab & Space at capture phase to prevent default tab-focus behaviour
-  document.addEventListener('keydown', function(e) {
-    const calcOpen = document.getElementById('calcModal').classList.contains('open');
-    if (calcOpen) return;
-    const tag = document.activeElement.tagName;
-    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
-    if (e.code === 'Space' || e.code === 'ArrowRight') {
-      e.preventDefault();
-      e.stopImmediatePropagation();
-    }
-  }, true);
+  }, true);  // capture phase — runs before browser default button-activation
 
   // Flash a calc button when its key is pressed
   function calcFlashKey(key) {
@@ -4948,6 +5262,8 @@
         + '<div class="summary-stat-label">LP Remaining</div></div>'
         + '<div class="summary-stat"><div class="summary-stat-val">' + bh + '</div>'
         + '<div class="summary-stat-label">Biggest Hit Taken</div></div>'
+        + '<div class="summary-stat"><div class="summary-stat-val">' + (function(){var dmg=gameLog.filter(function(e){return e.target===i&&e.sign==='damage';});var turns=Math.max(1,globalTurnNum-1);return Math.round(dmg.reduce(function(a,e){return a+e.amount;},0)/turns).toLocaleString();})() + '</div>'
+        + '<div class="summary-stat-label">Avg Dmg/Turn</div></div>'
         + '<div class="summary-stat"><div class="summary-stat-val">' + rec.w + 'W &middot; ' + rec.l + 'L</div>'
         + '<div class="summary-stat-label">Match Record</div></div>'
         + '</div>';
@@ -4957,6 +5273,8 @@
     if (sub)  sub.textContent  = "";
     if (btns) btns.innerHTML =
       '<button class="summary-btn gold" onclick="closeSummary(false)">&#x21A9; Review Board</button>'
+      + '<button class="summary-btn" style="color:#88ffbb;border-color:rgba(0,170,68,0.5);" onclick="rematch()">&#x1F503; Rematch</button>'
+      + '<button class="summary-btn dim" onclick="openRoster();closeSummary(false);">&#x1F4CB; Match Record</button>'
       + '<button class="summary-btn dim" onclick="closeSummary(true)">&#x2715; New Game</button>';
     playSound('win');
     document.getElementById('summaryOverlay').classList.add('show');
@@ -5028,6 +5346,14 @@
   }
 
   /* ━━ FULLSCREEN ━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  function toggleGameMenu() {
+    const menu = document.getElementById('gameMenu');
+    const btn  = document.getElementById('menuToggleBtn');
+    const open = !menu.classList.contains('collapsed');
+    menu.classList.toggle('collapsed', open);
+    btn.classList.toggle('open', !open);
+  }
+
   function toggleFullscreen() {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen().catch(function() {});
@@ -5665,6 +5991,7 @@
         + '  (' + s[0] + '–' + s[1] + ')';
       if (btns) btns.innerHTML =
         '<button class="summary-btn gold" onclick="closeSummary(false)">&#x21A9; Review Board</button>'
+        + '<button class="summary-btn dim" onclick="openRoster();closeSummary(false);">&#x1F4CB; Match Record</button>'
         + '<button class="summary-btn dim" onclick="closeSummary(true)">&#x2715; End Match</button>';
     } else {
       matchCtx.duelNum++;
@@ -6029,6 +6356,7 @@
     var btns = document.getElementById('summaryButtons');
     if (btns) btns.innerHTML =
       '<button class="summary-btn gold" onclick="closeSummary(false)">&#x21A9; Review Board</button>'
+      + '<button class="summary-btn dim" onclick="openRoster();closeSummary(false);">&#x1F4CB; Match Record</button>'
       + '<button class="summary-btn dim" onclick="closeSummary(true)">&#x2715; New Game</button>';
     document.getElementById('summaryOverlay').classList.add('show');
   }
@@ -6747,6 +7075,7 @@
     _cardSearchTimer = setTimeout(doCardSearch, _cardDbReady ? 160 : 480);
   }
 
+  var _recentCards = []; // [{id, name, img_id}]
   function doCardSearch() {
     clearTimeout(_cardSearchTimer);
     var query   = (document.getElementById('cardSearchInput').value || '').trim();
@@ -6767,6 +7096,7 @@
         status.textContent = 'NO RESULTS FOUND';
       } else {
         status.textContent = results.length + (results.length === 36 ? '+' : '') + ' RESULT' + (results.length !== 1 ? 'S' : '') + '  ·  OFFLINE';
+        if (results.length) { _addRecentCard(results[0]); }
         _renderCardGrid(results, grid);
       }
       return;
@@ -6991,6 +7321,23 @@
     _updateDeckBadges();
   }
 
+  function addToDeckSide(card) {
+    if (!card) return;
+    var max = _deckMaxCopies(card);
+    if (max === 0) { _deckFlash('❌ Forbidden — cannot add'); return; }
+    if (_deckTotalCount('side') >= 15) { _deckFlash('⚠️ SIDE deck is full (15)'); return; }
+    var existing = _deckList.side.find(function(e){ return e.id === card.id; });
+    if (existing) {
+      if (existing.count >= max) { _deckFlash('⚠️ Max ' + max + ' cop' + (max===1?'y':'ies') + ' of this card'); return; }
+      existing.count++;
+    } else {
+      var img_id = card.card_images && card.card_images[0] ? card.card_images[0].id : card.id;
+      _deckList.side.push({ id: card.id, name: card.name, type: card.type || '', count: 1, banlist: card.banlist || '', img_id: img_id });
+    }
+    _renderDeckPanel();
+    _deckFlash('✔ ' + card.name + ' → SIDE');
+  }
+
   function toggleDeckBuilder() {
     var panel = document.getElementById('csearchDeckPanel');
     var btn   = document.getElementById('csDeckToggle');
@@ -7041,7 +7388,25 @@
     var body = document.getElementById('cdeckBody');
     if (!body) return;
     _renderDeckCounts();
+    _saveDeckToStorage();
     body.innerHTML = '';
+
+    // Deck stats bar
+    var monsters = 0, spells = 0, traps = 0;
+    _deckList.main.forEach(function(e) {
+      if (e.type && e.type.includes('Spell')) spells += e.count;
+      else if (e.type && e.type.includes('Trap')) traps += e.count;
+      else monsters += e.count;
+    });
+    if (_deckTotalCount('main') > 0) {
+      var stats = document.createElement('div');
+      stats.style.cssText = 'display:flex;gap:8px;padding:6px 14px 2px;font-family:\'Cinzel\',serif;font-size:9px;letter-spacing:1px;';
+      stats.innerHTML = '<span style="color:#8899ff">⚔ ' + monsters + '</span>'
+        + '<span style="color:#88cc88">✦ ' + spells + '</span>'
+        + '<span style="color:#cc8888">⚑ ' + traps + '</span>';
+      body.appendChild(stats);
+    }
+
     ['main','extra','side'].forEach(function(sec) {
       var list = _deckList[sec];
       var label = sec === 'main' ? '⚔️ MAIN DECK' : sec === 'extra' ? '🌀 EXTRA DECK' : '🔄 SIDE DECK';
@@ -7060,6 +7425,10 @@
         var row = document.createElement('div');
         row.className = 'cdeck-card-row';
         var thumb = 'https://images.ygoprodeck.com/images/cards_small/' + entry.img_id + '.jpg';
+        // Move button: main↔side, extra has no move
+        var moveBtn = '';
+        if (sec === 'main') moveBtn = '<button class="cdeck-ctrl-btn" title="Move to Side" onclick="moveDeckEntry(' + entry.id + ',\'main\',\'side\')">⇄</button>';
+        if (sec === 'side') moveBtn = '<button class="cdeck-ctrl-btn" title="Move to Main" onclick="moveDeckEntry(' + entry.id + ',\'side\',\'main\')">⇄</button>';
         row.innerHTML =
           '<img class="cdeck-card-img" src="' + thumb + '" alt="" onerror="this.style.opacity=0.2">'
           + '<div class="cdeck-card-name" title="' + _escHtml(entry.name) + '">' + _escHtml(entry.name) + '</div>'
@@ -7067,6 +7436,7 @@
           +   '<button class="cdeck-ctrl-btn" onclick="adjustDeckCount(' + entry.id + ',\'' + sec + '\',-1)">−</button>'
           +   '<span class="cdeck-card-count">×' + entry.count + '</span>'
           +   '<button class="cdeck-ctrl-btn" onclick="adjustDeckCount(' + entry.id + ',\'' + sec + '\',1)">+</button>'
+          +   moveBtn
           +   '<button class="cdeck-ctrl-btn del" onclick="removeDeckEntry(' + entry.id + ',\'' + sec + '\')">✕</button>'
           + '</div>';
         body.appendChild(row);
@@ -7079,6 +7449,41 @@
     _renderDeckPanel();
     _updateDeckBadges();
   }
+
+  function moveDeckEntry(cardId, fromSec, toSec) {
+    var entry = _deckList[fromSec].find(function(e){ return e.id === cardId; });
+    if (!entry) return;
+    var toLimit = toSec === 'side' ? 15 : 60;
+    if (_deckTotalCount(toSec) + entry.count > toLimit) {
+      _deckFlash('⚠️ ' + toSec.toUpperCase() + ' full'); return;
+    }
+    var existing = _deckList[toSec].find(function(e){ return e.id === cardId; });
+    if (existing) {
+      existing.count += entry.count;
+    } else {
+      _deckList[toSec].push(Object.assign({}, entry));
+    }
+    _deckList[fromSec] = _deckList[fromSec].filter(function(e){ return e.id !== cardId; });
+    _renderDeckPanel();
+    _updateDeckBadges();
+  }
+
+  function _saveDeckToStorage() {
+    try { localStorage.setItem('ygo_deck', JSON.stringify(_deckList)); } catch(e) {}
+  }
+
+  function _loadDeckFromStorage() {
+    try {
+      var saved = localStorage.getItem('ygo_deck');
+      if (saved) {
+        var parsed = JSON.parse(saved);
+        if (parsed && parsed.main) _deckList = parsed;
+      }
+    } catch(e) {}
+  }
+
+  // Load deck on startup
+  _loadDeckFromStorage();
 
   function exportDeckText() {
     var lines = [];
@@ -7220,6 +7625,9 @@
   function openRulings() {
     document.getElementById('rulingsModal').classList.add('open');
     renderManualRulingsList();
+    // Show GitHub Pages notice if applicable
+    var notice = document.getElementById('rulingsGhNotice');
+    if (notice) notice.style.display = window.location.hostname.includes('github.io') ? 'block' : 'none';
     // Auto-add first chain link if none exist
     if (document.getElementById('chainLinks').children.length === 0) addChainLink();
     else {
@@ -7726,9 +8134,13 @@
     .catch(function(err) {
       typingEl.classList.remove('active');
       askBtn.disabled = false;
+      var isGitHub = window.location.hostname.includes('github.io');
+      var errMsg = isGitHub
+        ? '⚠️ AI Rulings are unavailable on the GitHub Pages version.\n\nThis feature requires a server-side proxy to handle the Anthropic API key securely. To use AI Rulings:\n\n• Open this app inside Claude.ai (where it works natively)\n• Or host your own proxy server\n\nYou can still use ✍️ Manual Rulings to save your own notes.'
+        : 'Connection error — please check your internet and try again.\n\nDetails: ' + err.message;
       _prependRulingCard(resultsEl, {
         q: qSummary,
-        a: 'Connection error — please check your internet.\n\n(' + err.message + ')',
+        a: errMsg,
         source: 'ai', date: new Date().toLocaleDateString(), isError: true
       });
     });
@@ -7877,6 +8289,569 @@
     });
   }
 
+
+  /* ═══════════════ NEW FEATURES ═══════════════ */
+
+  // Toast system
+  function showToast(msg, type, duration) {
+    duration = duration || 2800;
+    var container = document.getElementById('toastContainer');
+    if (!container) return;
+    var t = document.createElement('div');
+    t.className = 'toast ' + (type || 'info');
+    t.textContent = msg;
+    container.appendChild(t);
+    requestAnimationFrame(() => { requestAnimationFrame(() => { t.classList.add('show'); }); });
+    setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 300); }, duration);
+  }
+
+  // Confirm dialog
+  var _confirmCallback = null;
+  function openConfirm(msg, onYes) {
+    _confirmCallback = onYes;
+    document.getElementById('confirmMsg').textContent = msg;
+    document.getElementById('confirmYes').onclick = function() { closeConfirm(); if (_confirmCallback) _confirmCallback(); };
+    document.getElementById('confirmModal').classList.add('open');
+  }
+  function closeConfirm() { document.getElementById('confirmModal').classList.remove('open'); }
+
+  // Confirm before new game
+  function confirmNewGame() {
+    if (!dueling) { resetGame(); return; }
+    openConfirm('Start a new game? Current progress will be lost.', resetGame);
+  }
+
+  // Keyboard shortcut modal
+  function openShortcutModal()  { document.getElementById('shortcutModal').classList.add('open'); }
+  function closeShortcutModal() { document.getElementById('shortcutModal').classList.remove('open'); }
+
+  // ? key opens shortcuts, F key toggles fullscreen, Ctrl+Z = undo
+  (function() {
+    document.addEventListener('keydown', function(e) {
+      var tag = document.activeElement ? document.activeElement.tagName : '';
+      if (['INPUT','TEXTAREA','SELECT'].includes(tag)) return;
+      if (e.key === '?' || e.key === '/') { e.preventDefault(); openShortcutModal(); }
+      if ((e.key === 'f' || e.key === 'F') && !e.ctrlKey && !e.metaKey) { e.preventDefault(); toggleFullscreen(); }
+      if (e.key === 'z' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); if (players[activeTurn]) undoLP(activeTurn); }
+    }, false);
+  })();
+
+  // Half LP
+  function applyHalfLP(i) {
+    var lp = (gameMode === 'team' && teamLP.length && matchCtx && matchCtx.teams)
+      ? (matchCtx.teams[0].indexOf(i) !== -1 ? teamLP[0] : teamLP[1]) : players[i].lp;
+    var half = Math.floor(lp / 2);
+    if (half > 0) applyPreset(i, -half);
+  }
+
+  // Surrender
+  function surrenderPlayer(i) {
+    openConfirm(players[i].name + ' surrenders?', function() {
+      players[i].lp = 0;
+      players[i].eliminated = true;
+      panelState[i] = null;
+      playSound('eliminate');
+      render();
+      checkWinCondition();
+    });
+  }
+
+  // Card collapse
+  function toggleCardCollapse(i) {
+    cardCollapsed[i] = !cardCollapsed[i];
+    var card = document.getElementById('card-' + i);
+    if (card) card.classList.toggle('collapsed', cardCollapsed[i]);
+    var btn = document.getElementById('collapse-btn-' + i);
+    if (btn) btn.textContent = cardCollapsed[i] ? '▼' : '▲';
+  }
+
+  // Player color cycling
+  function cyclePlayerColor(i) {
+    var cur = PLAYER_COLOR_PRESETS.indexOf(playerColors[i]);
+    playerColors[i] = PLAYER_COLOR_PRESETS[(cur + 1) % PLAYER_COLOR_PRESETS.length];
+    var card = document.getElementById('card-' + i);
+    if (card) {
+      card.style.borderTop = '2px solid ' + playerColors[i];
+      var dot = card.querySelector('.player-color-dot');
+      if (dot) dot.style.background = playerColors[i];
+    }
+    showToast('Player color changed', 'info');
+  }
+
+  // Counter tokens
+  function promptAddToken(i) {
+    var name = prompt('Counter name (e.g. "Spell Counter"):');
+    if (!name || !name.trim()) return;
+    if (!counterTokens[i]) counterTokens[i] = [];
+    counterTokens[i].push({ name: name.trim(), count: 0 });
+    render();
+  }
+  function adjToken(i, ti, delta) {
+    if (!counterTokens[i] || !counterTokens[i][ti]) return;
+    counterTokens[i][ti].count = Math.max(0, counterTokens[i][ti].count + delta);
+    render();
+  }
+  function removeToken(i, ti) {
+    if (!counterTokens[i]) return;
+    counterTokens[i].splice(ti, 1);
+    render();
+  }
+
+  // LP Transfer
+  function openTransfer(fromIdx) {
+    var fromSel = document.getElementById('transferFrom');
+    var toSel   = document.getElementById('transferTo');
+    var opts = players.map(function(p, pi) {
+      return '<option value="' + pi + '"' + (p.eliminated ? ' style="opacity:0.4"' : '') + '>' + p.name + (p.eliminated ? ' (out)' : '') + '</option>';
+    }).join('');
+    fromSel.innerHTML = toSel.innerHTML = opts;
+    if (fromIdx != null) {
+      fromSel.value = fromIdx;
+      var target = players.findIndex(function(p, pi) { return pi !== fromIdx && !p.eliminated; });
+      if (target >= 0) toSel.value = target;
+    }
+    document.getElementById('transferAmt').value = '';
+    document.getElementById('transferModal').classList.add('open');
+    setTimeout(function() { document.getElementById('transferAmt').focus(); }, 60);
+  }
+  function closeTransfer() { document.getElementById('transferModal').classList.remove('open'); }
+  function doTransfer() {
+    var from = parseInt(document.getElementById('transferFrom').value);
+    var to   = parseInt(document.getElementById('transferTo').value);
+    var amt  = parseInt(document.getElementById('transferAmt').value);
+    if (isNaN(from) || isNaN(to) || isNaN(amt) || amt <= 0) { showToast('Enter a valid amount', 'warning'); return; }
+    if (from === to) { showToast('Select different players', 'warning'); return; }
+    if (!players[from] || players[from].eliminated) { showToast(players[from] ? players[from].name + ' is eliminated' : 'Invalid player', 'warning'); return; }
+    var actual = Math.min(amt, players[from].lp);
+    if (actual <= 0) { showToast('Source player has no LP', 'warning'); return; }
+    adjustLP(from, -actual, 'effect', null);
+    adjustLP(to,   +actual, 'heal',   null);
+    closeTransfer();
+    showToast('Transferred ' + actual.toLocaleString() + ' LP: ' + players[from].name + ' → ' + players[to].name, 'heal');
+  }
+
+  // Recent cards
+  function _addRecentCard(card) {
+    _recentCards = _recentCards.filter(function(r) { return r.id !== card.id; });
+    _recentCards.unshift({ id: card.id, name: card.name, img_id: card.id });
+    if (_recentCards.length > 8) _recentCards.pop();
+    _renderRecentCards();
+  }
+  function _renderRecentCards() {
+    var row   = document.getElementById('recentCardsRow');
+    var chips = document.getElementById('recentCardsChips');
+    if (!row || !chips) return;
+    if (!_recentCards.length) { row.classList.remove('has-cards'); return; }
+    row.classList.add('has-cards');
+    chips.innerHTML = _recentCards.map(function(r) {
+      var safeName = r.name.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+      var safeId   = String(r.id || r.img_id || '');
+      return '<span class="recent-card-chip" onclick="searchRecentCard(' + "'" + safeId + "','" + safeName + "'" + ')">'
+        + '<img src="https://images.ygoprodeck.com/images/cards_small/' + safeId + '.jpg" onerror="this.style.display=\'none\'">'
+        + '<span>' + r.name + '</span></span>';
+    }).join('');
+  }
+  function searchRecentCard(id, name) {
+    var inp = document.getElementById('cardSearchInput');
+    if (inp) { inp.value = name; doCardSearch(); }
+  }
+
+  // Rematch
+  function rematch() {
+    // Capture names and count BEFORE anything clears them
+    var names = players.map(function(p) { return p.name; });
+    var count = players.length;
+    closeSummary(false);
+    initPlayers(count);
+    // Restore player names after fresh init
+    players.forEach(function(p, i) { if (names[i]) p.name = names[i]; });
+    render();
+    // Update name inputs in the UI
+    players.forEach(function(p, i) {
+      var card = document.getElementById('card-' + i);
+      if (card) { var inp = card.querySelector('.player-name'); if (inp) inp.value = p.name; }
+    });
+    showToast('Rematch! 🎴 Good luck', 'info');
+  }
+
+  // Match timer
+  var _matchTimerInterval = null;
+  function startMatchTimer() {
+    if (_matchTimerInterval) return;
+    _matchTimerInterval = setInterval(function() {
+      if (!matchStartTime) return;
+      var secs = Math.floor((Date.now() - matchStartTime) / 1000);
+      var m = String(Math.floor(secs / 60)).padStart(2,'0');
+      var s = String(secs % 60).padStart(2,'0');
+      var el = document.getElementById('matchTimerDisplay');
+      if (el) el.textContent = m + ':' + s;
+    }, 1000);
+  }
+  startMatchTimer();
+
+
+
+  /* ═══════════════════════════════════════════════════════════
+     VOICE CONTROL — Web Speech API
+     ═══════════════════════════════════════════════════════════ */
+  (function() {
+    var SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    var _rec      = null;
+    var _active   = false;
+    var _restartOnEnd = false;
+
+    // ── word-to-number map ────────────────────────────────────
+    var W2N = {
+      zero:0,one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10,
+      eleven:11,twelve:12,thirteen:13,fourteen:14,fifteen:15,sixteen:16,seventeen:17,
+      eighteen:18,nineteen:19,twenty:20,thirty:30,forty:40,fifty:50,sixty:60,
+      seventy:70,eighty:80,ninety:90,hundred:100,thousand:1000,
+      a:1,an:1, half:0 /* special */
+    };
+    function wordsToNum(str) {
+      // strip punctuation, lowercase
+      var s = str.toLowerCase().replace(/[^a-z0-9\s]/g,'').trim();
+      // first try direct integer parse
+      var direct = parseInt(s.replace(/,/g,''));
+      if (!isNaN(direct)) return direct;
+
+      var tokens = s.split(/\s+/);
+      var total = 0, current = 0;
+      for (var i = 0; i < tokens.length; i++) {
+        var w = tokens[i];
+        if (W2N[w] === undefined) continue;
+        var n = W2N[w];
+        if (n === 100) { current = (current || 1) * 100; }
+        else if (n === 1000) { total += (current || 1) * 1000; current = 0; }
+        else { current += n; }
+      }
+      total += current;
+      return total > 0 ? total : NaN;
+    }
+
+    // Find player index by name or "player N" pattern
+    function findPlayer(str) {
+      str = str.toLowerCase().trim();
+      // "player 1", "player one", "p2", etc
+      var byNum = str.match(/^(?:player\s*)?(\w+)$/);
+      if (byNum) {
+        var n = parseInt(byNum[1]);
+        if (isNaN(n)) n = W2N[byNum[1]];
+        if (!isNaN(n) && n >= 1 && n <= players.length) return n - 1;
+      }
+      // by name (fuzzy — starts with)
+      var low = str.toLowerCase();
+      for (var i = 0; i < players.length; i++) {
+        if (players[i].name.toLowerCase().startsWith(low) || low.startsWith(players[i].name.toLowerCase())) return i;
+      }
+      return -1;
+    }
+
+    // Announce result in HUD
+    function setHeard(text) {
+      var el = document.getElementById('voiceHeard');
+      if (el) el.textContent = text ? '"' + text + '"' : '';
+    }
+    function setResult(text, type) {
+      var el = document.getElementById('voiceResult');
+      if (!el) return;
+      el.textContent = text;
+      el.className = 'vh-result' + (type ? ' ' + type : '');
+    }
+
+    // ── Main command parser ───────────────────────────────────
+    function handleCommand(raw) {
+      setHeard(raw);
+      var t = raw.toLowerCase().trim();
+
+      // NEXT TURN
+      if (/^next turn/.test(t) || t === 'advance turn') {
+        nextTurn(); setResult('Next turn ✓', 'ok'); return;
+      }
+
+      // NEXT PHASE / specific phase
+      if (/^next phase/.test(t) || t === 'advance phase' || t === 'advance') {
+        advancePhase(); setResult('Phase advanced ✓', 'ok'); return;
+      }
+      var phaseNames = ['draw','standby','main one','main 1','battle','main two','main 2','end'];
+      var phaseMap   = { draw:0, standby:1, 'main one':2, 'main 1':2, battle:3, 'main two':4, 'main 2':4, end:5 };
+      for (var ph in phaseMap) {
+        if (t.startsWith(ph + ' phase') || t === ph) {
+          setPhase(phaseMap[ph]); setResult('Phase: ' + PHASES[phaseMap[ph]] + ' ✓', 'ok'); return;
+        }
+      }
+
+      // UNDO
+      if (/^undo/.test(t)) {
+        undoLP(activeTurn); setResult('Undone ✓', 'ok'); return;
+      }
+
+      // HALF
+      if (t === 'half' || t === 'half lp' || t === 'halve') {
+        applyHalfLP(activeTurn); setResult('Half LP applied ✓', 'ok'); return;
+      }
+
+      // SURRENDER
+      if (/^surrender/.test(t) || /^concede/.test(t)) {
+        surrenderPlayer(activeTurn); setResult('Surrender confirmed', 'ok'); return;
+      }
+
+      // NEW GAME
+      if (/^new game/.test(t) || /^reset/.test(t)) {
+        confirmNewGame(); setResult('New game…', 'ok'); return;
+      }
+
+      // COMMANDS / HELP
+      if (/^commands?/.test(t) || /^help/.test(t)) {
+        openVoiceCmds(); setResult('Command list opened', 'ok'); return;
+      }
+
+      // DAMAGE / DEAL ──────────────────────────────────────────
+      // Patterns: "damage 800", "deal 800", "800 damage",
+      //           "deal 800 to player 2", "damage player 2 800"
+      var dmgMatch = t.match(/^(?:damage|deal|hit)\s+(.+)$/) || t.match(/^(.+?)\s+damage$/);
+      if (dmgMatch) {
+        var body = dmgMatch[1];
+        // extract "to player X" or "player X" target
+        var targetIdx = activeTurn; // default: self takes damage? No — active player DEALS damage to opponent
+        // Default target: first non-active non-eliminated player
+        var defaultTarget = players.findIndex(function(p, pi) { return pi !== activeTurn && !p.eliminated; });
+        if (defaultTarget >= 0) targetIdx = defaultTarget;
+
+        var toMatch = body.match(/(?:to\s+)(.+?)(?:\s+(\d[\d,]*|\w+))?$/);
+        if (toMatch) {
+          var maybeTarget = findPlayer(toMatch[1]);
+          if (maybeTarget >= 0) { targetIdx = maybeTarget; body = body.replace(/\s+to\s+\S+(\s+\S+)?$/, '').trim(); }
+        }
+        // Also check "player N" at start
+        var plFirst = body.match(/^(?:player\s+\w+)\s+(.+)$/);
+        if (plFirst) {
+          var pi = findPlayer(body.split(/\s+/).slice(0,2).join(' '));
+          if (pi >= 0) { targetIdx = pi; body = plFirst[1]; }
+        }
+
+        var amt = wordsToNum(body);
+        if (!isNaN(amt) && amt > 0) {
+          if (players[targetIdx] && !players[targetIdx].eliminated) {
+            adjustLP(targetIdx, -amt, 'effect', activeTurn);
+            setResult('−' + amt.toLocaleString() + ' LP → ' + players[targetIdx].name + ' ✓', 'ok');
+          } else {
+            setResult('Invalid target player', 'err');
+          }
+          return;
+        }
+      }
+
+      // HEAL ───────────────────────────────────────────────────
+      // Patterns: "heal 500", "heal player 2 500", "heal 500 to player 1"
+      var healMatch = t.match(/^heal\s+(.+)$/);
+      if (healMatch) {
+        var hbody = healMatch[1];
+        var htarget = activeTurn;
+        // "player N" at start?
+        var hpi = hbody.match(/^(?:player\s+\w+)\s+(.+)$/);
+        if (hpi) { var hpidx = findPlayer(hbody.split(/\s+/).slice(0,2).join(' ')); if (hpidx >= 0) { htarget = hpidx; hbody = hpi[1]; } }
+        // "to player N"?
+        var hto = hbody.match(/^(.+?)\s+to\s+(.+)$/);
+        if (hto) { var htoi = findPlayer(hto[2]); if (htoi >= 0) { htarget = htoi; hbody = hto[1]; } }
+
+        var hamt = wordsToNum(hbody);
+        if (!isNaN(hamt) && hamt > 0) {
+          if (players[htarget] && !players[htarget].eliminated) {
+            adjustLP(htarget, hamt, 'heal', null);
+            setResult('+' + hamt.toLocaleString() + ' LP → ' + players[htarget].name + ' ✓', 'ok');
+          } else {
+            setResult('Invalid target player', 'err');
+          }
+          return;
+        }
+      }
+
+      // "800 to player 2" shorthand (damage)
+      var shortDmg = t.match(/^([\d,]+(?:\s+\w+)*?)\s+to\s+(.+)$/);
+      if (shortDmg) {
+        var sdAmt = wordsToNum(shortDmg[1]);
+        var sdTgt = findPlayer(shortDmg[2]);
+        if (!isNaN(sdAmt) && sdAmt > 0 && sdTgt >= 0 && !players[sdTgt].eliminated) {
+          adjustLP(sdTgt, -sdAmt, 'effect', activeTurn);
+          setResult('−' + sdAmt.toLocaleString() + ' LP → ' + players[sdTgt].name + ' ✓', 'ok');
+          return;
+        }
+      }
+
+      setResult('Command not recognised', 'err');
+    }
+
+    // ── Start / stop ──────────────────────────────────────────
+    window.toggleVoice = function() {
+      if (!SpeechRec) { showToast('Voice control not supported in this browser', 'warning'); return; }
+      if (_active) stopVoice(); else startVoice();
+    };
+
+    window.startVoice = function() {
+      if (_active) return;
+      if (!SpeechRec) { showToast('Voice control not supported in this browser', 'warning'); return; }
+      _rec = new SpeechRec();
+      _rec.lang = 'en-US';
+      _rec.continuous = true;
+      _rec.interimResults = true;
+      _rec.maxAlternatives = 1;
+
+      _rec.onstart = function() {
+        _active = true;
+        _restartOnEnd = true;
+        var btn = document.getElementById('voiceBtn');
+        if (btn) btn.classList.add('listening');
+        var hud = document.getElementById('voiceHUD');
+        if (hud) hud.classList.add('active');
+        setHeard(''); setResult('Say a command…');
+      };
+
+      _rec.onresult = function(e) {
+        var interim = '', final = '';
+        for (var i = e.resultIndex; i < e.results.length; i++) {
+          var transcript = e.results[i][0].transcript;
+          if (e.results[i].isFinal) final += transcript;
+          else interim += transcript;
+        }
+        if (interim) setHeard(interim);
+        if (final.trim()) handleCommand(final.trim());
+      };
+
+      _rec.onerror = function(e) {
+        if (e.error === 'no-speech') return; // ignore silences
+        if (e.error === 'not-allowed') { showToast('Microphone access denied', 'warning'); stopVoice(); return; }
+        setResult('Error: ' + e.error, 'err');
+      };
+
+      _rec.onend = function() {
+        // Auto-restart to keep listening
+        if (_restartOnEnd && _active) {
+          try { _rec.start(); } catch(ex) {}
+        } else {
+          _active = false;
+          var btn = document.getElementById('voiceBtn');
+          if (btn) btn.classList.remove('listening');
+          var hud = document.getElementById('voiceHUD');
+          if (hud) hud.classList.remove('active');
+        }
+      };
+
+      try { _rec.start(); }
+      catch(ex) { showToast('Could not start voice: ' + ex.message, 'warning'); }
+    };
+
+    window.stopVoice = function() {
+      _restartOnEnd = false;
+      _active = false;
+      if (_rec) { try { _rec.stop(); } catch(ex) {} _rec = null; }
+      var btn = document.getElementById('voiceBtn');
+      if (btn) btn.classList.remove('listening');
+      var hud = document.getElementById('voiceHUD');
+      if (hud) hud.classList.remove('active');
+    };
+
+    // Voice command reference modal
+    window.openVoiceCmds  = function() { document.getElementById('voiceCmdModal').classList.add('open'); };
+    window.closeVoiceCmds = function() { document.getElementById('voiceCmdModal').classList.remove('open'); };
+
+    // Add V key shortcut to toggle voice
+    document.addEventListener('keydown', function(e) {
+      var tag = document.activeElement ? document.activeElement.tagName : '';
+      if (['INPUT','TEXTAREA','SELECT'].includes(tag)) return;
+      if ((e.key === 'v' || e.key === 'V') && !e.ctrlKey && !e.metaKey) { e.preventDefault(); toggleVoice(); }
+    });
+
+  }());
+
 </script>
+
+<!-- Toast Container -->
+<div id="toastContainer"></div>
+
+<!-- Shortcut Modal -->
+<div id="shortcutModal" onclick="if(event.target===this)closeShortcutModal()">
+  <div class="shortcut-wrap">
+    <div class="shortcut-title">⌨ Keyboard Shortcuts</div>
+    <div class="shortcut-row"><span>Next Phase</span><kbd class="shortcut-key">Space</kbd></div>
+    <div class="shortcut-row"><span>Next Turn</span><kbd class="shortcut-key">→</kbd></div>
+    <div class="shortcut-row"><span>Undo LP</span><kbd class="shortcut-key">Ctrl + Z</kbd></div>
+    <div class="shortcut-row"><span>Close Modal</span><kbd class="shortcut-key">Esc</kbd></div>
+    <div class="shortcut-row"><span>Shortcuts Help</span><kbd class="shortcut-key">?</kbd></div>
+    <div class="shortcut-row"><span>Fullscreen</span><kbd class="shortcut-key">F</kbd></div>
+    <div class="shortcut-row"><span>Voice Control</span><kbd class="shortcut-key">🎤 Mic button</kbd></div>
+    <button class="shortcut-close" onclick="closeShortcutModal()">CLOSE</button>
+  </div>
+</div>
+
+<!-- Transfer Modal -->
+<div id="transferModal" onclick="if(event.target===this)closeTransfer()">
+  <div class="transfer-wrap">
+    <div class="transfer-title">⇄ LP Transfer</div>
+    <div class="transfer-row">
+      <span style="font-family:'Cinzel',serif;font-size:10px;color:var(--dim);white-space:nowrap;">FROM</span>
+      <select class="transfer-select" id="transferFrom"></select>
+    </div>
+    <div class="transfer-row">
+      <span style="font-family:'Cinzel',serif;font-size:10px;color:var(--dim);white-space:nowrap;">TO</span>
+      <select class="transfer-select" id="transferTo"></select>
+    </div>
+    <div class="transfer-row">
+      <span style="font-family:'Cinzel',serif;font-size:10px;color:var(--dim);white-space:nowrap;">AMT</span>
+      <input type="number" class="transfer-input" id="transferAmt" placeholder="LP" min="1" onkeydown="if(event.key==='Enter')doTransfer()">
+    </div>
+    <button class="transfer-go" onclick="doTransfer()">Transfer LP</button>
+    <button class="transfer-cancel" onclick="closeTransfer()">Cancel</button>
+  </div>
+</div>
+
+<!-- Confirm Modal -->
+<div id="confirmModal">
+  <div class="confirm-wrap">
+    <div class="confirm-msg" id="confirmMsg">Are you sure?</div>
+    <div class="confirm-btns">
+      <button class="confirm-yes" id="confirmYes">Yes</button>
+      <button class="confirm-no"  onclick="closeConfirm()">Cancel</button>
+    </div>
+  </div>
+</div>
+<!-- Voice Control HUD -->
+<div id="voiceHUD">
+  <div class="vh-row1">
+    <div class="vh-dot"></div>
+    <span class="vh-label">Listening…</span>
+    <button class="vh-close" onclick="stopVoice()" title="Stop">✕</button>
+  </div>
+  <div class="vh-heard" id="voiceHeard"></div>
+  <div class="vh-result" id="voiceResult"></div>
+</div>
+
+<!-- Voice Command Reference Modal -->
+<div id="voiceCmdModal" onclick="if(event.target===this)closeVoiceCmds()">
+  <div class="vcmd-wrap">
+    <div class="vcmd-title">🎤 Voice Commands</div>
+
+    <div class="vcmd-section">Turn Control</div>
+    <div class="vcmd-row"><span class="vcmd-example">"next turn"</span><span class="vcmd-desc">Advance to next player's turn</span></div>
+    <div class="vcmd-row"><span class="vcmd-example">"next phase"</span><span class="vcmd-desc">Advance the current phase</span></div>
+    <div class="vcmd-row"><span class="vcmd-example">"draw phase"</span><span class="vcmd-desc">Jump to a specific phase</span></div>
+
+    <div class="vcmd-section">Life Points</div>
+    <div class="vcmd-row"><span class="vcmd-example">"damage 800"</span><span class="vcmd-desc">Deal 800 to active player</span></div>
+    <div class="vcmd-row"><span class="vcmd-example">"deal 1500 to player 2"</span><span class="vcmd-desc">Deal LP to a named player</span></div>
+    <div class="vcmd-row"><span class="vcmd-example">"heal 500"</span><span class="vcmd-desc">Heal active player 500 LP</span></div>
+    <div class="vcmd-row"><span class="vcmd-example">"heal player 1 two thousand"</span><span class="vcmd-desc">Heal a specific player</span></div>
+    <div class="vcmd-row"><span class="vcmd-example">"half"</span><span class="vcmd-desc">Halve active player's LP</span></div>
+    <div class="vcmd-row"><span class="vcmd-example">"undo"</span><span class="vcmd-desc">Undo last LP change (active player)</span></div>
+
+    <div class="vcmd-section">Game Actions</div>
+    <div class="vcmd-row"><span class="vcmd-example">"surrender"</span><span class="vcmd-desc">Active player concedes</span></div>
+    <div class="vcmd-row"><span class="vcmd-example">"new game"</span><span class="vcmd-desc">Start a new game</span></div>
+    <div class="vcmd-row"><span class="vcmd-example">"commands"</span><span class="vcmd-desc">Show this command list</span></div>
+
+    <button class="vcmd-close" onclick="closeVoiceCmds()">CLOSE</button>
+  </div>
+</div>
+
 </body>
 </html>
