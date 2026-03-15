@@ -3018,7 +3018,7 @@
   <div class="summary-sub" id="summarySubtitle" style="font-family:'Cinzel',serif;font-size:10px;color:var(--dim);letter-spacing:3px;margin-bottom:8px;text-align:center;"></div>
   <div class="summary-buttons" id="summaryButtons">
     <button class="summary-btn gold" onclick="closeSummary(false)">↩ Review Board</button>
-    <button class="summary-btn dim"  onclick="openRoster();closeSummary(false);">👥 Match Record</button>
+    <button class="summary-btn dim"  onclick="closeSummary(false);openMatchHistory();">👥 Match Record</button>
     <button class="summary-btn dim"  onclick="closeSummary(true)">✕ New Game</button>
   </div>
 </div>
@@ -4207,8 +4207,15 @@
 
   function toggleElim(i) {
     players[i].eliminated = !players[i].eliminated;
-    if (players[i].eliminated) panelState[i] = null;
-    render();
+    if (players[i].eliminated) {
+      players[i].lp = 0;
+      panelState[i] = null;
+      render();
+      playSound('eliminate');
+      checkWinCondition();
+    } else {
+      render();
+    }
   }
 
   function secondChance(i) {
@@ -4930,6 +4937,14 @@
 
 
 
+  function openMatchHistory() {
+    openLog();
+    setTimeout(function() {
+      var histTab = document.querySelector('.log-tab:last-child');
+      if (histTab) switchLogTab('history', histTab);
+    }, 50);
+  }
+
   /* ── Game Log ───────────────────────────── */
   function openLog() {
     renderLog();
@@ -5274,7 +5289,7 @@
     if (btns) btns.innerHTML =
       '<button class="summary-btn gold" onclick="closeSummary(false)">&#x21A9; Review Board</button>'
       + '<button class="summary-btn" style="color:#88ffbb;border-color:rgba(0,170,68,0.5);" onclick="rematch()">&#x1F503; Rematch</button>'
-      + '<button class="summary-btn dim" onclick="openRoster();closeSummary(false);">&#x1F4CB; Match Record</button>'
+      + '<button class="summary-btn dim" onclick="closeSummary(false);openMatchHistory();">&#x1F4CB; Match Record</button>'
       + '<button class="summary-btn dim" onclick="closeSummary(true)">&#x2715; New Game</button>';
     playSound('win');
     document.getElementById('summaryOverlay').classList.add('show');
@@ -5991,7 +6006,7 @@
         + '  (' + s[0] + '–' + s[1] + ')';
       if (btns) btns.innerHTML =
         '<button class="summary-btn gold" onclick="closeSummary(false)">&#x21A9; Review Board</button>'
-        + '<button class="summary-btn dim" onclick="openRoster();closeSummary(false);">&#x1F4CB; Match Record</button>'
+        + '<button class="summary-btn dim" onclick="closeSummary(false);openMatchHistory();">&#x1F4CB; Match Record</button>'
         + '<button class="summary-btn dim" onclick="closeSummary(true)">&#x2715; End Match</button>';
     } else {
       matchCtx.duelNum++;
@@ -6356,7 +6371,7 @@
     var btns = document.getElementById('summaryButtons');
     if (btns) btns.innerHTML =
       '<button class="summary-btn gold" onclick="closeSummary(false)">&#x21A9; Review Board</button>'
-      + '<button class="summary-btn dim" onclick="openRoster();closeSummary(false);">&#x1F4CB; Match Record</button>'
+      + '<button class="summary-btn dim" onclick="closeSummary(false);openMatchHistory();">&#x1F4CB; Match Record</button>'
       + '<button class="summary-btn dim" onclick="closeSummary(true)">&#x2715; New Game</button>';
     document.getElementById('summaryOverlay').classList.add('show');
   }
