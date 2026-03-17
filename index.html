@@ -3139,13 +3139,22 @@
     <!-- Team Battle -->
     <div class="mode-panel" id="mpanel-team">
       <div class="mode-section-title">Team Battle</div>
-      <p class="mode-info">Two teams share the board. A team loses when all its members reach 0 LP. Turns alternate between teams.</p>
+      <p class="mode-info">Two teams share the board. Turns alternate between teams.</p>
+      <div class="mode-field" style="align-items:center;gap:12px;">
+        <label style="flex:none;">LP Mode</label>
+        <select class="mode-select" id="team-lp-mode">
+          <option value="shared">Shared Pool — one LP total per team</option>
+          <option value="separate">Separate — each player has their own LP</option>
+        </select>
+      </div>
+      <p class="mode-info" id="team-lp-desc" style="margin-top:0;font-size:11px;opacity:0.65;">Shared: team loses when the pool reaches 0. Separate: team loses when all members reach 0.</p>
       <div class="mode-field">
         <label>Format</label>
         <select class="mode-select" id="team-format" onchange="renderModeModal()">
           <option value="2v2">2v2</option>
           <option value="3v3">3v3</option>
           <option value="4v4">4v4</option>
+          <option value="5v5">5v5</option>
         </select>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
@@ -3156,6 +3165,7 @@
             <div class="mode-player-slot" id="team-a-slot-2"><span class="mode-slot-label team-a">A2</span><select class="mode-slot-select"></select></div>
             <div class="mode-player-slot" id="team-a-slot-3" style="display:none;"><span class="mode-slot-label team-a">A3</span><select class="mode-slot-select"></select></div>
             <div class="mode-player-slot" id="team-a-slot-4" style="display:none;"><span class="mode-slot-label team-a">A4</span><select class="mode-slot-select"></select></div>
+            <div class="mode-player-slot" id="team-a-slot-5" style="display:none;"><span class="mode-slot-label team-a">A5</span><select class="mode-slot-select"></select></div>
           </div>
         </div>
         <div>
@@ -3165,6 +3175,7 @@
             <div class="mode-player-slot" id="team-b-slot-2"><span class="mode-slot-label team-b">B2</span><select class="mode-slot-select"></select></div>
             <div class="mode-player-slot" id="team-b-slot-3" style="display:none;"><span class="mode-slot-label team-b">B3</span><select class="mode-slot-select"></select></div>
             <div class="mode-player-slot" id="team-b-slot-4" style="display:none;"><span class="mode-slot-label team-b">B4</span><select class="mode-slot-select"></select></div>
+            <div class="mode-player-slot" id="team-b-slot-5" style="display:none;"><span class="mode-slot-label team-b">B5</span><select class="mode-slot-select"></select></div>
           </div>
         </div>
       </div>
@@ -3828,9 +3839,9 @@
         </div>` : ''}
 
         <div class="lp-display">
-          <div class="lp-value ${getLPClass(p.lp)}" id="lp-val-${i}">${(function(){ if(gameMode==='team'&&teamLP.length&&matchCtx&&matchCtx.teams){return(matchCtx.teams[0].indexOf(i)!==-1?teamLP[0]:teamLP[1]).toLocaleString();}return p.lp.toLocaleString();})()}</div>
+          <div class="lp-value ${getLPClass(p.lp)}" id="lp-val-${i}">${(function(){ if(gameMode==='team'&&teamLP.length&&matchCtx&&matchCtx.teams&&!matchCtx.separateLP){return(matchCtx.teams[0].indexOf(i)!==-1?teamLP[0]:teamLP[1]).toLocaleString();}return p.lp.toLocaleString();})()}</div>
           <div class="lp-label">Life Points</div>
-          ${i !== activeTurn && !p.eliminated && players[activeTurn] && !players[activeTurn].eliminated ? `<div class="lp-diff" id="lp-diff-${i}">${(()=>{const me=(gameMode==='team'&&teamLP.length&&matchCtx&&matchCtx.teams)?(matchCtx.teams[0].indexOf(activeTurn)!==-1?teamLP[0]:teamLP[1]):players[activeTurn].lp;const them=(gameMode==='team'&&teamLP.length&&matchCtx&&matchCtx.teams)?(matchCtx.teams[0].indexOf(i)!==-1?teamLP[0]:teamLP[1]):p.lp;const d=them-me;return (d>0?'▲+':'▼')+d.toLocaleString();})()}</div>` : ''}
+          ${i !== activeTurn && !p.eliminated && players[activeTurn] && !players[activeTurn].eliminated ? `<div class="lp-diff" id="lp-diff-${i}">${(()=>{const me=(gameMode==='team'&&teamLP.length&&matchCtx&&matchCtx.teams&&!matchCtx.separateLP)?(matchCtx.teams[0].indexOf(activeTurn)!==-1?teamLP[0]:teamLP[1]):players[activeTurn].lp;const them=(gameMode==='team'&&teamLP.length&&matchCtx&&matchCtx.teams&&!matchCtx.separateLP)?(matchCtx.teams[0].indexOf(i)!==-1?teamLP[0]:teamLP[1]):p.lp;const d=them-me;return (d>0?'▲+':'▼')+d.toLocaleString();})()}</div>` : ''}
           <div class="match-record">${(() => { var k=p.name.trim().toLowerCase(); var r=roster[k]||{w:0,l:0}; return '<span class="wins">'+r.w+'W</span> &middot; <span class="losses">'+r.l+'L</span>'; })()} </div>
           ${biggestHit[i] > 0 ? `<div class="biggest-hit-badge" title="Biggest hit taken this duel">💥 ${biggestHit[i].toLocaleString()}</div>` : ''}
         </div>
@@ -3838,7 +3849,7 @@
         <div class="lp-sparkline"><canvas id="spark-${i}" height="28"></canvas></div>
         <div class="lp-bar-track">
           <div class="lp-bar-fill" id="lp-bar-${i}"
-            style="width:${Math.min(100,(gameMode==='team'&&teamLP.length?(matchCtx.teams[0].indexOf(i)!==-1?teamLP[0]:teamLP[1]):p.lp)/MAX_LP*100)}%;background:${getLPColor((gameMode==='team'&&teamLP.length?(matchCtx.teams[0].indexOf(i)!==-1?teamLP[0]:teamLP[1]):p.lp))};"></div>
+            style="width:${Math.min(100,(gameMode==='team'&&teamLP.length&&matchCtx&&!matchCtx.separateLP?(matchCtx.teams[0].indexOf(i)!==-1?teamLP[0]:teamLP[1]):p.lp)/MAX_LP*100)}%;background:${getLPColor((gameMode==='team'&&teamLP.length&&matchCtx&&!matchCtx.separateLP?(matchCtx.teams[0].indexOf(i)!==-1?teamLP[0]:teamLP[1]):p.lp))};"></div>
         </div>
 
         <!-- Battle Phase Panel -->
@@ -3997,7 +4008,7 @@
     lpHistory[i].push({ lp: players[i] ? players[i].lp : 0, teamLP: teamLP.length ? [...teamLP] : null });
 
     // In team mode, damage/heal the shared team pool instead of individual LP
-    if (gameMode === 'team' && matchCtx && matchCtx.teams && teamLP.length) {
+    if (gameMode === 'team' && matchCtx && matchCtx.teams && teamLP.length && !matchCtx.separateLP) {
       var teamIdx = matchCtx.teams[0].indexOf(i) !== -1 ? 0 : 1;
       var oldPool = teamLP[teamIdx];
       teamLP[teamIdx] = Math.max(0, teamLP[teamIdx] + delta);
@@ -4093,7 +4104,11 @@
       if (p.lp === 0) {
         p.eliminated = true; panelState[i] = null; render();
         playSound('eliminate');
-        checkWinCondition();
+        if (gameMode === 'team' && matchCtx && matchCtx.separateLP) {
+          checkTeamWinCondition();
+        } else {
+          checkWinCondition();
+        }
       }
       // Sync: host pushes full state; guest pushes their own slot
       if (_fbRoom && _fbIsHost) fbPushState();
@@ -5303,8 +5318,8 @@
     document.getElementById('summaryOverlay').classList.remove('show');
     if (newGame) {
       // Restore base LP if we inflated it for team battle
-      if (gameMode === 'team' && matchCtx) {
-        var count = matchCtx.format === '4v4' ? 4 : matchCtx.format === '3v3' ? 3 : 2;
+      if (gameMode === 'team' && matchCtx && !matchCtx.separateLP) {
+        var count = matchCtx.format === '5v5' ? 5 : matchCtx.format === '4v4' ? 4 : matchCtx.format === '3v3' ? 3 : 2;
         MAX_LP = Math.round(MAX_LP / count);
         document.getElementById('startingLPInput').value = MAX_LP;
       }
@@ -5950,9 +5965,9 @@
 
     // Team — refresh selects
     var fmt = document.getElementById('team-format');
-    var count = fmt ? (fmt.value === '4v4' ? 4 : fmt.value === '3v3' ? 3 : 2) : 2;
+    var count = fmt ? (fmt.value === '5v5' ? 5 : fmt.value === '4v4' ? 4 : fmt.value === '3v3' ? 3 : 2) : 2;
     ['a','b'].forEach(function(team, ti) {
-      for (var si = 1; si <= 4; si++) {
+      for (var si = 1; si <= 5; si++) {
         var row = document.getElementById('team-' + team + '-slot-' + si);
         if (!row) continue;
         row.style.display = si <= count ? 'flex' : 'none';
@@ -6285,7 +6300,7 @@
   // ── Team Battle ──────────────────────────────
   function startTeamBattle() {
     var fmt   = document.getElementById('team-format').value; // '2v2' | '3v3' | '4v4'
-    var count = fmt === '4v4' ? 4 : fmt === '3v3' ? 3 : 2;
+    var count = fmt === '5v5' ? 5 : fmt === '4v4' ? 4 : fmt === '3v3' ? 3 : 2;
     var teamA = [], teamB = [];
     for (var i = 1; i <= count; i++) {
       var selA = document.querySelector('#team-a-slot-' + i + ' select');
@@ -6298,9 +6313,12 @@
     var allNames = teamA.concat(teamB);
     var unique = new Set(allNames.map(function(n) { return n.toLowerCase(); }));
     if (unique.size < allNames.length) { alert('Each player must be different'); return; }
+    var lpModeEl = document.getElementById('team-lp-mode');
+    var separateLP = lpModeEl && lpModeEl.value === 'separate';
     gameMode = 'team';
     matchCtx = {
       format: fmt,
+      separateLP: separateLP,
       teams: [
         Array.from({length:count}, function(_,i) { return i; }),
         Array.from({length:count}, function(_,i) { return count+i; })
@@ -6308,10 +6326,14 @@
       teamNames: ['Team A', 'Team B']
     };
     closeModeModal();
-    // Scale LP: each player gets 8000 × team size (2v2=16000, 3v3=24000)
+    // Scale LP: shared mode inflates pool (8000 × count); separate keeps 8000 each
     var baseLp = parseInt(document.getElementById('startingLPInput').value) || 8000;
-    MAX_LP = baseLp * count;
-    document.getElementById('startingLPInput').value = MAX_LP;
+    if (!separateLP) {
+      MAX_LP = baseLp * count;
+      document.getElementById('startingLPInput').value = MAX_LP;
+    } else {
+      MAX_LP = baseLp;
+    }
     initPlayers(count * 2);
     allNames.forEach(function(name, i) { players[i].name = name; });
     // Interleave turn order: A1, B1, A2, B2, ...
@@ -6328,14 +6350,26 @@
       players.map(function(_,i) { return i; }).filter(function(i) { return i % 2 === 1; })
     ];
     currentPhase = 1;
-    // Shared team LP pools
-    teamLP = [MAX_LP, MAX_LP];
+    // Shared team LP pools (only in shared mode)
+    teamLP = separateLP ? [] : [MAX_LP, MAX_LP];
     render();
     updateMatchBanner();
   }
 
   function checkTeamWinCondition() {
-    if (!matchCtx || !matchCtx.teams || !teamLP.length) return;
+    if (!matchCtx || !matchCtx.teams) return;
+    if (matchCtx.separateLP) {
+      // Separate LP: team loses when ALL members are eliminated
+      var aAlive = matchCtx.teams[0].some(function(pi) { return players[pi] && !players[pi].eliminated; });
+      var bAlive = matchCtx.teams[1].some(function(pi) { return players[pi] && !players[pi].eliminated; });
+      if (!aAlive || !bAlive) {
+        var winTeamIdx = aAlive ? 0 : 1;
+        setTimeout(function() { showTeamSummary(winTeamIdx); }, 900);
+      }
+      return;
+    }
+    // Shared LP: team loses when the pool hits 0
+    if (!teamLP.length) return;
     var aAlive = teamLP[0] > 0;
     var bAlive = teamLP[1] > 0;
     if (!aAlive || !bAlive) {
@@ -6348,7 +6382,7 @@
     var winName = matchCtx.teamNames[winTeamIdx];
     document.getElementById('summaryTitle').textContent = winName + ' Wins!';
     var sub = document.getElementById('summarySubtitle');
-    if (sub) sub.textContent = 'TEAM BATTLE · ' + matchCtx.format.toUpperCase();
+    if (sub) sub.textContent = 'TEAM BATTLE · ' + matchCtx.format.toUpperCase() + (matchCtx.separateLP ? ' · SEPARATE LP' : ' · SHARED LP');
     // update roster for all players
     players.forEach(function(p, i) {
       var k = p.name.trim().toLowerCase();
