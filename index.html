@@ -1713,6 +1713,7 @@
   .bracket-match-player.bye    { color:var(--dim); font-style:italic; font-size:9px; }
   .bracket-match-player.tbd    { color:var(--dim); font-style:italic; }
   .bracket-win-badge { font-size:9px; color:var(--gold); }
+  .bracket-score { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:11px; color:rgba(255,255,255,0.5); margin-left:4px; }
   .bracket-connector {
     width:16px; flex-shrink:0; position:relative; align-self:stretch; display:flex; align-items:center;
   }
@@ -3129,7 +3130,14 @@
           <option value="16">16</option>
         </select>
       </div>
-      <div id="tourn-slots" style="display:flex;flex-direction:column;gap:6px;margin-top:4px;max-height:260px;overflow-y:auto;padding-right:4px;"></div>
+      <div class="mode-field" style="align-items:center;gap:12px;">
+        <label style="flex:none;">Match Format</label>
+        <select class="mode-select" id="tourn-format">
+          <option value="bo1">Single Duel (Best of 1)</option>
+          <option value="bo3">Best of 3 — First to 2 wins advances</option>
+        </select>
+      </div>
+      <div id="tourn-slots" style="display:flex;flex-direction:column;gap:6px;margin-top:4px;max-height:240px;overflow-y:auto;padding-right:4px;"></div>
       <div class="mode-actions">
         <button class="btn btn-dim" onclick="closeModeModal()">Cancel</button>
         <button class="mode-start-btn" onclick="startTournament()">&#x1F3C6; Generate Bracket</button>
@@ -6116,8 +6124,10 @@
     if (names.length < 2) { alert('Select at least 2 players'); return; }
     var unique = names.filter(function(n, i) { return names.indexOf(n) === i; });
     if (unique.length !== names.length) { alert('Each participant must be different'); return; }
+    var fmtEl = document.getElementById('tourn-format');
+    var bo3 = fmtEl && fmtEl.value === 'bo3';
     gameMode = 'tournament';
-    matchCtx = buildBracket(unique);
+    matchCtx = buildBracket(unique, bo3);
     closeModeModal();
     updateMatchBanner();
     renderBracket();
@@ -6125,7 +6135,7 @@
     setTimeout(loadNextTournamentMatch, 400);
   }
 
-  function buildBracket(names) {
+  function buildBracket(names, bo3) {
     // Seed players (shuffle for randomness)
     var seeded = names.slice().sort(function() { return Math.random() - 0.5; });
     // Pad to next power of 2 with byes
@@ -6137,14 +6147,14 @@
     var rounds = [];
     var current = [];
     for (var i = 0; i < size; i += 2) {
-      current.push({ p1: seeded[i], p2: seeded[i+1], winner: seeded[i+1] === null ? seeded[i] : null });
+      current.push({ p1: seeded[i], p2: seeded[i+1], winner: seeded[i+1] === null ? seeded[i] : null, scores: {p1:0, p2:0}, game: 1 });
     }
     rounds.push(current);
     var sz = current.length;
     while (sz > 1) {
       var next = [];
       for (var j = 0; j < sz; j += 2) {
-        next.push({ p1: null, p2: null, winner: null });
+        next.push({ p1: null, p2: null, winner: null, scores: {p1:0, p2:0}, game: 1 });
       }
       rounds.push(next);
       sz = next.length;
@@ -6161,7 +6171,8 @@
 
     return {
       entrants: names, rounds: rounds,
-      currentRound: null, currentMatch: null, champion: null
+      currentRound: null, currentMatch: null, champion: null,
+      bo3: !!bo3
     };
   }
 
@@ -6212,17 +6223,65 @@
     if (!matchCtx) return showSummary(winner);
     var ri = matchCtx.currentRound;
     var mi = matchCtx.currentMatch;
+    var match = matchCtx.rounds[ri][mi];
     var loser  = players.find(function(p) { return p !== winner; });
-    // record in bracket
+    var roundNames = ['Round 1','Round 2','Quarterfinals','Semifinals','Finals'];
+    var roundLabel = roundNames[ri] || ('Round ' + (ri+1));
+    if (matchCtx.rounds.length <= 2) roundLabel = ri === 0 ? 'Semifinals' : 'Final';
+    if (matchCtx.rounds.length === 1) roundLabel = 'Final';
+
+    // ── Bo3: track game scores ──────────────────────────────────
+    if (matchCtx.bo3) {
+      var isP1 = (match.p1 === winner.name);
+      if (isP1) match.scores.p1++; else match.scores.p2++;
+      var neededWins = 2;
+      var matchWinner = match.scores.p1 >= neededWins ? match.p1
+                      : match.scores.p2 >= neededWins ? match.p2 : null;
+
+      showSummary(winner);
+      var sub  = document.getElementById('summarySubtitle');
+      var btns = document.getElementById('summaryButtons');
+      var scoreStr = match.scores.p1 + ' – ' + match.scores.p2;
+      var gameNum  = match.scores.p1 + match.scores.p2;
+
+      if (matchWinner) {
+        // Match over — advance
+        propagateWinner(matchCtx.rounds, ri, mi, matchWinner);
+        var isChampionship = (ri === matchCtx.rounds.length - 1);
+        if (isChampionship) matchCtx.champion = matchWinner;
+        if (sub) sub.textContent = 'TOURNAMENT · ' + roundLabel.toUpperCase() + ' · MATCH ' + scoreStr;
+        if (btns) {
+          if (isChampionship) {
+            btns.innerHTML =
+              '<button class="summary-btn gold" onclick="openBracketModal();closeSummary(false);">&#x1F3C6; Final Bracket</button>'
+              + '<button class="summary-btn dim" onclick="closeSummary(true)">&#x2715; End Tournament</button>';
+          } else {
+            btns.innerHTML =
+              '<button class="summary-btn gold" onclick="tournamentNextMatch()">&#x25B6; Next Match</button>'
+              + '<button class="summary-btn view" onclick="openBracketModal();closeSummary(false);" style="background:none;border:1px solid rgba(255,255,255,0.15);color:var(--dim);font-family:\'Cinzel\',serif;font-size:10px;letter-spacing:2px;padding:8px 16px;border-radius:3px;cursor:pointer;">&#x1F3C6; Bracket</button>';
+          }
+        }
+      } else {
+        // Match continues — next game
+        if (sub) sub.textContent = 'TOURNAMENT · ' + roundLabel.toUpperCase() + ' · GAME ' + gameNum + ' · ' + scoreStr;
+        if (btns) {
+          btns.innerHTML =
+            '<button class="summary-btn gold" onclick="bo3NextGame()">&#x25B6; Game ' + (gameNum + 1) + '</button>'
+            + '<button class="summary-btn view" onclick="openBracketModal();closeSummary(false);" style="background:none;border:1px solid rgba(255,255,255,0.15);color:var(--dim);font-family:\'Cinzel\',serif;font-size:10px;letter-spacing:2px;padding:8px 16px;border-radius:3px;cursor:pointer;">&#x1F3C6; Bracket</button>';
+        }
+      }
+      renderBracket();
+      updateMatchBanner();
+      return;
+    }
+
+    // ── Standard Bo1 path ───────────────────────────────────────
     propagateWinner(matchCtx.rounds, ri, mi, winner.name);
     var isChampionship = (ri === matchCtx.rounds.length - 1);
     if (isChampionship) matchCtx.champion = winner.name;
-    // show standard duel summary
     showSummary(winner);
     var sub  = document.getElementById('summarySubtitle');
     var btns = document.getElementById('summaryButtons');
-    var roundNames = ['Round 1','Round 2','Quarterfinals','Semifinals','Finals'];
-    var roundLabel = roundNames[ri] || ('Round ' + (ri+1));
     if (sub) sub.textContent = 'TOURNAMENT · ' + roundLabel.toUpperCase();
     if (btns) {
       if (isChampionship) {
@@ -6236,6 +6295,20 @@
       }
     }
     renderBracket();
+    updateMatchBanner();
+  }
+
+  function bo3NextGame() {
+    // Continue the current match with the same two players, reset board
+    document.getElementById('summaryOverlay').classList.remove('show');
+    var ri = matchCtx.currentRound;
+    var mi = matchCtx.currentMatch;
+    var match = matchCtx.rounds[ri][mi];
+    initPlayers(2);
+    players[0].name = match.p1;
+    players[1].name = match.p2;
+    currentPhase = 1;
+    render();
     updateMatchBanner();
   }
 
@@ -6268,8 +6341,13 @@
           if (!name) return '<div class="bracket-match-player tbd">TBD</div>';
           if (isByeSlot) return '<div class="bracket-match-player bye">BYE</div>';
           var isWin = (m.winner === name);
+          var scoreStr = '';
+          if (matchCtx.bo3 && m.scores) {
+            var sc = (name === m.p1) ? m.scores.p1 : m.scores.p2;
+            if (sc > 0 || m.winner) scoreStr = ' <span class="bracket-score">' + sc + '</span>';
+          }
           return '<div class="bracket-match-player' + (isWin ? ' winner' : '') + '">'
-            + name + (isWin ? ' <span class="bracket-win-badge">&#x2713;</span>' : '') + '</div>';
+            + name + scoreStr + (isWin ? ' <span class="bracket-win-badge">&#x2713;</span>' : '') + '</div>';
         }
         html += playerRow(m.p1, false);
         html += playerRow(m.p2, m.p1 && !m.p2 && isDone); // mark as bye if auto-advanced
@@ -6434,12 +6512,18 @@
       banner.classList.add('visible');
       var nxt = findNextTournamentMatch();
       label.textContent = matchCtx.champion ? 'Champion: ' + matchCtx.champion
-        : (nxt ? 'R' + (nxt.ri+1) + ' M' + (nxt.mi+1) : 'Tournament');
+        : (matchCtx.bo3 ? 'Bo3 · ' : '') + (nxt ? 'R' + (nxt.ri+1) + ' M' + (nxt.mi+1) : 'Tournament');
       bbtn.style.display = 'inline-block';
       if (nxt) {
+        var ri = matchCtx.currentRound !== null ? matchCtx.currentRound : nxt.ri;
+        var mi = matchCtx.currentMatch !== null ? matchCtx.currentMatch : nxt.mi;
+        var curMatch = matchCtx.rounds[ri] && matchCtx.rounds[ri][mi];
+        var scoreDisp = matchCtx.bo3 && curMatch && curMatch.scores
+          ? ' (' + curMatch.scores.p1 + '–' + curMatch.scores.p2 + ')' : '';
         score.innerHTML = '<span class="banner-player">' + nxt.match.p1 + '</span>'
           + '<span class="banner-vs">vs</span>'
-          + '<span class="banner-player">' + nxt.match.p2 + '</span>';
+          + '<span class="banner-player">' + nxt.match.p2 + '</span>'
+          + (scoreDisp ? '<span class="banner-vs">' + scoreDisp + '</span>' : '');
       } else {
         score.innerHTML = '';
       }
