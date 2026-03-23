@@ -271,6 +271,7 @@
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+    container-type: inline-size;
   }
   .player-card.rotate-90  { transform: rotate(90deg)  scale(0.92); }
   .player-card.rotate-180 { transform: rotate(180deg) scale(0.92); }
@@ -380,16 +381,17 @@
     min-height: 80px;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
     justify-content: center;
   }
   .lp-value {
     font-family: 'Cinzel Decorative', serif;
-    font-size: var(--lp-font-size, clamp(30px, 5vw, 46px));
+    font-size: clamp(42px, 33cqw, 450px);
     font-weight: 900; line-height: 1;
     transition: color 0.5s, font-size 0.4s ease;
-    display: inline-block;
-      max-width: 100%; overflow: hidden; text-overflow: ellipsis;
+    display: block;
+    width: 100%; text-align: center;
+    white-space: nowrap; overflow: visible;
   }
   .lp-value.healthy { color: #e8e8ff; }
   .lp-value.warning { color: #ffcc00; text-shadow: 0 0 12px rgba(255,204,0,0.3); }
@@ -409,7 +411,7 @@
     gap: 2px; margin-bottom: 6px;
   }
   .phase-badge-icon {
-    font-size: clamp(56px, 8vw, 88px);
+    font-size: clamp(84px, 12cqw, 132px);
     line-height: 1;
     filter: drop-shadow(0 0 10px rgba(201,162,39,0.6));
     animation: phaseBadgePulse 2s ease-in-out infinite;
@@ -565,6 +567,133 @@
     text-align: center; min-height: 14px;
     letter-spacing: 1px; margin-top: 6px;
     transition: color 0.3s;
+  }
+
+  /* ── Effect Timer ── */
+  .effect-timer-btn {
+    font-size: 13px; background: none;
+    border: 1px solid rgba(100,100,220,0.35); border-radius: 3px;
+    color: #aaaaff; cursor: pointer; padding: 2px 7px;
+    transition: all 0.2s; line-height: 1; margin-left: 4px;
+  }
+  .effect-timer-btn:hover { background: rgba(100,100,220,0.18); border-color: rgba(160,160,255,0.6); }
+  .effect-timer-btn.active { color: #ff9999; border-color: rgba(220,60,60,0.55); background: rgba(180,20,20,0.12); }
+
+  .effect-timer-panel {
+    display: none; flex-direction: column; gap: 7px;
+    background: rgba(8,8,24,0.98); border: 1px solid rgba(100,100,220,0.28);
+    border-radius: 6px; padding: 10px; margin-top: 6px;
+    animation: fadeIn 0.15s ease;
+  }
+  .effect-timer-panel.open { display: flex; }
+  .effect-timer-title {
+    font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 3px;
+    color: #9999dd; text-transform: uppercase; text-align: center;
+  }
+  .effect-name-input {
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(100,100,220,0.28);
+    border-radius: 3px; color: var(--text); font-family: 'Rajdhani', sans-serif;
+    font-size: 12px; padding: 5px 8px; outline: none; width: 100%;
+    transition: border-color 0.2s;
+  }
+  .effect-name-input:focus { border-color: rgba(160,160,255,0.55); }
+  .effect-name-input::placeholder { color: rgba(140,140,200,0.4); }
+  .effect-row { display: flex; gap: 6px; align-items: center; }
+  .effect-row-label {
+    font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 1px;
+    color: var(--dim); white-space: nowrap;
+  }
+  .effect-turns-input {
+    width: 50px; text-align: center;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(100,100,220,0.28);
+    border-radius: 3px; color: var(--gold); font-family: 'Cinzel Decorative', serif;
+    font-size: 14px; padding: 4px 6px; outline: none;
+    transition: border-color 0.2s;
+  }
+  .effect-turns-input:focus { border-color: rgba(160,160,255,0.55); }
+  .effect-target-select {
+    flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(100,100,220,0.28);
+    border-radius: 3px; color: var(--text); font-family: 'Rajdhani', sans-serif;
+    font-size: 11px; padding: 4px 6px; outline: none; cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .effect-target-select:focus { border-color: rgba(160,160,255,0.55); }
+  .effect-apply-btn {
+    font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 2px;
+    padding: 7px 0; border-radius: 3px; border: 1px solid rgba(100,100,220,0.45);
+    color: #ccccff; background: rgba(68,68,204,0.1); cursor: pointer;
+    transition: all 0.2s; width: 100%;
+  }
+  .effect-apply-btn:hover { background: rgba(68,68,204,0.28); box-shadow: 0 0 12px rgba(68,68,204,0.3); }
+
+  .effect-phase-picker {
+    display: flex; flex-wrap: wrap; gap: 4px; margin-top: 2px;
+  }
+  .effect-phase-chk { display: none; }
+  .effect-phase-lbl {
+    font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 0.5px;
+    padding: 5px 7px; border-radius: 3px; cursor: pointer;
+    border: 1px solid rgba(100,100,220,0.28);
+    background: rgba(68,68,204,0.05); color: var(--dim);
+    transition: all 0.15s; user-select: none; line-height: 1.3;
+  }
+  .effect-phase-chk:checked + .effect-phase-lbl {
+    border-color: rgba(220,60,60,0.7);
+    background: rgba(160,20,20,0.28);
+    color: #ff9999;
+    box-shadow: 0 0 6px rgba(204,34,0,0.25);
+  }
+  .effect-phase-lbl:hover { border-color: rgba(160,160,255,0.5); color: #bbbbff; }
+
+  .effect-player-presets {
+    display: flex; gap: 4px; margin-bottom: 4px;
+  }
+  .effect-preset-btn {
+    font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 1px;
+    padding: 4px 8px; border-radius: 3px; cursor: pointer;
+    border: 1px solid rgba(100,100,220,0.35);
+    background: rgba(68,68,204,0.07); color: var(--dim);
+    transition: all 0.15s;
+  }
+  .effect-preset-btn:hover { background: rgba(68,68,204,0.22); color: #ccccff; border-color: rgba(160,160,255,0.5); }
+
+  /* ── Effect badges on cards ── */
+  .active-effects-bar {
+    display: flex; flex-wrap: wrap; gap: 4px; margin: 4px 0 2px;
+  }
+  .effect-badge {
+    display: flex; align-items: center; gap: 5px;
+    background: rgba(160,20,20,0.18); border: 1px solid rgba(220,60,60,0.4);
+    border-radius: 3px; padding: 3px 7px;
+    font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 1px; color: #ff9999;
+    animation: effectBadgePulse 2s ease-in-out infinite;
+  }
+  @keyframes effectBadgePulse {
+    0%,100% { border-color: rgba(220,60,60,0.4); box-shadow: none; }
+    50%      { border-color: rgba(255,80,80,0.8); box-shadow: 0 0 8px rgba(204,34,0,0.3); }
+  }
+  .effect-badge-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 90px; }
+  .effect-badge-turns {
+    font-family: 'Cinzel Decorative', serif; font-size: 11px;
+    color: #ffaaaa; font-weight: 900; flex-shrink: 0;
+  }
+  .effect-badge-cancel {
+    background: none; border: none; color: rgba(255,100,100,0.45);
+    cursor: pointer; font-size: 11px; padding: 0; line-height: 1;
+    transition: color 0.15s; flex-shrink: 0;
+  }
+  .effect-badge-cancel:hover { color: #ff4444; }
+
+  /* ── Cursed phase step (active effect) ── */
+  .phase-step.cursed {
+    border-color: rgba(220,40,40,0.75) !important;
+    background: rgba(160,20,20,0.28) !important;
+    color: #ff8888 !important;
+    animation: cursedPulse 1s ease-in-out infinite !important;
+  }
+  @keyframes cursedPulse {
+    0%,100% { box-shadow: 0 0 5px rgba(204,34,0,0.35); border-color: rgba(220,40,40,0.75); }
+    50%      { box-shadow: 0 0 14px rgba(255,60,60,0.75); border-color: rgba(255,80,80,1); }
   }
 
   /* ── Phase Indicator ── */
@@ -3751,6 +3880,9 @@
   let logEventId = 0;
   let dmgTypeState = {}; // key: "i" -> 'battle'|'effect', default 'effect'
   let lpHistory    = {}; // key: i -> [{lp, teamLP}] for undo
+  let activeEffects = []; // { id, name, activatorIdx, affectedIdxs, turnsLeft, totalTurns }
+  let _effectIdCounter = 0;
+  let _effectPanelOpen = {}; // i -> bool
 
   const PRESETS = [100, 500, 1000, 2000];
 
@@ -3794,6 +3926,8 @@
     counterTokens = Array(count).fill(null).map(() => []);
     playerColors  = Array(count).fill(null).map((_, i) => PLAYER_COLOR_PRESETS[i % PLAYER_COLOR_PRESETS.length]);
     lpHistory     = {};
+    activeEffects = [];
+    _effectPanelOpen = {};
     matchStartTime = Date.now();
     render();
   }
@@ -3997,12 +4131,53 @@
         <div class="counter-tokens" id="tokens-${i}">
           ${(counterTokens[i]||[]).map((t,ti)=>`<span class="counter-token" title="${t.name}">${t.name} <strong>${t.count}</strong> <button class="token-adj" onclick="adjToken(${i},${ti},1)">+</button><button class="token-adj" onclick="adjToken(${i},${ti},-1)">−</button><button class="token-adj" onclick="removeToken(${i},${ti})">✕</button></span>`).join('')}
           <button class="add-token-btn" onclick="promptAddToken(${i})">+ Counter</button>
+          <button class="effect-timer-btn ${getPlayerActiveEffects(i).length ? 'active' : ''}" id="effect-timer-btn-${i}" onclick="toggleEffectPanel(${i})" title="Add timed card effect">⏱</button>
+        </div>
+
+        ${(() => {
+          const effs = getPlayerActiveEffects(i);
+          if (!effs.length) return '';
+          return '<div class="active-effects-bar">' + effs.map(e =>
+            `<span class="effect-badge"><span class="effect-badge-name">⚠ ${e.name}</span><span class="effect-badge-turns">${e.turnsLeft}</span><button class="effect-badge-cancel" onclick="cancelEffect(${e.id})" title="Cancel effect">✕</button></span>`
+          ).join('') + '</div>';
+        })()}
+
+        <div class="effect-timer-panel ${_effectPanelOpen[i] ? 'open' : ''}" id="effect-panel-${i}">
+          <div class="effect-timer-title">⏱ Timed Card Effect</div>
+          <input class="effect-name-input" id="effect-name-${i}" placeholder="Effect name (e.g. Swords of Revealing Light)" maxlength="40"
+            onkeydown="if(event.key==='Enter')applyEffect(${i})">
+          <div class="effect-row">
+            <span class="effect-row-label">Turns:</span>
+            <input type="number" class="effect-turns-input" id="effect-turns-${i}" value="3" min="1" max="99">
+          </div>
+          <div class="effect-row-label" style="margin-top:4px;">Affects:</div>
+          <div class="effect-player-presets">
+            <button class="effect-preset-btn" onclick="effectSelectPreset(${i},'others')">Opponents</button>
+            <button class="effect-preset-btn" onclick="effectSelectPreset(${i},'all')">All</button>
+            <button class="effect-preset-btn" onclick="effectSelectPreset(${i},'self')">Just Me</button>
+          </div>
+          <div class="effect-phase-picker" id="effect-players-${i}">
+            ${players.map((pl, pi) => `<input type="checkbox" class="effect-player-chk" id="eplayer-${i}-${pi}" value="${pi}" ${pi !== i ? 'checked' : ''}><label class="effect-phase-lbl" for="eplayer-${i}-${pi}">${pl.name}</label>`).join('')}
+          </div>
+          <div class="effect-row-label" style="margin-top:4px;">Highlight phases:</div>
+          <div class="effect-phase-picker" id="effect-phases-${i}">
+            ${PHASES.map((ph, pi) => `<input type="checkbox" class="effect-phase-chk" id="ephase-${i}-${pi}" value="${pi}"><label class="effect-phase-lbl" for="ephase-${i}-${pi}">${ph}</label>`).join('')}
+          </div>
+          <button class="effect-apply-btn" onclick="applyEffect(${i})">⚡ Activate Effect</button>
         </div>
         ${i === activeTurn ? `
         <div class="phase-indicator">
           <div class="phase-label-row">Phase</div>
           <div class="phase-steps">
-            ${PHASES.map((ph, pi) => `<button class="phase-step ${pi === currentPhase ? 'current' : ''}" onclick="setPhase(${pi})">${ph}</button>`).join('')}
+            ${(()=>{
+              const effs = getPlayerActiveEffects(i);
+              return PHASES.map((ph, pi) => {
+                const isCursed = effs.some(function(e) {
+                  return !e.affectedPhases || e.affectedPhases.indexOf(pi) !== -1;
+                });
+                return `<button class="phase-step ${pi === currentPhase ? 'current' : ''} ${isCursed ? 'cursed' : ''}" onclick="setPhase(${pi})">${ph}</button>`;
+              }).join('');
+            })()}
           </div>
         </div>` : ''}
       `
@@ -4314,6 +4489,79 @@
     render();
   }
 
+  /* ── Effect Timer ─────────────────────── */
+  function toggleEffectPanel(i) {
+    _effectPanelOpen[i] = !_effectPanelOpen[i];
+    const panel = document.getElementById('effect-panel-' + i);
+    const btn   = document.getElementById('effect-timer-btn-' + i);
+    if (panel) panel.classList.toggle('open', !!_effectPanelOpen[i]);
+    if (btn)   btn.classList.toggle('active', !!_effectPanelOpen[i]);
+  }
+
+  function effectSelectPreset(i, mode) {
+    var boxes = document.querySelectorAll('#effect-players-' + i + ' .effect-player-chk');
+    boxes.forEach(function(cb) {
+      var pi = parseInt(cb.value);
+      if (mode === 'all')    cb.checked = true;
+      else if (mode === 'self')   cb.checked = (pi === i);
+      else if (mode === 'others') cb.checked = (pi !== i);
+    });
+  }
+
+  function applyEffect(i) {
+    const nameEl  = document.getElementById('effect-name-' + i);
+    const turnsEl = document.getElementById('effect-turns-' + i);
+    const name    = (nameEl && nameEl.value.trim()) || 'Effect';
+    const turns   = Math.max(1, parseInt(turnsEl && turnsEl.value) || 3);
+
+    // Read selected players
+    const playerBoxes   = document.querySelectorAll('#effect-players-' + i + ' .effect-player-chk:checked');
+    const affectedIdxs  = Array.from(playerBoxes).map(function(cb) { return parseInt(cb.value); })
+                            .filter(function(pi) { return !players[pi] || !players[pi].eliminated; });
+
+    if (affectedIdxs.length === 0) { showToast('Select at least one target', 'warning'); return; }
+
+    // Read selected phases; if none checked, default to all
+    const phaseBoxes    = document.querySelectorAll('#effect-phases-' + i + ' .effect-phase-chk:checked');
+    const affectedPhases = phaseBoxes.length
+      ? Array.from(phaseBoxes).map(function(cb) { return parseInt(cb.value); })
+      : PHASES.map(function(_,pi) { return pi; });
+
+    const phaseNames = affectedPhases.map(function(pi) { return PHASES[pi]; }).join(', ');
+    activeEffects.push({
+      id: ++_effectIdCounter, name,
+      activatorIdx: i, affectedIdxs, affectedPhases,
+      turnsLeft: turns, totalTurns: turns
+    });
+
+    _effectPanelOpen[i] = false;
+    showToast('⏱ ' + name + ' · ' + turns + ' turn' + (turns !== 1 ? 's' : '') + ' · ' + phaseNames, 'info', 3000);
+    render();
+  }
+
+  function cancelEffect(id) {
+    activeEffects = activeEffects.filter(function(e) { return e.id !== id; });
+    render();
+  }
+
+  function tickEffectsForPhaseLeave(leavingPhaseIdx, playerIdx) {
+    // Decrement effects where this player is affected AND this phase is one of the watched phases
+    var expired = [];
+    activeEffects = activeEffects.map(function(e) {
+      if (e.affectedIdxs.indexOf(playerIdx) === -1) return e;
+      var phases = e.affectedPhases || PHASES.map(function(_,pi){ return pi; });
+      if (phases.indexOf(leavingPhaseIdx) === -1) return e;
+      var next = Object.assign({}, e, { turnsLeft: e.turnsLeft - 1 });
+      if (next.turnsLeft <= 0) expired.push(e.name);
+      return next;
+    }).filter(function(e) { return e.turnsLeft > 0; });
+    expired.forEach(function(n) { showToast('⏱ ' + n + ' has expired', 'info', 2500); });
+  }
+
+  function getPlayerActiveEffects(i) {
+    return activeEffects.filter(function(e) { return e.affectedIdxs.indexOf(i) !== -1; });
+  }
+
   /* ── Turn ─────────────────────────────── */
   function nextTurn() {
     playSound('nextTurn');
@@ -4323,6 +4571,8 @@
       let n = (activeTurn + 1) % players.length, t = 0;
       while (players[n].eliminated && t++ < players.length) n = (n+1) % players.length;
       if (!timerRunning) timerStart();
+      // Leaving current phase (typically End) counts as passing it
+      tickEffectsForPhaseLeave(currentPhase, activeTurn);
       activeTurn = n; currentPhase = 0; render();
     });
   }
@@ -4345,6 +4595,12 @@
   }
 
   function setPhase(idx) {
+    // Tick for every phase being skipped over (forward only)
+    if (idx > currentPhase) {
+      for (var p = currentPhase; p < idx; p++) {
+        tickEffectsForPhaseLeave(p, activeTurn);
+      }
+    }
     currentPhase = idx;
     render();
   }
@@ -4362,10 +4618,10 @@
     const alive = players.filter(p => !p.eliminated);
     if (alive.length === 0) return;
     if (currentPhase === PHASES.length - 1) {
-      nextTurn();
+      nextTurn(); // nextTurn handles the tick for End phase
     } else {
-      // Auto-start timer: first time we leave Standby on turn 1 (game has truly begun)
       if (globalTurnNum === 1 && currentPhase === 1 && !timerRunning) timerStart();
+      tickEffectsForPhaseLeave(currentPhase, activeTurn);
       currentPhase++;
       render();
     }
