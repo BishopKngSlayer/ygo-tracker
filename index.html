@@ -271,7 +271,6 @@
     display: flex;
     flex-direction: column;
     overflow-y: auto;
-    container-type: inline-size;
   }
   .player-card.rotate-90  { transform: rotate(90deg)  scale(0.92); }
   .player-card.rotate-180 { transform: rotate(180deg) scale(0.92); }
@@ -381,17 +380,16 @@
     min-height: 80px;
     display: flex;
     flex-direction: column;
-    align-items: stretch;
+    align-items: center;
     justify-content: center;
   }
   .lp-value {
     font-family: 'Cinzel Decorative', serif;
-    font-size: clamp(42px, 33cqw, 450px);
+    font-size: var(--lp-font-size, clamp(30px, 5vw, 46px));
     font-weight: 900; line-height: 1;
     transition: color 0.5s, font-size 0.4s ease;
-    display: block;
-    width: 100%; text-align: center;
-    white-space: nowrap; overflow: visible;
+    display: inline-block;
+      max-width: 100%; overflow: hidden; text-overflow: ellipsis;
   }
   .lp-value.healthy { color: #e8e8ff; }
   .lp-value.warning { color: #ffcc00; text-shadow: 0 0 12px rgba(255,204,0,0.3); }
@@ -411,7 +409,7 @@
     gap: 2px; margin-bottom: 6px;
   }
   .phase-badge-icon {
-    font-size: clamp(84px, 12cqw, 132px);
+    font-size: clamp(56px, 8vw, 88px);
     line-height: 1;
     filter: drop-shadow(0 0 10px rgba(201,162,39,0.6));
     animation: phaseBadgePulse 2s ease-in-out infinite;
@@ -567,133 +565,6 @@
     text-align: center; min-height: 14px;
     letter-spacing: 1px; margin-top: 6px;
     transition: color 0.3s;
-  }
-
-  /* ── Effect Timer ── */
-  .effect-timer-btn {
-    font-size: 13px; background: none;
-    border: 1px solid rgba(100,100,220,0.35); border-radius: 3px;
-    color: #aaaaff; cursor: pointer; padding: 2px 7px;
-    transition: all 0.2s; line-height: 1; margin-left: 4px;
-  }
-  .effect-timer-btn:hover { background: rgba(100,100,220,0.18); border-color: rgba(160,160,255,0.6); }
-  .effect-timer-btn.active { color: #ff9999; border-color: rgba(220,60,60,0.55); background: rgba(180,20,20,0.12); }
-
-  .effect-timer-panel {
-    display: none; flex-direction: column; gap: 7px;
-    background: rgba(8,8,24,0.98); border: 1px solid rgba(100,100,220,0.28);
-    border-radius: 6px; padding: 10px; margin-top: 6px;
-    animation: fadeIn 0.15s ease;
-  }
-  .effect-timer-panel.open { display: flex; }
-  .effect-timer-title {
-    font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 3px;
-    color: #9999dd; text-transform: uppercase; text-align: center;
-  }
-  .effect-name-input {
-    background: rgba(255,255,255,0.05); border: 1px solid rgba(100,100,220,0.28);
-    border-radius: 3px; color: var(--text); font-family: 'Rajdhani', sans-serif;
-    font-size: 12px; padding: 5px 8px; outline: none; width: 100%;
-    transition: border-color 0.2s;
-  }
-  .effect-name-input:focus { border-color: rgba(160,160,255,0.55); }
-  .effect-name-input::placeholder { color: rgba(140,140,200,0.4); }
-  .effect-row { display: flex; gap: 6px; align-items: center; }
-  .effect-row-label {
-    font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 1px;
-    color: var(--dim); white-space: nowrap;
-  }
-  .effect-turns-input {
-    width: 50px; text-align: center;
-    background: rgba(255,255,255,0.05); border: 1px solid rgba(100,100,220,0.28);
-    border-radius: 3px; color: var(--gold); font-family: 'Cinzel Decorative', serif;
-    font-size: 14px; padding: 4px 6px; outline: none;
-    transition: border-color 0.2s;
-  }
-  .effect-turns-input:focus { border-color: rgba(160,160,255,0.55); }
-  .effect-target-select {
-    flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(100,100,220,0.28);
-    border-radius: 3px; color: var(--text); font-family: 'Rajdhani', sans-serif;
-    font-size: 11px; padding: 4px 6px; outline: none; cursor: pointer;
-    transition: border-color 0.2s;
-  }
-  .effect-target-select:focus { border-color: rgba(160,160,255,0.55); }
-  .effect-apply-btn {
-    font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 2px;
-    padding: 7px 0; border-radius: 3px; border: 1px solid rgba(100,100,220,0.45);
-    color: #ccccff; background: rgba(68,68,204,0.1); cursor: pointer;
-    transition: all 0.2s; width: 100%;
-  }
-  .effect-apply-btn:hover { background: rgba(68,68,204,0.28); box-shadow: 0 0 12px rgba(68,68,204,0.3); }
-
-  .effect-phase-picker {
-    display: flex; flex-wrap: wrap; gap: 4px; margin-top: 2px;
-  }
-  .effect-phase-chk { display: none; }
-  .effect-phase-lbl {
-    font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 0.5px;
-    padding: 5px 7px; border-radius: 3px; cursor: pointer;
-    border: 1px solid rgba(100,100,220,0.28);
-    background: rgba(68,68,204,0.05); color: var(--dim);
-    transition: all 0.15s; user-select: none; line-height: 1.3;
-  }
-  .effect-phase-chk:checked + .effect-phase-lbl {
-    border-color: rgba(220,60,60,0.7);
-    background: rgba(160,20,20,0.28);
-    color: #ff9999;
-    box-shadow: 0 0 6px rgba(204,34,0,0.25);
-  }
-  .effect-phase-lbl:hover { border-color: rgba(160,160,255,0.5); color: #bbbbff; }
-
-  .effect-player-presets {
-    display: flex; gap: 4px; margin-bottom: 4px;
-  }
-  .effect-preset-btn {
-    font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 1px;
-    padding: 4px 8px; border-radius: 3px; cursor: pointer;
-    border: 1px solid rgba(100,100,220,0.35);
-    background: rgba(68,68,204,0.07); color: var(--dim);
-    transition: all 0.15s;
-  }
-  .effect-preset-btn:hover { background: rgba(68,68,204,0.22); color: #ccccff; border-color: rgba(160,160,255,0.5); }
-
-  /* ── Effect badges on cards ── */
-  .active-effects-bar {
-    display: flex; flex-wrap: wrap; gap: 4px; margin: 4px 0 2px;
-  }
-  .effect-badge {
-    display: flex; align-items: center; gap: 5px;
-    background: rgba(160,20,20,0.18); border: 1px solid rgba(220,60,60,0.4);
-    border-radius: 3px; padding: 3px 7px;
-    font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 1px; color: #ff9999;
-    animation: effectBadgePulse 2s ease-in-out infinite;
-  }
-  @keyframes effectBadgePulse {
-    0%,100% { border-color: rgba(220,60,60,0.4); box-shadow: none; }
-    50%      { border-color: rgba(255,80,80,0.8); box-shadow: 0 0 8px rgba(204,34,0,0.3); }
-  }
-  .effect-badge-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 90px; }
-  .effect-badge-turns {
-    font-family: 'Cinzel Decorative', serif; font-size: 11px;
-    color: #ffaaaa; font-weight: 900; flex-shrink: 0;
-  }
-  .effect-badge-cancel {
-    background: none; border: none; color: rgba(255,100,100,0.45);
-    cursor: pointer; font-size: 11px; padding: 0; line-height: 1;
-    transition: color 0.15s; flex-shrink: 0;
-  }
-  .effect-badge-cancel:hover { color: #ff4444; }
-
-  /* ── Cursed phase step (active effect) ── */
-  .phase-step.cursed {
-    border-color: rgba(220,40,40,0.75) !important;
-    background: rgba(160,20,20,0.28) !important;
-    color: #ff8888 !important;
-    animation: cursedPulse 1s ease-in-out infinite !important;
-  }
-  @keyframes cursedPulse {
-    0%,100% { box-shadow: 0 0 5px rgba(204,34,0,0.35); border-color: rgba(220,40,40,0.75); }
-    50%      { box-shadow: 0 0 14px rgba(255,60,60,0.75); border-color: rgba(255,80,80,1); }
   }
 
   /* ── Phase Indicator ── */
@@ -1720,6 +1591,8 @@
   .player-card.team-a.active { border-color: #5078ff; box-shadow: 0 0 20px rgba(80,120,255,0.3); }
   .player-card.team-b { border-color: rgba(255,80,80,0.5); }
   .player-card.team-b.active { border-color: #ff5050; box-shadow: 0 0 20px rgba(255,80,80,0.3); }
+  .player-card.team-solo { border-color: rgba(255,200,80,0.55); }
+  .player-card.team-solo.active { border-color: #ffcc44; box-shadow: 0 0 20px rgba(255,200,80,0.35); }
   .team-badge {
     font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 2px;
     padding: 2px 7px; border-radius: 2px; margin-left: 6px;
@@ -3308,7 +3181,7 @@
     <!-- Team Battle -->
     <div class="mode-panel" id="mpanel-team">
       <div class="mode-section-title">Team Battle</div>
-      <p class="mode-info">Two teams share the board. Turns alternate between teams.</p>
+      <p class="mode-info" id="team-mode-info">Two teams share the board. Turns alternate between teams.</p>
       <div class="mode-field" style="align-items:center;gap:12px;">
         <label style="flex:none;">LP Mode</label>
         <select class="mode-select" id="team-lp-mode">
@@ -3324,6 +3197,9 @@
           <option value="3v3">3v3</option>
           <option value="4v4">4v4</option>
           <option value="5v5">5v5</option>
+          <option value="2v1" style="color:#ffcc88;">2v1 — Team vs Solo</option>
+          <option value="3v1" style="color:#ffcc88;">3v1 — Team vs Solo</option>
+          <option value="4v1" style="color:#ffcc88;">4v1 — Team vs Solo</option>
         </select>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
@@ -3338,13 +3214,15 @@
           </div>
         </div>
         <div>
-          <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:#ff8888;margin-bottom:8px;">TEAM B</div>
+          <div id="team-b-header" style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:#ff8888;margin-bottom:8px;">TEAM B</div>
+          <div id="solo-header" style="display:none;font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:#ffcc88;margin-bottom:8px;">SOLO DUELIST</div>
           <div class="mode-player-slots">
             <div class="mode-player-slot" id="team-b-slot-1"><span class="mode-slot-label team-b">B1</span><select class="mode-slot-select"></select></div>
             <div class="mode-player-slot" id="team-b-slot-2"><span class="mode-slot-label team-b">B2</span><select class="mode-slot-select"></select></div>
             <div class="mode-player-slot" id="team-b-slot-3" style="display:none;"><span class="mode-slot-label team-b">B3</span><select class="mode-slot-select"></select></div>
             <div class="mode-player-slot" id="team-b-slot-4" style="display:none;"><span class="mode-slot-label team-b">B4</span><select class="mode-slot-select"></select></div>
             <div class="mode-player-slot" id="team-b-slot-5" style="display:none;"><span class="mode-slot-label team-b">B5</span><select class="mode-slot-select"></select></div>
+            <div class="mode-player-slot" id="team-b-solo-slot" style="display:none;"><span class="mode-slot-label" style="color:#ffcc88;background:rgba(255,200,100,0.15);border-color:rgba(255,200,100,0.3);">SOLO</span><select class="mode-slot-select"></select></div>
           </div>
         </div>
       </div>
@@ -3880,9 +3758,6 @@
   let logEventId = 0;
   let dmgTypeState = {}; // key: "i" -> 'battle'|'effect', default 'effect'
   let lpHistory    = {}; // key: i -> [{lp, teamLP}] for undo
-  let activeEffects = []; // { id, name, activatorIdx, affectedIdxs, turnsLeft, totalTurns }
-  let _effectIdCounter = 0;
-  let _effectPanelOpen = {}; // i -> bool
 
   const PRESETS = [100, 500, 1000, 2000];
 
@@ -3926,8 +3801,6 @@
     counterTokens = Array(count).fill(null).map(() => []);
     playerColors  = Array(count).fill(null).map((_, i) => PLAYER_COLOR_PRESETS[i % PLAYER_COLOR_PRESETS.length]);
     lpHistory     = {};
-    activeEffects = [];
-    _effectPanelOpen = {};
     matchStartTime = Date.now();
     render();
   }
@@ -3997,7 +3870,8 @@
       const isLowLP = gameRules.lowLPWarning && !p.eliminated && _lpChk > 0 && _lpChk <= (gameRules.lowLPThreshold || 1000);
       var teamClass = '';
       if (gameMode === 'team' && matchCtx && matchCtx.teams) {
-        if (matchCtx.teams[0].indexOf(i) !== -1) teamClass = 'team-a';
+        if (matchCtx.vsOne && i === matchCtx.soloIdx) teamClass = 'team-solo';
+        else if (matchCtx.teams[0].indexOf(i) !== -1) teamClass = 'team-a';
         else if (matchCtx.teams[1].indexOf(i) !== -1) teamClass = 'team-b';
       }
       const rotClass = ['','rotate-90','rotate-180','rotate-270'][cardRotations[i]||0];
@@ -4036,9 +3910,9 @@
         </div>` : ''}
 
         <div class="lp-display">
-          <div class="lp-value ${getLPClass(p.lp)}" id="lp-val-${i}">${(function(){ if(gameMode==='team'&&teamLP.length&&matchCtx&&matchCtx.teams&&!matchCtx.separateLP){return(matchCtx.teams[0].indexOf(i)!==-1?teamLP[0]:teamLP[1]).toLocaleString();}return p.lp.toLocaleString();})()}</div>
+          <div class="lp-value ${getLPClass(p.lp)}" id="lp-val-${i}">${(function(){ if(gameMode==='team'&&teamLP.length&&matchCtx&&matchCtx.teams&&!matchCtx.separateLP){if(matchCtx.vsOne&&i===matchCtx.soloIdx)return p.lp.toLocaleString();return(matchCtx.teams[0].indexOf(i)!==-1?teamLP[0]:teamLP[1]).toLocaleString();}return p.lp.toLocaleString();})()}</div>
           <div class="lp-label">Life Points</div>
-          ${i !== activeTurn && !p.eliminated && players[activeTurn] && !players[activeTurn].eliminated ? `<div class="lp-diff" id="lp-diff-${i}">${(()=>{const me=(gameMode==='team'&&teamLP.length&&matchCtx&&matchCtx.teams&&!matchCtx.separateLP)?(matchCtx.teams[0].indexOf(activeTurn)!==-1?teamLP[0]:teamLP[1]):players[activeTurn].lp;const them=(gameMode==='team'&&teamLP.length&&matchCtx&&matchCtx.teams&&!matchCtx.separateLP)?(matchCtx.teams[0].indexOf(i)!==-1?teamLP[0]:teamLP[1]):p.lp;const d=them-me;return (d>0?'▲+':'▼')+d.toLocaleString();})()}</div>` : ''}
+          ${i !== activeTurn && !p.eliminated && players[activeTurn] && !players[activeTurn].eliminated ? `<div class="lp-diff" id="lp-diff-${i}">${(()=>{const _isVsOneSolo=(idx)=>matchCtx&&matchCtx.vsOne&&idx===matchCtx.soloIdx;const me=(gameMode==='team'&&teamLP.length&&matchCtx&&matchCtx.teams&&!matchCtx.separateLP&&!_isVsOneSolo(activeTurn))?(matchCtx.teams[0].indexOf(activeTurn)!==-1?teamLP[0]:teamLP[1]):players[activeTurn].lp;const them=(gameMode==='team'&&teamLP.length&&matchCtx&&matchCtx.teams&&!matchCtx.separateLP&&!_isVsOneSolo(i))?(matchCtx.teams[0].indexOf(i)!==-1?teamLP[0]:teamLP[1]):p.lp;const d=them-me;return (d>0?'▲+':'▼')+d.toLocaleString();})()}</div>` : ''}
           <div class="match-record">${(() => { var k=p.name.trim().toLowerCase(); var r=roster[k]||{w:0,l:0,f:0}; var parts=['<span class="wins">'+r.w+'W</span>','<span class="losses">'+r.l+'L</span>']; if(r.f) parts.push('<span class="forfeits">'+r.f+'F</span>'); return parts.join(' &middot; '); })()} </div>
           ${biggestHit[i] > 0 ? `<div class="biggest-hit-badge" title="Biggest hit taken this duel">💥 ${biggestHit[i].toLocaleString()}</div>` : ''}
           ${gameMode === 'koth' && matchCtx && matchCtx.champion === p.name && (matchCtx.streak||0) > 0 ? `<div class="koth-streak"><span class="koth-streak-fire">🔥</span> ${matchCtx.streak} WIN STREAK</div>` : ''}
@@ -4047,7 +3921,7 @@
         <div class="lp-sparkline"><canvas id="spark-${i}" height="28"></canvas></div>
         <div class="lp-bar-track">
           <div class="lp-bar-fill" id="lp-bar-${i}"
-            style="width:${Math.min(100,(gameMode==='team'&&teamLP.length&&matchCtx&&!matchCtx.separateLP?(matchCtx.teams[0].indexOf(i)!==-1?teamLP[0]:teamLP[1]):p.lp)/MAX_LP*100)}%;background:${getLPColor((gameMode==='team'&&teamLP.length&&matchCtx&&!matchCtx.separateLP?(matchCtx.teams[0].indexOf(i)!==-1?teamLP[0]:teamLP[1]):p.lp))};"></div>
+            style="width:${Math.min(100,((gameMode==='team'&&teamLP.length&&matchCtx&&!matchCtx.separateLP&&!(matchCtx.vsOne&&i===matchCtx.soloIdx))?(matchCtx.teams[0].indexOf(i)!==-1?teamLP[0]:teamLP[1]):p.lp)/(matchCtx&&matchCtx.vsOne&&i===matchCtx.soloIdx?(matchCtx.soloMaxLP||8000):MAX_LP)*100)}%;background:${getLPColor((gameMode==='team'&&teamLP.length&&matchCtx&&!matchCtx.separateLP&&!(matchCtx.vsOne&&i===matchCtx.soloIdx))?(matchCtx.teams[0].indexOf(i)!==-1?teamLP[0]:teamLP[1]):p.lp)};"></div>
         </div>
 
         <!-- Battle Phase Panel -->
@@ -4131,53 +4005,12 @@
         <div class="counter-tokens" id="tokens-${i}">
           ${(counterTokens[i]||[]).map((t,ti)=>`<span class="counter-token" title="${t.name}">${t.name} <strong>${t.count}</strong> <button class="token-adj" onclick="adjToken(${i},${ti},1)">+</button><button class="token-adj" onclick="adjToken(${i},${ti},-1)">−</button><button class="token-adj" onclick="removeToken(${i},${ti})">✕</button></span>`).join('')}
           <button class="add-token-btn" onclick="promptAddToken(${i})">+ Counter</button>
-          <button class="effect-timer-btn ${getPlayerActiveEffects(i).length ? 'active' : ''}" id="effect-timer-btn-${i}" onclick="toggleEffectPanel(${i})" title="Add timed card effect">⏱</button>
-        </div>
-
-        ${(() => {
-          const effs = getPlayerActiveEffects(i);
-          if (!effs.length) return '';
-          return '<div class="active-effects-bar">' + effs.map(e =>
-            `<span class="effect-badge"><span class="effect-badge-name">⚠ ${e.name}</span><span class="effect-badge-turns">${e.turnsLeft}</span><button class="effect-badge-cancel" onclick="cancelEffect(${e.id})" title="Cancel effect">✕</button></span>`
-          ).join('') + '</div>';
-        })()}
-
-        <div class="effect-timer-panel ${_effectPanelOpen[i] ? 'open' : ''}" id="effect-panel-${i}">
-          <div class="effect-timer-title">⏱ Timed Card Effect</div>
-          <input class="effect-name-input" id="effect-name-${i}" placeholder="Effect name (e.g. Swords of Revealing Light)" maxlength="40"
-            onkeydown="if(event.key==='Enter')applyEffect(${i})">
-          <div class="effect-row">
-            <span class="effect-row-label">Turns:</span>
-            <input type="number" class="effect-turns-input" id="effect-turns-${i}" value="3" min="1" max="99">
-          </div>
-          <div class="effect-row-label" style="margin-top:4px;">Affects:</div>
-          <div class="effect-player-presets">
-            <button class="effect-preset-btn" onclick="effectSelectPreset(${i},'others')">Opponents</button>
-            <button class="effect-preset-btn" onclick="effectSelectPreset(${i},'all')">All</button>
-            <button class="effect-preset-btn" onclick="effectSelectPreset(${i},'self')">Just Me</button>
-          </div>
-          <div class="effect-phase-picker" id="effect-players-${i}">
-            ${players.map((pl, pi) => `<input type="checkbox" class="effect-player-chk" id="eplayer-${i}-${pi}" value="${pi}" ${pi !== i ? 'checked' : ''}><label class="effect-phase-lbl" for="eplayer-${i}-${pi}">${pl.name}</label>`).join('')}
-          </div>
-          <div class="effect-row-label" style="margin-top:4px;">Highlight phases:</div>
-          <div class="effect-phase-picker" id="effect-phases-${i}">
-            ${PHASES.map((ph, pi) => `<input type="checkbox" class="effect-phase-chk" id="ephase-${i}-${pi}" value="${pi}"><label class="effect-phase-lbl" for="ephase-${i}-${pi}">${ph}</label>`).join('')}
-          </div>
-          <button class="effect-apply-btn" onclick="applyEffect(${i})">⚡ Activate Effect</button>
         </div>
         ${i === activeTurn ? `
         <div class="phase-indicator">
           <div class="phase-label-row">Phase</div>
           <div class="phase-steps">
-            ${(()=>{
-              const effs = getPlayerActiveEffects(i);
-              return PHASES.map((ph, pi) => {
-                const isCursed = effs.some(function(e) {
-                  return !e.affectedPhases || e.affectedPhases.indexOf(pi) !== -1;
-                });
-                return `<button class="phase-step ${pi === currentPhase ? 'current' : ''} ${isCursed ? 'cursed' : ''}" onclick="setPhase(${pi})">${ph}</button>`;
-              }).join('');
-            })()}
+            ${PHASES.map((ph, pi) => `<button class="phase-step ${pi === currentPhase ? 'current' : ''}" onclick="setPhase(${pi})">${ph}</button>`).join('')}
           </div>
         </div>` : ''}
       `
@@ -4247,7 +4080,9 @@
     lpHistory[i].push({ lp: players[i] ? players[i].lp : 0, teamLP: teamLP.length ? [...teamLP] : null });
 
     // In team mode, damage/heal the shared team pool instead of individual LP
-    if (gameMode === 'team' && matchCtx && matchCtx.teams && teamLP.length && !matchCtx.separateLP) {
+    // vsOne: solo player (soloIdx) bypasses shared pool and uses standard LP path
+    var _isSolo = matchCtx && matchCtx.vsOne && i === matchCtx.soloIdx;
+    if (gameMode === 'team' && matchCtx && matchCtx.teams && teamLP.length && !matchCtx.separateLP && !_isSolo) {
       var teamIdx = matchCtx.teams[0].indexOf(i) !== -1 ? 0 : 1;
       var oldPool = teamLP[teamIdx];
       teamLP[teamIdx] = Math.max(0, teamLP[teamIdx] + delta);
@@ -4343,7 +4178,7 @@
       if (p.lp === 0) {
         p.eliminated = true; panelState[i] = null; render();
         playSound('eliminate');
-        if (gameMode === 'team' && matchCtx && matchCtx.separateLP) {
+        if (gameMode === 'team' && matchCtx && (matchCtx.separateLP || matchCtx.vsOne)) {
           checkTeamWinCondition();
         } else {
           checkWinCondition();
@@ -4489,79 +4324,6 @@
     render();
   }
 
-  /* ── Effect Timer ─────────────────────── */
-  function toggleEffectPanel(i) {
-    _effectPanelOpen[i] = !_effectPanelOpen[i];
-    const panel = document.getElementById('effect-panel-' + i);
-    const btn   = document.getElementById('effect-timer-btn-' + i);
-    if (panel) panel.classList.toggle('open', !!_effectPanelOpen[i]);
-    if (btn)   btn.classList.toggle('active', !!_effectPanelOpen[i]);
-  }
-
-  function effectSelectPreset(i, mode) {
-    var boxes = document.querySelectorAll('#effect-players-' + i + ' .effect-player-chk');
-    boxes.forEach(function(cb) {
-      var pi = parseInt(cb.value);
-      if (mode === 'all')    cb.checked = true;
-      else if (mode === 'self')   cb.checked = (pi === i);
-      else if (mode === 'others') cb.checked = (pi !== i);
-    });
-  }
-
-  function applyEffect(i) {
-    const nameEl  = document.getElementById('effect-name-' + i);
-    const turnsEl = document.getElementById('effect-turns-' + i);
-    const name    = (nameEl && nameEl.value.trim()) || 'Effect';
-    const turns   = Math.max(1, parseInt(turnsEl && turnsEl.value) || 3);
-
-    // Read selected players
-    const playerBoxes   = document.querySelectorAll('#effect-players-' + i + ' .effect-player-chk:checked');
-    const affectedIdxs  = Array.from(playerBoxes).map(function(cb) { return parseInt(cb.value); })
-                            .filter(function(pi) { return !players[pi] || !players[pi].eliminated; });
-
-    if (affectedIdxs.length === 0) { showToast('Select at least one target', 'warning'); return; }
-
-    // Read selected phases; if none checked, default to all
-    const phaseBoxes    = document.querySelectorAll('#effect-phases-' + i + ' .effect-phase-chk:checked');
-    const affectedPhases = phaseBoxes.length
-      ? Array.from(phaseBoxes).map(function(cb) { return parseInt(cb.value); })
-      : PHASES.map(function(_,pi) { return pi; });
-
-    const phaseNames = affectedPhases.map(function(pi) { return PHASES[pi]; }).join(', ');
-    activeEffects.push({
-      id: ++_effectIdCounter, name,
-      activatorIdx: i, affectedIdxs, affectedPhases,
-      turnsLeft: turns, totalTurns: turns
-    });
-
-    _effectPanelOpen[i] = false;
-    showToast('⏱ ' + name + ' · ' + turns + ' turn' + (turns !== 1 ? 's' : '') + ' · ' + phaseNames, 'info', 3000);
-    render();
-  }
-
-  function cancelEffect(id) {
-    activeEffects = activeEffects.filter(function(e) { return e.id !== id; });
-    render();
-  }
-
-  function tickEffectsForPhaseLeave(leavingPhaseIdx, playerIdx) {
-    // Decrement effects where this player is affected AND this phase is one of the watched phases
-    var expired = [];
-    activeEffects = activeEffects.map(function(e) {
-      if (e.affectedIdxs.indexOf(playerIdx) === -1) return e;
-      var phases = e.affectedPhases || PHASES.map(function(_,pi){ return pi; });
-      if (phases.indexOf(leavingPhaseIdx) === -1) return e;
-      var next = Object.assign({}, e, { turnsLeft: e.turnsLeft - 1 });
-      if (next.turnsLeft <= 0) expired.push(e.name);
-      return next;
-    }).filter(function(e) { return e.turnsLeft > 0; });
-    expired.forEach(function(n) { showToast('⏱ ' + n + ' has expired', 'info', 2500); });
-  }
-
-  function getPlayerActiveEffects(i) {
-    return activeEffects.filter(function(e) { return e.affectedIdxs.indexOf(i) !== -1; });
-  }
-
   /* ── Turn ─────────────────────────────── */
   function nextTurn() {
     playSound('nextTurn');
@@ -4571,8 +4333,6 @@
       let n = (activeTurn + 1) % players.length, t = 0;
       while (players[n].eliminated && t++ < players.length) n = (n+1) % players.length;
       if (!timerRunning) timerStart();
-      // Leaving current phase (typically End) counts as passing it
-      tickEffectsForPhaseLeave(currentPhase, activeTurn);
       activeTurn = n; currentPhase = 0; render();
     });
   }
@@ -4595,12 +4355,6 @@
   }
 
   function setPhase(idx) {
-    // Tick for every phase being skipped over (forward only)
-    if (idx > currentPhase) {
-      for (var p = currentPhase; p < idx; p++) {
-        tickEffectsForPhaseLeave(p, activeTurn);
-      }
-    }
     currentPhase = idx;
     render();
   }
@@ -4618,10 +4372,10 @@
     const alive = players.filter(p => !p.eliminated);
     if (alive.length === 0) return;
     if (currentPhase === PHASES.length - 1) {
-      nextTurn(); // nextTurn handles the tick for End phase
+      nextTurn();
     } else {
+      // Auto-start timer: first time we leave Standby on turn 1 (game has truly begun)
       if (globalTurnNum === 1 && currentPhase === 1 && !timerRunning) timerStart();
-      tickEffectsForPhaseLeave(currentPhase, activeTurn);
       currentPhase++;
       render();
     }
@@ -5683,8 +5437,12 @@
     if (newGame) {
       // Restore base LP if we inflated it for team battle
       if (gameMode === 'team' && matchCtx && !matchCtx.separateLP) {
-        var count = matchCtx.format === '5v5' ? 5 : matchCtx.format === '4v4' ? 4 : matchCtx.format === '3v3' ? 3 : 2;
-        MAX_LP = Math.round(MAX_LP / count);
+        if (matchCtx.vsOne) {
+          MAX_LP = matchCtx.soloMaxLP || 8000;
+        } else {
+          var count = matchCtx.format === '5v5' ? 5 : matchCtx.format === '4v4' ? 4 : matchCtx.format === '3v3' ? 3 : 2;
+          MAX_LP = Math.round(MAX_LP / count);
+        }
         document.getElementById('startingLPInput').value = MAX_LP;
       }
       // KotH cleanup
@@ -6341,12 +6099,30 @@
 
     // Team — refresh selects
     var fmt = document.getElementById('team-format');
-    var count = fmt ? (fmt.value === '5v5' ? 5 : fmt.value === '4v4' ? 4 : fmt.value === '3v3' ? 3 : 2) : 2;
+    var fmtVal = fmt ? fmt.value : '2v2';
+    var isVsOne = fmtVal.endsWith('v1');
+    var count = isVsOne ? parseInt(fmtVal) : (fmtVal === '5v5' ? 5 : fmtVal === '4v4' ? 4 : fmtVal === '3v3' ? 3 : 2);
+
+    // Show/hide Team B section vs Solo section
+    var teamBHeader = document.getElementById('team-b-header');
+    var soloHeader  = document.getElementById('solo-header');
+    var soloSlot    = document.getElementById('team-b-solo-slot');
+    if (teamBHeader) teamBHeader.style.display = isVsOne ? 'none' : '';
+    if (soloHeader)  soloHeader.style.display  = isVsOne ? '' : 'none';
+    if (soloSlot)    soloSlot.style.display     = isVsOne ? 'flex' : 'none';
+
+    // Update mode info text
+    var infoEl = document.getElementById('team-mode-info');
+    if (infoEl) infoEl.textContent = isVsOne
+      ? 'The team shares a combined LP pool. The solo duelist has 8,000 LP. Team goes first, all members in a row, then the solo player.'
+      : 'Two teams share the board. Turns alternate between teams.';
+
     ['a','b'].forEach(function(team, ti) {
+      var maxSlots = isVsOne && team === 'b' ? 0 : 5;
       for (var si = 1; si <= 5; si++) {
         var row = document.getElementById('team-' + team + '-slot-' + si);
         if (!row) continue;
-        row.style.display = si <= count ? 'flex' : 'none';
+        row.style.display = si <= count && si <= maxSlots ? 'flex' : 'none';
         var sel = row.querySelector('select');
         if (!sel) continue;
         var cur = sel.value;
@@ -6358,6 +6134,18 @@
             }).join('');
       }
     });
+
+    // Populate solo slot
+    if (isVsOne && soloSlot) {
+      var solSel = soloSlot.querySelector('select');
+      if (solSel) {
+        var curSolo = solSel.value;
+        solSel.innerHTML = '<option value="">— Choose Solo —</option>'
+          + rosterNames.map(function(n) {
+              return '<option value="' + n + '"' + (n === curSolo ? ' selected' : '') + '>' + n + '</option>';
+            }).join('');
+      }
+    }
   }
 
   // ── Best of X ───────────────────────────────
@@ -6748,7 +6536,8 @@
 
   // ── Team Battle ──────────────────────────────
   function startTeamBattle() {
-    var fmt   = document.getElementById('team-format').value; // '2v2' | '3v3' | '4v4'
+    var fmt = document.getElementById('team-format').value;
+    if (fmt.endsWith('v1')) { startVsOne(fmt); return; }
     var count = fmt === '5v5' ? 5 : fmt === '4v4' ? 4 : fmt === '3v3' ? 3 : 2;
     var teamA = [], teamB = [];
     for (var i = 1; i <= count; i++) {
@@ -6805,8 +6594,82 @@
     updateMatchBanner();
   }
 
+
+  /* ── NvX (Team vs Solo) ──────────────────────── */
+  function startVsOne(fmt) {
+    var teamCount = parseInt(fmt); // 2, 3, or 4
+    // Read team slots
+    var teamNames = [];
+    for (var i = 1; i <= teamCount; i++) {
+      var sel = document.querySelector('#team-a-slot-' + i + ' select');
+      var n = sel ? sel.value.trim() : '';
+      if (!n) { alert('Fill all Team slots'); return; }
+      teamNames.push(n);
+    }
+    // Read solo slot
+    var soloSel = document.querySelector('#team-b-solo-slot select');
+    var soloName = soloSel ? soloSel.value.trim() : '';
+    if (!soloName) { alert('Choose the Solo duelist'); return; }
+    // Validate uniqueness
+    var allNames = teamNames.concat([soloName]);
+    var unique = new Set(allNames.map(function(n) { return n.toLowerCase(); }));
+    if (unique.size < allNames.length) { alert('Each player must be different'); return; }
+
+    gameMode = 'team';
+    var baseLp = parseInt(document.getElementById('startingLPInput').value) || 8000;
+    var teamPool = baseLp * teamCount;
+
+    // Players 0..teamCount-1 = team members, player teamCount = solo
+    var totalPlayers = teamCount + 1;
+    matchCtx = {
+      format:   fmt,
+      vsOne:    true,
+      soloIdx:  teamCount,
+      separateLP: false,
+      teams:    [
+        Array.from({length:teamCount}, function(_,i){ return i; }), // team
+        [teamCount]                                                   // solo (treated as "team 1")
+      ],
+      teamNames: ['Team', soloName]
+    };
+    closeModeModal();
+
+    // MAX_LP = team pool (for shared LP bar scaling); solo uses baseLp
+    MAX_LP = teamPool;
+    document.getElementById('startingLPInput').value = MAX_LP;
+
+    initPlayers(totalPlayers);
+    teamNames.forEach(function(name, i) { players[i].name = name; });
+    players[teamCount].name = soloName;
+    // Solo player gets standard 8000 LP
+    matchCtx.soloMaxLP = baseLp;
+    players[teamCount].lp     = baseLp;
+    players[teamCount].prevLP = baseLp;
+
+    // Turn order: team members 0..N-1, then solo N — already sequential
+    currentPhase = 1;
+    // Shared pool for team only; solo uses individual LP
+    teamLP = [teamPool]; // only one shared pool (index 0)
+
+    render();
+    updateMatchBanner();
+    showToast(fmt + ' — ' + teamNames.join(', ') + ' vs ' + soloName, 'info', 3500);
+  }
+
   function checkTeamWinCondition() {
     if (!matchCtx || !matchCtx.teams) return;
+
+    if (matchCtx.vsOne) {
+      // vsOne: team wins if solo is eliminated; solo wins if team pool hits 0
+      var soloAlive = players[matchCtx.soloIdx] && !players[matchCtx.soloIdx].eliminated;
+      var teamAlive = teamLP.length > 0 && teamLP[0] > 0;
+      if (!soloAlive || !teamAlive) {
+        var winTeamIdx = !soloAlive ? 0 : 1; // 0=team wins, 1=solo wins
+        setTimeout(function() { showTeamSummary(winTeamIdx); }, 900);
+      }
+      return;
+    }
+
     if (matchCtx.separateLP) {
       // Separate LP: team loses when ALL members are eliminated
       var aAlive = matchCtx.teams[0].some(function(pi) { return players[pi] && !players[pi].eliminated; });
@@ -6831,7 +6694,7 @@
     var winName = matchCtx.teamNames[winTeamIdx];
     document.getElementById('summaryTitle').textContent = winName + ' Wins!';
     var sub = document.getElementById('summarySubtitle');
-    if (sub) sub.textContent = 'TEAM BATTLE · ' + matchCtx.format.toUpperCase() + (matchCtx.separateLP ? ' · SEPARATE LP' : ' · SHARED LP');
+    if (sub) sub.textContent = 'TEAM BATTLE · ' + matchCtx.format.toUpperCase() + (matchCtx.vsOne ? '' : matchCtx.separateLP ? ' · SEPARATE LP' : ' · SHARED LP');
     // update roster for all players
     players.forEach(function(p, i) {
       var k = p.name.trim().toLowerCase();
@@ -6900,13 +6763,20 @@
       }
     } else if (gameMode === 'team' && matchCtx) {
       banner.classList.add('visible');
-      label.textContent = matchCtx.format.toUpperCase();
+      label.textContent = matchCtx.format.toUpperCase() + (matchCtx.vsOne ? '' : matchCtx.separateLP ? ' · SEP LP' : '');
       bbtn.style.display = 'none';
       var aNames = matchCtx.teams[0].map(function(i) { return players[i] ? players[i].name : '?'; }).join(' & ');
-      var bNames = matchCtx.teams[1].map(function(i) { return players[i] ? players[i].name : '?'; }).join(' & ');
-      score.innerHTML = '<span class="banner-player" style="color:#8899ff;">' + aNames + '</span>'
-        + '<span class="banner-vs">vs</span>'
-        + '<span class="banner-player" style="color:#ff8888;">' + bNames + '</span>';
+      if (matchCtx.vsOne) {
+        var soloName = players[matchCtx.soloIdx] ? players[matchCtx.soloIdx].name : '?';
+        score.innerHTML = '<span class="banner-player" style="color:#8899ff;">' + aNames + '</span>'
+          + '<span class="banner-vs">vs</span>'
+          + '<span class="banner-player" style="color:#ffcc88;">' + soloName + '</span>';
+      } else {
+        var bNames = matchCtx.teams[1].map(function(i) { return players[i] ? players[i].name : '?'; }).join(' & ');
+        score.innerHTML = '<span class="banner-player" style="color:#8899ff;">' + aNames + '</span>'
+          + '<span class="banner-vs">vs</span>'
+          + '<span class="banner-player" style="color:#ff8888;">' + bNames + '</span>';
+      }
     } else if (gameMode === 'koth' && matchCtx) {
       banner.classList.add('visible');
       var streak = matchCtx.streak || 0;
@@ -9197,6 +9067,73 @@
         openTransfer(activeTurn); setResult('Transfer panel opened','ok'); return;
       }
 
+      // ── BATTLE DAMAGE ─────────────────────────────────────────
+      // Patterns:
+      //   "3000 attacks into 2500"             → active attacks, default opponent takes 500
+      //   "3000 attacks into player 2 2500"    → explicit target
+      //   "attack 3000 into 2500"              → synonym
+      //   "my 3000 attacks their 2500"         → natural
+      //   "3000 attacks 2500"                  → short form
+      //   "direct attack 3000"                 → direct, def=0
+      //   "direct 3000"                        → direct, def=0
+      var battleMatch = null;
+      // direct attack
+      if (/^(?:direct attack|direct)\s+(.+)$/.test(t)) {
+        var dm = t.match(/^(?:direct attack|direct)\s+(.+)$/);
+        var dAmt = wordsToNum(dm[1]);
+        if (!isNaN(dAmt) && dAmt > 0) {
+          var dTgt = players.findIndex(function(p,pi){ return pi!==activeTurn && !p.eliminated; });
+          if (dTgt >= 0) {
+            adjustLP(dTgt, -dAmt, 'battle', activeTurn);
+            setResult('⚔️ Direct ' + dAmt.toLocaleString() + ' → ' + players[dTgt].name + ' ✓','ok');
+          } else { setResult('No valid target', 'err'); }
+          return;
+        }
+      }
+      // "ATK attacks [into] [player N] DEF"  /  "ATK attacks DEF"  /  "attack ATK into DEF"
+      var bPat = t.match(/^(?:attack\s+)?(\w[\w\s,]*?)\s+attacks?\s+(?:into\s+)?(?:(player\s+\w+)\s+)?(\w[\w\s,]*)$/)
+               || t.match(/^(\w[\w\s,]*?)\s+attacks?\s+(\w[\w\s,]*)$/);
+      // also handle "my N attacks their M"
+      var bPat2 = t.match(/^(?:my\s+)?(\w[\w\s,]+?)\s+attacks?\s+(?:their\s+|(?:player\s+\w+\s+))?(\w[\w\s,]+)$/);
+
+      if (bPat || bPat2) {
+        var pat = bPat || bPat2;
+        var atkStr  = pat[1].trim();
+        var maybeTarget = pat[2] && /^player\s+/i.test(pat[2].trim()) ? pat[2].trim() : null;
+        var defStr  = maybeTarget ? pat[3].trim() : (pat[2]||'').trim();
+
+        // If no explicit target provided via "player N", try parsing from defStr prefix
+        if (!maybeTarget) {
+          var plPrefix = defStr.match(/^(player\s+\w+)\s+(.+)$/);
+          if (plPrefix) { maybeTarget = plPrefix[1]; defStr = plPrefix[2]; }
+        }
+
+        var atkVal = wordsToNum(atkStr);
+        var defVal = wordsToNum(defStr);
+
+        if (!isNaN(atkVal) && !isNaN(defVal)) {
+          var diff = atkVal - defVal;
+          var dmg  = Math.abs(diff);
+          var btgt;
+          if (maybeTarget) {
+            btgt = findPlayer(maybeTarget);
+            if (btgt < 0) btgt = players.findIndex(function(p,pi){ return pi!==activeTurn && !p.eliminated; });
+          } else {
+            btgt = diff > 0
+              ? players.findIndex(function(p,pi){ return pi!==activeTurn && !p.eliminated; })
+              : activeTurn; // attacker takes damage
+          }
+          if (diff === 0) { setResult('Equal ATK/DEF — no battle damage',''); return; }
+          if (btgt < 0) { setResult('No valid target', 'err'); return; }
+          var srcIdx = diff > 0 ? activeTurn : null;
+          adjustLP(btgt, -dmg, 'battle', srcIdx);
+          var who = diff > 0 ? players[btgt].name + ' takes' : players[activeTurn].name + ' takes (reflect)';
+          setResult('⚔️ ' + atkVal.toLocaleString() + ' vs ' + defVal.toLocaleString() + ' → ' + dmg.toLocaleString() + ' to ' + players[btgt].name + ' ✓','ok');
+          return;
+        }
+      }
+
+
       // ── TIMER ────────────────────────────────────────────────
       if (/^(start timer|start clock|begin timer|resume timer)/.test(t)) {
         timerStart(); setResult('Timer started ✓','ok'); return;
@@ -9678,6 +9615,13 @@
     <div class="vcmd-row"><span class="vcmd-example">"previous turn"</span><span class="vcmd-desc">Go back a turn</span></div>
     <div class="vcmd-row"><span class="vcmd-example">"next phase"</span><span class="vcmd-desc">Advance the current phase</span></div>
     <div class="vcmd-row"><span class="vcmd-example">"battle phase"</span><span class="vcmd-desc">Jump to a specific phase (draw / standby / main one / battle / main two / end)</span></div>
+
+    <div class="vcmd-section">Battle Damage</div>
+    <div class="vcmd-row"><span class="vcmd-example">"3000 attacks into 2500"</span><span class="vcmd-desc">Active player attacks, opponent takes 500</span></div>
+    <div class="vcmd-row"><span class="vcmd-example">"3000 attacks into player 2 2500"</span><span class="vcmd-desc">Explicitly target a player</span></div>
+    <div class="vcmd-row"><span class="vcmd-example">"my 3000 attacks their 2500"</span><span class="vcmd-desc">Natural phrasing, same result</span></div>
+    <div class="vcmd-row"><span class="vcmd-example">"2500 attacks into 3000"</span><span class="vcmd-desc">Attacker takes 500 (reflect)</span></div>
+    <div class="vcmd-row"><span class="vcmd-example">"direct attack 2800"</span><span class="vcmd-desc">Direct — opponent takes full 2800</span></div>
 
     <div class="vcmd-section">Life Points</div>
     <div class="vcmd-row"><span class="vcmd-example">"damage 800"</span><span class="vcmd-desc">Deal 800 to default opponent</span></div>
