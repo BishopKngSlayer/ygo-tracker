@@ -2181,6 +2181,184 @@
   }
   .csearch-deck-toggle:hover { color:var(--gold); border-color:rgba(201,162,39,0.35); }
   .csearch-deck-toggle.active { color:var(--gold); border-color:rgba(201,162,39,0.5); background:rgba(201,162,39,0.1); }
+
+  /* ── Deck toolbar: name input + save + library ── */
+  .cdeck-toolbar {
+    padding:8px 14px 0; display:flex; gap:6px; align-items:center; flex-shrink:0;
+  }
+  .cdeck-name-input {
+    flex:1; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
+    border-radius:5px; color:var(--text); font-family:'Cinzel',serif;
+    font-size:11px; padding:6px 10px; outline:none; letter-spacing:1px; min-width:0;
+  }
+  .cdeck-name-input:focus { border-color:rgba(201,162,39,0.4); }
+  .cdeck-name-input::placeholder { color:var(--dim); }
+  .cdeck-toolbar-btn {
+    padding:5px 9px; border-radius:5px; cursor:pointer;
+    font-family:'Cinzel',serif; font-size:11px; letter-spacing:0.5px; white-space:nowrap;
+    transition:all .14s; background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.1); color:var(--dim);
+  }
+  .cdeck-toolbar-btn:hover { color:var(--gold); border-color:rgba(201,162,39,0.4); background:rgba(201,162,39,0.07); }
+  .cdeck-toolbar-btn.save { color:#88cc88; border-color:rgba(100,200,100,0.3); background:rgba(100,200,100,0.05); }
+  .cdeck-toolbar-btn.save:hover { background:rgba(100,200,100,0.14); border-color:rgba(100,200,100,0.5); }
+
+  /* ── View / analytics row ── */
+  .cdeck-view-row {
+    padding:6px 14px 0; display:flex; gap:6px; align-items:center; flex-shrink:0;
+  }
+  .cdeck-view-btn {
+    font-family:'Cinzel',serif; font-size:9px; letter-spacing:1px;
+    padding:4px 10px; border-radius:4px; cursor:pointer; transition:all .14s;
+    background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); color:var(--dim);
+  }
+  .cdeck-view-btn.active { color:var(--gold); border-color:rgba(201,162,39,0.5); background:rgba(201,162,39,0.1); }
+  .cdeck-view-btn:hover:not(.active) { color:var(--text); background:rgba(255,255,255,0.07); }
+
+  /* ── Analytics panel ── */
+  .cdeck-analytics {
+    padding:10px 14px; flex-shrink:0; border-top:1px solid rgba(255,255,255,0.05);
+    animation:fadeIn .2s ease;
+  }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:none} }
+  .cdeck-chart-label {
+    font-family:'Cinzel',serif; font-size:8px; letter-spacing:2px;
+    color:var(--dim); margin-bottom:5px; text-transform:uppercase;
+  }
+  .cdeck-bar-row { display:flex; align-items:center; gap:6px; margin-bottom:4px; }
+  .cdeck-bar-label { font-family:'Cinzel',serif; font-size:9px; color:var(--text); width:66px; flex-shrink:0; }
+  .cdeck-bar-track { flex:1; height:7px; background:rgba(255,255,255,0.05); border-radius:4px; overflow:hidden; }
+  .cdeck-bar-fill  { height:100%; border-radius:4px; transition:width .35s ease; }
+  .cdeck-bar-val   { font-family:'Cinzel',serif; font-size:9px; color:var(--dim); width:22px; text-align:right; flex-shrink:0; }
+  .cdeck-level-curve { display:flex; align-items:flex-end; gap:3px; height:40px; padding:0 0 2px; }
+  .cdeck-level-wrap { display:flex; flex-direction:column; align-items:center; flex:1; height:100%; justify-content:flex-end; }
+  .cdeck-level-bar { width:100%; background:rgba(100,140,255,0.55); border-radius:2px 2px 0 0; min-height:2px; transition:height .3s ease; }
+  .cdeck-level-num { font-family:'Cinzel',serif; font-size:7px; color:var(--dim); margin-top:2px; }
+
+  /* ── Visual grid view ── */
+  .cdeck-card-grid {
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(54px,1fr));
+    gap:4px; padding:6px 10px;
+  }
+  .cdeck-grid-item {
+    position:relative; border-radius:3px; overflow:hidden; cursor:pointer;
+    transition:transform .12s, box-shadow .12s;
+  }
+  .cdeck-grid-item:hover { transform:scale(1.07); z-index:2; box-shadow:0 4px 12px rgba(0,0,0,0.6); }
+  .cdeck-grid-item img { width:100%; display:block; border-radius:3px; }
+  .cdeck-grid-count {
+    position:absolute; bottom:2px; right:2px;
+    background:rgba(0,0,0,0.82); color:var(--gold);
+    font-family:'Cinzel',serif; font-size:9px; font-weight:700;
+    padding:1px 4px; border-radius:3px; letter-spacing:0; line-height:1.4;
+    pointer-events:none;
+  }
+  .cdeck-grid-actions {
+    display:none; position:absolute; bottom:0; left:0; right:0;
+    background:rgba(0,0,0,0.82); justify-content:space-around;
+    align-items:center; padding:2px 0; border-radius:0 0 3px 3px;
+  }
+  .cdeck-grid-item:hover .cdeck-grid-actions { display:flex; }
+  .cdeck-grid-btn {
+    background:none; border:none; cursor:pointer;
+    color:var(--text); font-size:14px; line-height:1; padding:1px 6px;
+    font-family:'Cinzel',serif; transition:color .1s;
+  }
+  .cdeck-grid-btn:hover { color:var(--gold); }
+  .cdeck-grid-btn.del { color:rgba(255,100,100,0.7); font-size:10px; }
+  .cdeck-grid-btn.del:hover { color:#ff8888; }
+
+  /* ── Deck Library Modal ── */
+  #deckLibraryModal {
+    display:none; position:fixed; inset:0; z-index:620;
+    background:rgba(0,0,0,0.88); backdrop-filter:blur(12px);
+    align-items:center; justify-content:center;
+  }
+  #deckLibraryModal.open { display:flex; }
+  .dlib-wrap {
+    background:rgba(8,8,22,0.98); border:1px solid rgba(201,162,39,0.35);
+    border-radius:12px; padding:28px 30px; width:min(520px,94vw);
+    max-height:80vh; overflow-y:auto; position:relative;
+  }
+  .dlib-title { font-family:'Cinzel Decorative',serif; font-size:14px; color:var(--gold); letter-spacing:3px; margin-bottom:4px; }
+  .dlib-subtitle { font-family:'Cinzel',serif; font-size:9px; letter-spacing:3px; color:var(--dim); margin-bottom:20px; }
+  .dlib-empty { font-family:'Cinzel',serif; font-size:10px; letter-spacing:2px; color:rgba(255,255,255,0.18); padding:24px 0; text-align:center; line-height:2; }
+  .dlib-deck-row {
+    display:flex; align-items:center; gap:10px; padding:10px 12px;
+    border:1px solid rgba(255,255,255,0.06); border-radius:7px; margin-bottom:8px;
+    transition:border-color .14s, background .14s;
+  }
+  .dlib-deck-row:hover { border-color:rgba(201,162,39,0.3); background:rgba(201,162,39,0.03); }
+  .dlib-deck-info { flex:1; min-width:0; }
+  .dlib-deck-name { font-family:'Cinzel',serif; font-size:12px; color:var(--text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .dlib-deck-meta { font-family:'Cinzel',serif; font-size:9px; color:var(--dim); letter-spacing:1px; margin-top:2px; }
+  .dlib-deck-load {
+    padding:5px 12px; border-radius:5px; cursor:pointer; white-space:nowrap;
+    font-family:'Cinzel',serif; font-size:9px; letter-spacing:1px;
+    background:rgba(201,162,39,0.1); border:1px solid rgba(201,162,39,0.35); color:var(--gold);
+    transition:background .14s;
+  }
+  .dlib-deck-load:hover { background:rgba(201,162,39,0.22); }
+  .dlib-deck-del {
+    padding:5px 9px; border-radius:5px; cursor:pointer; white-space:nowrap;
+    font-family:'Cinzel',serif; font-size:9px;
+    background:none; border:1px solid rgba(255,80,80,0.2); color:rgba(255,100,100,0.55);
+    transition:all .14s;
+  }
+  .dlib-deck-del:hover { background:rgba(255,80,80,0.1); color:#ff8888; border-color:rgba(255,80,80,0.4); }
+  .dlib-close {
+    margin-top:18px; width:100%; padding:10px; border-radius:7px;
+    background:none; border:1px solid rgba(255,255,255,0.1); color:var(--dim);
+    font-family:'Cinzel',serif; font-size:10px; letter-spacing:2px; cursor:pointer; transition:all .14s;
+  }
+  .dlib-close:hover { color:var(--text); background:rgba(255,255,255,0.05); }
+
+  /* ── Deck Import Modal ── */
+  #deckImportModal {
+    display:none; position:fixed; inset:0; z-index:620;
+    background:rgba(0,0,0,0.88); backdrop-filter:blur(12px);
+    align-items:center; justify-content:center;
+  }
+  #deckImportModal.open { display:flex; }
+  .dimport-wrap {
+    background:rgba(8,8,22,0.98); border:1px solid rgba(201,162,39,0.35);
+    border-radius:12px; padding:28px 30px; width:min(540px,94vw);
+    max-height:88vh; overflow-y:auto; position:relative;
+  }
+  .dimport-title { font-family:'Cinzel Decorative',serif; font-size:14px; color:var(--gold); letter-spacing:3px; margin-bottom:16px; }
+  .dimport-tabs { display:flex; gap:8px; margin-bottom:16px; }
+  .dimport-tab {
+    flex:1; padding:8px 0; border-radius:6px; cursor:pointer;
+    font-family:'Cinzel',serif; font-size:10px; letter-spacing:1px;
+    background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:var(--dim); transition:all .14s;
+  }
+  .dimport-tab.active { color:var(--gold); border-color:rgba(201,162,39,0.5); background:rgba(201,162,39,0.1); }
+  .dimport-tab:hover:not(.active) { color:var(--text); background:rgba(255,255,255,0.07); }
+  .dimport-area {
+    width:100%; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1);
+    border-radius:8px; color:var(--text); font-family:'Rajdhani',sans-serif;
+    font-size:13px; padding:14px; outline:none; resize:vertical; min-height:170px; box-sizing:border-box;
+  }
+  .dimport-area:focus { border-color:rgba(201,162,39,0.4); }
+  .dimport-hint { font-family:'Cinzel',serif; font-size:9px; letter-spacing:1px; color:var(--dim); margin:8px 0 12px; line-height:1.8; }
+  .dimport-file-zone {
+    border:2px dashed rgba(201,162,39,0.22); border-radius:8px; padding:28px;
+    text-align:center; cursor:pointer; transition:border-color .15s, background .15s; margin-bottom:10px;
+  }
+  .dimport-file-zone:hover, .dimport-file-zone.drag { border-color:rgba(201,162,39,0.6); background:rgba(201,162,39,0.04); }
+  .dimport-file-label { font-family:'Cinzel',serif; font-size:11px; color:var(--dim); letter-spacing:2px; }
+  .dimport-file-label span { color:var(--gold); }
+  .dimport-btns { display:flex; gap:10px; margin-top:14px; }
+  .dimport-btn {
+    flex:1; padding:11px 0; border-radius:7px; cursor:pointer;
+    font-family:'Cinzel',serif; font-size:11px; letter-spacing:1px; transition:background .14s;
+  }
+  .dimport-btn.go { background:rgba(201,162,39,0.15); border:1px solid rgba(201,162,39,0.45); color:var(--gold); }
+  .dimport-btn.go:hover { background:rgba(201,162,39,0.26); }
+  .dimport-btn.cancel { background:none; border:1px solid rgba(255,255,255,0.1); color:var(--dim); }
+  .dimport-btn.cancel:hover { color:var(--text); background:rgba(255,255,255,0.06); }
+  .dimport-status { font-family:'Cinzel',serif; font-size:10px; letter-spacing:2px; margin-top:10px; min-height:20px; text-align:center; }
+
   .cdeck-toggle-count {
     background:rgba(201,162,39,0.25); border-radius:10px;
     font-size:9px; padding:1px 6px; min-width:16px; text-align:center; color:var(--gold);
@@ -3495,6 +3673,18 @@
                 <input class="csearch-filter-input" type="number" id="cf-def-max" placeholder="Max" min="0" max="99999">
               </div>
             </div>
+            <div class="csearch-filter-group">
+              <div class="csearch-filter-label">Level / Rank</div>
+              <div class="csearch-filter-range">
+                <input class="csearch-filter-input" type="number" id="cf-level-min" placeholder="Min" min="1" max="12">
+                <span>–</span>
+                <input class="csearch-filter-input" type="number" id="cf-level-max" placeholder="Max" min="1" max="12">
+              </div>
+            </div>
+            <div class="csearch-filter-group">
+              <div class="csearch-filter-label">Archetype</div>
+              <input class="csearch-filter-input" type="text" id="cf-archetype" placeholder="e.g. Blue-Eyes" style="width:100%;box-sizing:border-box;">
+            </div>
           </div>
           <div class="csearch-filter-actions">
             <button class="csearch-filter-clear" onclick="clearCardFilters()">&#x2715; Clear Filters</button>
@@ -3515,10 +3705,25 @@
             <span class="cdeck-count-badge" id="cdeck-side-count">SIDE 0/15</span>
           </div>
         </div>
+        <!-- Deck name + save + library -->
+        <div class="cdeck-toolbar">
+          <input class="cdeck-name-input" id="cdeckNameInput" placeholder="Deck name…" maxlength="40">
+          <button class="cdeck-toolbar-btn save" onclick="saveDeckToLibrary()" title="Save deck">&#x1F4BE;</button>
+          <button class="cdeck-toolbar-btn" onclick="openDeckLibrary()" title="My Decks">&#x1F4DA;</button>
+        </div>
+        <!-- View toggle + analytics -->
+        <div class="cdeck-view-row">
+          <button class="cdeck-view-btn active" id="cdeckViewList" onclick="setDeckView('list')">&#x2630; List</button>
+          <button class="cdeck-view-btn" id="cdeckViewGrid" onclick="setDeckView('grid')">&#x229E; Visual</button>
+          <button class="cdeck-view-btn" id="cdeckAnalyticsBtn" onclick="toggleDeckAnalytics()" style="margin-left:auto;" title="Analytics">&#x1F4CA; Stats</button>
+        </div>
+        <!-- Analytics panel (hidden until toggled) -->
+        <div id="cdeckAnalyticsPanel" style="display:none;"></div>
         <div class="cdeck-body" id="cdeckBody"></div>
         <div class="cdeck-footer">
           <button class="cdeck-foot-btn export" onclick="exportDeckText()">&#x1F4CB; Text</button>
           <button class="cdeck-foot-btn ydk" onclick="exportDeckYDK()">&#x2B07; YDK</button>
+          <button class="cdeck-foot-btn" style="background:rgba(100,180,255,0.07);border:1px solid rgba(100,180,255,0.25);color:#88aadd;flex:1;padding:9px 0;border-radius:6px;cursor:pointer;font-family:'Cinzel',serif;font-size:10px;letter-spacing:1px;transition:background .14s;" onclick="openDeckImport()">&#x1F4E5; Import</button>
           <button class="cdeck-foot-btn clear" onclick="clearDeck()">&#x2715;</button>
         </div>
       </div>
@@ -3545,6 +3750,47 @@
         <button class="cdetail-action-btn deck"  onclick="addToDeck(_currentDetailCard); _updateDeckBadges()">➕ Add to Deck</button>
         <button class="cdetail-action-btn" style="background:rgba(80,120,200,0.1);border:1px solid rgba(80,120,200,0.3);color:#aabbee;" onclick="addToDeckSide(_currentDetailCard); _updateDeckBadges()">🔄 Side Deck</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Deck Library Modal -->
+<div id="deckLibraryModal" onclick="if(event.target===this)closeDeckLibrary()">
+  <div class="dlib-wrap">
+    <div class="dlib-title">&#x1F4DA; MY DECKS</div>
+    <div class="dlib-subtitle">SAVED DECK LIBRARY</div>
+    <div id="dlib-list"></div>
+    <button class="dlib-close" onclick="closeDeckLibrary()">CLOSE</button>
+  </div>
+</div>
+
+<!-- Deck Import Modal -->
+<div id="deckImportModal" onclick="if(event.target===this)closeDeckImport()">
+  <div class="dimport-wrap">
+    <div class="dimport-title">&#x1F4E5; IMPORT DECK</div>
+    <div class="dimport-tabs">
+      <button class="dimport-tab active" id="dimport-tab-text" onclick="switchImportTab('text')">&#x1F4CB; Text List</button>
+      <button class="dimport-tab" id="dimport-tab-ydk" onclick="switchImportTab('ydk')">&#x1F4C4; YDK File</button>
+    </div>
+    <div id="dimport-panel-text">
+      <textarea class="dimport-area" id="dimportTextarea" placeholder="Paste deck list here…&#10;&#10;3x Dark Magician&#10;2x Blue-Eyes White Dragon&#10;1x Pot of Greed&#10;&#10;Or use section headers:&#10;Main Deck:&#10;Extra Deck:&#10;Side Deck:"></textarea>
+      <div class="dimport-hint">Each line: <b>Nx Card Name</b> or just <b>Card Name</b> (defaults to ×1)<br>Section headers like &ldquo;Main Deck:&rdquo; / &ldquo;Extra Deck:&rdquo; are auto-detected</div>
+    </div>
+    <div id="dimport-panel-ydk" style="display:none;">
+      <div class="dimport-file-zone" id="dimportFileZone"
+        onclick="document.getElementById('dimportFileInput').click()"
+        ondragover="event.preventDefault();this.classList.add('drag')"
+        ondragleave="this.classList.remove('drag')"
+        ondrop="dimportHandleDrop(event)">
+        <div class="dimport-file-label" id="dimportFileLabel">Drop .ydk file here or <span>click to browse</span></div>
+      </div>
+      <input type="file" id="dimportFileInput" accept=".ydk,.txt" style="display:none" onchange="dimportHandleFile(event)">
+      <div class="dimport-hint">YDK format: card IDs one per line, with #main / #extra / !side section markers</div>
+    </div>
+    <div class="dimport-status" id="dimportStatus"></div>
+    <div class="dimport-btns">
+      <button class="dimport-btn go" onclick="executeDeckImport()">&#x2B07; Import Deck</button>
+      <button class="dimport-btn cancel" onclick="closeDeckImport()">Cancel</button>
     </div>
   </div>
 </div>
@@ -5019,6 +5265,13 @@
     // Close randomizer modal with Escape
     const randOpen = document.getElementById('playersModal').classList.contains('open');
     if (randOpen && e.key === 'Escape') { closeModal(); return; }
+    // Close deck library / import with Escape
+    if (e.key === 'Escape') {
+      var dlibOpen = document.getElementById('deckLibraryModal') && document.getElementById('deckLibraryModal').classList.contains('open');
+      if (dlibOpen) { closeDeckLibrary(); return; }
+      var dimportOpen = document.getElementById('deckImportModal') && document.getElementById('deckImportModal').classList.contains('open');
+      if (dimportOpen) { closeDeckImport(); return; }
+    }
 
     // ── Game mode ──
     const tag = document.activeElement.tagName;
@@ -7328,6 +7581,7 @@
             rank:     c.rank     != null ? c.rank  : null,
             linkval:  c.linkval  != null ? c.linkval : null,
             scale:    c.scale    != null ? c.scale : null,
+            archetype: c.archetype || '',
             banlist:  ban.ban_tcg || '',   // TCG ban status
             genesys:  (c.misc_info && c.misc_info[0] && c.misc_info[0].genesys_points) ? c.misc_info[0].genesys_points : 0,
             card_images: c.card_images ? [{ id: c.card_images[0].id }] : [{ id: c.id }]
@@ -7379,6 +7633,13 @@
       if (f.atkMax != null && (c.atk == null || c.atk > f.atkMax))    continue;
       if (f.defMin != null && (c.def == null || c.def < f.defMin))    continue;
       if (f.defMax != null && (c.def == null || c.def > f.defMax))    continue;
+      if (f.levelMin != null || f.levelMax != null) {
+        var lv = c.level != null ? c.level : (c.rank != null ? c.rank : (c.linkval != null ? c.linkval : null));
+        if (lv == null) continue;
+        if (f.levelMin != null && lv < f.levelMin) continue;
+        if (f.levelMax != null && lv > f.levelMax) continue;
+      }
+      if (f.archetype && !(c.archetype||'').toLowerCase().includes(f.archetype) && !(c.name||'').toLowerCase().includes(f.archetype)) continue;
       results.push(c);
     }
     if (q) {
@@ -7407,13 +7668,16 @@
       atkMin:    n('cf-atk-min'),
       atkMax:    n('cf-atk-max'),
       defMin:    n('cf-def-min'),
-      defMax:    n('cf-def-max')
+      defMax:    n('cf-def-max'),
+      levelMin:  n('cf-level-min'),
+      levelMax:  n('cf-level-max'),
+      archetype: s('cf-archetype').toLowerCase()
     };
   }
 
   function _hasActiveFilters() {
     var f = _getCardFilters();
-    return f.type || f.attribute || f.race || f.banlist || f.atkMin != null || f.atkMax != null || f.defMin != null || f.defMax != null;
+    return f.type || f.attribute || f.race || f.banlist || f.atkMin != null || f.atkMax != null || f.defMin != null || f.defMax != null || f.levelMin != null || f.levelMax != null || f.archetype;
   }
 
   function toggleCardFilters() {
@@ -7428,9 +7692,10 @@
     ['cf-type','cf-attribute','cf-race','cf-banlist'].forEach(function(id) {
       var el = document.getElementById(id); if (el) el.value = '';
     });
-    ['cf-atk-min','cf-atk-max','cf-def-min','cf-def-max'].forEach(function(id) {
+    ['cf-atk-min','cf-atk-max','cf-def-min','cf-def-max','cf-level-min','cf-level-max'].forEach(function(id) {
       var el = document.getElementById(id); if (el) el.value = '';
     });
+    var arch = document.getElementById('cf-archetype'); if (arch) arch.value = '';
   }
 
   // ── Ban badge helper ─────────────────────────────────────────
@@ -7520,6 +7785,7 @@
     if (filters.type)      url += '&type='      + encodeURIComponent(filters.type);
     if (filters.attribute) url += '&attribute=' + encodeURIComponent(filters.attribute);
     if (filters.race)      url += '&race='      + encodeURIComponent(filters.race);
+    if (filters.archetype) url += '&archetype=' + encodeURIComponent(filters.archetype);
     if (filters.banlist && filters.banlist !== 'Unlimited') url += '&banlist=tcg';
     fetch(url)
       .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
@@ -7651,8 +7917,10 @@
 
   /* ━━ DECK BUILDER ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-  // _deckList: { main: [{id, name, type, count, banlist, img_id}], extra: [...], side: [...] }
+  // _deckList: { main: [{id, name, type, count, banlist, img_id, level, rank, linkval, attribute}], extra: [...], side: [...] }
   var _deckList = { main: [], extra: [], side: [] };
+  var _deckViewMode = 'list'; // 'list' | 'grid'
+  var _deckAnalyticsOpen = false;
 
   var _EXTRA_TYPES = ['Fusion Monster', 'Synchro Monster', 'XYZ Monster', 'Link Monster',
                       'Pendulum Effect Fusion Monster', 'Synchro Pendulum Effect Monster',
@@ -7699,7 +7967,7 @@
       existing.count++;
     } else {
       var img_id = card.card_images && card.card_images[0] ? card.card_images[0].id : card.id;
-      _deckList[sec].push({ id: card.id, name: card.name, type: card.type || '', count: 1, banlist: card.banlist || '', img_id: img_id });
+      _deckList[sec].push({ id: card.id, name: card.name, type: card.type || '', count: 1, banlist: card.banlist || '', img_id: img_id, level: card.level||null, rank: card.rank||null, linkval: card.linkval||null, attribute: card.attribute||'' });
     }
     _renderDeckPanel();
     _deckFlash('✔ ' + card.name + ' added');
@@ -7751,7 +8019,7 @@
       existing.count++;
     } else {
       var img_id = card.card_images && card.card_images[0] ? card.card_images[0].id : card.id;
-      _deckList.side.push({ id: card.id, name: card.name, type: card.type || '', count: 1, banlist: card.banlist || '', img_id: img_id });
+      _deckList.side.push({ id: card.id, name: card.name, type: card.type || '', count: 1, banlist: card.banlist || '', img_id: img_id, level: card.level||null, rank: card.rank||null, linkval: card.linkval||null, attribute: card.attribute||'' });
     }
     _renderDeckPanel();
     _deckFlash('✔ ' + card.name + ' → SIDE');
@@ -7808,24 +8076,16 @@
     if (!body) return;
     _renderDeckCounts();
     _saveDeckToStorage();
+    _renderDeckAnalytics();
     body.innerHTML = '';
-
-    // Deck stats bar
-    var monsters = 0, spells = 0, traps = 0;
-    _deckList.main.forEach(function(e) {
-      if (e.type && e.type.includes('Spell')) spells += e.count;
-      else if (e.type && e.type.includes('Trap')) traps += e.count;
-      else monsters += e.count;
-    });
-    if (_deckTotalCount('main') > 0) {
-      var stats = document.createElement('div');
-      stats.style.cssText = 'display:flex;gap:8px;padding:6px 14px 2px;font-family:\'Cinzel\',serif;font-size:9px;letter-spacing:1px;';
-      stats.innerHTML = '<span style="color:#8899ff">⚔ ' + monsters + '</span>'
-        + '<span style="color:#88cc88">✦ ' + spells + '</span>'
-        + '<span style="color:#cc8888">⚑ ' + traps + '</span>';
-      body.appendChild(stats);
+    if (_deckViewMode === 'grid') {
+      _renderDeckGrid(body);
+    } else {
+      _renderDeckList(body);
     }
+  }
 
+  function _renderDeckList(body) {
     ['main','extra','side'].forEach(function(sec) {
       var list = _deckList[sec];
       var label = sec === 'main' ? '⚔️ MAIN DECK' : sec === 'extra' ? '🌀 EXTRA DECK' : '🔄 SIDE DECK';
@@ -7844,7 +8104,6 @@
         var row = document.createElement('div');
         row.className = 'cdeck-card-row';
         var thumb = 'https://images.ygoprodeck.com/images/cards_small/' + entry.img_id + '.jpg';
-        // Move button: main↔side, extra has no move
         var moveBtn = '';
         if (sec === 'main') moveBtn = '<button class="cdeck-ctrl-btn" title="Move to Side" onclick="moveDeckEntry(' + entry.id + ',\'main\',\'side\')">⇄</button>';
         if (sec === 'side') moveBtn = '<button class="cdeck-ctrl-btn" title="Move to Main" onclick="moveDeckEntry(' + entry.id + ',\'side\',\'main\')">⇄</button>';
@@ -7861,6 +8120,47 @@
         body.appendChild(row);
       });
     });
+  }
+
+  function _renderDeckGrid(body) {
+    var sections = [
+      { key:'main',  label:'⚔️ MAIN' },
+      { key:'extra', label:'🌀 EXTRA' },
+      { key:'side',  label:'🔄 SIDE' }
+    ];
+    var hasCards = false;
+    sections.forEach(function(s) {
+      var list = _deckList[s.key];
+      if (!list.length) return;
+      hasCards = true;
+      var secLabel = document.createElement('div');
+      secLabel.className = 'cdeck-section-label';
+      secLabel.textContent = s.label + ' (' + _deckTotalCount(s.key) + ')';
+      body.appendChild(secLabel);
+      var grid = document.createElement('div');
+      grid.className = 'cdeck-card-grid';
+      list.forEach(function(entry) {
+        var thumb = 'https://images.ygoprodeck.com/images/cards_small/' + entry.img_id + '.jpg';
+        var item = document.createElement('div');
+        item.className = 'cdeck-grid-item';
+        item.title = entry.name + (entry.count > 1 ? ' ×' + entry.count : '');
+        item.innerHTML = '<img src="' + thumb + '" alt="' + _escHtml(entry.name) + '" loading="lazy" onerror="this.style.opacity=0.2">'
+          + (entry.count > 1 ? '<div class="cdeck-grid-count">×' + entry.count + '</div>' : '')
+          + '<div class="cdeck-grid-actions">'
+          +   '<button class="cdeck-grid-btn del" onclick="event.stopPropagation();adjustDeckCount(' + entry.id + ',\'' + s.key + '\',-1)" title="Remove one">−</button>'
+          +   '<button class="cdeck-grid-btn" onclick="event.stopPropagation();adjustDeckCount(' + entry.id + ',\'' + s.key + '\',1)" title="Add one">+</button>'
+          + '</div>';
+        grid.appendChild(item);
+      });
+      body.appendChild(grid);
+    });
+    if (!hasCards) {
+      var empty = document.createElement('div');
+      empty.className = 'cdeck-empty';
+      empty.style.cssText = 'text-align:center;padding:20px;';
+      empty.textContent = 'No cards yet';
+      body.appendChild(empty);
+    }
   }
 
   function removeDeckEntry(cardId, section) {
@@ -7940,8 +8240,379 @@
     var blob = new Blob([text], { type: 'text/plain' });
     var url  = URL.createObjectURL(blob);
     var a    = document.createElement('a');
-    a.href = url; a.download = 'deck.ydk'; a.click();
+    var deckName = ((document.getElementById('cdeckNameInput')||{}).value||'deck').trim().replace(/[^a-zA-Z0-9_\-]/g,'_') || 'deck';
+    a.href = url; a.download = deckName + '.ydk'; a.click();
     setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+  }
+
+  /* ━━ DECK VIEW MODE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+  function setDeckView(mode) {
+    _deckViewMode = mode;
+    var listBtn = document.getElementById('cdeckViewList');
+    var gridBtn = document.getElementById('cdeckViewGrid');
+    if (listBtn) listBtn.classList.toggle('active', mode === 'list');
+    if (gridBtn) gridBtn.classList.toggle('active', mode === 'grid');
+    _renderDeckPanel();
+  }
+
+  /* ━━ DECK ANALYTICS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+  function toggleDeckAnalytics() {
+    _deckAnalyticsOpen = !_deckAnalyticsOpen;
+    var btn = document.getElementById('cdeckAnalyticsBtn');
+    if (btn) btn.classList.toggle('active', _deckAnalyticsOpen);
+    _renderDeckAnalytics();
+  }
+
+  function _renderDeckAnalytics() {
+    var panel = document.getElementById('cdeckAnalyticsPanel');
+    if (!panel) return;
+    if (!_deckAnalyticsOpen) { panel.style.display = 'none'; return; }
+    panel.style.display = 'block';
+
+    var monsters = 0, spells = 0, traps = 0;
+    var attrMap = {}, levelMap = {};
+    _deckList.main.forEach(function(e) {
+      var cnt = e.count;
+      if (e.type && e.type.includes('Spell'))      spells   += cnt;
+      else if (e.type && e.type.includes('Trap'))  traps    += cnt;
+      else {
+        monsters += cnt;
+        if (e.attribute) attrMap[e.attribute] = (attrMap[e.attribute] || 0) + cnt;
+        var lv = e.level != null ? e.level : (e.rank != null ? e.rank : null);
+        if (lv != null) levelMap[lv] = (levelMap[lv] || 0) + cnt;
+      }
+    });
+    var total = monsters + spells + traps;
+    if (total === 0) { panel.innerHTML = '<div class="cdeck-analytics"><div class="cdeck-chart-label" style="text-align:center;padding:8px 0;opacity:.5;">Add cards to see stats</div></div>'; return; }
+
+    var pct = function(n) { return total > 0 ? Math.round(n/total*100) : 0; };
+
+    // Type composition bars
+    var barsHtml = [
+      { label:'⚔ Monsters', val:monsters, clr:'#7788ff' },
+      { label:'✦ Spells',   val:spells,   clr:'#66cc88' },
+      { label:'⚑ Traps',    val:traps,    clr:'#cc7788' }
+    ].map(function(b) {
+      return '<div class="cdeck-bar-row">'
+        + '<div class="cdeck-bar-label">' + b.label + '</div>'
+        + '<div class="cdeck-bar-track"><div class="cdeck-bar-fill" style="width:' + pct(b.val) + '%;background:' + b.clr + ';"></div></div>'
+        + '<div class="cdeck-bar-val">' + b.val + '</div></div>';
+    }).join('');
+
+    // Attribute breakdown
+    var attrColors = { DARK:'#aa77ff', LIGHT:'#ffee77', EARTH:'#cc9944', WATER:'#66bbff', FIRE:'#ff7744', WIND:'#88ddaa', DIVINE:'#ffcc55' };
+    var attrHtml = '';
+    if (Object.keys(attrMap).length) {
+      attrHtml = '<div class="cdeck-chart-label" style="margin-top:10px;">Attribute Mix</div>';
+      Object.keys(attrMap).sort(function(a,b){ return attrMap[b]-attrMap[a]; }).forEach(function(attr) {
+        var clr = attrColors[attr] || '#aaa';
+        attrHtml += '<div class="cdeck-bar-row">'
+          + '<div class="cdeck-bar-label" style="color:' + clr + ';font-size:8px;">' + attr + '</div>'
+          + '<div class="cdeck-bar-track"><div class="cdeck-bar-fill" style="width:' + Math.round(attrMap[attr]/monsters*100) + '%;background:' + clr + ';opacity:.7;"></div></div>'
+          + '<div class="cdeck-bar-val">' + attrMap[attr] + '</div></div>';
+      });
+    }
+
+    // Level curve
+    var levelHtml = '';
+    var levelKeys = Object.keys(levelMap).map(Number).sort(function(a,b){return a-b;});
+    if (levelKeys.length > 1) {
+      var maxLvCnt = Math.max.apply(null, levelKeys.map(function(k){ return levelMap[k]; }));
+      levelHtml = '<div class="cdeck-chart-label" style="margin-top:10px;">Level / Rank Curve</div>'
+        + '<div class="cdeck-level-curve">';
+      levelKeys.forEach(function(lv) {
+        var h = Math.max(4, Math.round(levelMap[lv] / maxLvCnt * 34));
+        levelHtml += '<div class="cdeck-level-wrap">'
+          + '<div class="cdeck-level-bar" style="height:' + h + 'px;" title="Lv ' + lv + ': ' + levelMap[lv] + '"></div>'
+          + '<div class="cdeck-level-num">' + lv + '</div></div>';
+      });
+      levelHtml += '</div>';
+    }
+
+    // Banlist summary
+    var banned = 0, limited = 0, semi = 0;
+    ['main','extra','side'].forEach(function(sec) {
+      _deckList[sec].forEach(function(e) {
+        if (e.banlist === 'Forbidden')    banned  += e.count;
+        else if (e.banlist === 'Limited') limited += e.count;
+        else if (e.banlist === 'Semi-Limited') semi += e.count;
+      });
+    });
+    var banHtml = '';
+    if (limited || semi || banned) {
+      banHtml = '<div class="cdeck-chart-label" style="margin-top:10px;">Banlist Notes</div>'
+        + '<div style="font-family:\'Cinzel\',serif;font-size:8px;letter-spacing:1px;line-height:2;">';
+      if (banned)  banHtml += '<span style="color:#ff6666;">⬤ ' + banned + ' Forbidden</span> &nbsp;';
+      if (limited) banHtml += '<span style="color:#ffaa44;">⬤ ' + limited + ' Limited</span> &nbsp;';
+      if (semi)    banHtml += '<span style="color:#ffee44;">⬤ ' + semi + ' Semi</span>';
+      banHtml += '</div>';
+    }
+
+    panel.innerHTML = '<div class="cdeck-analytics">'
+      + '<div class="cdeck-chart-label">Card Type Ratio (' + total + ' cards)</div>'
+      + barsHtml + attrHtml + levelHtml + banHtml
+      + '</div>';
+  }
+
+  /* ━━ DECK LIBRARY (save / load multiple decks) ━━━━━━━━━━━━━━ */
+
+  var _DECK_LIB_KEY = 'ygo_deck_library';
+
+  function _getDeckLibrary() {
+    try { return JSON.parse(localStorage.getItem(_DECK_LIB_KEY) || '[]'); } catch(e) { return []; }
+  }
+  function _saveDeckLibrary(lib) {
+    try { localStorage.setItem(_DECK_LIB_KEY, JSON.stringify(lib)); } catch(e) {}
+  }
+
+  function saveDeckToLibrary() {
+    var nameEl = document.getElementById('cdeckNameInput');
+    var name = (nameEl ? nameEl.value.trim() : '') || 'Unnamed Deck';
+    if (!_deckTotalCount('main') && !_deckTotalCount('extra') && !_deckTotalCount('side')) {
+      _deckFlash('⚠️ Deck is empty'); return;
+    }
+    var lib = _getDeckLibrary();
+    // Replace if same name exists
+    var idx = lib.findIndex(function(d){ return d.name === name; });
+    var entry = {
+      name: name,
+      saved: Date.now(),
+      main:  _deckTotalCount('main'),
+      extra: _deckTotalCount('extra'),
+      side:  _deckTotalCount('side'),
+      deck: JSON.parse(JSON.stringify(_deckList))
+    };
+    if (idx >= 0) { lib[idx] = entry; } else { lib.unshift(entry); }
+    _saveDeckLibrary(lib);
+    _deckFlash('✔ Saved: ' + name);
+    showToast('💾 Deck saved: ' + name, 'ok', 2000);
+  }
+
+  function openDeckLibrary() {
+    var modal = document.getElementById('deckLibraryModal');
+    if (!modal) return;
+    _renderDeckLibrary();
+    modal.classList.add('open');
+  }
+  function closeDeckLibrary() {
+    var modal = document.getElementById('deckLibraryModal');
+    if (modal) modal.classList.remove('open');
+  }
+
+  function _renderDeckLibrary() {
+    var list = document.getElementById('dlib-list');
+    if (!list) return;
+    var lib = _getDeckLibrary();
+    if (!lib.length) {
+      list.innerHTML = '<div class="dlib-empty">No saved decks yet.<br>Build a deck, name it, and hit 💾</div>';
+      return;
+    }
+    list.innerHTML = lib.map(function(d, i) {
+      var date = new Date(d.saved).toLocaleDateString();
+      var meta = 'Main ' + d.main + ' · Extra ' + d.extra + ' · Side ' + d.side + '  ·  ' + date;
+      return '<div class="dlib-deck-row">'
+        + '<div class="dlib-deck-info"><div class="dlib-deck-name">' + _escHtml(d.name) + '</div>'
+        + '<div class="dlib-deck-meta">' + meta + '</div></div>'
+        + '<button class="dlib-deck-load" onclick="loadDeckFromLibrary(' + i + ')">Load</button>'
+        + '<button class="dlib-deck-del" onclick="deleteDeckFromLibrary(' + i + ')">✕</button>'
+        + '</div>';
+    }).join('');
+  }
+
+  function loadDeckFromLibrary(idx) {
+    var lib = _getDeckLibrary();
+    if (!lib[idx]) return;
+    _deckList = JSON.parse(JSON.stringify(lib[idx].deck));
+    var nameEl = document.getElementById('cdeckNameInput');
+    if (nameEl) nameEl.value = lib[idx].name;
+    _renderDeckPanel();
+    _updateDeckBadges();
+    closeDeckLibrary();
+    showToast('📋 Loaded: ' + lib[idx].name, 'ok', 2000);
+  }
+
+  function deleteDeckFromLibrary(idx) {
+    var lib = _getDeckLibrary();
+    if (!lib[idx]) return;
+    var name = lib[idx].name;
+    lib.splice(idx, 1);
+    _saveDeckLibrary(lib);
+    _renderDeckLibrary();
+    showToast('🗑 Deleted: ' + name, 'info', 2000);
+  }
+
+  /* ━━ DECK IMPORT ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+  var _importTab = 'text';
+  var _importYdkText = '';
+
+  function openDeckImport() {
+    var modal = document.getElementById('deckImportModal');
+    if (!modal) return;
+    var statusEl = document.getElementById('dimportStatus');
+    if (statusEl) { statusEl.textContent = ''; statusEl.style.color = ''; }
+    var ta = document.getElementById('dimportTextarea');
+    if (ta) ta.value = '';
+    _importYdkText = '';
+    var lbl = document.getElementById('dimportFileLabel');
+    if (lbl) lbl.innerHTML = 'Drop .ydk file here or <span>click to browse</span>';
+    switchImportTab('text');
+    modal.classList.add('open');
+  }
+  function closeDeckImport() {
+    var modal = document.getElementById('deckImportModal');
+    if (modal) modal.classList.remove('open');
+  }
+
+  function switchImportTab(tab) {
+    _importTab = tab;
+    ['text','ydk'].forEach(function(t) {
+      var btn = document.getElementById('dimport-tab-' + t);
+      var pnl = document.getElementById('dimport-panel-' + t);
+      if (btn) btn.classList.toggle('active', t === tab);
+      if (pnl) pnl.style.display = t === tab ? 'block' : 'none';
+    });
+  }
+
+  function dimportHandleFile(evt) {
+    var file = evt.target.files && evt.target.files[0];
+    if (!file) return;
+    var lbl = document.getElementById('dimportFileLabel');
+    if (lbl) lbl.innerHTML = '📄 <span>' + _escHtml(file.name) + '</span>';
+    var reader = new FileReader();
+    reader.onload = function(e) { _importYdkText = e.target.result || ''; };
+    reader.readAsText(file);
+  }
+
+  function dimportHandleDrop(evt) {
+    evt.preventDefault();
+    var zone = document.getElementById('dimportFileZone');
+    if (zone) zone.classList.remove('drag');
+    var file = evt.dataTransfer.files && evt.dataTransfer.files[0];
+    if (!file) return;
+    var lbl = document.getElementById('dimportFileLabel');
+    if (lbl) lbl.innerHTML = '📄 <span>' + _escHtml(file.name) + '</span>';
+    var reader = new FileReader();
+    reader.onload = function(e) { _importYdkText = e.target.result || ''; };
+    reader.readAsText(file);
+  }
+
+  function executeDeckImport() {
+    var statusEl = document.getElementById('dimportStatus');
+    function setStatus(msg, clr) { if (statusEl) { statusEl.textContent = msg; statusEl.style.color = clr || 'var(--dim)'; } }
+    setStatus('⏳ Importing…', 'var(--gold)');
+
+    if (_importTab === 'ydk') {
+      _importFromYDK(_importYdkText, function(result) {
+        if (result.error) { setStatus('❌ ' + result.error, '#ff8888'); return; }
+        _finishImport(result, setStatus);
+      });
+    } else {
+      var text = (document.getElementById('dimportTextarea') || {}).value || '';
+      _importFromText(text, function(result) {
+        if (result.error) { setStatus('❌ ' + result.error, '#ff8888'); return; }
+        _finishImport(result, setStatus);
+      });
+    }
+  }
+
+  function _finishImport(result, setStatus) {
+    _deckList = result.deck;
+    _renderDeckPanel();
+    _updateDeckBadges();
+    var msg = '✔ Imported ' + result.added + ' cards';
+    if (result.skipped) msg += ' (' + result.skipped + ' not found)';
+    setStatus(msg, '#88cc88');
+    setTimeout(function() { closeDeckImport(); }, 1200);
+    showToast('📥 ' + msg, 'ok', 3000);
+  }
+
+  function _importFromYDK(text, cb) {
+    if (!text.trim()) { cb({ error: 'No file loaded' }); return; }
+    var lines = text.split(/\r?\n/).map(function(l){ return l.trim(); }).filter(Boolean);
+    var section = 'main';
+    var idLists = { main: [], extra: [], side: [] };
+    lines.forEach(function(line) {
+      if (line === '#main')  { section = 'main';  return; }
+      if (line === '#extra') { section = 'extra'; return; }
+      if (line === '!side')  { section = 'side';  return; }
+      if (line.startsWith('#')) return;
+      var id = parseInt(line);
+      if (!isNaN(id)) idLists[section].push(id);
+    });
+    var allIds = idLists.main.concat(idLists.extra).concat(idLists.side);
+    if (!allIds.length) { cb({ error: 'No card IDs found in file' }); return; }
+    _resolveIdsToCards(idLists, cb);
+  }
+
+  function _importFromText(text, cb) {
+    if (!text.trim()) { cb({ error: 'Paste a deck list first' }); return; }
+    var lines = text.split(/\r?\n/);
+    var section = 'main';
+    var nameListsBySection = { main: [], extra: [], side: [] };
+    lines.forEach(function(line) {
+      var l = line.trim();
+      if (!l) return;
+      var lLow = l.toLowerCase();
+      if (/^(main deck|main):?$/i.test(l))  { section = 'main';  return; }
+      if (/^(extra deck|extra):?$/i.test(l)) { section = 'extra'; return; }
+      if (/^(side deck|side):?$/i.test(l))   { section = 'side';  return; }
+      // Parse count prefix: "3x Name" or "3 Name" or just "Name"
+      var m = l.match(/^(\d+)[x\s]+(.+)$/i);
+      var count = m ? Math.min(parseInt(m[1]), 3) : 1;
+      var name  = m ? m[2].trim() : l;
+      if (name) {
+        for (var i = 0; i < count; i++) nameListsBySection[section].push(name);
+      }
+    });
+    var total = nameListsBySection.main.length + nameListsBySection.extra.length + nameListsBySection.side.length;
+    if (!total) { cb({ error: 'No cards found in list' }); return; }
+    _resolveNamesToCards(nameListsBySection, cb);
+  }
+
+  function _resolveIdsToCards(idLists, cb) {
+    if (!_cardDb) { cb({ error: 'Card DB not loaded yet — wait for DB download' }); return; }
+    var newDeck = { main: [], extra: [], side: [] };
+    var added = 0, skipped = 0;
+    ['main','extra','side'].forEach(function(sec) {
+      idLists[sec].forEach(function(id) {
+        var card = _cardDb.find(function(c){ return c.id === id; });
+        if (!card) { skipped++; return; }
+        var existing = newDeck[sec].find(function(e){ return e.id === card.id; });
+        if (existing) { existing.count++; }
+        else {
+          var img_id = card.card_images && card.card_images[0] ? card.card_images[0].id : card.id;
+          newDeck[sec].push({ id:card.id, name:card.name, type:card.type||'', count:1, banlist:card.banlist||'', img_id:img_id, level:card.level||null, rank:card.rank||null, linkval:card.linkval||null, attribute:card.attribute||'' });
+        }
+        added++;
+      });
+    });
+    cb({ deck: newDeck, added: added, skipped: skipped });
+  }
+
+  function _resolveNamesToCards(nameListsBySection, cb) {
+    if (!_cardDb) { cb({ error: 'Card DB not loaded yet — wait for DB download' }); return; }
+    var newDeck = { main: [], extra: [], side: [] };
+    var added = 0, skipped = 0;
+    ['main','extra','side'].forEach(function(sec) {
+      nameListsBySection[sec].forEach(function(name) {
+        var nameLow = name.toLowerCase();
+        var card = _cardDb.find(function(c){ return c.name.toLowerCase() === nameLow; });
+        if (!card) card = _cardDb.find(function(c){ return c.name.toLowerCase().includes(nameLow); });
+        if (!card) { skipped++; return; }
+        var targetSec = _deckSection(card);
+        var existing = newDeck[targetSec].find(function(e){ return e.id === card.id; });
+        if (existing) { existing.count++; }
+        else {
+          var img_id = card.card_images && card.card_images[0] ? card.card_images[0].id : card.id;
+          newDeck[targetSec].push({ id:card.id, name:card.name, type:card.type||'', count:1, banlist:card.banlist||'', img_id:img_id, level:card.level||null, rank:card.rank||null, linkval:card.linkval||null, attribute:card.attribute||'' });
+        }
+        added++;
+      });
+    });
+    cb({ deck: newDeck, added: added, skipped: skipped });
   }
 
   /* ━━ ADD CARD TO RULINGS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
