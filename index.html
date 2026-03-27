@@ -257,7 +257,7 @@
     flex: 1;
     min-height: 0;
     overflow-x: auto;
-    --lp-font-size: clamp(30px, 5vw, 46px);
+    --lp-font-size: clamp(48px, 8vw, 74px);
   }
 
   /* ── Player Card ── */
@@ -385,7 +385,7 @@
   }
   .lp-value {
     font-family: 'Cinzel Decorative', serif;
-    font-size: var(--lp-font-size, clamp(30px, 5vw, 46px));
+    font-size: var(--lp-font-size, clamp(48px, 8vw, 74px));
     font-weight: 900; line-height: 1;
     transition: color 0.5s, font-size 0.4s ease;
     display: inline-block;
@@ -426,6 +426,83 @@
   .lp-label {
     font-size: 9px; letter-spacing: 5px;
     color: var(--dim); text-transform: uppercase; margin-top: 3px;
+  }
+
+  /* ── Chain Overlay ── */
+  #chainOverlay {
+    display:none; position:fixed; inset:0; z-index:500;
+    pointer-events:none; align-items:center; justify-content:center;
+    flex-direction:column; gap:16px;
+  }
+  #chainOverlay.active { display:flex; }
+  .chain-backdrop {
+    position:absolute; inset:0;
+    background:rgba(0,0,0,0.55); backdrop-filter:blur(3px);
+  }
+  .chain-word {
+    position:relative; z-index:1;
+    font-family:'Cinzel Decorative',serif;
+    font-size:clamp(72px,16vw,160px);
+    font-weight:900;
+    letter-spacing:12px;
+    color:transparent;
+    background:linear-gradient(135deg,#ff8800,#ffcc44,#ff6600,#ffaa00);
+    -webkit-background-clip:text; background-clip:text;
+    text-shadow:none;
+    filter:drop-shadow(0 0 40px rgba(255,150,0,0.7)) drop-shadow(0 0 80px rgba(255,100,0,0.4));
+    animation:chainPulse 0.9s ease-in-out infinite;
+    user-select:none;
+  }
+  @keyframes chainPulse {
+    0%,100% { filter:drop-shadow(0 0 30px rgba(255,150,0,0.6)) drop-shadow(0 0 60px rgba(255,100,0,0.3)); letter-spacing:12px; }
+    50%      { filter:drop-shadow(0 0 55px rgba(255,180,0,1))   drop-shadow(0 0 100px rgba(255,120,0,0.6)); letter-spacing:16px; }
+  }
+  .chain-sub {
+    position:relative; z-index:1;
+    font-family:'Cinzel',serif; font-size:clamp(10px,1.8vw,16px);
+    letter-spacing:6px; color:rgba(255,180,80,0.7);
+    text-transform:uppercase; animation:chainFadeIn 0.4s ease both;
+  }
+  @keyframes chainFadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+  .chain-icon {
+    position:relative; z-index:1;
+    font-size:clamp(32px,5vw,56px);
+    animation:chainSpin 2s linear infinite;
+    filter:drop-shadow(0 0 16px rgba(255,160,0,0.8));
+  }
+  @keyframes chainSpin {
+    0%   { transform:rotate(0deg)   scale(1); }
+    25%  { transform:rotate(15deg)  scale(1.1); }
+    75%  { transform:rotate(-15deg) scale(1.1); }
+    100% { transform:rotate(0deg)   scale(1); }
+  }
+  .lp-turn-timer {
+    display: flex; align-items: center; justify-content: center;
+    gap: 6px; margin-top: 8px;
+  }
+  .lp-turn-timer-label {
+    font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 3px;
+    color: var(--dim); text-transform: uppercase;
+  }
+  .lp-turn-timer-value {
+    font-family: 'Cinzel Decorative', serif; font-size: clamp(16px, 2.5vw, 26px);
+    letter-spacing: 2px; color: var(--gold-light);
+    text-shadow: 0 0 10px rgba(201,162,39,0.3);
+    transition: color 0.3s, text-shadow 0.3s;
+    min-width: 60px; text-align: center;
+  }
+  .lp-turn-timer-value.running {
+    color: #ffffff;
+    text-shadow: 0 0 16px rgba(255,255,255,0.4);
+    animation: timerPulse 1s ease-in-out infinite;
+  }
+  .lp-turn-timer-value.overtime {
+    color: #ff4444 !important;
+    animation: turnOvertime 0.6s ease-in-out infinite !important;
+  }
+  .lp-turn-timer-warn {
+    font-family: 'Cinzel', serif; font-size: 7px; letter-spacing: 2px;
+    color: var(--dim); margin-top: 2px;
   }
 
   /* ── LP Bar ── */
@@ -2359,6 +2436,479 @@
   .dimport-btn.cancel:hover { color:var(--text); background:rgba(255,255,255,0.06); }
   .dimport-status { font-family:'Cinzel',serif; font-size:10px; letter-spacing:2px; margin-top:10px; min-height:20px; text-align:center; }
 
+  /* ── Draw Simulator Modal ── */
+  #drawSimModal {
+    display:none; position:fixed; inset:0; z-index:620;
+    background:rgba(0,0,0,0.9); backdrop-filter:blur(14px);
+    align-items:center; justify-content:center;
+  }
+  #drawSimModal.open { display:flex; }
+  .dsim-wrap {
+    background:rgba(8,8,22,0.98); border:1px solid rgba(160,100,255,0.4);
+    border-radius:14px; padding:28px 28px 22px; width:min(700px,96vw);
+    max-height:90vh; overflow-y:auto; position:relative;
+    box-shadow:0 0 60px rgba(140,80,255,0.15);
+  }
+  .dsim-header {
+    display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;
+  }
+  .dsim-title {
+    font-family:'Cinzel Decorative',serif; font-size:14px; color:#cc99ff; letter-spacing:3px;
+    text-shadow:0 0 20px rgba(180,120,255,0.5);
+  }
+  .dsim-close {
+    background:none; border:none; color:var(--dim); font-size:20px; cursor:pointer;
+    padding:4px 8px; border-radius:4px; line-height:1; transition:color .15s;
+  }
+  .dsim-close:hover { color:var(--text); }
+  .dsim-subtitle {
+    font-family:'Cinzel',serif; font-size:9px; letter-spacing:3px; color:var(--dim);
+    margin-bottom:18px; text-transform:uppercase;
+  }
+  .dsim-section-label {
+    font-family:'Cinzel',serif; font-size:9px; letter-spacing:3px; color:var(--dim);
+    text-transform:uppercase; margin-bottom:10px; display:flex; align-items:center; gap:10px;
+  }
+  .dsim-section-label::after {
+    content:''; flex:1; height:1px; background:rgba(255,255,255,0.06);
+  }
+  .dsim-hand {
+    display:flex; gap:10px; flex-wrap:wrap; justify-content:center;
+    margin-bottom:22px; min-height:110px; align-items:flex-end;
+  }
+  .dsim-card {
+    position:relative; border-radius:6px; overflow:hidden; cursor:pointer;
+    transition:transform .18s, box-shadow .18s;
+    box-shadow:0 4px 16px rgba(0,0,0,0.6);
+    animation:dsimDeal .35s ease both;
+  }
+  .dsim-card:hover { transform:translateY(-10px) scale(1.06); box-shadow:0 12px 28px rgba(0,0,0,0.7); z-index:2; }
+  @keyframes dsimDeal {
+    from { opacity:0; transform:translateY(20px) scale(0.88) rotate(var(--deal-rot,0deg)); }
+    to   { opacity:1; transform:translateY(0) scale(1) rotate(0deg); }
+  }
+  .dsim-card img { width:80px; display:block; border-radius:6px; }
+  .dsim-card-tooltip {
+    display:none; position:absolute; bottom:calc(100% + 6px); left:50%; transform:translateX(-50%);
+    background:rgba(8,8,22,0.97); border:1px solid rgba(160,100,255,0.35);
+    border-radius:6px; padding:8px 10px; min-width:140px; max-width:200px; z-index:10;
+    font-family:'Cinzel',serif; font-size:9px; color:var(--text); letter-spacing:.5px;
+    line-height:1.6; white-space:normal; pointer-events:none;
+    box-shadow:0 4px 16px rgba(0,0,0,0.6);
+  }
+  .dsim-card:hover .dsim-card-tooltip { display:block; }
+  .dsim-card-tooltip-name { color:#cc99ff; font-size:10px; font-weight:700; margin-bottom:3px; line-height:1.3; }
+  .dsim-card-tooltip-type { color:var(--dim); font-size:8px; margin-bottom:4px; }
+  .dsim-card-tooltip-stats { color:var(--gold); font-size:8px; }
+  .dsim-footer {
+    display:flex; gap:10px; align-items:center; padding-top:14px;
+    border-top:1px solid rgba(255,255,255,0.05); flex-wrap:wrap;
+  }
+  .dsim-btn {
+    padding:9px 18px; border-radius:7px; cursor:pointer;
+    font-family:'Cinzel',serif; font-size:10px; letter-spacing:1px; transition:all .14s;
+  }
+  .dsim-btn.redraw {
+    background:rgba(160,100,255,0.14); border:1px solid rgba(160,100,255,0.4); color:#cc99ff;
+  }
+  .dsim-btn.redraw:hover { background:rgba(160,100,255,0.26); box-shadow:0 0 12px rgba(160,100,255,0.2); }
+  .dsim-btn.one-more {
+    background:rgba(201,162,39,0.1); border:1px solid rgba(201,162,39,0.35); color:var(--gold);
+  }
+  .dsim-btn.one-more:hover { background:rgba(201,162,39,0.22); }
+  .dsim-btn.close-sim {
+    background:none; border:1px solid rgba(255,255,255,0.1); color:var(--dim);
+    margin-left:auto;
+  }
+  .dsim-btn.close-sim:hover { color:var(--text); background:rgba(255,255,255,0.06); }
+  .dsim-deck-count {
+    font-family:'Cinzel',serif; font-size:9px; color:var(--dim); letter-spacing:1px;
+    margin-left:4px;
+  }
+
+  /* ══════════════════════════════════════════════════
+     ⚡ DECK FORGE — Full-screen deck builder overlay
+     ══════════════════════════════════════════════════ */
+  #forgeOverlay {
+    display:none; position:fixed; inset:0; z-index:600;
+    background:var(--darker); flex-direction:column;
+  }
+  #forgeOverlay.open { display:flex; }
+
+  /* Forge header */
+  .forge-header {
+    display:flex; align-items:center; gap:14px; padding:10px 18px;
+    background:rgba(5,5,12,0.97); border-bottom:1px solid rgba(201,162,39,0.2);
+    flex-shrink:0; backdrop-filter:blur(20px);
+  }
+  .forge-logo {
+    font-family:'Cinzel Decorative',serif; font-size:12px; color:var(--gold);
+    letter-spacing:3px; white-space:nowrap;
+    text-shadow:0 0 18px rgba(201,162,39,0.5);
+  }
+  .forge-logo span { color:rgba(201,162,39,0.38); font-size:8px; display:block; letter-spacing:4px; margin-top:1px; font-family:'Cinzel',serif; }
+  .forge-name-input {
+    flex:1; max-width:300px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+    border-radius:6px; color:var(--text); font-family:'Cinzel',serif;
+    font-size:13px; padding:7px 12px; outline:none; letter-spacing:1px;
+  }
+  .forge-name-input:focus { border-color:rgba(201,162,39,0.4); }
+  .forge-name-input::placeholder { color:var(--dim); }
+  .forge-hcounts { display:flex; gap:6px; }
+  .forge-hcount {
+    font-family:'Cinzel',serif; font-size:9px; letter-spacing:1px;
+    padding:4px 10px; border-radius:4px; border:1px solid;
+  }
+  .forge-hcount.main  { color:#8899ff; border-color:rgba(136,153,255,0.3); background:rgba(136,153,255,0.06); }
+  .forge-hcount.extra { color:#88ccaa; border-color:rgba(136,204,170,0.3); background:rgba(136,204,170,0.05); }
+  .forge-hcount.side  { color:#ccaa88; border-color:rgba(204,170,136,0.3); background:rgba(204,170,136,0.05); }
+  .forge-hcount.over  { color:#ff8888 !important; border-color:rgba(255,80,80,0.4) !important; }
+  .forge-hbtns { display:flex; gap:7px; margin-left:auto; }
+  .forge-hbtn {
+    font-family:'Cinzel',serif; font-size:9px; letter-spacing:1px;
+    padding:6px 12px; border-radius:5px; cursor:pointer; transition:all .15s;
+    background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:var(--dim);
+    white-space:nowrap;
+  }
+  .forge-hbtn:hover { color:var(--text); border-color:rgba(255,255,255,0.2); background:rgba(255,255,255,0.07); }
+  .forge-hbtn.gold { color:var(--gold); border-color:rgba(201,162,39,0.4); background:rgba(201,162,39,0.08); }
+  .forge-hbtn.gold:hover { background:rgba(201,162,39,0.18); }
+  .forge-hbtn.close { color:#ff8888; border-color:rgba(255,80,80,0.3); }
+  .forge-hbtn.close:hover { background:rgba(255,80,80,0.1); }
+
+  /* 3-col body */
+  .forge-body { display:flex; flex:1; min-height:0; }
+
+  /* ── Search col ── */
+  .forge-search-col {
+    width:270px; flex-shrink:0; display:flex; flex-direction:column;
+    border-right:1px solid rgba(255,255,255,0.06); background:rgba(6,6,14,0.97);
+    overflow:hidden;
+  }
+  .forge-col-header {
+    padding:11px 14px 9px; border-bottom:1px solid rgba(255,255,255,0.05); flex-shrink:0;
+    font-family:'Cinzel',serif; font-size:9px; letter-spacing:3px; color:var(--dim);
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .forge-search-row { padding:8px 10px; display:flex; gap:7px; flex-shrink:0; }
+  .forge-s-input {
+    flex:1; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08);
+    border-radius:6px; color:var(--text); font-family:'Cinzel',serif;
+    font-size:11px; padding:8px 10px; outline:none; letter-spacing:.5px;
+  }
+  .forge-s-input:focus { border-color:rgba(201,162,39,0.4); }
+  .forge-s-input::placeholder { color:var(--dim); }
+  .forge-s-btn {
+    background:rgba(201,162,39,0.12); border:1px solid rgba(201,162,39,0.35); border-radius:6px;
+    color:var(--gold); font-size:14px; padding:7px 12px; cursor:pointer; transition:background .14s;
+  }
+  .forge-s-btn:hover { background:rgba(201,162,39,0.24); }
+  .forge-filter-toggle {
+    padding:5px 10px 7px; display:flex; align-items:center; gap:6px; cursor:pointer;
+    font-family:'Cinzel',serif; font-size:8px; letter-spacing:2px; color:var(--dim);
+    transition:color .14s; flex-shrink:0;
+  }
+  .forge-filter-toggle:hover { color:var(--text); }
+  .forge-filters-body {
+    max-height:0; overflow:hidden; flex-shrink:0;
+    transition:max-height .3s cubic-bezier(.4,0,.2,1);
+    background:rgba(0,0,0,0.18);
+  }
+  .forge-filters-body.open { max-height:360px; }
+  .forge-filter-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; padding:8px 10px 10px; }
+  .forge-fg-label { font-family:'Cinzel',serif; font-size:7px; letter-spacing:2px; color:var(--dim); margin-bottom:3px; }
+  .forge-fg-sel, .forge-fg-inp {
+    width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08);
+    border-radius:4px; color:var(--text); font-family:'Rajdhani',sans-serif;
+    font-size:11px; padding:4px 7px; outline:none;
+  }
+  .forge-fg-sel { cursor:pointer; }
+  .forge-fg-sel:focus,.forge-fg-inp:focus { border-color:rgba(201,162,39,0.35); }
+  .forge-filter-range { display:flex; align-items:center; gap:3px; }
+  .forge-filter-range span { color:var(--dim); font-size:10px; }
+  .forge-filter-range .forge-fg-inp { flex:1; }
+  .forge-fg-full { grid-column:1/-1; }
+  .forge-filter-clear-row { padding:0 10px 8px; }
+  .forge-filter-clear {
+    width:100%; padding:5px; border-radius:4px; cursor:pointer;
+    font-family:'Cinzel',serif; font-size:8px; letter-spacing:2px;
+    background:none; border:1px solid rgba(255,255,255,0.07); color:var(--dim); transition:all .14s;
+  }
+  .forge-filter-clear:hover { color:#ff8888; border-color:rgba(255,80,80,0.3); }
+  .forge-search-status {
+    padding:5px 10px 2px; font-family:'Cinzel',serif; font-size:8px;
+    letter-spacing:2px; color:var(--dim); flex-shrink:0;
+  }
+  .forge-search-grid {
+    flex:1; overflow-y:auto; padding:6px 8px;
+    display:grid; grid-template-columns:repeat(3,1fr); gap:5px; align-content:start;
+  }
+  .forge-search-grid::-webkit-scrollbar { width:3px; }
+  .forge-search-grid::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.08); border-radius:2px; }
+  .forge-sg-card {
+    position:relative; border-radius:5px; overflow:visible; cursor:pointer;
+    transition:transform .14s;
+  }
+  .forge-sg-card:hover { transform:translateY(-4px); z-index:2; }
+  .forge-sg-card img { width:100%; display:block; border-radius:5px; box-shadow:0 3px 10px rgba(0,0,0,0.5); }
+  .forge-sg-add {
+    display:none; position:absolute; top:4px; right:4px;
+    width:20px; height:20px; border-radius:50%;
+    background:rgba(201,162,39,0.9); border:none; color:#000;
+    font-size:13px; font-weight:700; line-height:1; cursor:pointer;
+    align-items:center; justify-content:center;
+  }
+  .forge-sg-card:hover .forge-sg-add { display:flex; }
+  .forge-sg-badge {
+    position:absolute; top:4px; left:4px;
+    background:rgba(201,162,39,0.9); color:#000;
+    font-family:'Cinzel',serif; font-size:7px; font-weight:700;
+    padding:1px 4px; border-radius:8px; pointer-events:none;
+  }
+  .forge-sg-ban {
+    position:absolute; bottom:3px; left:50%; transform:translateX(-50%);
+    font-family:'Cinzel',serif; font-size:7px;
+    padding:1px 4px; border-radius:3px; pointer-events:none; white-space:nowrap;
+  }
+  .forge-sg-ban.f { background:rgba(200,40,40,0.9); color:#fff; }
+  .forge-sg-ban.l { background:rgba(220,110,0,0.9); color:#fff; }
+  .forge-sg-ban.s { background:rgba(190,170,0,0.9); color:#000; }
+
+  /* ── Deck col ── */
+  .forge-deck-col {
+    flex:1; min-width:0; display:flex; flex-direction:column;
+    border-right:1px solid rgba(255,255,255,0.06); background:rgba(7,7,16,0.92);
+    overflow:hidden;
+  }
+  .forge-deck-tabs { display:flex; padding:8px 14px 0; gap:4px; flex-shrink:0; border-bottom:1px solid rgba(255,255,255,0.06); }
+  .forge-deck-tab {
+    font-family:'Cinzel',serif; font-size:9px; letter-spacing:2px;
+    padding:7px 14px 9px; border-radius:5px 5px 0 0; cursor:pointer;
+    color:var(--dim); border:1px solid transparent; border-bottom:none;
+    transition:all .14s; position:relative; bottom:-1px;
+  }
+  .forge-deck-tab.active {
+    color:var(--text); background:rgba(255,255,255,0.04);
+    border-color:rgba(255,255,255,0.07); border-bottom-color:rgba(7,7,16,0.92);
+  }
+  .forge-deck-tab:not(.active):hover { color:var(--text); }
+  .forge-view-bar {
+    display:flex; align-items:center; gap:8px; padding:8px 14px;
+    flex-shrink:0; border-bottom:1px solid rgba(255,255,255,0.05);
+  }
+  .forge-vbtn {
+    font-family:'Cinzel',serif; font-size:8px; letter-spacing:1px;
+    padding:4px 10px; border-radius:4px; cursor:pointer; transition:all .14s;
+    background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07); color:var(--dim);
+  }
+  .forge-vbtn.active { color:var(--gold); border-color:rgba(201,162,39,0.4); background:rgba(201,162,39,0.07); }
+  .forge-vbtn:not(.active):hover { color:var(--text); }
+  .forge-sort-select {
+    background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07);
+    border-radius:4px; color:var(--dim); font-family:'Cinzel',serif;
+    font-size:8px; padding:4px 7px; outline:none; cursor:pointer; margin-left:auto;
+  }
+  .forge-deck-body { flex:1; overflow-y:auto; padding:10px 10px 60px; }
+  .forge-deck-body::-webkit-scrollbar { width:3px; }
+  .forge-deck-body::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.07); border-radius:2px; }
+
+  /* Deck grid */
+  .forge-deck-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(68px,1fr)); gap:5px; }
+  .forge-dg-card { position:relative; border-radius:5px; overflow:visible; cursor:pointer; transition:transform .14s; }
+  .forge-dg-card:hover { transform:translateY(-5px); z-index:2; }
+  .forge-dg-card img { width:100%; display:block; border-radius:5px; box-shadow:0 3px 10px rgba(0,0,0,0.5); }
+  .forge-dg-count {
+    position:absolute; bottom:3px; right:3px;
+    background:rgba(0,0,0,0.85); color:var(--gold);
+    font-family:'Cinzel',serif; font-size:8px; font-weight:700;
+    padding:1px 4px; border-radius:3px; pointer-events:none;
+  }
+  .forge-dg-cat-bar { display:flex; gap:1px; position:absolute; top:3px; left:3px; flex-wrap:wrap; }
+  .forge-dg-cat-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; box-shadow:0 0 3px rgba(0,0,0,0.6); }
+  .forge-dg-actions {
+    display:none; position:absolute; inset:0; background:rgba(0,0,0,0.78);
+    border-radius:5px; flex-direction:column; align-items:center; justify-content:center; gap:5px;
+  }
+  .forge-dg-card:hover .forge-dg-actions { display:flex; }
+  .forge-dg-btn {
+    font-family:'Cinzel',serif; font-size:8px; letter-spacing:.3px;
+    padding:3px 8px; border-radius:4px; cursor:pointer; transition:all .12s; border:1px solid;
+  }
+  .forge-dg-btn.plus { color:#88cc88; border-color:rgba(100,200,100,0.4); background:rgba(100,200,100,0.08); }
+  .forge-dg-btn.minus { color:#ff8888; border-color:rgba(255,80,80,0.4); background:rgba(255,80,80,0.08); }
+
+  /* Deck list */
+  .forge-sec-hdr {
+    font-family:'Cinzel',serif; font-size:8px; letter-spacing:3px; color:var(--dim);
+    text-transform:uppercase; padding:8px 4px 5px; display:flex; align-items:center; gap:8px;
+  }
+  .forge-sec-hdr::after { content:''; flex:1; height:1px; background:rgba(255,255,255,0.06); }
+  .forge-list-item {
+    display:flex; align-items:center; gap:7px; padding:4px 3px;
+    border-radius:5px; transition:background .12s;
+    border-bottom:1px solid rgba(255,255,255,0.025);
+  }
+  .forge-list-item:hover { background:rgba(255,255,255,0.03); }
+  .forge-li-img { width:34px; flex-shrink:0; border-radius:3px; box-shadow:0 2px 6px rgba(0,0,0,0.5); cursor:pointer; }
+  .forge-li-info { flex:1; min-width:0; }
+  .forge-li-name {
+    font-family:'Cinzel',serif; font-size:9px; letter-spacing:.4px; color:var(--text);
+    overflow:hidden; white-space:nowrap; text-overflow:ellipsis;
+  }
+  .forge-li-sub {
+    font-family:'Rajdhani',sans-serif; font-size:10px; color:var(--dim);
+    margin-top:1px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;
+  }
+  .forge-li-cats { display:flex; gap:3px; margin-top:2px; flex-wrap:wrap; }
+  .forge-li-cat-badge {
+    font-family:'Cinzel',serif; font-size:7px; letter-spacing:.3px;
+    padding:1px 4px; border-radius:8px; border:1px solid; opacity:.85;
+  }
+  .forge-li-controls { display:flex; align-items:center; gap:3px; flex-shrink:0; }
+  .forge-li-btn {
+    width:18px; height:18px; border-radius:3px;
+    background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1);
+    color:var(--text); font-size:12px; line-height:1; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; transition:background .12s;
+  }
+  .forge-li-btn:hover { background:rgba(255,255,255,0.14); }
+  .forge-li-btn.del { border-color:rgba(255,80,80,0.2); color:rgba(255,100,100,0.6); }
+  .forge-li-btn.del:hover { background:rgba(255,80,80,0.1); color:#ff8888; }
+  .forge-li-count { font-family:'Cinzel',serif; font-size:11px; color:var(--gold); min-width:13px; text-align:center; }
+  .forge-li-cat-btn {
+    width:18px; height:18px; border-radius:3px;
+    background:rgba(153,102,255,0.07); border:1px solid rgba(153,102,255,0.2);
+    color:#aa77ff; font-size:10px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; transition:all .12s;
+  }
+  .forge-li-cat-btn:hover { background:rgba(153,102,255,0.18); }
+  .forge-deck-empty {
+    font-family:'Cinzel',serif; font-size:9px; letter-spacing:2px;
+    color:rgba(255,255,255,0.15); padding:6px 4px 10px; text-align:center;
+  }
+
+  /* ── Right analytics/categories col ── */
+  .forge-right-col {
+    width:300px; flex-shrink:0; display:flex; flex-direction:column;
+    background:rgba(6,6,14,0.98); overflow:hidden;
+  }
+  .forge-right-tabs { display:flex; border-bottom:1px solid rgba(255,255,255,0.06); flex-shrink:0; }
+  .forge-right-tab {
+    flex:1; padding:11px 6px; text-align:center; cursor:pointer;
+    font-family:'Cinzel',serif; font-size:9px; letter-spacing:2px; color:var(--dim);
+    border-bottom:2px solid transparent; transition:all .15s;
+  }
+  .forge-right-tab.active { color:var(--gold); border-bottom-color:var(--gold); }
+  .forge-right-tab:not(.active):hover { color:var(--text); }
+  .forge-right-body { flex:1; overflow-y:auto; padding:14px; }
+  .forge-right-body::-webkit-scrollbar { width:3px; }
+  .forge-right-body::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.07); border-radius:2px; }
+
+  /* Stat cards */
+  .forge-stat-card {
+    background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.07);
+    border-radius:7px; padding:12px; margin-bottom:10px;
+  }
+  .forge-stat-title {
+    font-family:'Cinzel',serif; font-size:8px; letter-spacing:3px; color:var(--dim);
+    margin-bottom:10px; display:flex; align-items:center; gap:8px;
+  }
+  .forge-stat-title::after { content:''; flex:1; height:1px; background:rgba(255,255,255,0.06); }
+  .forge-stat-big { display:flex; justify-content:center; gap:16px; margin-bottom:6px; }
+  .forge-stat-big-item { text-align:center; }
+  .forge-stat-big-num { font-family:'Cinzel Decorative',serif; font-size:20px; color:var(--gold); text-shadow:0 0 14px rgba(201,162,39,0.4); }
+  .forge-stat-big-label { font-family:'Cinzel',serif; font-size:7px; letter-spacing:2px; color:var(--dim); margin-top:2px; }
+  .forge-bar-row { display:flex; align-items:center; gap:6px; margin-bottom:5px; }
+  .forge-bar-label { font-family:'Cinzel',serif; font-size:8px; color:var(--text); width:64px; flex-shrink:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .forge-bar-track { flex:1; height:6px; background:rgba(255,255,255,0.05); border-radius:3px; overflow:hidden; }
+  .forge-bar-fill { height:100%; border-radius:3px; transition:width .4s cubic-bezier(.4,0,.2,1); }
+  .forge-bar-val { font-family:'Cinzel',serif; font-size:8px; color:var(--dim); width:22px; text-align:right; flex-shrink:0; }
+  .forge-bar-pct { font-family:'Cinzel',serif; font-size:7px; color:rgba(88,88,160,0.8); width:28px; text-align:right; flex-shrink:0; }
+  .forge-level-curve { display:flex; align-items:flex-end; gap:3px; height:46px; margin-top:6px; }
+  .forge-lc-col { display:flex; flex-direction:column; align-items:center; flex:1; }
+  .forge-lc-bar { width:100%; background:rgba(100,140,255,0.5); border-radius:2px 2px 0 0; min-height:3px; transition:height .3s ease; }
+  .forge-lc-num { font-family:'Cinzel',serif; font-size:7px; color:var(--dim2); margin-top:2px; }
+  .forge-lc-cnt { font-family:'Cinzel',serif; font-size:7px; color:var(--dim); margin-bottom:1px; }
+  /* Probability */
+  .forge-prob-sel {
+    width:100%; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07);
+    border-radius:5px; color:var(--text); font-family:'Cinzel',serif; font-size:9px;
+    padding:5px 8px; outline:none; cursor:pointer; margin-bottom:7px;
+  }
+  .forge-prob-result {
+    display:flex; align-items:center; gap:8px; padding:8px;
+    background:rgba(153,102,255,0.06); border:1px solid rgba(153,102,255,0.2); border-radius:5px;
+  }
+  .forge-prob-pct { font-family:'Cinzel Decorative',serif; font-size:22px; color:#cc99ff; text-shadow:0 0 14px rgba(153,102,255,0.5); flex-shrink:0; min-width:60px; }
+  .forge-prob-desc { font-family:'Cinzel',serif; font-size:8px; letter-spacing:.5px; color:var(--dim); line-height:1.7; }
+  .forge-prob-bar-track { height:4px; background:rgba(255,255,255,0.05); border-radius:2px; overflow:hidden; margin-top:7px; }
+  .forge-prob-bar-fill { height:100%; border-radius:2px; background:linear-gradient(90deg,#9966ff,#cc99ff); transition:width .5s ease; }
+  /* Ban summary */
+  .forge-ban-items { display:flex; gap:6px; flex-wrap:wrap; }
+  .forge-ban-item {
+    font-family:'Cinzel',serif; font-size:8px; letter-spacing:1px;
+    padding:3px 8px; border-radius:4px; border:1px solid;
+  }
+  .forge-ban-item.f { color:#ff7777; border-color:rgba(255,80,80,0.3); background:rgba(255,80,80,0.05); }
+  .forge-ban-item.l { color:#ffaa55; border-color:rgba(255,140,0,0.3); background:rgba(255,140,0,0.05); }
+  .forge-ban-item.s { color:#ffdd55; border-color:rgba(255,220,0,0.3); background:rgba(255,220,0,0.04); }
+  .forge-ban-item.u { color:#66cc88; border-color:rgba(100,200,100,0.25); background:rgba(100,200,100,0.04); }
+
+  /* Categories */
+  .forge-cat-toolbar { display:flex; gap:6px; margin-bottom:12px; }
+  .forge-cat-input {
+    flex:1; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+    border-radius:5px; color:var(--text); font-family:'Rajdhani',sans-serif;
+    font-size:12px; padding:6px 8px; outline:none;
+  }
+  .forge-cat-input:focus { border-color:rgba(153,102,255,0.4); }
+  .forge-cat-input::placeholder { color:var(--dim); }
+  .forge-cat-add-btn {
+    padding:6px 10px; border-radius:5px; cursor:pointer;
+    font-family:'Cinzel',serif; font-size:8px; letter-spacing:1px; white-space:nowrap;
+    background:rgba(153,102,255,0.1); border:1px solid rgba(153,102,255,0.3); color:#cc99ff; transition:all .14s;
+  }
+  .forge-cat-add-btn:hover { background:rgba(153,102,255,0.22); }
+  .forge-cat-row {
+    display:flex; align-items:center; gap:7px; padding:7px 9px;
+    border-radius:6px; border:1px solid rgba(255,255,255,0.06); margin-bottom:5px;
+    cursor:pointer; transition:all .14s;
+  }
+  .forge-cat-row.selected,.forge-cat-row:hover { border-color:rgba(153,102,255,0.35); background:rgba(153,102,255,0.06); }
+  .forge-cat-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+  .forge-cat-name { font-family:'Cinzel',serif; font-size:10px; color:var(--text); flex:1; }
+  .forge-cat-count { font-family:'Cinzel',serif; font-size:8px; color:var(--dim); }
+  .forge-cat-del { background:none; border:none; color:var(--dim2); cursor:pointer; font-size:11px; line-height:1; padding:2px 4px; border-radius:3px; transition:color .12s; }
+  .forge-cat-del:hover { color:#ff8888; }
+  .forge-color-row { display:flex; align-items:center; gap:6px; margin-bottom:10px; flex-wrap:wrap; }
+  .forge-color-dot { width:13px; height:13px; border-radius:50%; cursor:pointer; transition:transform .12s; flex-shrink:0; }
+  .forge-color-dot:hover { transform:scale(1.3); }
+  .forge-cat-card-list { display:flex; flex-direction:column; gap:3px; margin-top:8px; }
+  .forge-cat-card-item {
+    display:flex; align-items:center; gap:7px; padding:4px 7px;
+    border-radius:4px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06);
+  }
+  .forge-cat-card-thumb { width:26px; border-radius:2px; flex-shrink:0; }
+  .forge-cat-card-name { font-family:'Cinzel',serif; font-size:9px; color:var(--text); flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .forge-cat-card-remove { background:none; border:none; color:var(--dim2); cursor:pointer; font-size:10px; transition:color .12s; }
+  .forge-cat-card-remove:hover { color:#ff8888; }
+  .forge-no-sel { font-family:'Cinzel',serif; font-size:9px; letter-spacing:2px; color:rgba(255,255,255,0.15); text-align:center; padding:16px 0; line-height:2.2; }
+
+  /* Category assign popup */
+  #forgeCatPopup {
+    display:none; position:fixed; z-index:700;
+    background:rgba(8,8,22,0.98); border:1px solid rgba(153,102,255,0.4);
+    border-radius:8px; padding:10px; min-width:170px; max-width:210px;
+    box-shadow:0 8px 28px rgba(0,0,0,0.7);
+  }
+  #forgeCatPopup.open { display:block; }
+  .fcp-title { font-family:'Cinzel',serif; font-size:8px; letter-spacing:2px; color:var(--dim); margin-bottom:7px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .fcp-item { display:flex; align-items:center; gap:7px; padding:5px 7px; border-radius:4px; cursor:pointer; transition:background .12s; }
+  .fcp-item:hover { background:rgba(255,255,255,0.06); }
+  .fcp-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+  .fcp-name { font-family:'Cinzel',serif; font-size:9px; color:var(--text); flex:1; }
+  .fcp-check { font-size:11px; color:var(--gold); }
+
   .cdeck-toggle-count {
     background:rgba(201,162,39,0.25); border-radius:10px;
     font-size:9px; padding:1px 6px; min-width:16px; text-align:center; color:var(--gold);
@@ -3716,6 +4266,7 @@
           <button class="cdeck-view-btn active" id="cdeckViewList" onclick="setDeckView('list')">&#x2630; List</button>
           <button class="cdeck-view-btn" id="cdeckViewGrid" onclick="setDeckView('grid')">&#x229E; Visual</button>
           <button class="cdeck-view-btn" id="cdeckAnalyticsBtn" onclick="toggleDeckAnalytics()" style="margin-left:auto;" title="Analytics">&#x1F4CA; Stats</button>
+          <button class="cdeck-view-btn" onclick="openForge()" title="Full Deck Builder" style="color:#cc99ff;border-color:rgba(153,102,255,0.4);background:rgba(153,102,255,0.07);">&#x26A1; Forge</button>
         </div>
         <!-- Analytics panel (hidden until toggled) -->
         <div id="cdeckAnalyticsPanel" style="display:none;"></div>
@@ -3724,6 +4275,7 @@
           <button class="cdeck-foot-btn export" onclick="exportDeckText()">&#x1F4CB; Text</button>
           <button class="cdeck-foot-btn ydk" onclick="exportDeckYDK()">&#x2B07; YDK</button>
           <button class="cdeck-foot-btn" style="background:rgba(100,180,255,0.07);border:1px solid rgba(100,180,255,0.25);color:#88aadd;flex:1;padding:9px 0;border-radius:6px;cursor:pointer;font-family:'Cinzel',serif;font-size:10px;letter-spacing:1px;transition:background .14s;" onclick="openDeckImport()">&#x1F4E5; Import</button>
+          <button class="cdeck-foot-btn" style="background:rgba(160,100,255,0.08);border:1px solid rgba(160,100,255,0.28);color:#cc99ff;flex:1;padding:9px 0;border-radius:6px;cursor:pointer;font-family:'Cinzel',serif;font-size:10px;letter-spacing:1px;transition:background .14s;" onclick="openDrawSim()">&#x1F0CF; Draw</button>
           <button class="cdeck-foot-btn clear" onclick="clearDeck()">&#x2715;</button>
         </div>
       </div>
@@ -3750,6 +4302,177 @@
         <button class="cdetail-action-btn deck"  onclick="addToDeck(_currentDetailCard); _updateDeckBadges()">➕ Add to Deck</button>
         <button class="cdetail-action-btn" style="background:rgba(80,120,200,0.1);border:1px solid rgba(80,120,200,0.3);color:#aabbee;" onclick="addToDeckSide(_currentDetailCard); _updateDeckBadges()">🔄 Side Deck</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- ⚡ DECK FORGE — Full-screen overlay -->
+<div id="forgeOverlay">
+  <!-- Header -->
+  <div class="forge-header">
+    <div class="forge-logo">DECK FORGE<span>FULL BUILDER</span></div>
+    <input class="forge-name-input" id="forgeNameInput" placeholder="Deck name…" maxlength="40" oninput="forgeSyncName()">
+    <div class="forge-hcounts">
+      <span class="forge-hcount main"  id="forge-hc-main">MAIN 0/60</span>
+      <span class="forge-hcount extra" id="forge-hc-extra">EX 0/15</span>
+      <span class="forge-hcount side"  id="forge-hc-side">SIDE 0/15</span>
+    </div>
+    <div class="forge-hbtns">
+      <button class="forge-hbtn" onclick="forgeOpenLibrary()">&#x1F4DA; My Decks</button>
+      <button class="forge-hbtn gold" onclick="forgeSave()">&#x1F4BE; Save</button>
+      <button class="forge-hbtn" onclick="forgeExportText()">&#x1F4CB; Text</button>
+      <button class="forge-hbtn" onclick="forgeExportYDK()">&#x2B07; YDK</button>
+      <button class="forge-hbtn close" onclick="closeForge()">&#x2715; Close</button>
+    </div>
+  </div>
+
+  <!-- 3-col body -->
+  <div class="forge-body">
+
+    <!-- Search col -->
+    <div class="forge-search-col">
+      <div class="forge-col-header">
+        <span>CARD SEARCH</span>
+        <span id="forgeDbStatus" style="font-size:7px;letter-spacing:1px;"></span>
+      </div>
+      <div class="forge-search-row">
+        <input class="forge-s-input" id="forgeSearchInput" placeholder="Search cards…" maxlength="80"
+          oninput="forgeSearchDebounce()" onkeydown="if(event.key==='Enter')forgeDoSearch()">
+        <button class="forge-s-btn" onclick="forgeDoSearch()">&#x1F50D;</button>
+      </div>
+      <div class="forge-filter-toggle" id="forgeFilterToggle" onclick="forgeToggleFilters()">
+        <span id="forgeFilterArrow">▼</span>
+        <span>Filters</span>
+      </div>
+      <div class="forge-filters-body" id="forgeFiltersBody">
+        <div class="forge-filter-grid">
+          <div>
+            <div class="forge-fg-label">Card Type</div>
+            <select class="forge-fg-sel" id="fgf-type">
+              <option value="">All</option>
+              <option>Effect Monster</option><option>Normal Monster</option>
+              <option>Fusion Monster</option><option>Synchro Monster</option>
+              <option>XYZ Monster</option><option>Link Monster</option>
+              <option>Ritual Monster</option><option>Pendulum Effect Monster</option>
+              <option>Spell Card</option><option>Trap Card</option>
+            </select>
+          </div>
+          <div>
+            <div class="forge-fg-label">Attribute</div>
+            <select class="forge-fg-sel" id="fgf-attr">
+              <option value="">All</option>
+              <option>DARK</option><option>LIGHT</option><option>EARTH</option>
+              <option>WATER</option><option>FIRE</option><option>WIND</option><option>DIVINE</option>
+            </select>
+          </div>
+          <div>
+            <div class="forge-fg-label">Monster Type</div>
+            <select class="forge-fg-sel" id="fgf-race">
+              <option value="">All</option>
+              <option>Dragon</option><option>Warrior</option><option>Spellcaster</option>
+              <option>Fairy</option><option>Fiend</option><option>Zombie</option>
+              <option>Machine</option><option>Aqua</option><option>Beast</option>
+              <option>Beast-Warrior</option><option>Dinosaur</option><option>Cyberse</option>
+              <option>Psychic</option><option>Thunder</option><option>Pyro</option>
+              <option>Rock</option><option>Plant</option><option>Insect</option>
+              <option>Winged Beast</option><option>Sea Serpent</option>
+            </select>
+          </div>
+          <div>
+            <div class="forge-fg-label">Ban Status</div>
+            <select class="forge-fg-sel" id="fgf-ban">
+              <option value="">All</option>
+              <option value="Forbidden">Forbidden</option>
+              <option value="Limited">Limited</option>
+              <option value="Semi-Limited">Semi-Limited</option>
+              <option value="Unlimited">Unlimited</option>
+            </select>
+          </div>
+          <div>
+            <div class="forge-fg-label">Level / Rank</div>
+            <div class="forge-filter-range">
+              <input class="forge-fg-inp" type="number" id="fgf-lvmin" placeholder="Min" min="1" max="12">
+              <span>–</span>
+              <input class="forge-fg-inp" type="number" id="fgf-lvmax" placeholder="Max" min="1" max="12">
+            </div>
+          </div>
+          <div>
+            <div class="forge-fg-label">ATK</div>
+            <div class="forge-filter-range">
+              <input class="forge-fg-inp" type="number" id="fgf-atkmin" placeholder="Min">
+              <span>–</span>
+              <input class="forge-fg-inp" type="number" id="fgf-atkmax" placeholder="Max">
+            </div>
+          </div>
+          <div class="forge-fg-full">
+            <div class="forge-fg-label">Archetype</div>
+            <input class="forge-fg-inp" id="fgf-arch" placeholder="e.g. Blue-Eyes, Tearlaments…" style="width:100%;">
+          </div>
+        </div>
+        <div class="forge-filter-clear-row">
+          <button class="forge-filter-clear" onclick="forgeClearFilters()">&#x2715; Clear Filters</button>
+        </div>
+      </div>
+      <div class="forge-search-status" id="forgeSearchStatus"></div>
+      <div class="forge-search-grid" id="forgeSearchGrid"></div>
+    </div>
+
+    <!-- Deck col -->
+    <div class="forge-deck-col">
+      <div class="forge-deck-tabs">
+        <div class="forge-deck-tab active" id="fgt-main"  onclick="forgeSetTab('main')">&#x2694;&#xFE0F; MAIN <span id="fgTabMain"  style="font-size:7px;opacity:.6;"></span></div>
+        <div class="forge-deck-tab"        id="fgt-extra" onclick="forgeSetTab('extra')">&#x1F300; EXTRA <span id="fgTabExtra" style="font-size:7px;opacity:.6;"></span></div>
+        <div class="forge-deck-tab"        id="fgt-side"  onclick="forgeSetTab('side')">&#x1F504; SIDE <span id="fgTabSide"  style="font-size:7px;opacity:.6;"></span></div>
+      </div>
+      <div class="forge-view-bar">
+        <button class="forge-vbtn active" id="fgvList" onclick="forgeSetView('list')">&#x2630; List</button>
+        <button class="forge-vbtn"        id="fgvGrid" onclick="forgeSetView('grid')">&#x229E; Visual</button>
+        <select class="forge-sort-select" id="forgeSortSel" onchange="forgeRenderDeck()">
+          <option value="none">Added Order</option>
+          <option value="name">Name</option>
+          <option value="type">Type</option>
+          <option value="level">Level / Rank</option>
+          <option value="atk">ATK</option>
+          <option value="cat">Category</option>
+        </select>
+      </div>
+      <div class="forge-deck-body" id="fgDeckBody"></div>
+    </div>
+
+    <!-- Right col -->
+    <div class="forge-right-col">
+      <div class="forge-right-tabs">
+        <div class="forge-right-tab active" id="fgrt-analytics"   onclick="forgeSetRightTab('analytics')">&#x1F4CA; Analytics</div>
+        <div class="forge-right-tab"        id="fgrt-categories"  onclick="forgeSetRightTab('categories')">&#x1F3F7; Categories</div>
+      </div>
+      <div class="forge-right-body" id="forgeRightBody"></div>
+    </div>
+
+  </div><!-- end forge-body -->
+</div><!-- end forgeOverlay -->
+
+<!-- Category assign popup for forge -->
+<div id="forgeCatPopup"></div>
+
+<!-- Draw Simulator Modal -->
+<div id="drawSimModal" onclick="if(event.target===this)closeDrawSim()">
+  <div class="dsim-wrap">
+    <div class="dsim-header">
+      <div>
+        <div class="dsim-title">&#x1F0CF; OPENING HAND</div>
+        <div class="dsim-subtitle">5-card draw &nbsp;·&nbsp; 5 extra deck</div>
+      </div>
+      <button class="dsim-close" onclick="closeDrawSim()">&#x2715;</button>
+    </div>
+    <div class="dsim-section-label">&#x2694;&#xFE0F; MAIN DECK HAND</div>
+    <div class="dsim-hand" id="dsimHand"></div>
+    <div class="dsim-section-label">&#x1F300; EXTRA DECK</div>
+    <div class="dsim-hand" id="dsimExtra"></div>
+    <div class="dsim-footer">
+      <button class="dsim-btn redraw" onclick="drawSimRoll()">&#x1F0CF; New Hand</button>
+      <button class="dsim-btn one-more" onclick="drawSimDrawOne()">+1 Draw</button>
+      <span class="dsim-deck-count" id="dsimDeckCount"></span>
+      <button class="dsim-btn close-sim" onclick="closeDrawSim()">Close</button>
     </div>
   </div>
 </div>
@@ -4098,7 +4821,7 @@
     grid.innerHTML = '';
     // scale LP font size and row height inversely with player count
     const cols = players.length;
-    const lpSize = { 1: '14vw', 2: '8vw', 3: '6vw', 4: '5vw', 5: '4.2vw', 6: '3.6vw' };
+    const lpSize = { 1: '22vw', 2: '13vw', 3: '9.6vw', 4: '8vw', 5: '6.7vw', 6: '5.8vw' };
     grid.style.setProperty('--lp-font-size', lpSize[cols] || '4vw');
     grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
 
@@ -4158,6 +4881,12 @@
         <div class="lp-display">
           <div class="lp-value ${getLPClass(p.lp)}" id="lp-val-${i}">${(function(){ if(gameMode==='team'&&teamLP.length&&matchCtx&&matchCtx.teams&&!matchCtx.separateLP){if(matchCtx.vsOne&&i===matchCtx.soloIdx)return p.lp.toLocaleString();return(matchCtx.teams[0].indexOf(i)!==-1?teamLP[0]:teamLP[1]).toLocaleString();}return p.lp.toLocaleString();})()}</div>
           <div class="lp-label">Life Points</div>
+          ${i === activeTurn && !p.eliminated && gameRules.turnTimeLimit ? `
+          <div class="lp-turn-timer">
+            <span class="lp-turn-timer-label">Turn</span>
+            <span class="lp-turn-timer-value${timerRunning ? ' running' : ''}${turnSeconds >= 600 ? ' overtime' : ''}" id="lp-turn-timer-${i}">${fmt(turnSeconds)}</span>
+          </div>
+          <div class="lp-turn-timer-warn" id="lp-turn-timer-warn-${i}">${(()=>{ var lim=(gameRules.turnTimeMinutes||10)*60; var rem=lim-turnSeconds; return rem>0 ? fmt(Math.max(0,rem))+' remaining' : '⚠ TIME UP'; })()}</div>` : ''}
           ${i !== activeTurn && !p.eliminated && players[activeTurn] && !players[activeTurn].eliminated ? `<div class="lp-diff" id="lp-diff-${i}">${(()=>{const _isVsOneSolo=(idx)=>matchCtx&&matchCtx.vsOne&&idx===matchCtx.soloIdx;const me=(gameMode==='team'&&teamLP.length&&matchCtx&&matchCtx.teams&&!matchCtx.separateLP&&!_isVsOneSolo(activeTurn))?(matchCtx.teams[0].indexOf(activeTurn)!==-1?teamLP[0]:teamLP[1]):players[activeTurn].lp;const them=(gameMode==='team'&&teamLP.length&&matchCtx&&matchCtx.teams&&!matchCtx.separateLP&&!_isVsOneSolo(i))?(matchCtx.teams[0].indexOf(i)!==-1?teamLP[0]:teamLP[1]):p.lp;const d=them-me;return (d>0?'▲+':'▼')+d.toLocaleString();})()}</div>` : ''}
           <div class="match-record">${(() => { var k=p.name.trim().toLowerCase(); var r=roster[k]||{w:0,l:0,f:0}; var parts=['<span class="wins">'+r.w+'W</span>','<span class="losses">'+r.l+'L</span>']; if(r.f) parts.push('<span class="forfeits">'+r.f+'F</span>'); return parts.join(' &middot; '); })()} </div>
           ${biggestHit[i] > 0 ? `<div class="biggest-hit-badge" title="Biggest hit taken this duel">💥 ${biggestHit[i].toLocaleString()}</div>` : ''}
@@ -4814,6 +5543,22 @@
     const td = document.getElementById('turnTimerDisplay');
     td.textContent = fmt(turnSeconds);
     td.classList.toggle('overtime', turnSeconds >= 600);
+    // Sync in-card turn timer (shown when turnTimeLimit rule is active)
+    if (gameRules.turnTimeLimit) {
+      const inCard = document.getElementById('lp-turn-timer-' + activeTurn);
+      if (inCard) {
+        inCard.textContent = fmt(turnSeconds);
+        inCard.classList.toggle('running', timerRunning);
+        inCard.classList.toggle('overtime', turnSeconds >= 600);
+      }
+      const warnEl = document.getElementById('lp-turn-timer-warn-' + activeTurn);
+      if (warnEl) {
+        var lim = (gameRules.turnTimeMinutes || 10) * 60;
+        var rem = lim - turnSeconds;
+        warnEl.textContent = rem > 0 ? fmt(Math.max(0, rem)) + ' remaining' : '⚠ TIME UP';
+        warnEl.style.color = rem <= 0 ? '#ff4444' : rem <= 60 ? '#ffaa44' : '';
+      }
+    }
     // Rule: auto-eliminate if turn exceeds limit
     if (gameRules.turnTimeLimit) {
       var limitSecs = (gameRules.turnTimeMinutes || 10) * 60;
@@ -4828,6 +5573,19 @@
 
   function timerToggle() {
     if (timerRunning) timerPause(); else timerStart();
+  }
+
+  var _chainActive = false;
+  function toggleChainOverlay() {
+    var overlay = document.getElementById('chainOverlay');
+    if (!overlay) return;
+    _chainActive = !_chainActive;
+    overlay.classList.toggle('active', _chainActive);
+    if (_chainActive) {
+      if (timerRunning) timerPause();
+    } else {
+      timerStart();
+    }
   }
   function _setMenuOpen(open) {
     var menu = document.getElementById('gameMenu');
@@ -4871,6 +5629,12 @@
   }
 
   function recordTurnAndAdvance(newActiveFn) {
+    // Dismiss chain overlay if active
+    if (_chainActive) {
+      _chainActive = false;
+      var co = document.getElementById('chainOverlay');
+      if (co) co.classList.remove('active');
+    }
     // log this turn for the current player
     const dur = turnSeconds;
     // guard against activeTurn being out of bounds
@@ -5271,6 +6035,10 @@
       if (dlibOpen) { closeDeckLibrary(); return; }
       var dimportOpen = document.getElementById('deckImportModal') && document.getElementById('deckImportModal').classList.contains('open');
       if (dimportOpen) { closeDeckImport(); return; }
+      var dsimOpen = document.getElementById('drawSimModal') && document.getElementById('drawSimModal').classList.contains('open');
+      if (dsimOpen) { closeDrawSim(); return; }
+      var forgeOpen = document.getElementById('forgeOverlay') && document.getElementById('forgeOverlay').classList.contains('open');
+      if (forgeOpen) { forgeCatPopupClose(); closeForge(); return; }
     }
 
     // ── Game mode ──
@@ -5286,6 +6054,10 @@
       e.stopPropagation();
       if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
       nextTurn();
+    } else if (e.code === 'ArrowUp') {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleChainOverlay();
     }
   }, true);  // capture phase — runs before browser default button-activation
 
@@ -8245,6 +9017,120 @@
     setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
   }
 
+  /* ━━ DRAW SIMULATOR ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+  var _dsimDeck = [];   // shuffled copy of main deck cards (flat, one entry per copy)
+
+  function openDrawSim() {
+    var main = _deckList.main;
+    if (!main.length) { showToast('⚠️ Add cards to Main Deck first', 'warning', 2500); return; }
+    var modal = document.getElementById('drawSimModal');
+    if (!modal) return;
+    modal.classList.add('open');
+    drawSimRoll();
+  }
+
+  function closeDrawSim() {
+    var modal = document.getElementById('drawSimModal');
+    if (modal) modal.classList.remove('open');
+    _dsimDeck = [];
+  }
+
+  function _dsimShuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+
+  function _dsimBuildDeck() {
+    var flat = [];
+    _deckList.main.forEach(function(e) {
+      for (var i = 0; i < e.count; i++) flat.push(e);
+    });
+    _dsimDeck = _dsimShuffle(flat);
+  }
+
+  function drawSimRoll() {
+    _dsimBuildDeck();
+    var handSize = Math.min(5, _dsimDeck.length);
+    var hand = _dsimDeck.splice(0, handSize);
+    _dsimRenderHand('dsimHand', hand, true);
+    _dsimRenderExtra();
+    _dsimUpdateCount();
+  }
+
+  function drawSimDrawOne() {
+    if (!_dsimDeck.length) { showToast('🃏 Deck is empty!', 'warning', 2000); return; }
+    var handEl = document.getElementById('dsimHand');
+    if (!handEl) return;
+    var card = _dsimDeck.splice(0, 1)[0];
+    var cardEl = _dsimMakeCardEl(card, handEl.children.length);
+    handEl.appendChild(cardEl);
+    _dsimUpdateCount();
+  }
+
+  function _dsimUpdateCount() {
+    var el = document.getElementById('dsimDeckCount');
+    if (el) el.textContent = _dsimDeck.length + ' cards left in deck';
+  }
+
+  function _dsimRenderHand(containerId, cards, animate) {
+    var el = document.getElementById(containerId);
+    if (!el) return;
+    el.innerHTML = '';
+    if (!cards.length) {
+      el.innerHTML = '<div style="font-family:\'Cinzel\',serif;font-size:9px;color:rgba(255,255,255,0.18);letter-spacing:2px;padding:20px 0;">Empty</div>';
+      return;
+    }
+    cards.forEach(function(card, i) {
+      el.appendChild(_dsimMakeCardEl(card, i));
+    });
+  }
+
+  function _dsimMakeCardEl(card, idx) {
+    var thumb = 'https://images.ygoprodeck.com/images/cards_small/' + card.img_id + '.jpg';
+    var rot = (Math.random() * 4 - 2).toFixed(1) + 'deg';
+    var delay = (idx * 0.06).toFixed(2) + 's';
+    var wrap = document.createElement('div');
+    wrap.className = 'dsim-card';
+    wrap.style.cssText = '--deal-rot:' + rot + ';animation-delay:' + delay + ';';
+    // Build tooltip content
+    var typeInfo = card.type || '';
+    var statsInfo = '';
+    if (card.atk != null || card.def != null) {
+      statsInfo += (card.atk != null ? 'ATK ' + card.atk : '') + (card.def != null ? '  DEF ' + card.def : '');
+    }
+    if (card.level != null) statsInfo += (statsInfo ? '  ' : '') + 'Lv ' + card.level;
+    if (card.rank  != null) statsInfo += (statsInfo ? '  ' : '') + 'Rank ' + card.rank;
+    if (card.banlist) typeInfo += '  ·  ' + card.banlist;
+    wrap.innerHTML = '<img src="' + thumb + '" alt="' + _escHtml(card.name) + '" loading="lazy" onerror="this.style.opacity=0.3">'
+      + '<div class="dsim-card-tooltip">'
+      + '<div class="dsim-card-tooltip-name">' + _escHtml(card.name) + '</div>'
+      + (typeInfo ? '<div class="dsim-card-tooltip-type">' + _escHtml(typeInfo) + '</div>' : '')
+      + (statsInfo ? '<div class="dsim-card-tooltip-stats">' + _escHtml(statsInfo) + '</div>' : '')
+      + '</div>';
+    return wrap;
+  }
+
+  function _dsimRenderExtra() {
+    var extra = _deckList.extra;
+    var el = document.getElementById('dsimExtra');
+    if (!el) return;
+    el.innerHTML = '';
+    if (!extra.length) {
+      el.innerHTML = '<div style="font-family:\'Cinzel\',serif;font-size:9px;color:rgba(255,255,255,0.18);letter-spacing:2px;padding:20px 0;">No Extra Deck cards</div>';
+      return;
+    }
+    // Show up to 5 extra deck cards (show unique cards, up to 5)
+    var shown = extra.slice(0, 5);
+    shown.forEach(function(card, i) {
+      el.appendChild(_dsimMakeCardEl(card, i));
+    });
+  }
+
   /* ━━ DECK VIEW MODE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
   function setDeckView(mode) {
@@ -8427,8 +9313,14 @@
     _deckList = JSON.parse(JSON.stringify(lib[idx].deck));
     var nameEl = document.getElementById('cdeckNameInput');
     if (nameEl) nameEl.value = lib[idx].name;
+    // Keep Forge name in sync
+    var forgeNameEl = document.getElementById('forgeNameInput');
+    if (forgeNameEl) forgeNameEl.value = lib[idx].name;
     _renderDeckPanel();
     _updateDeckBadges();
+    // If Forge is open, refresh it too
+    var forgeOpen = document.getElementById('forgeOverlay') && document.getElementById('forgeOverlay').classList.contains('open');
+    if (forgeOpen) { forgeUpdateCounts(); forgeRenderDeck(); forgeRenderRight(); }
     closeDeckLibrary();
     showToast('📋 Loaded: ' + lib[idx].name, 'ok', 2000);
   }
@@ -8614,6 +9506,748 @@
     });
     cb({ deck: newDeck, added: added, skipped: skipped });
   }
+
+  /* ━━ DECK FORGE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+  var _forgeTab = 'main', _forgeView = 'list', _forgeRightTab = 'analytics';
+  var _forgeCategories = {}, _forgeAssignments = {}; // catName→{color,cards[]}, cardId→[catName,…]
+  var _forgeSelectedCat = null, _forgeCatPopupId = null, _forgeSearchTimer = null;
+
+  var _FORGE_CAT_PRESETS = [
+    {name:'Starters',color:'#4488ff'},{name:'Extenders',color:'#22ccaa'},
+    {name:'Hand Traps',color:'#9966ff'},{name:'Board Breakers',color:'#ff4455'},
+    {name:'Draw Power',color:'#ffcc22'},{name:'Combo Pieces',color:'#ff8833'},
+    {name:'Engine Core',color:'#c9a227'},{name:'Recovery',color:'#44cc77'},
+    {name:'Tech Choices',color:'#888aaa'}
+  ];
+
+  function openForge() {
+    _forgeLoadStorage();
+    var overlay = document.getElementById('forgeOverlay');
+    if (!overlay) return;
+    overlay.classList.add('open');
+    // Sync name from deck panel
+    var cname = document.getElementById('cdeckNameInput');
+    var fname = document.getElementById('forgeNameInput');
+    if (cname && fname) fname.value = cname.value;
+    // Sync DB status
+    var dbSt = document.getElementById('forgeDbStatus');
+    if (dbSt) dbSt.textContent = _cardDbReady ? '📦 ' + (_cardDb ? _cardDb.length.toLocaleString() : '?') : '⏳';
+    forgeUpdateCounts();
+    forgeRenderDeck();
+    forgeRenderRight();
+  }
+
+  function closeForge() {
+    var overlay = document.getElementById('forgeOverlay');
+    if (overlay) overlay.classList.remove('open');
+    forgeCatPopupClose();
+    // Sync name back
+    var fname = document.getElementById('forgeNameInput');
+    var cname = document.getElementById('cdeckNameInput');
+    if (fname && cname) cname.value = fname.value;
+    // Refresh the mini panel
+    _renderDeckPanel();
+    _updateDeckBadges();
+  }
+
+  function forgeSyncName() {
+    var fname = document.getElementById('forgeNameInput');
+    var cname = document.getElementById('cdeckNameInput');
+    if (fname && cname) cname.value = fname.value;
+  }
+
+  function _forgeLoadStorage() {
+    try {
+      var cats = localStorage.getItem('ygo_forge_cats');
+      if (cats) { _forgeCategories = JSON.parse(cats); }
+      else { _forgeInitPresets(); }
+    } catch(e) { _forgeInitPresets(); }
+    try {
+      var asgn = localStorage.getItem('ygo_forge_assignments');
+      if (asgn) _forgeAssignments = JSON.parse(asgn);
+    } catch(e) {}
+  }
+
+  function _forgeSaveStorage() {
+    try { localStorage.setItem('ygo_forge_cats', JSON.stringify(_forgeCategories)); } catch(e) {}
+    try { localStorage.setItem('ygo_forge_assignments', JSON.stringify(_forgeAssignments)); } catch(e) {}
+  }
+
+  function _forgeInitPresets() {
+    _forgeCategories = {};
+    _FORGE_CAT_PRESETS.forEach(function(c) { _forgeCategories[c.name] = {color:c.color, cards:[]}; });
+  }
+
+  /* ── Count helpers ── */
+  function forgeUpdateCounts() {
+    var mc = _deckTotalCount('main'), ec = _deckTotalCount('extra'), sc = _deckTotalCount('side');
+    var e1 = document.getElementById('forge-hc-main');  if (e1) { e1.textContent='MAIN '+mc+'/60';  e1.classList.toggle('over', mc>60); }
+    var e2 = document.getElementById('forge-hc-extra'); if (e2) { e2.textContent='EX '+ec+'/15';    e2.classList.toggle('over', ec>15); }
+    var e3 = document.getElementById('forge-hc-side');  if (e3) { e3.textContent='SIDE '+sc+'/15';  e3.classList.toggle('over', sc>15); }
+    var t1 = document.getElementById('fgTabMain');  if (t1) t1.textContent = '('+mc+')';
+    var t2 = document.getElementById('fgTabExtra'); if (t2) t2.textContent = '('+ec+')';
+    var t3 = document.getElementById('fgTabSide');  if (t3) t3.textContent = '('+sc+')';
+  }
+
+  /* ── Search ── */
+  function forgeSearchDebounce() { clearTimeout(_forgeSearchTimer); _forgeSearchTimer = setTimeout(forgeDoSearch, 280); }
+
+  function forgeDoSearch() {
+    if (!_cardDbReady || !_cardDb) { document.getElementById('forgeSearchStatus').textContent = 'DB loading…'; return; }
+    var q = (document.getElementById('forgeSearchInput').value || '').trim().toLowerCase();
+    var f = _forgeGetFilters();
+    var hasF = q || f.type||f.attr||f.race||f.ban||f.arch||f.lvmin!=null||f.lvmax!=null||f.atkmin!=null||f.atkmax!=null;
+    if (!hasF) { document.getElementById('forgeSearchStatus').textContent = ''; document.getElementById('forgeSearchGrid').innerHTML = ''; return; }
+    var results = [];
+    for (var i = 0; i < _cardDb.length; i++) {
+      var c = _cardDb[i];
+      if (q && !c.name.toLowerCase().includes(q)) continue;
+      if (f.type && c.type !== f.type) continue;
+      if (f.attr && c.attribute !== f.attr) continue;
+      if (f.race && c.race !== f.race) continue;
+      if (f.ban) { if (f.ban==='Unlimited'){if(c.banlist)continue;} else {if(c.banlist!==f.ban)continue;} }
+      if (f.arch) { var la=f.arch.toLowerCase(); if(!c.archetype.toLowerCase().includes(la)&&!c.name.toLowerCase().includes(la)) continue; }
+      var lv = c.level!=null?c.level:(c.rank!=null?c.rank:(c.linkval!=null?c.linkval:null));
+      if (f.lvmin!=null && (lv==null||lv<f.lvmin)) continue;
+      if (f.lvmax!=null && (lv==null||lv>f.lvmax)) continue;
+      if (f.atkmin!=null && (c.atk==null||c.atk<f.atkmin)) continue;
+      if (f.atkmax!=null && (c.atk==null||c.atk>f.atkmax)) continue;
+      results.push(c);
+      if (results.length >= 60) break;
+    }
+    if (q) results.sort(function(a,b){
+      var al=a.name.toLowerCase(),bl=b.name.toLowerCase();
+      if(al===q&&bl!==q) return -1; if(bl===q&&al!==q) return 1;
+      if(al.startsWith(q)&&!bl.startsWith(q)) return -1; if(bl.startsWith(q)&&!al.startsWith(q)) return 1;
+      return a.name.localeCompare(b.name);
+    });
+    document.getElementById('forgeSearchStatus').textContent = results.length + (results.length===60?'+':' ') + ' results';
+    _forgeRenderSearchGrid(results);
+  }
+
+  function _forgeGetFilters() {
+    var n=function(id){var v=parseInt((document.getElementById(id)||{}).value);return isNaN(v)?null:v;};
+    var s=function(id){return ((document.getElementById(id)||{}).value||'').trim();};
+    return {type:s('fgf-type'),attr:s('fgf-attr'),race:s('fgf-race'),ban:s('fgf-ban'),arch:s('fgf-arch'),
+      lvmin:n('fgf-lvmin'),lvmax:n('fgf-lvmax'),atkmin:n('fgf-atkmin'),atkmax:n('fgf-atkmax')};
+  }
+
+  function forgeClearFilters() {
+    ['fgf-type','fgf-attr','fgf-race','fgf-ban'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
+    ['fgf-lvmin','fgf-lvmax','fgf-atkmin','fgf-atkmax'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
+    var a=document.getElementById('fgf-arch');if(a)a.value='';
+  }
+
+  function forgeToggleFilters() {
+    var body = document.getElementById('forgeFiltersBody');
+    var arrow = document.getElementById('forgeFilterArrow');
+    var toggle = document.getElementById('forgeFilterToggle');
+    var open = body.classList.toggle('open');
+    toggle.classList.toggle('open', open);
+    if (arrow) arrow.textContent = open ? '▲' : '▼';
+  }
+
+  function _forgeRenderSearchGrid(cards) {
+    var grid = document.getElementById('forgeSearchGrid');
+    if (!grid) return;
+    grid.innerHTML = '';
+    cards.forEach(function(card) {
+      var imgId = card.card_images && card.card_images[0] ? card.card_images[0].id : card.id;
+      var thumb = 'https://images.ygoprodeck.com/images/cards_small/' + imgId + '.jpg';
+      var inDeck = _deckCountFor(card.id);
+      var ban = card.banlist || '';
+      var banCls = ban==='Forbidden'?'f':ban==='Limited'?'l':ban==='Semi-Limited'?'s':'';
+      var div = document.createElement('div');
+      div.className = 'forge-sg-card';
+      div.title = card.name;
+      div.innerHTML = '<img src="'+thumb+'" alt="" loading="lazy" onerror="this.style.opacity=0.2">'
+        + (inDeck ? '<div class="forge-sg-badge">×'+inDeck+'</div>' : '')
+        + '<button class="forge-sg-add" title="Add">+</button>'
+        + (banCls ? '<div class="forge-sg-ban '+banCls+'">'+ban.replace('Semi-Limited','SEMI')+'</div>' : '');
+      div.querySelector('.forge-sg-add').onclick = (function(c) { return function(e) {
+        e.stopPropagation();
+        addToDeck(c); _updateDeckBadges(); forgeUpdateCounts(); forgeRenderDeck(); forgeRenderRight();
+        _forgeUpdateSearchBadges();
+      }; })(card);
+      div.onclick = (function(c) { return function() { openCardDetail(c); }; })(card);
+      grid.appendChild(div);
+    });
+  }
+
+  function _forgeUpdateSearchBadges() {
+    document.querySelectorAll('#forgeSearchGrid .forge-sg-card').forEach(function(d) {
+      var card = _cardDb && _cardDb.find(function(c){return c.name===d.title;});
+      if (!card) return;
+      var cnt = _deckCountFor(card.id);
+      var badge = d.querySelector('.forge-sg-badge');
+      if (cnt) {
+        if (!badge) { badge=document.createElement('div'); badge.className='forge-sg-badge'; d.insertBefore(badge,d.querySelector('.forge-sg-add')); }
+        badge.textContent = '×'+cnt;
+      } else { if(badge) badge.remove(); }
+    });
+  }
+
+  /* ── Deck rendering ── */
+  function forgeSetTab(tab) {
+    _forgeTab = tab;
+    ['main','extra','side'].forEach(function(t){ document.getElementById('fgt-'+t).classList.toggle('active',t===tab); });
+    forgeRenderDeck();
+  }
+
+  function forgeSetView(v) {
+    _forgeView = v;
+    document.getElementById('fgvList').classList.toggle('active', v==='list');
+    document.getElementById('fgvGrid').classList.toggle('active', v==='grid');
+    forgeRenderDeck();
+  }
+
+  function _forgeSortedList(sec) {
+    var list = _deckList[sec].slice();
+    var sort = (document.getElementById('forgeSortSel') || {}).value || 'none';
+    if (sort==='name')  list.sort(function(a,b){return a.name.localeCompare(b.name);});
+    else if (sort==='type')  list.sort(function(a,b){return (a.type||'').localeCompare(b.type||'');});
+    else if (sort==='level') list.sort(function(a,b){return (b.level||b.rank||b.linkval||0)-(a.level||a.rank||a.linkval||0);});
+    else if (sort==='atk')   list.sort(function(a,b){return (b.atk||0)-(a.atk||0);});
+    else if (sort==='cat')   list.sort(function(a,b){
+      var ac=(_forgeAssignments[a.id]||[])[0]||'zzz';
+      var bc=(_forgeAssignments[b.id]||[])[0]||'zzz';
+      return ac.localeCompare(bc);
+    });
+    return list;
+  }
+
+  function _forgeCatColor(name) {
+    return (_forgeCategories[name] && _forgeCategories[name].color) || '#888aaa';
+  }
+
+  function forgeRenderDeck() {
+    forgeUpdateCounts();
+    var body = document.getElementById('fgDeckBody');
+    if (!body) return;
+    body.innerHTML = '';
+    var list = _forgeSortedList(_forgeTab);
+    if (!list.length) {
+      body.innerHTML = '<div class="forge-deck-empty" style="padding:30px 0;">No cards in this section</div>';
+      return;
+    }
+    if (_forgeView === 'grid') _forgeRenderGrid(body, list);
+    else _forgeRenderList(body, list);
+  }
+
+  function _forgeRenderGrid(body, list) {
+    var grid = document.createElement('div');
+    grid.className = 'forge-deck-grid';
+    list.forEach(function(entry) {
+      var thumb = 'https://images.ygoprodeck.com/images/cards_small/' + entry.img_id + '.jpg';
+      var cats = _forgeAssignments[entry.id] || [];
+      var catDots = cats.map(function(c){ return '<div class="forge-dg-cat-dot" style="background:'+_forgeCatColor(c)+'" title="'+_escHtml(c)+'"></div>'; }).join('');
+      var div = document.createElement('div');
+      div.className = 'forge-dg-card';
+      div.title = entry.name;
+      div.innerHTML = '<img src="'+thumb+'" alt="" loading="lazy" onerror="this.style.opacity=0.2">'
+        + (entry.count > 1 ? '<div class="forge-dg-count">×'+entry.count+'</div>' : '')
+        + (catDots ? '<div class="forge-dg-cat-bar">'+catDots+'</div>' : '')
+        + '<div class="forge-dg-actions">'
+        + '<button class="forge-dg-btn plus" onclick="event.stopPropagation();forgeAdjust('+entry.id+',\''+_forgeTab+'\',1)">+1</button>'
+        + '<button class="forge-dg-btn minus" onclick="event.stopPropagation();forgeAdjust('+entry.id+',\''+_forgeTab+'\',-1)">−1</button>'
+        + '</div>';
+      div.onclick = (function(e) { return function() {
+        var card = _cardDb && _cardDb.find(function(c){return c.id===e.id;});
+        if (card) openCardDetail(card); else openCardDetail(e);
+      }; })(entry);
+      grid.appendChild(div);
+    });
+    body.appendChild(grid);
+  }
+
+  function _forgeRenderList(body, list) {
+    var sort = (document.getElementById('forgeSortSel') || {}).value || 'none';
+    if (sort === 'cat') {
+      var groups = {};
+      list.forEach(function(e) {
+        var cats = _forgeAssignments[e.id] || [];
+        var key = cats.length ? cats[0] : 'Uncategorized';
+        if (!groups[key]) groups[key] = [];
+        groups[key].push(e);
+      });
+      Object.keys(groups).forEach(function(grp) {
+        var hdr = document.createElement('div');
+        hdr.className = 'forge-sec-hdr';
+        hdr.innerHTML = '<span style="color:'+_forgeCatColor(grp)+'">'+_escHtml(grp)+'</span>';
+        body.appendChild(hdr);
+        groups[grp].forEach(function(entry){ body.appendChild(_forgeListItem(entry)); });
+      });
+      return;
+    }
+    list.forEach(function(entry){ body.appendChild(_forgeListItem(entry)); });
+  }
+
+  function _forgeListItem(entry) {
+    var thumb = 'https://images.ygoprodeck.com/images/cards_small/' + entry.img_id + '.jpg';
+    var cats = _forgeAssignments[entry.id] || [];
+    var catBadges = cats.map(function(c) {
+      var col = _forgeCatColor(c);
+      return '<span class="forge-li-cat-badge" style="color:'+col+';border-color:'+col+'44;background:'+col+'12;">'+_escHtml(c)+'</span>';
+    }).join('');
+    var sub = [];
+    if (entry.type) sub.push(entry.type);
+    if (entry.attribute) sub.push(entry.attribute);
+    var lv = entry.level||entry.rank||entry.linkval;
+    if (lv) sub.push((entry.level?'Lv ':entry.rank?'Rank ':'Link ')+lv);
+    if (entry.atk != null) sub.push('ATK '+entry.atk);
+    if (entry.banlist) {
+      var bc = entry.banlist==='Forbidden'?'#ff7777':entry.banlist==='Limited'?'#ffaa55':entry.banlist==='Semi-Limited'?'#ffdd55':'';
+      if (bc) sub.push('<span style="color:'+bc+'">'+entry.banlist+'</span>');
+    }
+    var row = document.createElement('div');
+    row.className = 'forge-list-item';
+    row.innerHTML = '<img class="forge-li-img" src="'+thumb+'" alt="" onerror="this.style.opacity=0.2">'
+      + '<div class="forge-li-info">'
+      + '<div class="forge-li-name">'+_escHtml(entry.name)+'</div>'
+      + (sub.length ? '<div class="forge-li-sub">'+sub.join(' · ')+'</div>' : '')
+      + (catBadges ? '<div class="forge-li-cats">'+catBadges+'</div>' : '')
+      + '</div>'
+      + '<div class="forge-li-controls">'
+      + '<button class="forge-li-cat-btn" onclick="forgeCatPopupOpen('+entry.id+',event)" title="Assign category">🏷</button>'
+      + '<button class="forge-li-btn" onclick="forgeAdjust('+entry.id+',\''+_forgeTab+'\',-1)">−</button>'
+      + '<span class="forge-li-count">×'+entry.count+'</span>'
+      + '<button class="forge-li-btn" onclick="forgeAdjust('+entry.id+',\''+_forgeTab+'\',1)">+</button>'
+      + '<button class="forge-li-btn del" onclick="forgeRemove('+entry.id+',\''+_forgeTab+'\')">✕</button>'
+      + '</div>';
+    row.querySelector('.forge-li-img').onclick = (function(e) { return function() {
+      var card = _cardDb && _cardDb.find(function(c){return c.id===e.id;});
+      openCardDetail(card || e);
+    }; })(entry);
+    return row;
+  }
+
+  function forgeAdjust(cardId, sec, delta) {
+    adjustDeckCount(cardId, sec, delta);
+    forgeUpdateCounts(); forgeRenderDeck(); forgeRenderRight(); _forgeUpdateSearchBadges();
+  }
+
+  function forgeRemove(cardId, sec) {
+    removeDeckEntry(cardId, sec);
+    forgeUpdateCounts(); forgeRenderDeck(); forgeRenderRight(); _forgeUpdateSearchBadges();
+  }
+
+  /* ── Analytics ── */
+  function forgeSetRightTab(tab) {
+    _forgeRightTab = tab;
+    document.getElementById('fgrt-analytics').classList.toggle('active', tab==='analytics');
+    document.getElementById('fgrt-categories').classList.toggle('active', tab==='categories');
+    forgeRenderRight();
+  }
+
+  function forgeRenderRight() {
+    var body = document.getElementById('forgeRightBody');
+    if (!body) return;
+    if (_forgeRightTab === 'analytics') _forgeRenderAnalytics(body);
+    else _forgeRenderCategories(body);
+  }
+
+  function _forgeStatCard(title) {
+    var div = document.createElement('div');
+    div.className = 'forge-stat-card';
+    div.innerHTML = '<div class="forge-stat-title">'+title+'</div>';
+    return div;
+  }
+
+  function _forgeBarRow(label, val, total, color, showPct) {
+    var pct = total > 0 ? Math.round(val/total*100) : 0;
+    var w   = total > 0 ? Math.min(100, pct) : 0;
+    return '<div class="forge-bar-row">'
+      + '<div class="forge-bar-label" style="color:'+color+'" title="'+_escHtml(label)+'">'+_escHtml(label)+'</div>'
+      + '<div class="forge-bar-track"><div class="forge-bar-fill" style="width:'+w+'%;background:'+color+';opacity:.75;"></div></div>'
+      + '<div class="forge-bar-val">'+val+'</div>'
+      + (showPct ? '<div class="forge-bar-pct">'+pct+'%</div>' : '')
+      + '</div>';
+  }
+
+  function _forgeRenderAnalytics(body) {
+    body.innerHTML = '';
+    var mc=_deckTotalCount('main'), ec=_deckTotalCount('extra'), sc=_deckTotalCount('side');
+    var total = mc+ec+sc;
+
+    // Summary
+    var sumCard = _forgeStatCard('DECK SUMMARY');
+    sumCard.innerHTML += '<div class="forge-stat-big">'
+      + '<div class="forge-stat-big-item"><div class="forge-stat-big-num">'+mc+'</div><div class="forge-stat-big-label">MAIN</div></div>'
+      + '<div class="forge-stat-big-item"><div class="forge-stat-big-num">'+ec+'</div><div class="forge-stat-big-label">EXTRA</div></div>'
+      + '<div class="forge-stat-big-item"><div class="forge-stat-big-num">'+sc+'</div><div class="forge-stat-big-label">SIDE</div></div>'
+      + '<div class="forge-stat-big-item"><div class="forge-stat-big-num" style="color:var(--text)">'+total+'</div><div class="forge-stat-big-label">TOTAL</div></div>'
+      + '</div>';
+    body.appendChild(sumCard);
+
+    if (!mc && !ec) {
+      body.innerHTML += '<div style="font-family:\'Cinzel\',serif;font-size:9px;letter-spacing:2px;color:rgba(255,255,255,.15);text-align:center;padding:24px 0;">Add cards to see analytics</div>';
+      return;
+    }
+
+    // Type ratio
+    var monsters=0, spells=0, traps=0;
+    _deckList.main.forEach(function(e){
+      if(e.type&&e.type.includes('Spell')) spells+=e.count;
+      else if(e.type&&e.type.includes('Trap')) traps+=e.count;
+      else monsters+=e.count;
+    });
+    var typeCard = _forgeStatCard('TYPE COMPOSITION');
+    if(monsters) typeCard.innerHTML += _forgeBarRow('⚔ Monsters', monsters, mc, '#7788ff', true);
+    if(spells)   typeCard.innerHTML += _forgeBarRow('✦ Spells',   spells,   mc, '#66cc88', true);
+    if(traps)    typeCard.innerHTML += _forgeBarRow('⚑ Traps',    traps,    mc, '#cc7788', true);
+    body.appendChild(typeCard);
+
+    // Monster types
+    if (monsters > 0) {
+      var raceMap = {};
+      _deckList.main.forEach(function(e){
+        if(!e.type||e.type.includes('Spell')||e.type.includes('Trap')) return;
+        if(e.race) raceMap[e.race]=(raceMap[e.race]||0)+e.count;
+      });
+      var raceColors={Dragon:'#ff6644',Warrior:'#4488ff',Spellcaster:'#aa77ff',Fairy:'#ffddaa',Fiend:'#884466',Zombie:'#556644',Machine:'#8899bb',Aqua:'#44aacc',Beast:'#997744',Cyberse:'#44ccff',Psychic:'#cc99ff',Thunder:'#ffee44',default:'#8888aa'};
+      var mtCard = _forgeStatCard('MONSTER TYPES');
+      Object.keys(raceMap).sort(function(a,b){return raceMap[b]-raceMap[a];}).slice(0,8).forEach(function(race){
+        mtCard.innerHTML += _forgeBarRow(race, raceMap[race], monsters, raceColors[race]||raceColors.default, true);
+      });
+      body.appendChild(mtCard);
+    }
+
+    // Attribute
+    var attrMap = {};
+    _deckList.main.forEach(function(e){ if(e.attribute) attrMap[e.attribute]=(attrMap[e.attribute]||0)+e.count; });
+    if (Object.keys(attrMap).length) {
+      var attrColors={DARK:'#aa77ff',LIGHT:'#ffee77',EARTH:'#cc9944',WATER:'#66bbff',FIRE:'#ff7744',WIND:'#88ddaa',DIVINE:'#ffcc55'};
+      var attrCard = _forgeStatCard('ATTRIBUTE MIX');
+      Object.keys(attrMap).sort(function(a,b){return attrMap[b]-attrMap[a];}).forEach(function(attr){
+        attrCard.innerHTML += _forgeBarRow(attr, attrMap[attr], monsters||mc, attrColors[attr]||'#888', true);
+      });
+      body.appendChild(attrCard);
+    }
+
+    // Level curve
+    var levelMap = {};
+    _deckList.main.concat(_deckList.extra).forEach(function(e){
+      var lv = e.level!=null?e.level:(e.rank!=null?e.rank:(e.linkval!=null?e.linkval:null));
+      if (lv != null) levelMap[lv] = (levelMap[lv]||0) + e.count;
+    });
+    var lvKeys = Object.keys(levelMap).map(Number).sort(function(a,b){return a-b;});
+    if (lvKeys.length > 0) {
+      var curveCard = _forgeStatCard('LEVEL / RANK CURVE');
+      var maxCnt = Math.max.apply(null, lvKeys.map(function(k){return levelMap[k];}));
+      var curveHtml = '<div class="forge-level-curve">';
+      lvKeys.forEach(function(lv) {
+        var cnt = levelMap[lv];
+        var h = Math.max(3, Math.round(cnt/maxCnt*42));
+        curveHtml += '<div class="forge-lc-col">'
+          + '<div class="forge-lc-cnt">'+cnt+'</div>'
+          + '<div class="forge-lc-bar" style="height:'+h+'px;"></div>'
+          + '<div class="forge-lc-num">'+lv+'</div></div>';
+      });
+      curveHtml += '</div>';
+      curveCard.innerHTML += curveHtml;
+      body.appendChild(curveCard);
+    }
+
+    // Extra breakdown
+    if (ec > 0) {
+      var extraMap = {};
+      _deckList.extra.forEach(function(e){
+        var t=e.type||'';
+        var s=t.includes('Fusion')?'Fusion':t.includes('Synchro')?'Synchro':t.includes('XYZ')?'XYZ':t.includes('Link')?'Link':'Other';
+        extraMap[s]=(extraMap[s]||0)+e.count;
+      });
+      var extColors={Fusion:'#cc77ff',Synchro:'#dddddd',XYZ:'#6666aa',Link:'#44aaff',Other:'#888aaa'};
+      var extraCard = _forgeStatCard('EXTRA DECK');
+      Object.keys(extraMap).forEach(function(t){ extraCard.innerHTML+=_forgeBarRow(t,extraMap[t],ec,extColors[t]||'#888',true); });
+      body.appendChild(extraCard);
+    }
+
+    // Category distribution
+    var catKeys = Object.keys(_forgeCategories);
+    if (catKeys.length) {
+      var catCard = _forgeStatCard('CATEGORY DISTRIBUTION');
+      var hasCatData = false;
+      catKeys.forEach(function(n){
+        var cat = _forgeCategories[n];
+        var cnt = cat.cards.filter(function(id){ return _deckCountFor(id)>0; }).length;
+        if (cnt > 0) { hasCatData=true; catCard.innerHTML+=_forgeBarRow(n,cnt,mc+ec,cat.color,false); }
+      });
+      if (!hasCatData) catCard.innerHTML += '<div class="forge-no-sel">No cards categorized yet</div>';
+      body.appendChild(catCard);
+    }
+
+    // Probability calculator
+    var probCard = _forgeStatCard('OPENING HAND PROBABILITY');
+    var mainCards = _deckList.main;
+    if (mainCards.length) {
+      var opts = mainCards.map(function(e){ return '<option value="'+e.id+'">'+_escHtml(e.name)+' (×'+e.count+')</option>'; }).join('');
+      probCard.innerHTML += '<select class="forge-prob-sel" id="forgeProbSel" onchange="forgeUpdateProb()">'+opts+'</select>'
+        + '<div class="forge-prob-result">'
+        + '<div class="forge-prob-pct" id="forgeProbPct">—</div>'
+        + '<div class="forge-prob-desc" id="forgeProbDesc">Select a card to see its opening hand probability.</div>'
+        + '</div>'
+        + '<div class="forge-prob-bar-track"><div class="forge-prob-bar-fill" id="forgeProbBar" style="width:0%"></div></div>';
+      setTimeout(forgeUpdateProb, 50);
+    } else {
+      probCard.innerHTML += '<div class="forge-no-sel">Add main deck cards first</div>';
+    }
+    body.appendChild(probCard);
+
+    // Banlist
+    var banned=0,limited=0,semi=0,unlimited=0;
+    _deckList.main.concat(_deckList.extra).concat(_deckList.side).forEach(function(e){
+      if(e.banlist==='Forbidden') banned+=e.count;
+      else if(e.banlist==='Limited') limited+=e.count;
+      else if(e.banlist==='Semi-Limited') semi+=e.count;
+      else unlimited+=e.count;
+    });
+    var banCard = _forgeStatCard('BANLIST STATUS (TCG)');
+    banCard.innerHTML += '<div class="forge-ban-items">'
+      + (banned  ? '<div class="forge-ban-item f">🚫 '+banned+' Forbidden</div>' : '')
+      + (limited ? '<div class="forge-ban-item l">⚠ '+limited+' Limited</div>' : '')
+      + (semi    ? '<div class="forge-ban-item s">◑ '+semi+' Semi</div>' : '')
+      + '<div class="forge-ban-item u">✓ '+unlimited+' Unlimited</div>'
+      + '</div>';
+    body.appendChild(banCard);
+  }
+
+  function forgeUpdateProb() {
+    var sel = document.getElementById('forgeProbSel');
+    if (!sel || !sel.value) return;
+    var cardId = parseInt(sel.value);
+    var entry = _deckList.main.find(function(e){return e.id===cardId;});
+    if (!entry) return;
+    var N = _deckTotalCount('main'), K = entry.count, n = 5;
+    if (N < 5) {
+      document.getElementById('forgeProbPct').textContent = '—';
+      document.getElementById('forgeProbDesc').textContent = 'Need ≥5 cards in main deck';
+      document.getElementById('forgeProbBar').style.width = '0%';
+      return;
+    }
+    function logC(a,b){ if(b<0||b>a) return -Infinity; if(b===0||b===a) return 0; var r=0; for(var i=0;i<b;i++) r+=Math.log(a-i)-Math.log(i+1); return r; }
+    var prob = 1 - Math.exp(logC(N-K,n) - logC(N,n));
+    var pct = Math.round(prob*100);
+    document.getElementById('forgeProbPct').textContent = pct + '%';
+    document.getElementById('forgeProbDesc').textContent = 'Drawing ≥1 copy of '+entry.name+' (×'+K+') in opening 5 from '+N+'-card deck';
+    document.getElementById('forgeProbBar').style.width = pct + '%';
+  }
+
+  /* ── Categories ── */
+  function _forgeRenderCategories(body) {
+    body.innerHTML = '';
+
+    // Toolbar
+    var toolbar = document.createElement('div');
+    toolbar.className = 'forge-cat-toolbar';
+    toolbar.innerHTML = '<input class="forge-cat-input" id="forgeNewCatInput" placeholder="New category name…" maxlength="30" onkeydown="if(event.key===\'Enter\')forgeAddCategory()">'
+      + '<button class="forge-cat-add-btn" onclick="forgeAddCategory()">+ Add</button>';
+    body.appendChild(toolbar);
+
+    // Category list
+    var catNames = Object.keys(_forgeCategories);
+    if (!catNames.length) {
+      body.innerHTML += '<div class="forge-no-sel">No categories yet.<br>Add one above.</div>';
+    } else {
+      catNames.forEach(function(name) {
+        var cat = _forgeCategories[name];
+        var inDeck = cat.cards.filter(function(id){return _deckCountFor(id)>0;}).length;
+        var row = document.createElement('div');
+        row.className = 'forge-cat-row' + (_forgeSelectedCat===name ? ' selected' : '');
+        row.innerHTML = '<div class="forge-cat-dot" style="background:'+cat.color+'"></div>'
+          + '<div class="forge-cat-name">'+_escHtml(name)+'</div>'
+          + '<div class="forge-cat-count">'+inDeck+' card'+(inDeck!==1?'s':'')+'</div>'
+          + '<button class="forge-cat-del" onclick="event.stopPropagation();forgeDeleteCategory(\''+_escHtml(name)+'\')">✕</button>';
+        row.onclick = function(){ forgeSelectCat(name); };
+        body.appendChild(row);
+      });
+    }
+
+    // Color picker for selected
+    if (_forgeSelectedCat && _forgeCategories[_forgeSelectedCat]) {
+      var colorRow = document.createElement('div');
+      colorRow.className = 'forge-color-row';
+      colorRow.innerHTML = '<span style="font-family:\'Cinzel\',serif;font-size:8px;color:var(--dim);letter-spacing:2px;">COLOR:</span>';
+      ['#4488ff','#22ccaa','#9966ff','#ff4455','#ffcc22','#ff8833','#c9a227','#44cc77','#888aaa','#ff77bb','#44ccff','#ff6644'].forEach(function(col) {
+        var dot = document.createElement('div');
+        dot.className = 'forge-color-dot';
+        dot.style.cssText = 'background:'+col+';'+((_forgeCategories[_forgeSelectedCat].color===col)?'box-shadow:0 0 0 2px #fff;':'');
+        dot.onclick = function() {
+          _forgeCategories[_forgeSelectedCat].color = col;
+          _forgeSaveStorage(); forgeRenderRight(); forgeRenderDeck();
+        };
+        colorRow.appendChild(dot);
+      });
+      body.appendChild(colorRow);
+
+      // Cards in selected category
+      var secLbl = document.createElement('div');
+      secLbl.style.cssText = 'font-family:\'Cinzel\',serif;font-size:8px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;margin-bottom:6px;';
+      secLbl.textContent = 'Cards in "'+_forgeSelectedCat+'"';
+      body.appendChild(secLbl);
+
+      var cat = _forgeCategories[_forgeSelectedCat];
+      var allDeckCards = _deckList.main.concat(_deckList.extra).concat(_deckList.side);
+      var validCards = cat.cards.filter(function(id){ return allDeckCards.some(function(e){return e.id===id;}); });
+      var cardList = document.createElement('div');
+      cardList.className = 'forge-cat-card-list';
+      if (!validCards.length) {
+        cardList.innerHTML = '<div class="forge-no-sel" style="padding:10px 0;">No deck cards assigned.<br>Use 🏷 on cards in the deck view.</div>';
+      } else {
+        validCards.forEach(function(id) {
+          var entry = allDeckCards.find(function(e){return e.id===id;});
+          if (!entry) return;
+          var thumb = 'https://images.ygoprodeck.com/images/cards_small/'+entry.img_id+'.jpg';
+          var item = document.createElement('div');
+          item.className = 'forge-cat-card-item';
+          item.innerHTML = '<img class="forge-cat-card-thumb" src="'+thumb+'" alt="" onerror="this.style.opacity=0.2">'
+            + '<div class="forge-cat-card-name" title="'+_escHtml(entry.name)+'">'+_escHtml(entry.name)+'</div>'
+            + '<button class="forge-cat-card-remove" onclick="forgeRemoveCatAssignment('+id+',\''+_escHtml(_forgeSelectedCat)+'\')">✕</button>';
+          cardList.appendChild(item);
+        });
+      }
+      body.appendChild(cardList);
+    } else if (catNames.length > 0) {
+      body.innerHTML += '<div class="forge-no-sel">Select a category to manage its cards.</div>';
+    }
+  }
+
+  function forgeSelectCat(name) {
+    _forgeSelectedCat = (_forgeSelectedCat === name) ? null : name;
+    _forgeRenderCategories(document.getElementById('forgeRightBody'));
+  }
+
+  function forgeAddCategory() {
+    var input = document.getElementById('forgeNewCatInput');
+    if (!input) return;
+    var name = input.value.trim();
+    if (!name) { showToast('Enter a category name', 'warning', 2000); return; }
+    if (_forgeCategories[name]) { showToast('Category already exists', 'warning', 2000); return; }
+    var colors = ['#4488ff','#22ccaa','#9966ff','#ff4455','#ffcc22','#ff8833','#c9a227','#44cc77','#888aaa','#ff77bb'];
+    _forgeCategories[name] = { color: colors[Object.keys(_forgeCategories).length % colors.length], cards: [] };
+    input.value = '';
+    _forgeSaveStorage();
+    _forgeSelectedCat = name;
+    forgeRenderRight();
+    showToast('✔ Category: '+name, 'ok', 2000);
+  }
+
+  function forgeDeleteCategory(name) {
+    delete _forgeCategories[name];
+    Object.keys(_forgeAssignments).forEach(function(id){
+      _forgeAssignments[id] = _forgeAssignments[id].filter(function(c){return c!==name;});
+      if (!_forgeAssignments[id].length) delete _forgeAssignments[id];
+    });
+    if (_forgeSelectedCat === name) _forgeSelectedCat = null;
+    _forgeSaveStorage(); forgeRenderRight(); forgeRenderDeck();
+  }
+
+  function forgeRemoveCatAssignment(cardId, catName) {
+    if (_forgeCategories[catName]) _forgeCategories[catName].cards = _forgeCategories[catName].cards.filter(function(id){return id!==cardId;});
+    if (_forgeAssignments[cardId]) {
+      _forgeAssignments[cardId] = _forgeAssignments[cardId].filter(function(c){return c!==catName;});
+      if (!_forgeAssignments[cardId].length) delete _forgeAssignments[cardId];
+    }
+    _forgeSaveStorage(); forgeRenderRight(); forgeRenderDeck();
+  }
+
+  /* ── Category popup ── */
+  function forgeCatPopupOpen(cardId, event) {
+    event.stopPropagation();
+    _forgeCatPopupId = cardId;
+    var popup = document.getElementById('forgeCatPopup');
+    if (!popup) return;
+    var catNames = Object.keys(_forgeCategories);
+    if (!catNames.length) { showToast('Create a category in the Categories tab first', 'info', 2500); return; }
+    var assigned = _forgeAssignments[cardId] || [];
+    var entry = _deckList.main.concat(_deckList.extra).concat(_deckList.side).find(function(e){return e.id===cardId;});
+    var cardName = entry ? entry.name : 'Card';
+    popup.innerHTML = '<div class="fcp-title">'+_escHtml(cardName)+'</div>'
+      + catNames.map(function(name) {
+        var cat = _forgeCategories[name];
+        var isAssigned = assigned.includes(name);
+        return '<div class="fcp-item" onclick="forgeToggleCatAssign('+cardId+',\''+_escHtml(name)+'\')">'
+          + '<div class="fcp-dot" style="background:'+cat.color+'"></div>'
+          + '<div class="fcp-name">'+_escHtml(name)+'</div>'
+          + (isAssigned ? '<span class="fcp-check">✓</span>' : '')
+          + '</div>';
+      }).join('');
+    var rect = event.target.getBoundingClientRect();
+    popup.style.top = (rect.bottom + 5) + 'px';
+    popup.style.left = Math.min(rect.left, window.innerWidth - 220) + 'px';
+    popup.classList.add('open');
+  }
+
+  function forgeToggleCatAssign(cardId, catName) {
+    if (!_forgeCategories[catName]) return;
+    var assigned = _forgeAssignments[cardId] || [];
+    var idx = assigned.indexOf(catName);
+    if (idx >= 0) {
+      assigned.splice(idx, 1);
+      _forgeCategories[catName].cards = _forgeCategories[catName].cards.filter(function(id){return id!==cardId;});
+    } else {
+      assigned.push(catName);
+      if (!_forgeCategories[catName].cards.includes(cardId)) _forgeCategories[catName].cards.push(cardId);
+    }
+    _forgeAssignments[cardId] = assigned;
+    if (!assigned.length) delete _forgeAssignments[cardId];
+    _forgeSaveStorage(); forgeCatPopupClose(); forgeRenderDeck();
+    if (_forgeRightTab === 'categories') forgeRenderRight();
+  }
+
+  function forgeCatPopupClose() {
+    var p = document.getElementById('forgeCatPopup');
+    if (p) p.classList.remove('open');
+    _forgeCatPopupId = null;
+  }
+
+  /* ── Save / Export ── */
+  function forgeSave() {
+    var name = ((document.getElementById('forgeNameInput') || {}).value || '').trim() || 'Unnamed Deck';
+    if (!_deckTotalCount('main') && !_deckTotalCount('extra') && !_deckTotalCount('side')) {
+      showToast('⚠️ Deck is empty', 'warning', 2000); return;
+    }
+    var lib = _getDeckLibrary();
+    var idx = lib.findIndex(function(d){return d.name===name;});
+    var entry = { name:name, saved:Date.now(), main:_deckTotalCount('main'), extra:_deckTotalCount('extra'), side:_deckTotalCount('side'), deck:JSON.parse(JSON.stringify(_deckList)) };
+    if (idx >= 0) { lib[idx] = entry; } else { lib.unshift(entry); }
+    _saveDeckLibrary(lib);
+    // Sync name back to mini panel
+    var cname = document.getElementById('cdeckNameInput');
+    if (cname) cname.value = name;
+    showToast('💾 Saved: '+name, 'ok', 2000);
+  }
+
+  function forgeExportText() {
+    var name = ((document.getElementById('forgeNameInput')||{}).value||'Deck').trim();
+    var lines = ['=== '+name.toUpperCase()+' ===', '', 'Main Deck ('+_deckTotalCount('main')+')'];
+    _deckList.main.forEach(function(e){lines.push(e.count+'x '+e.name);});
+    if(_deckList.extra.length){lines.push('','Extra Deck ('+_deckTotalCount('extra')+')');_deckList.extra.forEach(function(e){lines.push(e.count+'x '+e.name);});}
+    if(_deckList.side.length){lines.push('','Side Deck ('+_deckTotalCount('side')+')');_deckList.side.forEach(function(e){lines.push(e.count+'x '+e.name);});}
+    navigator.clipboard.writeText(lines.join('\n')).then(function(){showToast('📋 Copied!','ok',2000);}).catch(function(){alert(lines.join('\n'));});
+  }
+
+  function forgeOpenLibrary() {
+    openDeckLibrary();
+  }
+
+  function forgeExportYDK() {
+    var name = ((document.getElementById('forgeNameInput')||{}).value||'deck').trim().replace(/[^a-zA-Z0-9_\-]/g,'_')||'deck';
+    var lines=['#created by YGO Tracker','#main'];
+    _deckList.main.forEach(function(e){for(var i=0;i<e.count;i++) lines.push(e.id);});
+    lines.push('#extra'); _deckList.extra.forEach(function(e){for(var i=0;i<e.count;i++) lines.push(e.id);});
+    lines.push('!side'); _deckList.side.forEach(function(e){for(var i=0;i<e.count;i++) lines.push(e.id);});
+    var blob=new Blob([lines.join('\n')],{type:'text/plain'});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a'); a.href=url; a.download=name+'.ydk'; a.click();
+    setTimeout(function(){URL.revokeObjectURL(url);},1000);
+  }
+
+  /* close forge on escape */
+  document.addEventListener('click', function(e) {
+    var popup = document.getElementById('forgeCatPopup');
+    if (popup && popup.classList.contains('open') && !popup.contains(e.target)) forgeCatPopupClose();
+  });
 
   /* ━━ ADD CARD TO RULINGS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
@@ -9895,6 +11529,17 @@
         setTimeout(function(){ toggleDeckBuilder(); }, 200);
         setResult('Deck builder opened','ok'); return;
       }
+      if (/^(draw hand|simulate draw|opening hand|draw sim|test hand)/.test(t)) {
+        openCardSearch();
+        setTimeout(function(){ if (!document.getElementById('csearchDeckPanel').classList.contains('open')) toggleDeckBuilder(); }, 200);
+        setTimeout(function(){ openDrawSim(); }, 400);
+        setResult('Opening hand drawn','ok'); return;
+      }
+      if (/^(deck forge|full builder|forge deck|open forge)/.test(t)) {
+        openCardSearch();
+        setTimeout(function(){ openForge(); }, 300);
+        setResult('Deck Forge opened','ok'); return;
+      }
       if (/^(rulings|open rulings|check ruling|ask ruling|rulings search)/.test(t)) {
         openRulings(); setResult('Rulings opened','ok'); return;
       }
@@ -10216,6 +11861,14 @@
 
 </script>
 
+<!-- Chain Overlay -->
+<div id="chainOverlay">
+  <div class="chain-backdrop"></div>
+  <div class="chain-icon">⛓</div>
+  <div class="chain-word">CHAIN</div>
+  <div class="chain-sub">Timer Paused &nbsp;·&nbsp; Press ↑ to Resume</div>
+</div>
+
 <!-- Toast Container -->
 <div id="toastContainer"></div>
 
@@ -10225,6 +11878,7 @@
     <div class="shortcut-title">⌨ Keyboard Shortcuts</div>
     <div class="shortcut-row"><span>Next Phase</span><kbd class="shortcut-key">Space</kbd></div>
     <div class="shortcut-row"><span>Next Turn</span><kbd class="shortcut-key">→</kbd></div>
+    <div class="shortcut-row"><span>Chain / Pause Timer</span><kbd class="shortcut-key">↑</kbd></div>
     <div class="shortcut-row"><span>Undo LP</span><kbd class="shortcut-key">Ctrl + Z</kbd></div>
     <div class="shortcut-row"><span>Close Modal</span><kbd class="shortcut-key">Esc</kbd></div>
     <div class="shortcut-row"><span>Shortcuts Help</span><kbd class="shortcut-key">?</kbd></div>
