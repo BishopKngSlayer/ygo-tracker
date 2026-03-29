@@ -271,6 +271,7 @@
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+    container-type: inline-size;
   }
   .player-card.rotate-90  { transform: rotate(90deg)  scale(0.92); }
   .player-card.rotate-180 { transform: rotate(180deg) scale(0.92); }
@@ -385,11 +386,12 @@
   }
   .lp-value {
     font-family: 'Cinzel Decorative', serif;
-    font-size: var(--lp-font-size, clamp(48px, 8vw, 74px));
+    font-size: 80px;
     font-weight: 900; line-height: 1;
-    transition: color 0.5s, font-size 0.4s ease;
-    display: inline-block;
-      max-width: 100%; overflow: hidden; text-overflow: ellipsis;
+    transition: color 0.5s;
+    display: block;
+    white-space: nowrap;
+    width: 100%; text-align: center;
   }
   .lp-value.healthy { color: #e8e8ff; }
   .lp-value.warning { color: #ffcc00; text-shadow: 0 0 12px rgba(255,204,0,0.3); }
@@ -4821,8 +4823,6 @@
     grid.innerHTML = '';
     // scale LP font size and row height inversely with player count
     const cols = players.length;
-    const lpSize = { 1: '22vw', 2: '13vw', 3: '9.6vw', 4: '8vw', 5: '6.7vw', 6: '5.8vw' };
-    grid.style.setProperty('--lp-font-size', lpSize[cols] || '4vw');
     grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
 
     players.forEach((p, i) => {
@@ -4997,6 +4997,25 @@
     });
     updateTurnLabel();
     updateHeaderVisibility();
+    requestAnimationFrame(_fitLPDisplays);
+  }
+
+  /* ── LP font auto-fit ─────────────────── */
+  function _fitLPDisplays() {
+    document.querySelectorAll('.lp-value').forEach(function(el) {
+      var card = el.closest('.player-card');
+      if (!card) return;
+      var avail = card.clientWidth - 28; // 14px padding each side
+      if (avail <= 0) return;
+      // Binary search: largest font size where scrollWidth fits avail
+      var lo = 12, hi = 600;
+      for (var i = 0; i < 12; i++) {
+        var mid = Math.floor((lo + hi) / 2);
+        el.style.fontSize = mid + 'px';
+        if (el.scrollWidth <= avail) lo = mid; else hi = mid - 1;
+      }
+      el.style.fontSize = lo + 'px';
+    });
   }
 
   /* ── Panel toggle ─────────────────────── */
@@ -5258,6 +5277,7 @@
       v.textContent = lp.toLocaleString();
       v.className = `lp-value ${getLPClass(lp)} lp-pop`;
       setTimeout(() => v.classList.remove('lp-pop'), 300);
+      requestAnimationFrame(_fitLPDisplays);
     }
     if (b) { b.style.width = pct + '%'; b.style.background = getLPColor(lp); }
   }
@@ -5677,6 +5697,7 @@
     }
     resize();
     window.addEventListener('resize', resize);
+    window.addEventListener('resize', function() { requestAnimationFrame(_fitLPDisplays); });
 
     for (let i = 0; i < 140; i++) {
       stars.push({
@@ -12002,6 +12023,287 @@
     <button class="vcmd-close" onclick="closeVoiceCmds()">CLOSE</button>
   </div>
 </div>
+
+<!-- ═══════════ TUTORIAL OVERLAY ═══════════ -->
+<style>
+#tutorialOverlay {
+  display:none; position:fixed; inset:0; z-index:900;
+  background:rgba(0,0,0,0.88); backdrop-filter:blur(16px);
+  align-items:center; justify-content:center; flex-direction:column;
+  padding:20px;
+}
+#tutorialOverlay.open { display:flex; }
+
+.tut-card {
+  background:rgba(10,10,22,0.98);
+  border:1px solid rgba(201,162,39,0.35);
+  border-radius:14px;
+  width:min(560px,94vw);
+  overflow:hidden;
+  box-shadow:0 0 80px rgba(201,162,39,0.08), 0 24px 60px rgba(0,0,0,0.7);
+  animation:tutSlideIn .35s cubic-bezier(.34,1.4,.64,1);
+}
+@keyframes tutSlideIn {
+  from { opacity:0; transform:translateY(28px) scale(.97); }
+  to   { opacity:1; transform:none; }
+}
+
+/* progress dots */
+.tut-dots {
+  display:flex; justify-content:center; gap:7px; padding:18px 0 0;
+}
+.tut-dot {
+  width:7px; height:7px; border-radius:50%;
+  background:rgba(255,255,255,0.12); transition:all .3s;
+}
+.tut-dot.active {
+  background:var(--gold); box-shadow:0 0 8px rgba(201,162,39,0.6);
+  transform:scale(1.2);
+}
+.tut-dot.done { background:rgba(201,162,39,0.4); }
+
+/* slide content */
+.tut-slides { overflow:hidden; position:relative; }
+.tut-slide {
+  display:none; padding:30px 36px 20px; text-align:center;
+  animation:tutFadeIn .25s ease;
+}
+.tut-slide.active { display:block; }
+@keyframes tutFadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
+
+.tut-icon {
+  font-size:52px; line-height:1; margin-bottom:14px;
+  filter:drop-shadow(0 0 16px rgba(201,162,39,0.5));
+  animation:tutIconFloat 3s ease-in-out infinite;
+}
+@keyframes tutIconFloat {
+  0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)}
+}
+.tut-step-label {
+  font-family:'Cinzel',serif; font-size:9px; letter-spacing:4px;
+  color:var(--dim); text-transform:uppercase; margin-bottom:8px;
+}
+.tut-title {
+  font-family:'Cinzel Decorative',serif; font-size:clamp(15px,3vw,22px);
+  color:var(--gold); letter-spacing:2px; margin-bottom:12px; line-height:1.3;
+  text-shadow:0 0 24px rgba(201,162,39,0.4);
+}
+.tut-body {
+  font-family:'Rajdhani',sans-serif; font-size:15px; line-height:1.7;
+  color:var(--text); opacity:.88; max-width:440px; margin:0 auto;
+}
+.tut-body b { color:var(--gold-light); font-weight:600; }
+.tut-body code {
+  font-family:monospace; background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.14); border-radius:3px;
+  padding:1px 6px; font-size:12px; color:#ccddff;
+}
+.tut-keys {
+  display:flex; gap:8px; justify-content:center; margin-top:14px; flex-wrap:wrap;
+}
+.tut-key {
+  font-family:'Cinzel',serif; font-size:10px; letter-spacing:1px;
+  padding:5px 14px; border-radius:5px;
+  background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.18);
+  color:var(--text); display:flex; align-items:center; gap:6px;
+}
+.tut-key span { font-size:14px; }
+
+/* footer */
+.tut-footer {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 28px 22px; border-top:1px solid rgba(255,255,255,0.06);
+  gap:12px; flex-wrap:wrap;
+}
+.tut-skip {
+  font-family:'Cinzel',serif; font-size:9px; letter-spacing:2px;
+  color:var(--dim); background:none; border:none; cursor:pointer;
+  padding:6px 10px; border-radius:4px; transition:color .15s;
+  text-decoration:underline; text-underline-offset:3px;
+}
+.tut-skip:hover { color:var(--text); }
+.tut-nav { display:flex; gap:8px; }
+.tut-back {
+  font-family:'Cinzel',serif; font-size:10px; letter-spacing:2px;
+  padding:9px 18px; border-radius:6px; cursor:pointer;
+  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1);
+  color:var(--dim); transition:all .15s;
+}
+.tut-back:hover { color:var(--text); background:rgba(255,255,255,0.08); }
+.tut-next {
+  font-family:'Cinzel',serif; font-size:10px; letter-spacing:2px;
+  padding:9px 24px; border-radius:6px; cursor:pointer;
+  background:rgba(201,162,39,0.15); border:1px solid rgba(201,162,39,0.5);
+  color:var(--gold); transition:all .15s;
+}
+.tut-next:hover { background:rgba(201,162,39,0.28); box-shadow:0 0 16px rgba(201,162,39,0.2); }
+.tut-next.finish {
+  background:rgba(201,162,39,0.22); border-color:var(--gold);
+  color:var(--gold-light); font-size:11px;
+}
+.tut-next.finish:hover { background:rgba(201,162,39,0.38); }
+.tut-progress-text {
+  font-family:'Cinzel',serif; font-size:9px; letter-spacing:2px; color:var(--dim);
+}
+</style>
+
+<div id="tutorialOverlay">
+  <div class="tut-card">
+    <div class="tut-dots" id="tutDots"></div>
+    <div class="tut-slides" id="tutSlides"></div>
+    <div class="tut-footer">
+      <button class="tut-skip" onclick="tutSkip()">I'm familiar with the features</button>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span class="tut-progress-text" id="tutProgress"></span>
+        <div class="tut-nav">
+          <button class="tut-back" id="tutBackBtn" onclick="tutBack()">← Back</button>
+          <button class="tut-next" id="tutNextBtn" onclick="tutNext()">Next →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  var STEPS = [
+    {
+      icon: '⚡',
+      title: 'Welcome to Y.U.G.I.O.H.',
+      label: 'Getting Started',
+      body: 'Your <b>Unified Gameplay Identifier & Operation Hub</b> — a full-featured tracker built for real tabletop Yu-Gi-Oh! sessions. Created and maintained by <b>BishopKngSlayer</b>. Support & feedback for future updates are welcome in DMs on <b>TikTok</b> or <b>Discord</b>. This quick tour covers the key features.'
+    },
+    {
+      icon: '💀',
+      title: 'Life Point Tracking',
+      label: 'Core Gameplay',
+      body: 'Each player card shows live <b>Life Points</b>. Hit <b>−</b> to deal damage or <b>+</b> to heal. Choose from preset amounts or enter a custom value. Press <b>Ctrl+Z</b> to undo the last LP change.',
+      keys: [['−','Damage'],['＋','Heal'],['⌃Z','Undo']]
+    },
+    {
+      icon: '🕐',
+      title: 'Phases & Turns',
+      label: 'Turn Structure',
+      body: 'Advance through <b>Draw → Standby → Main 1 → Battle → Main 2 → End</b> with the phase bar at the bottom. Use keyboard shortcuts to keep the game moving.',
+      keys:[['Space','Next Phase'],['→','Next Turn']]
+    },
+    {
+      icon: '⛓',
+      title: 'Chain Link',
+      label: 'Rulings & Chains',
+      body: 'Press <b>↑</b> during a turn to freeze the timer and display <b>CHAIN</b> on screen — perfect for resolving chain links. Press <b>↑</b> again to resume. The <b>⚖ Rulings</b> button opens the AI rulings assistant.',
+      keys:[['↑','Chain / Unpause']]
+    },
+    {
+      icon: '⏱',
+      title: 'Match Timer',
+      label: 'Timers',
+      body: 'The top bar shows a <b>Game Timer</b> and a <b>Turn Timer</b>. Enable the <b>Turn Time Limit</b> rule in settings to add a per-turn countdown directly on each player\'s card.'
+    },
+    {
+      icon: '🃏',
+      title: 'Card Search & Deck Forge',
+      label: 'Deck Building',
+      body: 'Open <b>Card Search</b> to browse the full card database. Toggle <b>Deck Builder</b> to build your Main, Extra, and Side decks. Hit <b>⚡ Forge</b> for the full-screen builder with deep analytics, category tags, and opening hand simulator.'
+    },
+    {
+      icon: '👥',
+      title: 'Players & Modes',
+      label: 'Game Modes',
+      body: 'Support for <b>2–6 players</b>, <b>Team mode</b>, and <b>King of the Hill</b> queues. Use the <b>Roster</b> to save player names and track win/loss records across sessions.'
+    },
+    {
+      icon: '🎤',
+      title: 'Voice Control',
+      label: 'Shortcuts',
+      body: 'Tap the <b>🎤 mic button</b> and speak commands like <i>"deal 800"</i>, <i>"next turn"</i>, <i>"heal player 2 2000"</i>, or <i>"flip coin"</i>. Say <i>"commands"</i> for the full list.',
+      keys:[['?','Shortcuts'],['F','Fullscreen']]
+    },
+    {
+      icon: '🏆',
+      title: "You're Ready to Duel",
+      label: 'All Set',
+      body: "That's everything you need to know. Add player names, set your starting LP, and hit <b>Start</b>. Good luck — and may your top-deck always save you."
+    }
+  ];
+
+  var _cur = 0;
+
+  function _render() {
+    var dotsEl   = document.getElementById('tutDots');
+    var slidesEl = document.getElementById('tutSlides');
+    var nextBtn  = document.getElementById('tutNextBtn');
+    var backBtn  = document.getElementById('tutBackBtn');
+    var progEl   = document.getElementById('tutProgress');
+    if (!dotsEl) return;
+
+    // Dots
+    dotsEl.innerHTML = STEPS.map(function(_, i) {
+      var cls = i === _cur ? 'tut-dot active' : i < _cur ? 'tut-dot done' : 'tut-dot';
+      return '<div class="' + cls + '"></div>';
+    }).join('');
+
+    // Slides
+    slidesEl.innerHTML = STEPS.map(function(s, i) {
+      var keysHtml = '';
+      if (s.keys) {
+        keysHtml = '<div class="tut-keys">' + s.keys.map(function(k) {
+          return '<div class="tut-key"><span>' + k[0] + '</span>' + k[1] + '</div>';
+        }).join('') + '</div>';
+      }
+      return '<div class="tut-slide' + (i === _cur ? ' active' : '') + '">'
+        + '<div class="tut-icon">' + s.icon + '</div>'
+        + '<div class="tut-step-label">' + s.label + '</div>'
+        + '<div class="tut-title">' + s.title + '</div>'
+        + '<div class="tut-body">' + s.body + '</div>'
+        + keysHtml
+        + '</div>';
+    }).join('');
+
+    // Progress
+    if (progEl) progEl.textContent = (_cur + 1) + ' / ' + STEPS.length;
+
+    // Buttons
+    if (backBtn) backBtn.style.visibility = _cur === 0 ? 'hidden' : 'visible';
+    if (nextBtn) {
+      var isLast = _cur === STEPS.length - 1;
+      nextBtn.textContent = isLast ? "✦ Let's Play" : 'Next →';
+      nextBtn.className = 'tut-next' + (isLast ? ' finish' : '');
+    }
+  }
+
+  window.tutNext = function() {
+    if (_cur < STEPS.length - 1) { _cur++; _render(); }
+    else tutSkip();
+  };
+  window.tutBack = function() {
+    if (_cur > 0) { _cur--; _render(); }
+  };
+  window.tutSkip = function() {
+    document.getElementById('tutorialOverlay').classList.remove('open');
+    try { localStorage.setItem('ygo_tutorial_done', '1'); } catch(e) {}
+  };
+
+  // Show on load if not seen before
+  window.addEventListener('load', function() {
+    try {
+      if (!localStorage.getItem('ygo_tutorial_done')) {
+        _render();
+        document.getElementById('tutorialOverlay').classList.add('open');
+      }
+    } catch(e) {}
+  });
+
+  // Keyboard navigation while tutorial is open
+  document.addEventListener('keydown', function(e) {
+    var overlay = document.getElementById('tutorialOverlay');
+    if (!overlay || !overlay.classList.contains('open')) return;
+    if (e.key === 'ArrowRight' || e.key === 'Enter') { e.preventDefault(); tutNext(); }
+    else if (e.key === 'ArrowLeft')                   { e.preventDefault(); tutBack(); }
+    else if (e.key === 'Escape')                      { e.preventDefault(); tutSkip(); }
+  }, true);
+})();
+</script>
 
 </body>
 </html>
