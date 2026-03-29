@@ -373,6 +373,20 @@
   }
   .btn-elim:hover { color: var(--red); transform: scale(1.2); }
 
+  /* ── Drag handle on player card ── */
+  .btn-drag {
+    background: none; border: none; color: var(--dim2); cursor: grab;
+    font-size: 13px; padding: 4px 5px; line-height: 1; opacity: 0.5;
+    transition: opacity 0.2s, color 0.2s; touch-action: none;
+  }
+  .btn-drag:hover { opacity: 1; color: var(--dim); }
+  .btn-drag:active { cursor: grabbing; }
+  .player-card.drag-over {
+    border-color: var(--gold) !important;
+    box-shadow: 0 0 0 2px rgba(201,162,39,0.4), 0 0 24px rgba(201,162,39,0.2) !important;
+  }
+  .player-card.dragging { opacity: 0.45; }
+
   /* ── LP display ── */
   .lp-display {
     text-align: center;
@@ -784,9 +798,23 @@
     font-family: 'Cinzel', serif; font-size: 13px;
     animation: slideIn 0.4s ease forwards;
     opacity: 0; transform: translateX(-20px);
-    transition: background 0.2s;
+    transition: background 0.2s, border-color 0.15s;
   }
   .order-item:hover { background: rgba(255,255,255,0.05); }
+  .order-item.drag-over {
+    border-color: rgba(201,162,39,0.5);
+    background: rgba(201,162,39,0.06);
+    opacity: 1; transform: none;
+  }
+  .order-item.dragging { opacity: 0.35; }
+  .order-drag-handle {
+    cursor: grab; color: var(--dim2); font-size: 14px;
+    padding: 2px 0; line-height: 1; opacity: 0.5;
+    transition: opacity .15s, color .15s; flex-shrink: 0;
+    user-select: none;
+  }
+  .order-drag-handle:hover { opacity: 1; color: var(--dim); }
+  .order-drag-handle:active { cursor: grabbing; }
   @keyframes slideIn { to { opacity:1; transform:translateX(0); } }
   .order-num { font-family:'Cinzel Decorative',serif; font-size:18px; color:var(--gold); width:28px; text-align:center; }
   .order-name { color: var(--text); }
@@ -1591,7 +1619,22 @@
   .assign-slots { padding: 16px; display: flex; flex-direction: column; gap: 10px; }
   .assign-slot {
     display: flex; align-items: center; gap: 10px;
+    border-radius: 5px; transition: background .15s, border-color .15s;
+    border: 1px solid transparent; padding: 2px 4px;
   }
+  .assign-slot.drag-over {
+    border-color: rgba(201,162,39,0.5);
+    background: rgba(201,162,39,0.06);
+  }
+  .assign-slot.dragging { opacity: 0.4; }
+  .assign-drag-handle {
+    cursor: grab; color: var(--dim2); font-size: 14px;
+    padding: 4px 2px; line-height: 1; opacity: 0.5;
+    transition: opacity .15s, color .15s; flex-shrink: 0;
+    user-select: none;
+  }
+  .assign-drag-handle:hover { opacity: 1; color: var(--dim); }
+  .assign-drag-handle:active { cursor: grabbing; }
   .assign-num {
     font-family:'Cinzel Decorative',serif; font-size:16px; color:var(--gold);
     width: 24px; text-align: center; flex-shrink: 0;
@@ -3381,6 +3424,98 @@
   .add-token-btn { font-family:'Cinzel',serif; font-size:8px; letter-spacing:1px; padding:2px 7px; border-radius:3px; border:1px dashed rgba(255,255,255,0.15); color:var(--dim); background:transparent; cursor:pointer; transition:all 0.15s; }
   .add-token-btn:hover { border-color:rgba(201,162,39,0.4); color:var(--gold); }
 
+  /* ── Phase Effects ── */
+  .add-effect-btn { font-family:'Cinzel',serif; font-size:8px; letter-spacing:1px; padding:2px 7px; border-radius:3px; border:1px dashed rgba(120,180,255,0.25); color:#88aadd; background:transparent; cursor:pointer; transition:all 0.15s; }
+  .add-effect-btn:hover { border-color:rgba(120,180,255,0.55); color:#aaccff; }
+  .phase-effects { display:flex; flex-wrap:wrap; gap:4px; margin-top:3px; }
+  .pe-badge {
+    display:inline-flex; align-items:center; gap:4px;
+    border-radius:4px; font-family:'Cinzel',serif; font-size:8px; letter-spacing:.5px;
+    padding:3px 6px; border:1px solid; cursor:default;
+    transition:box-shadow .3s, border-color .3s;
+  }
+  .pe-badge.active-phase {
+    box-shadow:0 0 10px var(--pe-color, rgba(120,180,255,0.6));
+    animation:peBadgePulse .7s ease-in-out infinite;
+  }
+  @keyframes peBadgePulse {
+    0%,100%{filter:brightness(1)}
+    50%{filter:brightness(1.35)}
+  }
+  .pe-badge-name { max-width:80px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .pe-badge-turns {
+    font-family:'Cinzel Decorative',serif; font-size:11px; font-weight:900;
+    min-width:14px; text-align:center;
+  }
+  .pe-badge-del { background:none; border:none; cursor:pointer; color:rgba(255,100,100,0.5); font-size:10px; line-height:1; padding:0 1px; transition:color .12s; }
+  .pe-badge-del:hover { color:#ff8888; }
+
+  /* Phase Effects Modal */
+  #phaseEffectModal {
+    display:none; position:fixed; inset:0; z-index:600;
+    background:rgba(0,0,0,0.85); backdrop-filter:blur(12px);
+    align-items:center; justify-content:center;
+  }
+  #phaseEffectModal.open { display:flex; }
+  .pe-modal-wrap {
+    background:rgba(8,8,22,0.98); border:1px solid rgba(120,180,255,0.35);
+    border-radius:12px; padding:26px 28px; width:min(440px,94vw);
+    box-shadow:0 0 50px rgba(100,150,255,0.1);
+  }
+  .pe-modal-title { font-family:'Cinzel Decorative',serif; font-size:13px; color:#aaccff; letter-spacing:3px; margin-bottom:4px; }
+  .pe-modal-sub   { font-family:'Cinzel',serif; font-size:9px; letter-spacing:3px; color:var(--dim); margin-bottom:18px; }
+  .pe-field { margin-bottom:14px; }
+  .pe-label { font-family:'Cinzel',serif; font-size:9px; letter-spacing:2px; color:var(--dim); margin-bottom:5px; }
+  .pe-input, .pe-select {
+    width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
+    border-radius:6px; color:var(--text); font-family:'Cinzel',serif;
+    font-size:12px; padding:8px 12px; outline:none; letter-spacing:.5px;
+  }
+  .pe-input:focus, .pe-select:focus { border-color:rgba(120,180,255,0.4); }
+  .pe-input::placeholder { color:var(--dim); }
+  .pe-presets { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px; }
+  .pe-preset {
+    font-family:'Cinzel',serif; font-size:8px; letter-spacing:1px;
+    padding:4px 10px; border-radius:4px; cursor:pointer;
+    background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:var(--dim);
+    transition:all .14s;
+  }
+  .pe-preset:hover { color:var(--text); border-color:rgba(120,180,255,0.4); background:rgba(120,180,255,0.07); }
+  .pe-turn-row { display:flex; align-items:center; gap:10px; }
+  .pe-turn-btn {
+    width:32px; height:32px; border-radius:5px; cursor:pointer;
+    background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12);
+    color:var(--text); font-size:18px; line-height:1; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; transition:background .12s;
+  }
+  .pe-turn-btn:hover { background:rgba(255,255,255,0.14); }
+  .pe-turn-val {
+    font-family:'Cinzel Decorative',serif; font-size:26px; color:#aaccff;
+    text-shadow:0 0 12px rgba(120,180,255,0.4); min-width:36px; text-align:center;
+  }
+  .pe-turn-label { font-family:'Cinzel',serif; font-size:9px; color:var(--dim); letter-spacing:2px; }
+  .pe-color-row { display:flex; gap:6px; flex-wrap:wrap; }
+  .pe-color-swatch {
+    width:18px; height:18px; border-radius:50%; cursor:pointer;
+    border:2px solid transparent; transition:transform .12s, border-color .12s;
+  }
+  .pe-color-swatch:hover { transform:scale(1.2); }
+  .pe-color-swatch.selected { border-color:#fff; }
+  .pe-btns { display:flex; gap:10px; margin-top:18px; }
+  .pe-btn-apply {
+    flex:1; padding:10px; border-radius:7px; cursor:pointer;
+    font-family:'Cinzel',serif; font-size:11px; letter-spacing:1px;
+    background:rgba(120,180,255,0.14); border:1px solid rgba(120,180,255,0.4); color:#aaccff;
+    transition:background .14s;
+  }
+  .pe-btn-apply:hover { background:rgba(120,180,255,0.26); }
+  .pe-btn-cancel {
+    padding:10px 18px; border-radius:7px; cursor:pointer;
+    font-family:'Cinzel',serif; font-size:11px; letter-spacing:1px;
+    background:none; border:1px solid rgba(255,255,255,0.1); color:var(--dim); transition:all .14s;
+  }
+  .pe-btn-cancel:hover { color:var(--text); background:rgba(255,255,255,0.06); }
+
   /* ── Player color dot ── */
   .player-color-dot { width:10px; height:10px; border-radius:50%; border:1px solid rgba(255,255,255,0.2); cursor:pointer; flex-shrink:0; transition:transform 0.15s; }
   .player-color-dot:hover { transform:scale(1.3); }
@@ -4656,6 +4791,7 @@
   let cardRotations  = []; // per-player card rotation index 0-3 (x90°)
   let cardCollapsed  = []; // per-player collapse state
   let counterTokens  = []; // per-player [{name, count}]
+  let phaseEffects   = []; // per-player [{name, turnsLeft, triggerPhase, color}]
   let playerColors   = []; // per-player accent color
   let matchStartTime = null; // Date.now() when match begins
   const PLAYER_COLOR_PRESETS = ['#c9a227','#e05555','#5599ff','#55cc88','#cc77ff','#ff9944'];
@@ -4770,6 +4906,7 @@
     cardRotations = Array(count).fill(0);
     cardCollapsed = Array(count).fill(false);
     counterTokens = Array(count).fill(null).map(() => []);
+    phaseEffects  = Array(count).fill(null).map(() => []);
     playerColors  = Array(count).fill(null).map((_, i) => PLAYER_COLOR_PRESETS[i % PLAYER_COLOR_PRESETS.length]);
     lpHistory     = {};
     matchStartTime = Date.now();
@@ -4858,7 +4995,7 @@
           ${!p.eliminated ? `<button class="btn-surrender" onclick="surrenderPlayer(${i})" title="Forfeit (concede)">🏳️</button>` : ''}
           ${i !== activeTurn && !p.eliminated ? `<button class="btn-collapse" onclick="toggleCardCollapse(${i})" title="Collapse/expand card" id="collapse-btn-${i}">${cardCollapsed[i] ? '▼' : '▲'}</button>` : ''}
           <div class="player-color-dot" style="background:${(playerColors&&playerColors[i])||PLAYER_COLOR_PRESETS[i%PLAYER_COLOR_PRESETS.length]}" onclick="cyclePlayerColor(${i})" title="Click to change accent color"></div>
-          <button class="btn-rotate" onclick="rotateCard(${i})" title="Rotate card (tabletop mode)">⟳</button>
+          <button class="btn-drag" data-drag-idx="${i}" title="Drag to reorder">⠿</button>
           <button class="btn-elim" onclick="toggleElim(${i})">${p.eliminated ? '↩' : '💀'}</button>
         </div>
 
@@ -4980,7 +5117,20 @@
         <div class="counter-tokens" id="tokens-${i}">
           ${(counterTokens[i]||[]).map((t,ti)=>`<span class="counter-token" title="${t.name}">${t.name} <strong>${t.count}</strong> <button class="token-adj" onclick="adjToken(${i},${ti},1)">+</button><button class="token-adj" onclick="adjToken(${i},${ti},-1)">−</button><button class="token-adj" onclick="removeToken(${i},${ti})">✕</button></span>`).join('')}
           <button class="add-token-btn" onclick="promptAddToken(${i})">+ Counter</button>
+          <button class="add-effect-btn" onclick="openPhaseEffect(${i})">⧗ Effect</button>
         </div>
+        ${(phaseEffects[i]||[]).length ? `
+        <div class="phase-effects" id="pe-badges-${i}">
+          ${(phaseEffects[i]||[]).map((ef,ei)=>{
+            const isActive = i===activeTurn && currentPhase===ef.triggerPhase;
+            const style=`color:${ef.color};border-color:${ef.color}44;background:${ef.color}14;--pe-color:${ef.color}99;`;
+            return `<span class="pe-badge${isActive?' active-phase':''}" style="${style}" title="${ef.name} — ticks on ${PHASES[ef.triggerPhase]}">`
+              +`<span class="pe-badge-name">${ef.name}</span>`
+              +`<span class="pe-badge-turns">${ef.turnsLeft}</span>`
+              +`<button class="pe-badge-del" onclick="removePhaseEffect(${i},${ei})">✕</button>`
+              +`</span>`;
+          }).join('')}
+        </div>` : ''}
         ${i === activeTurn ? `
         <div class="phase-indicator">
           <div class="phase-label-row">Phase</div>
@@ -4993,6 +5143,21 @@
       const _pColor = (playerColors && playerColors[i]) ? playerColors[i] : PLAYER_COLOR_PRESETS[i % PLAYER_COLOR_PRESETS.length];
       card.style.borderTop = '2px solid ' + _pColor;
       if (cardCollapsed[i] && i !== activeTurn) card.classList.add('collapsed');
+
+      // Drag-to-reorder: only allow dragging from the handle
+      card.draggable = false; // default off
+      const handle = card.querySelector('.btn-drag');
+      if (handle) {
+        handle.addEventListener('mousedown', function() { card.draggable = true; });
+        handle.addEventListener('touchstart', function() { card.draggable = true; }, {passive:true});
+        card.addEventListener('dragend', function() { card.draggable = false; });
+      }
+      card.addEventListener('dragstart', _onCardDragStart);
+      card.addEventListener('dragover',  _onCardDragOver);
+      card.addEventListener('dragleave', _onCardDragLeave);
+      card.addEventListener('drop',      _onCardDrop);
+      card.addEventListener('dragend',   _onCardDragEnd);
+
       grid.appendChild(card);
     });
     updateTurnLabel();
@@ -5016,6 +5181,178 @@
       }
       el.style.fontSize = lo + 'px';
     });
+  }
+
+  /* ── Drag-to-reorder players ─────────────────────────── */
+  var _dragSrcIdx = null;
+
+  function _onCardDragStart(e) {
+    _dragSrcIdx = parseInt(this.id.replace('card-', ''));
+    this.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', _dragSrcIdx);
+  }
+
+  function _onCardDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    var targetIdx = parseInt(this.id.replace('card-', ''));
+    if (targetIdx !== _dragSrcIdx) this.classList.add('drag-over');
+  }
+
+  function _onCardDragLeave() {
+    this.classList.remove('drag-over');
+  }
+
+  function _onCardDrop(e) {
+    e.preventDefault();
+    this.classList.remove('drag-over');
+    var toIdx = parseInt(this.id.replace('card-', ''));
+    if (_dragSrcIdx === null || _dragSrcIdx === toIdx) return;
+    _reorderPlayers(_dragSrcIdx, toIdx);
+    _dragSrcIdx = null;
+  }
+
+  function _onCardDragEnd() {
+    this.classList.remove('dragging');
+    document.querySelectorAll('.player-card').forEach(function(c) { c.classList.remove('drag-over'); });
+    _dragSrcIdx = null;
+  }
+
+  function _reorderPlayers(from, to) {
+    function moveIdx(arr) {
+      var a = arr.slice();
+      var item = a.splice(from, 1)[0];
+      a.splice(to, 0, item);
+      return a;
+    }
+    function moveObj(obj) {
+      // lpHistory is keyed by index — rebuild after reorder
+      var keys = Object.keys(obj).map(Number).sort(function(a,b){return a-b;});
+      var vals = keys.map(function(k){ return obj[k]; });
+      var moved = moveIdx(vals);
+      var out = {};
+      moved.forEach(function(v, i){ if (v !== undefined) out[i] = v; });
+      return out;
+    }
+
+    players          = moveIdx(players);
+    panelState       = moveIdx(panelState);
+    cardCollapsed    = moveIdx(cardCollapsed);
+    playerColors     = moveIdx(playerColors);
+    cardRotations    = moveIdx(cardRotations);
+    turnLogs         = moveIdx(turnLogs);
+    playerTotalTurnTime = moveIdx(playerTotalTurnTime);
+    biggestHit       = moveIdx(biggestHit);
+    lpHistory        = moveObj(lpHistory);
+
+    // Adjust activeTurn to follow the moved player
+    if (activeTurn === from) {
+      activeTurn = to;
+    } else if (from < to) {
+      if (activeTurn > from && activeTurn <= to) activeTurn--;
+    } else {
+      if (activeTurn >= to && activeTurn < from) activeTurn++;
+    }
+
+    render();
+    showToast('🔀 Players reordered', 'info', 1500);
+  }
+
+  /* ── Drag-to-reorder assign slots (player menu) ─────── */
+  var _slotDragSrc = null;
+
+  function _onSlotDragStart(e) {
+    _slotDragSrc = this;
+    this.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', this.getAttribute('data-slot-idx'));
+  }
+
+  function _onSlotDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    if (this !== _slotDragSrc) this.classList.add('drag-over');
+  }
+
+  function _onSlotDragLeave() {
+    this.classList.remove('drag-over');
+  }
+
+  function _onSlotDrop(e) {
+    e.preventDefault();
+    this.classList.remove('drag-over');
+    if (!_slotDragSrc || _slotDragSrc === this) return;
+
+    // Swap the select values (and re-number)
+    var fromSel = _slotDragSrc.querySelector('select');
+    var toSel   = this.querySelector('select');
+    if (!fromSel || !toSel) return;
+    var tmp = fromSel.value;
+    fromSel.value = toSel.value;
+    toSel.value = tmp;
+
+    // Re-number the slot labels
+    var slots = document.getElementById('assignSlots');
+    if (slots) {
+      Array.from(slots.querySelectorAll('.assign-slot')).forEach(function(row, idx) {
+        row.setAttribute('data-slot-idx', idx);
+        var numEl = row.querySelector('.assign-num');
+        if (numEl) numEl.textContent = idx + 1;
+        var sel = row.querySelector('select');
+        if (sel) sel.setAttribute('data-slot', idx);
+      });
+    }
+    refreshAssignSlots();
+    _slotDragSrc = null;
+  }
+
+  function _onSlotDragEnd() {
+    this.classList.remove('dragging');
+    var slots = document.getElementById('assignSlots');
+    if (slots) slots.querySelectorAll('.assign-slot').forEach(function(r) { r.classList.remove('drag-over'); });
+    _slotDragSrc = null;
+  }
+
+  /* ── Drag-to-reorder turn order list ────────────────── */
+  var _orderDragSrc = null;
+
+  function _onOrderDragStart(e) {
+    _orderDragSrc = this;
+    this.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', this.getAttribute('data-order-idx'));
+  }
+
+  function _onOrderDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    if (this !== _orderDragSrc) this.classList.add('drag-over');
+  }
+
+  function _onOrderDragLeave() {
+    this.classList.remove('drag-over');
+  }
+
+  function _onOrderDrop(e) {
+    e.preventDefault();
+    this.classList.remove('drag-over');
+    if (!_orderDragSrc || _orderDragSrc === this) return;
+    var from = parseInt(_orderDragSrc.getAttribute('data-order-idx'));
+    var to   = parseInt(this.getAttribute('data-order-idx'));
+    if (isNaN(from) || isNaN(to) || from === to) return;
+    // Splice pendingOrder
+    var item = pendingOrder.splice(from, 1)[0];
+    pendingOrder.splice(to, 0, item);
+    _orderDragSrc = null;
+    populateOrderList();
+  }
+
+  function _onOrderDragEnd() {
+    this.classList.remove('dragging');
+    var list = document.getElementById('orderList');
+    if (list) list.querySelectorAll('.order-item').forEach(function(r) { r.classList.remove('drag-over'); });
+    _orderDragSrc = null;
   }
 
   /* ── Panel toggle ─────────────────────── */
@@ -5322,6 +5659,8 @@
   /* ── Turn ─────────────────────────────── */
   function nextTurn() {
     playSound('nextTurn');
+    // Tick effects for any phases not yet passed this turn (End phase tick)
+    tickEffectsForPhaseLeave(activeTurn, PHASES.length - 1);
     recordTurnAndAdvance(() => {
       const alive = players.filter(p => !p.eliminated);
       if (alive.length === 0) return;
@@ -5350,6 +5689,10 @@
   }
 
   function setPhase(idx) {
+    // Tick effects for any phases being skipped over
+    if (idx > currentPhase) {
+      for (var _sp = currentPhase; _sp < idx; _sp++) tickEffectsForPhaseLeave(activeTurn, _sp);
+    }
     currentPhase = idx;
     render();
   }
@@ -5371,7 +5714,9 @@
     } else {
       // Auto-start timer: first time we leave Standby on turn 1 (game has truly begun)
       if (globalTurnNum === 1 && currentPhase === 1 && !timerRunning) timerStart();
+      const leavingPhase = currentPhase;
       currentPhase++;
+      tickEffectsForPhaseLeave(activeTurn, leavingPhase);
       render();
     }
   }
@@ -5442,6 +5787,14 @@
     for (var i = 0; i < count; i++) {
       var row = document.createElement('div');
       row.className = 'assign-slot';
+      row.setAttribute('data-slot-idx', i);
+
+      // Drag handle
+      var handle = document.createElement('span');
+      handle.className = 'assign-drag-handle';
+      handle.textContent = '⠿';
+      handle.title = 'Drag to reorder';
+
       var num = document.createElement('span');
       num.className = 'assign-num';
       num.textContent = i + 1;
@@ -5449,8 +5802,24 @@
       sel.className = 'assign-select';
       sel.setAttribute('data-slot', i);
       sel.setAttribute('onchange', 'refreshAssignSlots()');
+
+      row.appendChild(handle);
       row.appendChild(num);
       row.appendChild(sel);
+
+      // Drag-to-reorder wiring
+      row.draggable = false;
+      handle.addEventListener('mousedown', function(){ row.draggable = true; });
+      handle.addEventListener('touchstart', function(){ row.draggable = true; }, {passive:true});
+      row.addEventListener('dragend', function(){ row.draggable = false; });
+      (function(r) {
+        r.addEventListener('dragstart', _onSlotDragStart);
+        r.addEventListener('dragover',  _onSlotDragOver);
+        r.addEventListener('dragleave', _onSlotDragLeave);
+        r.addEventListener('drop',      _onSlotDrop);
+        r.addEventListener('dragend',   _onSlotDragEnd);
+      })(row);
+
       slots.appendChild(row);
     }
     // Fill options with deduplication
@@ -5509,12 +5878,43 @@
     var list = document.getElementById('orderList');
     if (!list) return;
     var source = pendingOrder && pendingOrder.length ? pendingOrder : players;
+    // Sync pendingOrder so drag ops always work against a real array
+    if (!pendingOrder || !pendingOrder.length) pendingOrder = source.slice();
     list.innerHTML = '';
     source.forEach(function(p, i) {
       var li = document.createElement('li');
       li.className = 'order-item';
       li.style.animationDelay = (i * 80) + 'ms';
-      li.innerHTML = '<span class="order-num">' + (i+1) + '</span><span class="order-name">' + p.name + '</span>';
+      li.setAttribute('data-order-idx', i);
+      li.draggable = false;
+
+      var handle = document.createElement('span');
+      handle.className = 'order-drag-handle';
+      handle.textContent = '⠿';
+      handle.title = 'Drag to reorder';
+
+      var numEl = document.createElement('span');
+      numEl.className = 'order-num';
+      numEl.textContent = i + 1;
+
+      var nameEl = document.createElement('span');
+      nameEl.className = 'order-name';
+      nameEl.textContent = p.name;
+
+      li.appendChild(handle);
+      li.appendChild(numEl);
+      li.appendChild(nameEl);
+
+      handle.addEventListener('mousedown', function() { li.draggable = true; });
+      handle.addEventListener('touchstart', function() { li.draggable = true; }, {passive:true});
+      li.addEventListener('dragend', function() { li.draggable = false; });
+
+      li.addEventListener('dragstart', _onOrderDragStart);
+      li.addEventListener('dragover',  _onOrderDragOver);
+      li.addEventListener('dragleave', _onOrderDragLeave);
+      li.addEventListener('drop',      _onOrderDrop);
+      li.addEventListener('dragend',   _onOrderDragEnd);
+
       list.appendChild(li);
     });
   }
@@ -6060,6 +6460,8 @@
       if (dsimOpen) { closeDrawSim(); return; }
       var forgeOpen = document.getElementById('forgeOverlay') && document.getElementById('forgeOverlay').classList.contains('open');
       if (forgeOpen) { forgeCatPopupClose(); closeForge(); return; }
+      var peOpen = document.getElementById('phaseEffectModal') && document.getElementById('phaseEffectModal').classList.contains('open');
+      if (peOpen) { closePhaseEffect(); return; }
     }
 
     // ── Game mode ──
@@ -11154,6 +11556,125 @@
     render();
   }
 
+  /* ━━ PHASE EFFECTS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  var _peTargetPlayer = 0;
+  var _peTurns = 3;
+  var _peColor = '#88aaff';
+  var _PE_COLORS = ['#88aaff','#ff8877','#88ddaa','#ffcc44','#cc88ff','#ff9944','#44ccdd','#ffaacc','#aaaaaa'];
+
+  function openPhaseEffect(playerIdx) {
+    _peTargetPlayer = playerIdx !== undefined ? playerIdx : activeTurn;
+    _peTurns = 3;
+    _peColor = _PE_COLORS[0];
+    var modal = document.getElementById('phaseEffectModal');
+    if (!modal) return;
+    // Populate player select
+    var sel = document.getElementById('pePlayerSelect');
+    if (sel) {
+      sel.innerHTML = '<option value="__others__">⚔ All Other Players (not turn player)</option>'
+        + players.map(function(p,i){
+          return '<option value="'+i+'"'+(i===_peTargetPlayer?' selected':'')+'>'+p.name+'</option>';
+        }).join('');
+    }
+    // Render color swatches
+    var colorRow = document.getElementById('peColorRow');
+    if (colorRow) {
+      colorRow.innerHTML = _PE_COLORS.map(function(c){
+        return '<div class="pe-color-swatch'+(c===_peColor?' selected':'')+'" style="background:'+c+'" onclick="pePickColor(\''+c+'\')" title="'+c+'"></div>';
+      }).join('');
+    }
+    var turnsEl = document.getElementById('peTurnsVal');
+    if (turnsEl) turnsEl.textContent = _peTurns;
+    var nameEl = document.getElementById('peNameInput');
+    if (nameEl) { nameEl.value = ''; setTimeout(function(){nameEl.focus();},100); }
+    modal.classList.add('open');
+  }
+
+  function closePhaseEffect() {
+    var modal = document.getElementById('phaseEffectModal');
+    if (modal) modal.classList.remove('open');
+  }
+
+  function peLoadPreset(name, turns, triggerPhase) {
+    var nameEl = document.getElementById('peNameInput');
+    if (nameEl) nameEl.value = name;
+    _peTurns = turns;
+    var turnsEl = document.getElementById('peTurnsVal');
+    if (turnsEl) turnsEl.textContent = _peTurns;
+    var phaseEl = document.getElementById('peTriggerPhase');
+    if (phaseEl) phaseEl.value = triggerPhase;
+    if (name === 'Custom Effect' && nameEl) { nameEl.value = ''; nameEl.focus(); }
+  }
+
+  function peTurnsAdj(delta) {
+    _peTurns = Math.max(1, Math.min(20, _peTurns + delta));
+    var el = document.getElementById('peTurnsVal');
+    if (el) el.textContent = _peTurns;
+  }
+
+  function pePickColor(c) {
+    _peColor = c;
+    document.querySelectorAll('#peColorRow .pe-color-swatch').forEach(function(sw){
+      sw.classList.toggle('selected', sw.style.background === c || sw.getAttribute('onclick').includes(c));
+    });
+  }
+
+  function applyPhaseEffect() {
+    var nameEl = document.getElementById('peNameInput');
+    var name = nameEl ? nameEl.value.trim() : '';
+    if (!name) { showToast('Enter an effect name', 'warning', 2000); return; }
+    var playerSel = document.getElementById('pePlayerSelect');
+    var playerVal = playerSel ? playerSel.value : String(_peTargetPlayer);
+    var phaseSel = document.getElementById('peTriggerPhase');
+    var triggerPhase = phaseSel ? parseInt(phaseSel.value) : 1;
+
+    var targets = [];
+    if (playerVal === '__others__') {
+      players.forEach(function(p, i) {
+        if (i !== activeTurn && !p.eliminated) targets.push(i);
+      });
+    } else {
+      targets.push(parseInt(playerVal));
+    }
+
+    if (!targets.length) { showToast('No valid targets', 'warning', 2000); return; }
+
+    targets.forEach(function(targetIdx) {
+      if (!phaseEffects[targetIdx]) phaseEffects[targetIdx] = [];
+      phaseEffects[targetIdx].push({ name: name, turnsLeft: _peTurns, triggerPhase: triggerPhase, color: _peColor });
+    });
+
+    closePhaseEffect();
+    render();
+    var targetLabel = playerVal === '__others__'
+      ? 'all other players'
+      : players[targets[0]].name;
+    showToast('⧗ ' + name + ' → ' + targetLabel + ' (' + _peTurns + ' turns)', 'ok', 2500);
+  }
+
+  function removePhaseEffect(playerIdx, effectIdx) {
+    if (!phaseEffects[playerIdx]) return;
+    phaseEffects[playerIdx].splice(effectIdx, 1);
+    render();
+  }
+
+  function tickEffectsForPhaseLeave(playerIdx, leavingPhase) {
+    if (!phaseEffects[playerIdx] || !phaseEffects[playerIdx].length) return;
+    var expired = [];
+    phaseEffects[playerIdx].forEach(function(ef, ei) {
+      if (ef.triggerPhase === leavingPhase) {
+        ef.turnsLeft--;
+        if (ef.turnsLeft <= 0) expired.push(ei);
+      }
+    });
+    // Remove expired (reverse order to preserve indices)
+    for (var i = expired.length - 1; i >= 0; i--) {
+      var ef = phaseEffects[playerIdx][expired[i]];
+      showToast('⧗ ' + ef.name + ' expired on ' + players[playerIdx].name, 'info', 3000);
+      phaseEffects[playerIdx].splice(expired[i], 1);
+    }
+  }
+
   // LP Transfer
   function openTransfer(fromIdx) {
     var fromSel = document.getElementById('transferFrom');
@@ -11882,6 +12403,66 @@
 
 </script>
 
+<!-- Phase Effect Modal -->
+<div id="phaseEffectModal" onclick="if(event.target===this)closePhaseEffect()">
+  <div class="pe-modal-wrap">
+    <div class="pe-modal-title">⧗ PHASE EFFECT</div>
+    <div class="pe-modal-sub">TIMED CARD EFFECT TRACKER</div>
+
+    <div class="pe-field">
+      <div class="pe-label">QUICK PRESETS</div>
+      <div class="pe-presets">
+        <button class="pe-preset" onclick="peLoadPreset('Swords of Revealing Light',3,1)">Swords of Revealing Light</button>
+        <button class="pe-preset" onclick="peLoadPreset('Custom Effect',3,5)">Custom…</button>
+      </div>
+    </div>
+
+    <div class="pe-field">
+      <div class="pe-label">EFFECT NAME</div>
+      <input class="pe-input" id="peNameInput" placeholder="e.g. Swords of Revealing Light" maxlength="30">
+    </div>
+
+    <div class="pe-field">
+      <div class="pe-label">APPLIED TO PLAYER</div>
+      <select class="pe-select" id="pePlayerSelect">
+        <option value="__others__">All Other Players (not turn player)</option>
+      </select>
+    </div>
+
+    <div class="pe-field">
+      <div class="pe-label">TRIGGER PHASE (counts down when this player passes through)</div>
+      <select class="pe-select" id="peTriggerPhase">
+        <option value="0">Draw Phase</option>
+        <option value="1" selected>Standby Phase</option>
+        <option value="2">Main Phase 1</option>
+        <option value="3">Battle Phase</option>
+        <option value="4">Main Phase 2</option>
+        <option value="5">End Phase</option>
+      </select>
+    </div>
+
+    <div class="pe-field">
+      <div class="pe-label">TURNS REMAINING</div>
+      <div class="pe-turn-row">
+        <button class="pe-turn-btn" onclick="peTurnsAdj(-1)">−</button>
+        <span class="pe-turn-val" id="peTurnsVal">3</span>
+        <button class="pe-turn-btn" onclick="peTurnsAdj(1)">+</button>
+        <span class="pe-turn-label">turns</span>
+      </div>
+    </div>
+
+    <div class="pe-field">
+      <div class="pe-label">BADGE COLOR</div>
+      <div class="pe-color-row" id="peColorRow"></div>
+    </div>
+
+    <div class="pe-btns">
+      <button class="pe-btn-apply" onclick="applyPhaseEffect()">⧗ Apply Effect</button>
+      <button class="pe-btn-cancel" onclick="closePhaseEffect()">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <!-- Chain Overlay -->
 <div id="chainOverlay">
   <div class="chain-backdrop"></div>
@@ -12201,8 +12782,11 @@
       body: 'The top bar shows a <b>Game Timer</b> and a <b>Turn Timer</b>. Enable the <b>Turn Time Limit</b> rule in settings to add a per-turn countdown directly on each player\'s card.'
     },
     {
-      icon: '🃏',
-      title: 'Card Search & Deck Forge',
+      icon: '⚖️',
+      title: 'Rulings — Work in Progress',
+      label: 'Important Notice',
+      body: 'The <b>AI Rulings assistant</b> is still under construction and <b>may not always be accurate</b>. Always consult a <b>certified judge</b> when a ruling is unclear during competitive or serious play. Use it as a helpful reference, not a final authority.'
+    },
       label: 'Deck Building',
       body: 'Open <b>Card Search</b> to browse the full card database. Toggle <b>Deck Builder</b> to build your Main, Extra, and Side decks. Hit <b>⚡ Forge</b> for the full-screen builder with deep analytics, category tags, and opening hand simulator.'
     },
