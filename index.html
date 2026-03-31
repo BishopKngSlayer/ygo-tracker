@@ -356,17 +356,16 @@
   }
   .player-name {
     font-family: 'Cinzel', serif; font-size: 26px; font-weight: 600;
-    color: var(--gold-light); border: none; background: transparent; outline: none;
-    width: 100%; padding: 2px 0; border-bottom: 1px solid transparent;
-    transition: font-size 0.25s ease, color 0.25s ease, border-color 0.2s;
-    line-height: 1.2;
+    color: var(--gold-light);
+    width: 100%; padding: 2px 0;
+    line-height: 1.2; display: block;
+    overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
   }
   .player-card.active .player-name {
     font-size: 52px;
     width: 100%;
     text-shadow: 0 0 18px rgba(201,162,39,0.3);
   }
-  .player-name:focus { border-bottom-color: var(--gold); }
   .btn-elim {
     background: none; border: none; color: var(--dim); cursor: pointer;
     font-size: 14px; padding: 4px; transition: all 0.2s; line-height: 1;
@@ -4988,11 +4987,10 @@
         <div class="player-header">
           <div class="player-name-wrap">
             <div class="turn-order-badge">${p.turnOrder}</div>
-            <input class="player-name" value="${p.name.replace(/"/g, '&quot;')}" maxlength="18"
-              onchange="rosterOnNameChange(${i},this.value)">
+            <span class="player-name">${p.name.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</span>
           </div>
           ${(() => { const isW = !p.eliminated && players.length > 1 && players.filter(pl => !pl.eliminated).length === 1; return isW ? '<span class="winner-crown">👑</span>' : ''; })()}
-          ${!p.eliminated ? `<button class="btn-surrender" onclick="surrenderPlayer(${i})" title="Forfeit (concede)">🏳️</button>` : ''}
+          ${!p.eliminated ? `<button class="btn-surrender" onclick="surrenderPlayer(${i})" title="Forfeit (concede)">🏳️ Forfeit</button>` : ''}
           ${i !== activeTurn && !p.eliminated ? `<button class="btn-collapse" onclick="toggleCardCollapse(${i})" title="Collapse/expand card" id="collapse-btn-${i}">${cardCollapsed[i] ? '▼' : '▲'}</button>` : ''}
           <div class="player-color-dot" style="background:${(playerColors&&playerColors[i])||PLAYER_COLOR_PRESETS[i%PLAYER_COLOR_PRESETS.length]}" onclick="cyclePlayerColor(${i})" title="Click to change accent color"></div>
           <button class="btn-drag" data-drag-idx="${i}" title="Drag to reorder">⠿</button>
@@ -5059,6 +5057,7 @@
               ${players.map((pl,pi) => pi !== i && !pl.eliminated ? `<option value="${pi}">${pl.name}</option>` : '').join('')}
             </select>
             <button class="battle-apply-btn" onclick="applyCardBattle(${i})">Apply</button>
+            <button class="battle-apply-btn" onclick="undoBattle(${i})" title="Undo last battle damage" style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.15);color:var(--dim);font-size:13px;padding:6px 10px;" id="battle-undo-${i}">Undo</button>
           </div>
         </div>` : ''}
 
@@ -5525,6 +5524,7 @@
     const type = delta < 0 ? (dmgTypeState[i] || 'effect') : 'heal';
     const src  = delta < 0 ? getSourceIdx(i) : null;
     adjustLP(i, delta, type, src);
+    _closePanel(i);
   }
 
   function applyAllPreset(i) {
@@ -5567,6 +5567,7 @@
       const type = sign < 0 ? (dmgTypeState[i] || 'effect') : 'heal';
       adjustLP(i, sign * val, type, null);
       el.value = '';
+      _closePanel(i);
     }
   }
 
@@ -5594,7 +5595,24 @@
       const src  = sign < 0 ? getSourceIdx(i) : null;
       adjustLP(i, sign * val, type, src);
       el.value = '';
+      _closePanel(i);
     }
+  }
+
+  function _closePanel(i) {
+    panelState[i] = null;
+    const card = document.getElementById('card-' + i);
+    if (!card) return;
+    const mt = card.querySelector('.minus-toggle');
+    const pt = card.querySelector('.plus-toggle');
+    const pc = document.getElementById('panels-' + i);
+    const mp = document.getElementById('minus-panel-' + i);
+    const pp = document.getElementById('plus-panel-' + i);
+    if (mt) mt.classList.remove('open');
+    if (pt) pt.classList.remove('open');
+    if (pc) pc.classList.remove('visible');
+    if (mp) mp.classList.add('hidden-panel');
+    if (pp) pp.classList.add('hidden-panel');
   }
 
   function updateLPDisplay(i) {
@@ -6224,12 +6242,25 @@
     var target = diff > 0
       ? parseInt(document.getElementById('btgt-' + i).value)
       : i;
+    _lastBattleTarget[i] = target; // remember who got hit for undo
     adjustLP(target, -dmg, 'battle', diff > 0 ? i : null);
     // clear inputs after apply
     document.getElementById('batk-' + i).value = '';
     document.getElementById('bdef-' + i).value = '';
     var res = document.getElementById('bres-' + i);
     if (res) res.style.display = 'none';
+  }
+
+  var _lastBattleTarget = {}; // playerIdx → last target player idx
+
+  function undoBattle(i) {
+    var target = _lastBattleTarget[i];
+    if (target === undefined || target === null) {
+      undoLP(i); // fallback: undo for this card's player
+      return;
+    }
+    undoLP(target);
+    delete _lastBattleTarget[i];
   }
 
   function calcBattleDiff() {
