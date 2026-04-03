@@ -450,6 +450,7 @@
     flex-direction:column; gap:16px;
   }
   #chainOverlay.active { display:flex; }
+  #chainOverlay.interactive { pointer-events:all; }
   .chain-backdrop {
     position:absolute; inset:0;
     background:rgba(0,0,0,0.55); backdrop-filter:blur(3px);
@@ -490,6 +491,54 @@
     25%  { transform:rotate(15deg)  scale(1.1); }
     75%  { transform:rotate(-15deg) scale(1.1); }
     100% { transform:rotate(0deg)   scale(1); }
+  }
+
+  /* ── Chain player selector + timer (shown when turn time limit active) ── */
+  .chain-player-panel {
+    position:relative; z-index:1;
+    background:rgba(8,8,22,0.88); border:1px solid rgba(255,160,0,0.35);
+    border-radius:12px; padding:18px 24px; min-width:280px;
+    animation:chainFadeIn 0.35s ease both;
+    display:flex; flex-direction:column; align-items:center; gap:12px;
+  }
+  .chain-player-label {
+    font-family:'Cinzel',serif; font-size:9px; letter-spacing:4px;
+    color:rgba(255,180,80,0.7); text-transform:uppercase;
+  }
+  .chain-player-btns {
+    display:flex; gap:8px; flex-wrap:wrap; justify-content:center;
+  }
+  .chain-player-btn {
+    font-family:'Cinzel',serif; font-size:10px; letter-spacing:1px;
+    padding:7px 16px; border-radius:6px; cursor:pointer; transition:all .15s;
+    background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); color:var(--text);
+  }
+  .chain-player-btn:hover { border-color:rgba(255,160,0,0.5); background:rgba(255,160,0,0.1); color:#ffcc66; }
+  .chain-player-btn.selected { border-color:rgba(255,160,0,0.7); background:rgba(255,160,0,0.15); color:#ffdd88; box-shadow:0 0 12px rgba(255,160,0,0.3); }
+  .chain-timer-block {
+    display:flex; flex-direction:column; align-items:center; gap:4px; margin-top:4px;
+  }
+  .chain-timer-label {
+    font-family:'Cinzel',serif; font-size:8px; letter-spacing:3px;
+    color:rgba(255,180,80,0.6); text-transform:uppercase;
+  }
+  .chain-timer-val {
+    font-family:'Cinzel Decorative',serif; font-size:clamp(28px,5vw,48px);
+    letter-spacing:3px; color:#ffcc66;
+    text-shadow:0 0 20px rgba(255,180,0,0.6);
+    transition:color .3s;
+    animation:chainFadeIn .25s ease both;
+  }
+  .chain-timer-val.low { color:#ff6644; text-shadow:0 0 20px rgba(255,80,0,0.8); animation:turnOvertime .6s ease-in-out infinite; }
+  .chain-timer-val.expired { color:#ff2222; text-shadow:0 0 24px rgba(255,0,0,1); animation:turnOvertime .4s ease-in-out infinite; }
+  .chain-timer-budget {
+    font-family:'Cinzel',serif; font-size:8px; letter-spacing:2px;
+    color:rgba(255,180,80,0.45); margin-top:2px;
+  }
+  .chain-timer-depleted {
+    font-family:'Cinzel',serif; font-size:10px; letter-spacing:3px;
+    color:#ff4444; text-transform:uppercase;
+    animation:chainFadeIn .2s ease both;
   }
   .lp-turn-timer {
     display: flex; align-items: center; justify-content: center;
@@ -4913,9 +4962,24 @@
     cardCollapsed = Array(count).fill(false);
     counterTokens = Array(count).fill(null).map(() => []);
     phaseEffects  = Array(count).fill(null).map(() => []);
+    lastTurnRemaining = Array(count).fill(null);
+    chainCount        = Array(count).fill(0);
+    chainDebt         = Array(count).fill(0);
     playerColors  = Array(count).fill(null).map((_, i) => PLAYER_COLOR_PRESETS[i % PLAYER_COLOR_PRESETS.length]);
     lpHistory     = {};
+    _lastBattleTarget = {};
     matchStartTime = Date.now();
+    // Reset chain overlay state
+    if (_chainActive) {
+      clearInterval(_chainInterval);
+      _chainActive = false;
+      _chainInterval = null;
+      _chainTimerSecs = 0;
+      _chainElapsedSecs = 0;
+      _chainSelectedPlayer = null;
+      var co = document.getElementById('chainOverlay');
+      if (co) { co.classList.remove('active'); co.classList.remove('interactive'); }
+    }
     render();
   }
 
@@ -5258,6 +5322,9 @@
     biggestHit       = moveIdx(biggestHit);
     counterTokens    = moveIdx(counterTokens);
     phaseEffects     = moveIdx(phaseEffects);
+    lastTurnRemaining = moveIdx(lastTurnRemaining);
+    chainCount       = moveIdx(chainCount);
+    chainDebt        = moveIdx(chainDebt);
     lpHistory        = moveObj(lpHistory);
 
     // Adjust activeTurn to follow the moved player
@@ -5551,6 +5618,7 @@
       players.forEach((p, pi) => { if (pi !== i && !p.eliminated) { adjustLP(pi, -val, type, i); affected++; } });
       if (el) el.value = '';
       if (affected > 0) showToast('💥 Hit All: -' + val.toLocaleString() + ' LP × ' + affected + ' players', 'damage');
+      _closePanel(i);
     } else {
       const inp = document.getElementById('cm-' + i);
       if (inp) { inp.style.borderColor = 'rgba(255,100,100,0.8)'; setTimeout(() => inp.style.borderColor = '', 800); inp.focus(); }
@@ -5700,7 +5768,16 @@
       let n = (activeTurn + 1) % players.length, t = 0;
       while (players[n].eliminated && t++ < players.length) n = (n+1) % players.length;
       if (!timerRunning) timerStart();
-      activeTurn = n; currentPhase = 0; render();
+      activeTurn = n; currentPhase = 0;
+      // Apply chain debt: this player spent time chaining before their turn
+      if (gameRules.turnTimeLimit && chainDebt[n] > 0) {
+        turnSeconds = Math.min(chainDebt[n], (gameRules.turnTimeMinutes || 10) * 60);
+        var td2 = document.getElementById('turnTimerDisplay');
+        if (td2) td2.textContent = fmt(turnSeconds);
+        showToast('⛓ ' + players[n].name + ' starts with ' + _chainTimerFmt(chainDebt[n]) + ' chain debt', 'warning', 3500);
+        chainDebt[n] = 0;
+      }
+      render();
     });
   }
   function prevTurn() {
@@ -5709,7 +5786,14 @@
       if (alive.length === 0) return;
       let n = (activeTurn - 1 + players.length) % players.length, t = 0;
       while (players[n].eliminated && t++ < players.length) n = (n-1+players.length) % players.length;
-      activeTurn = n; currentPhase = 0; render();
+      activeTurn = n; currentPhase = 0;
+      if (gameRules.turnTimeLimit && chainDebt[n] > 0) {
+        turnSeconds = Math.min(chainDebt[n], (gameRules.turnTimeMinutes || 10) * 60);
+        var td2 = document.getElementById('turnTimerDisplay');
+        if (td2) td2.textContent = fmt(turnSeconds);
+        chainDebt[n] = 0;
+      }
+      render();
     });
   }
   function updateTurnLabel() {
@@ -6029,14 +6113,129 @@
   }
 
   var _chainActive = false;
+  var _chainInterval = null;
+  var _chainTimerSecs = 0;
+  var _chainElapsedSecs = 0;  // seconds elapsed in current chain session
+  var _chainSelectedPlayer = null;
+  var lastTurnRemaining = []; // per player: time remaining when their last turn ended
+  var chainCount        = []; // per player: how many times they've chained this game
+  var chainDebt         = []; // per player: seconds spent chaining before their turn
+
+  function _chainTimerFmt(s) {
+    if (s <= 0) return '0:00';
+    var m = Math.floor(s / 60), sec = s % 60;
+    return m + ':' + (sec < 10 ? '0' : '') + sec;
+  }
+
+  function _chainSelectPlayer(idx) {
+    _chainSelectedPlayer = idx;
+    _chainElapsedSecs = 0; // reset elapsed for this selection
+    var limit = (gameRules.turnTimeMinutes || 10) * 60;
+    var lastRem = lastTurnRemaining[idx] != null ? lastTurnRemaining[idx] : limit;
+    var chains  = chainCount[idx] || 0;
+    _chainTimerSecs = Math.max(0, lastRem - chains);
+
+    // Highlight selected button
+    document.querySelectorAll('.chain-player-btn').forEach(function(b) {
+      b.classList.toggle('selected', parseInt(b.dataset.playerIdx) === idx);
+    });
+
+    // Show timer block
+    var block = document.getElementById('chainTimerBlock');
+    var val   = document.getElementById('chainTimerVal');
+    var budget = document.getElementById('chainTimerBudget');
+    if (block) block.style.display = 'flex';
+    if (val)   val.textContent = _chainTimerFmt(_chainTimerSecs);
+    if (budget) budget.textContent = 'Budget: ' + _chainTimerFmt(lastRem) + ' − ' + chains + (chains === 1 ? ' chain' : ' chains') + ' = ' + _chainTimerFmt(_chainTimerSecs);
+    if (val) {
+      val.classList.remove('low','expired');
+      if (_chainTimerSecs === 0) val.classList.add('expired');
+      else if (_chainTimerSecs <= 15) val.classList.add('low');
+    }
+
+    // Start countdown — also tracks elapsed time spent in this chain
+    clearInterval(_chainInterval);
+    _chainInterval = setInterval(function() {
+      _chainElapsedSecs++;
+      if (_chainTimerSecs > 0) {
+        _chainTimerSecs--;
+        var v = document.getElementById('chainTimerVal');
+        var bg = document.getElementById('chainTimerBudget');
+        if (v) {
+          v.textContent = _chainTimerFmt(_chainTimerSecs);
+          v.classList.remove('low','expired');
+          if (_chainTimerSecs <= 0) {
+            v.classList.add('expired');
+          } else if (_chainTimerSecs <= 15) {
+            v.classList.add('low');
+          }
+        }
+        if (bg) {
+          var lastRem2 = lastTurnRemaining[_chainSelectedPlayer] != null ? lastTurnRemaining[_chainSelectedPlayer] : (gameRules.turnTimeMinutes||10)*60;
+          var chains2  = chainCount[_chainSelectedPlayer] || 0;
+          bg.textContent = 'Budget: ' + _chainTimerFmt(lastRem2) + ' − ' + chains2 + (chains2===1?' chain':' chains') + ' = ' + _chainTimerFmt(Math.max(0,lastRem2-chains2));
+        }
+      }
+    }, 1000);
+  }
+
   function toggleChainOverlay() {
     var overlay = document.getElementById('chainOverlay');
     if (!overlay) return;
     _chainActive = !_chainActive;
     overlay.classList.toggle('active', _chainActive);
+
     if (_chainActive) {
       if (timerRunning) timerPause();
+
+      var timeLimitMode = gameRules.turnTimeLimit;
+      var panel = document.getElementById('chainPlayerPanel');
+      var sub   = document.getElementById('chainSub');
+
+      if (timeLimitMode && panel) {
+        // Make overlay interactive for clicking player buttons
+        overlay.classList.add('interactive');
+        panel.style.display = 'flex';
+        if (sub) sub.textContent = 'Select chaining player below';
+
+        // Build player buttons
+        var btns = document.getElementById('chainPlayerBtns');
+        if (btns) {
+          btns.innerHTML = players.map(function(p, i) {
+            if (p.eliminated) return '';
+            return '<button class="chain-player-btn" data-player-idx="' + i + '" onclick="event.stopPropagation();_chainSelectPlayer(' + i + ')">' + p.name + '</button>';
+          }).join('');
+        }
+
+        // Hide timer block until a player is selected
+        var block = document.getElementById('chainTimerBlock');
+        if (block) block.style.display = 'none';
+        _chainSelectedPlayer = null;
+
+      } else {
+        if (panel) panel.style.display = 'none';
+        overlay.classList.remove('interactive');
+        if (sub) sub.textContent = 'Timer Paused \u00b7 Press ↑ to Resume';
+      }
+
     } else {
+      // Closing chain overlay
+      clearInterval(_chainInterval);
+      overlay.classList.remove('interactive');
+
+      // Accumulate chain debt and increment count for selected player
+      if (_chainSelectedPlayer !== null && gameRules.turnTimeLimit) {
+        if (!chainCount[_chainSelectedPlayer]) chainCount[_chainSelectedPlayer] = 0;
+        chainCount[_chainSelectedPlayer]++;
+        if (!chainDebt[_chainSelectedPlayer]) chainDebt[_chainSelectedPlayer] = 0;
+        chainDebt[_chainSelectedPlayer] += _chainElapsedSecs;
+        var pName = players[_chainSelectedPlayer] ? players[_chainSelectedPlayer].name : '?';
+        showToast('⛓ ' + pName + ' chained for ' + _chainElapsedSecs + 's — ' + _chainTimerFmt(chainDebt[_chainSelectedPlayer]) + ' owed on their next turn', 'info', 3000);
+      }
+      _chainSelectedPlayer = null;
+      _chainTimerSecs = 0;
+      _chainElapsedSecs = 0;
+
       timerStart();
     }
   }
@@ -6084,14 +6283,19 @@
   function recordTurnAndAdvance(newActiveFn) {
     // Dismiss chain overlay if active
     if (_chainActive) {
+      clearInterval(_chainInterval);
       _chainActive = false;
+      _chainSelectedPlayer = null;
       var co = document.getElementById('chainOverlay');
-      if (co) co.classList.remove('active');
+      if (co) { co.classList.remove('active'); co.classList.remove('interactive'); }
     }
     // log this turn for the current player
     const dur = turnSeconds;
     // guard against activeTurn being out of bounds
     if (activeTurn >= players.length) activeTurn = 0;
+    // Save how much time was left on this player's turn
+    var limit = (gameRules.turnTimeMinutes || 10) * 60;
+    lastTurnRemaining[activeTurn] = Math.max(0, limit - turnSeconds);
     playerTotalTurnTime[activeTurn] += dur;
     turnLogs[activeTurn].push({
       turnNum: globalTurnNum,
@@ -12524,7 +12728,16 @@
   <div class="chain-backdrop"></div>
   <div class="chain-icon">⛓</div>
   <div class="chain-word">CHAIN</div>
-  <div class="chain-sub">Timer Paused &nbsp;·&nbsp; Press ↑ to Resume</div>
+  <div class="chain-sub" id="chainSub">Timer Paused &nbsp;·&nbsp; Press ↑ to Resume</div>
+  <div class="chain-player-panel" id="chainPlayerPanel" style="display:none;">
+    <div class="chain-player-label">Who is chaining?</div>
+    <div class="chain-player-btns" id="chainPlayerBtns"></div>
+    <div class="chain-timer-block" id="chainTimerBlock" style="display:none;">
+      <div class="chain-timer-label">Chain Time Remaining</div>
+      <div class="chain-timer-val" id="chainTimerVal">—</div>
+      <div class="chain-timer-budget" id="chainTimerBudget"></div>
+    </div>
+  </div>
 </div>
 
 <!-- Toast Container -->
