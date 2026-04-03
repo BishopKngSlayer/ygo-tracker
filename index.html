@@ -2027,6 +2027,13 @@
   }
   .battle-apply-btn:hover { background: rgba(255,80,80,0.2); }
   .battle-apply-btn:disabled { opacity: 0.3; cursor: default; }
+  .battle-half-btn {
+    font-family: 'Cinzel Decorative', serif; font-size: 11px; font-weight: 900;
+    padding: 4px 7px; border-radius: 3px; cursor: pointer; flex-shrink: 0;
+    border: 1px solid rgba(255,180,0,0.35); color: #ffcc66;
+    background: rgba(255,180,0,0.07); transition: all 0.15s; line-height: 1;
+  }
+  .battle-half-btn:hover { background: rgba(255,180,0,0.2); border-color: rgba(255,200,0,0.6); }
 
 
   .sound-row {
@@ -5041,14 +5048,20 @@
           <div class="battle-panel-row">
             <div class="battle-field">
               <label class="battle-field-label">My ATK</label>
-              <input type="number" class="battle-input" id="batk-${i}" placeholder="0" min="0"
-                oninput="calcCardBattle(${i})">
+              <div style="display:flex;gap:3px;align-items:center;">
+                <input type="number" class="battle-input" id="batk-${i}" placeholder="0" min="0"
+                  oninput="calcCardBattle(${i})" style="flex:1;">
+                <button class="battle-half-btn" onclick="halveBattleInput('batk-${i}',${i})" title="Halve ATK">½</button>
+              </div>
             </div>
             <div class="battle-vs">vs</div>
             <div class="battle-field">
               <label class="battle-field-label">Opp ATK/DEF</label>
-              <input type="number" class="battle-input" id="bdef-${i}" placeholder="0" min="0"
-                oninput="calcCardBattle(${i})">
+              <div style="display:flex;gap:3px;align-items:center;">
+                <input type="number" class="battle-input" id="bdef-${i}" placeholder="0" min="0"
+                  oninput="calcCardBattle(${i})" style="flex:1;">
+                <button class="battle-half-btn" onclick="halveBattleInput('bdef-${i}',${i})" title="Halve ATK/DEF">½</button>
+              </div>
             </div>
           </div>
           <div class="battle-result" id="bres-${i}" style="display:none;"></div>
@@ -5243,6 +5256,8 @@
     turnLogs         = moveIdx(turnLogs);
     playerTotalTurnTime = moveIdx(playerTotalTurnTime);
     biggestHit       = moveIdx(biggestHit);
+    counterTokens    = moveIdx(counterTokens);
+    phaseEffects     = moveIdx(phaseEffects);
     lpHistory        = moveObj(lpHistory);
 
     // Adjust activeTurn to follow the moved player
@@ -6252,6 +6267,16 @@
   }
 
   var _lastBattleTarget = {}; // playerIdx → last target player idx
+
+  function halveBattleInput(inputId, cardIdx) {
+    var el = document.getElementById(inputId);
+    if (!el) return;
+    var val = parseInt(el.value);
+    if (!isNaN(val) && val > 0) {
+      el.value = Math.floor(val / 2);
+      calcCardBattle(cardIdx);
+    }
+  }
 
   function undoBattle(i) {
     var target = _lastBattleTarget[i];
