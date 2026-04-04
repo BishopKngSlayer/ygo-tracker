@@ -2083,6 +2083,22 @@
     background: rgba(255,180,0,0.07); transition: all 0.15s; line-height: 1;
   }
   .battle-half-btn:hover { background: rgba(255,180,0,0.2); border-color: rgba(255,200,0,0.6); }
+  .battle-double-btn {
+    font-family: 'Cinzel Decorative', serif; font-size: 11px; font-weight: 900;
+    padding: 4px 7px; border-radius: 3px; cursor: pointer; flex-shrink: 0;
+    border: 1px solid rgba(255,60,60,0.35); color: #ff9999;
+    background: rgba(255,60,60,0.07); transition: all 0.15s; line-height: 1;
+  }
+  .battle-double-btn:hover { background: rgba(255,60,60,0.18); border-color: rgba(255,80,80,0.6); }
+  .battle-double-btn.active {
+    background: rgba(255,40,40,0.22); border-color: #ff4444; color: #ffaaaa;
+    box-shadow: 0 0 10px rgba(255,40,40,0.35);
+    animation: doublePulse 0.8s ease-in-out infinite;
+  }
+  @keyframes doublePulse {
+    0%,100% { box-shadow: 0 0 8px rgba(255,40,40,0.3); }
+    50%      { box-shadow: 0 0 18px rgba(255,60,60,0.65); }
+  }
 
 
   .sound-row {
@@ -4035,6 +4051,7 @@
       <button class="mode-tab active" id="mtab-bestof"     onclick="switchModeTab('bestof')">&#x1F3AE; Best of X</button>
       <button class="mode-tab"        id="mtab-tournament" onclick="switchModeTab('tournament');renderModeModal();renderTournamentSlots()">&#x1F3C6; Tournament</button>
       <button class="mode-tab"        id="mtab-team"       onclick="switchModeTab('team');renderModeModal()">&#x1F91D; Team Battle</button>
+      <button class="mode-tab"        id="mtab-teamtourney" onclick="switchModeTab('teamtourney');renderTeamTourneyModal()">&#x2694;&#xFE0F; Team Tourney</button>
       <button class="mode-tab"        id="mtab-koth"       onclick="switchModeTab('koth');renderKothModal()">&#x1F451; King of the Hill</button>
       <button class="mode-tab"        id="mtab-rules"      onclick="switchModeTab('rules')">&#x2696;&#xFE0F; Rules</button>
       <button class="mode-tab"        id="mtab-sync"       onclick="switchModeTab('sync');openSyncModalPanel()">&#x1F534; Sync</button>
@@ -4151,6 +4168,49 @@
         <button class="mode-start-btn" onclick="startTeamBattle()">&#x1F91D; Start Battle</button>
       </div>
     </div>
+    <!-- Team Tournament -->
+    <div class="mode-panel" id="mpanel-teamtourney">
+      <p class="mode-info">Two teams face off in a series of 1v1 duels. A1 vs B1, A2 vs B2, etc. The team with the most wins takes the match.</p>
+      <div class="mode-field" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <label style="flex:none;font-family:'Cinzel',serif;font-size:10px;letter-spacing:1px;color:var(--dim);">TEAM SIZE</label>
+          <select class="mode-select" id="tt-size" onchange="renderTeamTourneyModal()" style="width:80px;">
+            <option value="2">2v2</option>
+            <option value="3">3v3</option>
+            <option value="4">4v4</option>
+            <option value="5">5v5</option>
+          </select>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <label style="flex:none;font-family:'Cinzel',serif;font-size:10px;letter-spacing:1px;color:var(--dim);">DUELS PER MATCHUP</label>
+          <select class="mode-select" id="tt-bestof" style="width:90px;">
+            <option value="1">1 Duel</option>
+            <option value="3">Best of 3</option>
+            <option value="5">Best of 5</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;margin-bottom:6px;">
+        <div style="flex:1;">
+          <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:#8899ff;margin-bottom:4px;">
+            TEAM A &nbsp;<input id="tt-name-a" placeholder="Team Alpha" style="background:rgba(255,255,255,0.05);border:1px solid rgba(136,153,255,0.25);border-radius:4px;color:#8899ff;font-family:'Cinzel',serif;font-size:10px;padding:3px 8px;outline:none;width:100px;">
+          </div>
+          <div id="tt-slots-a" class="mode-player-slots"></div>
+        </div>
+        <div style="flex:none;display:flex;align-items:center;font-family:'Cinzel Decorative',serif;font-size:18px;color:var(--dim);padding-top:20px;">vs</div>
+        <div style="flex:1;">
+          <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:#ff8888;margin-bottom:4px;">
+            TEAM B &nbsp;<input id="tt-name-b" placeholder="Team Omega" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,136,136,0.25);border-radius:4px;color:#ff8888;font-family:'Cinzel',serif;font-size:10px;padding:3px 8px;outline:none;width:100px;">
+          </div>
+          <div id="tt-slots-b" class="mode-player-slots"></div>
+        </div>
+      </div>
+      <div class="mode-actions">
+        <button class="btn btn-dim" onclick="closeModeModal()">Cancel</button>
+        <button class="mode-start-btn" onclick="startTeamTourney()">&#x2694;&#xFE0F; Start Tournament</button>
+      </div>
+    </div>
+
     <!-- King of the Hill -->
     <div class="mode-panel" id="mpanel-koth">
       <div class="mode-section-title">&#x1F451; King of the Hill</div>
@@ -4968,6 +5028,7 @@
     playerColors  = Array(count).fill(null).map((_, i) => PLAYER_COLOR_PRESETS[i % PLAYER_COLOR_PRESETS.length]);
     lpHistory     = {};
     _lastBattleTarget = {};
+    _battleDouble = {};
     matchStartTime = Date.now();
     // Reset chain overlay state
     if (_chainActive) {
@@ -5108,7 +5169,11 @@
         <!-- Battle Phase Panel -->
         ${currentPhase === 3 && i === activeTurn && !p.eliminated ? `
         <div class="battle-panel" id="battle-panel-${i}">
-          <div class="battle-panel-title">⚔️ Battle Damage</div>
+          <div class="battle-panel-title" style="display:flex;align-items:center;justify-content:space-between;">
+            <span>⚔️ Battle Damage</span>
+            <button class="battle-double-btn${_battleDouble[i]?' active':''}" id="bdbl-${i}"
+              onclick="toggleBattleDouble(${i})" title="Double damage (Limiter Removal, Megamorph, etc.)">×2</button>
+          </div>
           <div class="battle-panel-row">
             <div class="battle-field">
               <label class="battle-field-label">My ATK</label>
@@ -6432,16 +6497,19 @@
     if (isNaN(atk) || isNaN(def)) { res.style.display = 'none'; if (btn) btn.disabled = true; return; }
     var diff = atk - def;
     var dmg  = Math.abs(diff);
+    var doubled = !!_battleDouble[i];
+    if (doubled && dmg > 0) dmg = dmg * 2;
     res.style.display = 'block';
+    var dblTag = doubled ? ' <span style="font-size:9px;color:#ff9999;letter-spacing:1px;">[×2]</span>' : '';
     if (diff > 0) {
-      res.style.borderLeft = '2px solid #ff6666';
-      res.innerHTML = '<div class="battle-result-amt" style="color:#ff8888;">' + dmg.toLocaleString() + '</div>'
-        + '<div class="battle-result-lbl">Opponent takes battle damage</div>';
+      res.style.borderLeft = '2px solid ' + (doubled ? '#ff4444' : '#ff6666');
+      res.innerHTML = '<div class="battle-result-amt" style="color:' + (doubled ? '#ff7777' : '#ff8888') + ';">' + dmg.toLocaleString() + '</div>'
+        + '<div class="battle-result-lbl">Opponent takes battle damage' + dblTag + '</div>';
       if (btn) btn.disabled = false;
     } else if (diff < 0) {
-      res.style.borderLeft = '2px solid #ffaa66';
-      res.innerHTML = '<div class="battle-result-amt" style="color:#ffaa66;">' + dmg.toLocaleString() + '</div>'
-        + '<div class="battle-result-lbl">You take damage (reflect to self?)</div>';
+      res.style.borderLeft = '2px solid ' + (doubled ? '#ff7733' : '#ffaa66');
+      res.innerHTML = '<div class="battle-result-amt" style="color:' + (doubled ? '#ff8844' : '#ffaa66') + ';">' + dmg.toLocaleString() + '</div>'
+        + '<div class="battle-result-lbl">You take damage (reflect to self?)' + dblTag + '</div>';
       if (btn) btn.disabled = false;
     } else {
       res.style.borderLeft = '2px solid rgba(255,255,255,0.1)';
@@ -6457,12 +6525,18 @@
     if (isNaN(atk) || isNaN(def) || atk === def) return;
     var diff = atk - def;
     var dmg  = Math.abs(diff);
+    // Apply double damage multiplier if active
+    if (_battleDouble[i] && dmg > 0) dmg = dmg * 2;
     // positive diff = opponent takes damage; negative = self takes damage
     var target = diff > 0
       ? parseInt(document.getElementById('btgt-' + i).value)
       : i;
-    _lastBattleTarget[i] = target; // remember who got hit for undo
+    _lastBattleTarget[i] = target;
     adjustLP(target, -dmg, 'battle', diff > 0 ? i : null);
+    // Reset double toggle after each attack — it's one-shot per attack
+    _battleDouble[i] = false;
+    var dblBtn = document.getElementById('bdbl-' + i);
+    if (dblBtn) dblBtn.classList.remove('active');
     // clear inputs after apply
     document.getElementById('batk-' + i).value = '';
     document.getElementById('bdef-' + i).value = '';
@@ -6471,6 +6545,7 @@
   }
 
   var _lastBattleTarget = {}; // playerIdx → last target player idx
+  var _battleDouble     = {}; // playerIdx → boolean, double damage active
 
   function halveBattleInput(inputId, cardIdx) {
     var el = document.getElementById(inputId);
@@ -6480,6 +6555,13 @@
       el.value = Math.floor(val / 2);
       calcCardBattle(cardIdx);
     }
+  }
+
+  function toggleBattleDouble(i) {
+    _battleDouble[i] = !_battleDouble[i];
+    var btn = document.getElementById('bdbl-' + i);
+    if (btn) btn.classList.toggle('active', !!_battleDouble[i]);
+    calcCardBattle(i); // refresh damage display
   }
 
   function undoBattle(i) {
@@ -7070,9 +7152,10 @@
     const alive = players.filter(function(p) { return !p.eliminated; });
     if (alive.length === 1 && players.length > 1) {
       setTimeout(function() {
-        if (gameMode === "bestof")      { handleBestOfDuelEnd(alive[0]); }
-        else if (gameMode === "tournament") { handleTournamentDuelEnd(alive[0]); }
-        else if (gameMode === "koth")   { handleKothDuelEnd(alive[0]); }
+        if (gameMode === "bestof")           { handleBestOfDuelEnd(alive[0]); }
+        else if (gameMode === "tournament")  { handleTournamentDuelEnd(alive[0]); }
+        else if (gameMode === "koth")        { handleKothDuelEnd(alive[0]); }
+        else if (gameMode === "team-tourney"){ handleTeamTourneyDuelEnd(alive[0]); }
         else { showSummary(alive[0]); }
       }, 900);
     }
@@ -8435,6 +8518,225 @@
   }
 
   // ── Match Banner ─────────────────────────────
+  /* ━━ TEAM TOURNAMENT ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+  function renderTeamTourneyModal() {
+    var size  = parseInt(document.getElementById('tt-size').value) || 2;
+    var rosterNames = Object.values(roster).map(function(r){ return r.name; }).sort(function(a,b){return a.localeCompare(b);});
+    var optHtml = '<option value="">— Select —</option>' + rosterNames.map(function(n){ return '<option>'+n+'</option>'; }).join('');
+
+    ['a','b'].forEach(function(team) {
+      var container = document.getElementById('tt-slots-' + team);
+      if (!container) return;
+      var prev = Array.from(container.querySelectorAll('select')).map(function(s){ return s.value; });
+      container.innerHTML = '';
+      for (var i = 0; i < size; i++) {
+        var color = team === 'a' ? '#8899ff' : '#ff8888';
+        var label = (team === 'a' ? 'A' : 'B') + (i + 1);
+        container.innerHTML += '<div class="mode-player-slot">'
+          + '<span class="mode-slot-label" style="color:'+color+';background:'+color+'22;border-color:'+color+'44;">' + label + '</span>'
+          + '<select class="mode-slot-select" data-tt-team="'+team+'" data-tt-idx="'+i+'">' + optHtml + '</select>'
+          + '</div>';
+      }
+      // Restore prev selections
+      Array.from(container.querySelectorAll('select')).forEach(function(sel, idx){
+        if (prev[idx]) sel.value = prev[idx];
+      });
+    });
+  }
+
+  function startTeamTourney() {
+    var size   = parseInt(document.getElementById('tt-size').value) || 2;
+    var bestOf = parseInt(document.getElementById('tt-bestof').value) || 1;
+    var nameA  = (document.getElementById('tt-name-a').value.trim()) || 'Team Alpha';
+    var nameB  = (document.getElementById('tt-name-b').value.trim()) || 'Team Omega';
+
+    var teamA = [], teamB = [];
+    for (var i = 0; i < size; i++) {
+      var selA = document.querySelector('[data-tt-team="a"][data-tt-idx="'+i+'"]');
+      var selB = document.querySelector('[data-tt-team="b"][data-tt-idx="'+i+'"]');
+      var na = selA ? selA.value.trim() : '';
+      var nb = selB ? selB.value.trim() : '';
+      if (!na || !nb) { alert('Fill all player slots for both teams'); return; }
+      teamA.push(na);
+      teamB.push(nb);
+    }
+
+    var allNames = teamA.concat(teamB);
+    var unique = new Set(allNames.map(function(n){ return n.toLowerCase(); }));
+    if (unique.size < allNames.length) { alert('Each player must be unique'); return; }
+
+    // Build matchups: A1 vs B1, A2 vs B2, …
+    var matchups = [];
+    for (var j = 0; j < size; j++) {
+      matchups.push({ a: teamA[j], b: teamB[j], winner: null, scores: { a: 0, b: 0 } });
+    }
+
+    gameMode = 'team-tourney';
+    matchCtx = {
+      teamNames: [nameA, nameB],
+      teamPlayers: [teamA.slice(), teamB.slice()],
+      matchups: matchups,
+      currentMatchup: 0,
+      teamScores: [0, 0],
+      bestOf: bestOf,
+      winsNeeded: Math.ceil(bestOf / 2)
+    };
+
+    closeModeModal();
+    _ttStartMatchup(0);
+  }
+
+  function _ttStartMatchup(idx) {
+    if (!matchCtx || !matchCtx.matchups || idx >= matchCtx.matchups.length) return;
+    matchCtx.currentMatchup = idx;
+    var mu = matchCtx.matchups[idx];
+    mu.scores = { a: 0, b: 0 }; // reset per-matchup scores
+
+    var baseLp = parseInt(document.getElementById('startingLPInput').value) || 8000;
+    initPlayers(2);
+    players[0].name = mu.a;
+    players[1].name = mu.b;
+    MAX_LP = baseLp;
+    players[0].lp = baseLp; players[0].prevLP = baseLp;
+    players[1].lp = baseLp; players[1].prevLP = baseLp;
+    currentPhase = 1;
+    render();
+    updateMatchBanner();
+
+    var mu_idx = idx + 1;
+    var total  = matchCtx.matchups.length;
+    showToast('⚔️ Match ' + mu_idx + '/' + total + ' — ' + mu.a + ' vs ' + mu.b, 'info', 3500);
+  }
+
+  function handleTeamTourneyDuelEnd(winner) {
+    if (!matchCtx || !matchCtx.matchups) return;
+    var idx = matchCtx.currentMatchup;
+    var mu  = matchCtx.matchups[idx];
+    var winnerName = winner ? winner.name : null;
+    var winSide = (winnerName === mu.a) ? 'a' : 'b';
+    var losSide = winSide === 'a' ? 'b' : 'a';
+    mu.scores[winSide]++;
+
+    // Update roster
+    if (winner) {
+      var loserName = winSide === 'a' ? mu.b : mu.a;
+      var wk = winner.name.trim().toLowerCase();
+      var lk = loserName.trim().toLowerCase();
+      if (!roster[wk]) roster[wk] = {name:winner.name, w:0, l:0, f:0, duels:0};
+      if (!roster[lk]) roster[lk] = {name:loserName, w:0, l:0, f:0, duels:0};
+      roster[wk].w++; roster[wk].duels = (roster[wk].duels||0) + 1;
+      roster[lk].l++; roster[lk].duels = (roster[lk].duels||0) + 1;
+      rosterSave();
+    }
+
+    var winsNeeded = matchCtx.winsNeeded;
+
+    // Check if this matchup's bestOf series is decided
+    if (mu.scores[winSide] >= winsNeeded) {
+      // Matchup winner decided
+      mu.winner = winnerName;
+      var winTeam = (winSide === 'a') ? 0 : 1;
+      matchCtx.teamScores[winTeam]++;
+    }
+
+    // Show summary with next-match/rematch buttons
+    showSummary(winner);
+    var sub  = document.getElementById('summarySubtitle');
+    var btns = document.getElementById('summaryButtons');
+
+    var scoreLine = matchCtx.teamNames[0] + ' ' + matchCtx.teamScores[0] + ' – ' + matchCtx.teamScores[1] + ' ' + matchCtx.teamNames[1];
+    var seriesLine = matchCtx.bestOf > 1 ? ' · Series ' + mu.scores.a + '–' + mu.scores.b : '';
+
+    // Matchup still ongoing (best of 3/5, series not decided)
+    if (!mu.winner) {
+      if (sub) sub.textContent = 'TEAM TOURNEY · Match ' + (idx+1) + '/' + matchCtx.matchups.length + seriesLine + ' · ' + scoreLine;
+      if (btns) btns.innerHTML =
+        '<button class="summary-btn gold" onclick="ttNextDuelInSeries()">▶ Duel Again</button>'
+        + '<button class="summary-btn dim" onclick="closeSummary(false)">↩ Review Board</button>';
+      updateMatchBanner();
+      return;
+    }
+
+    // Matchup decided — check if all matchups are done
+    var allDone = matchCtx.matchups.every(function(m){ return m.winner !== null; });
+    var nextIdx = null;
+    for (var i = idx + 1; i < matchCtx.matchups.length; i++) {
+      if (!matchCtx.matchups[i].winner) { nextIdx = i; break; }
+    }
+
+    if (sub) sub.textContent = 'TEAM TOURNEY · Match ' + (idx+1) + '/' + matchCtx.matchups.length + ' · ' + scoreLine;
+
+    if (allDone) {
+      // Tournament over
+      var teamWinner = matchCtx.teamScores[0] > matchCtx.teamScores[1] ? 0 : matchCtx.teamScores[1] > matchCtx.teamScores[0] ? 1 : -1;
+      var teamWinnerName = teamWinner >= 0 ? matchCtx.teamNames[teamWinner] : 'TIE';
+      document.getElementById('summaryTitle').textContent = (teamWinner >= 0 ? teamWinnerName + ' Wins!' : 'It\'s a Tie!');
+      if (sub) sub.textContent = '🏆 TEAM TOURNAMENT COMPLETE · ' + matchCtx.teamNames[0] + ' ' + matchCtx.teamScores[0] + ' – ' + matchCtx.teamScores[1] + ' ' + matchCtx.teamNames[1];
+      if (btns) btns.innerHTML =
+        '<button class="summary-btn gold" onclick="closeSummary(false)">↩ Review Board</button>'
+        + '<button class="summary-btn dim" onclick="openMatchHistory();">📋 Match Record</button>'
+        + '<button class="summary-btn dim" onclick="closeSummary(true)">✕ End Tournament</button>';
+      _ttShowScoreboard();
+    } else {
+      // More matchups remain
+      if (btns) btns.innerHTML =
+        '<button class="summary-btn gold" onclick="ttNextMatchup()">⚔️ Next Match: ' + matchCtx.matchups[nextIdx].a + ' vs ' + matchCtx.matchups[nextIdx].b + '</button>'
+        + '<button class="summary-btn dim" onclick="closeSummary(false)">↩ Review Board</button>';
+    }
+    updateMatchBanner();
+  }
+
+  function ttNextDuelInSeries() {
+    document.getElementById('summaryOverlay').classList.remove('show');
+    var idx = matchCtx.currentMatchup;
+    var mu  = matchCtx.matchups[idx];
+    var baseLp = parseInt(document.getElementById('startingLPInput').value) || 8000;
+    initPlayers(2);
+    players[0].name = mu.a;
+    players[1].name = mu.b;
+    players[0].lp = baseLp; players[0].prevLP = baseLp;
+    players[1].lp = baseLp; players[1].prevLP = baseLp;
+    currentPhase = 1;
+    render();
+    updateMatchBanner();
+    showToast('🎴 Side Deck time — Game ' + (mu.scores.a + mu.scores.b + 1), 'info', 3000);
+  }
+
+  function ttNextMatchup() {
+    document.getElementById('summaryOverlay').classList.remove('show');
+    var nextIdx = matchCtx.currentMatchup + 1;
+    // Find the first unsettled matchup
+    for (var i = 0; i < matchCtx.matchups.length; i++) {
+      if (!matchCtx.matchups[i].winner) { nextIdx = i; break; }
+    }
+    _ttStartMatchup(nextIdx);
+  }
+
+  function _ttShowScoreboard() {
+    var grid = document.getElementById('summaryGrid');
+    if (!grid || !matchCtx) return;
+    var mu = matchCtx.matchups;
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;margin-bottom:6px;">'
+      + '<div style="font-family:\'Cinzel\',serif;font-size:11px;letter-spacing:3px;color:var(--dim);margin-bottom:12px;">MATCH RESULTS</div>'
+      + '<div style="display:flex;justify-content:center;gap:24px;margin-bottom:12px;">'
+      + '<div style="text-align:center;"><div style="font-family:\'Cinzel\',serif;font-size:9px;letter-spacing:2px;color:#8899ff;">' + matchCtx.teamNames[0] + '</div><div style="font-family:\'Cinzel Decorative\',serif;font-size:32px;color:#8899ff;">' + matchCtx.teamScores[0] + '</div></div>'
+      + '<div style="font-family:\'Cinzel Decorative\',serif;font-size:20px;color:var(--dim);align-self:center;">–</div>'
+      + '<div style="text-align:center;"><div style="font-family:\'Cinzel\',serif;font-size:9px;letter-spacing:2px;color:#ff8888;">' + matchCtx.teamNames[1] + '</div><div style="font-family:\'Cinzel Decorative\',serif;font-size:32px;color:#ff8888;">' + matchCtx.teamScores[1] + '</div></div>'
+      + '</div>'
+      + mu.map(function(m, i) {
+          var side = m.winner === m.a ? 'a' : 'b';
+          var clrA = side === 'a' ? '#8899ff' : 'var(--dim)';
+          var clrB = side === 'b' ? '#ff8888' : 'var(--dim)';
+          return '<div style="font-family:\'Cinzel\',serif;font-size:10px;letter-spacing:1px;margin:4px 0;display:flex;align-items:center;justify-content:center;gap:8px;">'
+            + '<span style="color:'+clrA+';font-weight:'+(side==='a'?'700':'400')+'">'+m.a+'</span>'
+            + '<span style="color:var(--dim);font-size:8px;">Match '+(i+1)+'</span>'
+            + '<span style="color:'+clrB+';font-weight:'+(side==='b'?'700':'400')+'">'+m.b+'</span>'
+            + '</div>';
+        }).join('')
+      + '</div>';
+  }
+
   function updateMatchBanner() {
     var banner = document.getElementById('matchBanner');
     var label  = document.getElementById('bannerModeLabel');
@@ -8485,6 +8787,14 @@
           + '<span class="banner-vs">vs</span>'
           + '<span class="banner-player" style="color:#ff8888;">' + bNames + '</span>';
       }
+    } else if (gameMode === 'team-tourney' && matchCtx) {
+      banner.classList.add('visible');
+      var mu = matchCtx.matchups[matchCtx.currentMatchup];
+      label.textContent = '⚔️ Team Tourney · Match ' + (matchCtx.currentMatchup + 1) + '/' + matchCtx.matchups.length;
+      bbtn.style.display = 'none';
+      score.innerHTML = '<span class="banner-player" style="color:#8899ff;">' + matchCtx.teamNames[0] + ' <strong>' + matchCtx.teamScores[0] + '</strong></span>'
+        + '<span class="banner-vs">vs</span>'
+        + '<span class="banner-player" style="color:#ff8888;"><strong>' + matchCtx.teamScores[1] + '</strong> ' + matchCtx.teamNames[1] + '</span>';
     } else if (gameMode === 'koth' && matchCtx) {
       banner.classList.add('visible');
       var streak = matchCtx.streak || 0;
