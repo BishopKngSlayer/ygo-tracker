@@ -2827,7 +2827,21 @@
   .forge-deck-body::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.07); border-radius:2px; }
 
   /* Deck grid */
-  .forge-deck-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(68px,1fr)); gap:5px; }
+  .forge-deck-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(var(--forge-card-size,80px),1fr)); gap:5px; }
+  .forge-size-wrap { display:flex; align-items:center; gap:6px; margin-left:4px; }
+  .forge-size-icon { font-size:14px; opacity:0.6; flex-shrink:0; }
+  .forge-size-slider {
+    -webkit-appearance:none; appearance:none; width:80px; height:3px;
+    background:rgba(255,255,255,0.15); border-radius:2px; outline:none; cursor:pointer;
+  }
+  .forge-size-slider::-webkit-slider-thumb {
+    -webkit-appearance:none; width:13px; height:13px; border-radius:50%;
+    background:var(--gold); cursor:pointer; box-shadow:0 0 5px rgba(201,162,39,0.5);
+  }
+  .forge-size-slider::-moz-range-thumb {
+    width:13px; height:13px; border-radius:50%; border:none;
+    background:var(--gold); cursor:pointer;
+  }
   .forge-dg-card { position:relative; border-radius:5px; overflow:visible; cursor:pointer; transition:transform .14s; }
   .forge-dg-card:hover { transform:translateY(-5px); z-index:2; }
   .forge-dg-card img { width:100%; display:block; border-radius:5px; box-shadow:0 3px 10px rgba(0,0,0,0.5); }
@@ -3016,7 +3030,8 @@
     box-shadow:0 8px 28px rgba(0,0,0,0.7);
   }
   #forgeCatPopup.open { display:block; }
-  .fcp-title { font-family:'Cinzel',serif; font-size:8px; letter-spacing:2px; color:var(--dim); margin-bottom:7px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .fcp-title { font-family:'Cinzel',serif; font-size:8px; letter-spacing:2px; color:var(--dim); margin-bottom:4px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .fcp-hint { font-family:'Cinzel',serif; font-size:7px; letter-spacing:1px; color:rgba(255,255,255,0.2); margin-bottom:7px; }
   .fcp-item { display:flex; align-items:center; gap:7px; padding:5px 7px; border-radius:4px; cursor:pointer; transition:background .12s; }
   .fcp-item:hover { background:rgba(255,255,255,0.06); }
   .fcp-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
@@ -4701,6 +4716,10 @@
           <option value="atk">ATK</option>
           <option value="cat">Category</option>
         </select>
+        <div class="forge-size-wrap" id="forgeSizeWrap" style="display:none;">
+          <span class="forge-size-icon">🂠</span>
+          <input type="range" min="52" max="160" value="80" step="4" class="forge-size-slider" id="forgeSizeSlider" oninput="forgeSetCardSize(this.value)" title="Card size">
+        </div>
       </div>
       <div class="forge-deck-body" id="fgDeckBody"></div>
     </div>
@@ -9775,7 +9794,7 @@
       existing.count++;
     } else {
       var img_id = card.card_images && card.card_images[0] ? card.card_images[0].id : card.id;
-      _deckList[sec].push({ id: card.id, name: card.name, type: card.type || '', count: 1, banlist: card.banlist || '', img_id: img_id, level: card.level||null, rank: card.rank||null, linkval: card.linkval||null, attribute: card.attribute||'' });
+      _deckList[sec].push({ id: card.id, name: card.name, type: card.type || '', race: card.race || '', count: 1, banlist: card.banlist || '', img_id: img_id, level: card.level||null, rank: card.rank||null, linkval: card.linkval||null, attribute: card.attribute||'' });
     }
     _renderDeckPanel();
     _deckFlash('✔ ' + card.name + ' added');
@@ -9830,7 +9849,7 @@
       existing.count++;
     } else {
       var img_id = card.card_images && card.card_images[0] ? card.card_images[0].id : card.id;
-      _deckList.side.push({ id: card.id, name: card.name, type: card.type || '', count: 1, banlist: card.banlist || '', img_id: img_id, level: card.level||null, rank: card.rank||null, linkval: card.linkval||null, attribute: card.attribute||'' });
+      _deckList.side.push({ id: card.id, name: card.name, type: card.type || '', race: card.race || '', count: 1, banlist: card.banlist || '', img_id: img_id, level: card.level||null, rank: card.rank||null, linkval: card.linkval||null, attribute: card.attribute||'' });
     }
     _renderDeckPanel();
     _deckFlash('✔ ' + card.name + ' → SIDE');
@@ -10756,11 +10775,23 @@
     forgeRenderDeck();
   }
 
+  var _forgeCardSize = 80;
+
   function forgeSetView(v) {
     _forgeView = v;
     document.getElementById('fgvList').classList.toggle('active', v==='list');
     document.getElementById('fgvGrid').classList.toggle('active', v==='grid');
+    var sizeWrap = document.getElementById('forgeSizeWrap');
+    if (sizeWrap) sizeWrap.style.display = v === 'grid' ? 'flex' : 'none';
     forgeRenderDeck();
+  }
+
+  function forgeSetCardSize(val) {
+    _forgeCardSize = parseInt(val);
+    var body = document.getElementById('fgDeckBody');
+    if (body) body.style.setProperty('--forge-card-size', _forgeCardSize + 'px');
+    var grid = body && body.querySelector('.forge-deck-grid');
+    if (grid) grid.style.gridTemplateColumns = 'repeat(auto-fill,minmax(' + _forgeCardSize + 'px,1fr))';
   }
 
   function _forgeSortedList(sec) {
@@ -10805,6 +10836,7 @@
       var catDots = cats.map(function(c){ return '<div class="forge-dg-cat-dot" style="background:'+_forgeCatColor(c)+'" title="'+_escHtml(c)+'"></div>'; }).join('');
       var div = document.createElement('div');
       div.className = 'forge-dg-card';
+      div.setAttribute('data-id', entry.id);
       div.title = entry.name;
       div.innerHTML = '<img src="'+thumb+'" alt="" loading="lazy" onerror="this.style.opacity=0.2">'
         + (entry.count > 1 ? '<div class="forge-dg-count">×'+entry.count+'</div>' : '')
@@ -10816,6 +10848,10 @@
       div.onclick = (function(e) { return function() {
         var card = _cardDb && _cardDb.find(function(c){return c.id===e.id;});
         if (card) openCardDetail(card); else openCardDetail(e);
+      }; })(entry);
+      div.oncontextmenu = (function(e) { return function(ev) {
+        ev.preventDefault();
+        forgeCatPopupOpen(e.id, ev);
       }; })(entry);
       grid.appendChild(div);
     });
@@ -11224,6 +11260,7 @@
     var entry = _deckList.main.concat(_deckList.extra).concat(_deckList.side).find(function(e){return e.id===cardId;});
     var cardName = entry ? entry.name : 'Card';
     popup.innerHTML = '<div class="fcp-title">'+_escHtml(cardName)+'</div>'
+      + '<div class="fcp-hint">Click to toggle • Click outside to close</div>'
       + catNames.map(function(name) {
         var cat = _forgeCategories[name];
         var isAssigned = assigned.includes(name);
@@ -11252,7 +11289,40 @@
     }
     _forgeAssignments[cardId] = assigned;
     if (!assigned.length) delete _forgeAssignments[cardId];
-    _forgeSaveStorage(); forgeCatPopupClose(); forgeRenderDeck();
+    _forgeSaveStorage();
+    // Refresh checkmarks in popup without closing
+    var popup = document.getElementById('forgeCatPopup');
+    if (popup && popup.classList.contains('open')) {
+      popup.querySelectorAll('.fcp-item').forEach(function(item) {
+        var nameEl = item.querySelector('.fcp-name');
+        if (!nameEl) return;
+        var n = nameEl.textContent;
+        var check = item.querySelector('.fcp-check');
+        var isNowAssigned = (_forgeAssignments[cardId] || []).includes(n);
+        if (isNowAssigned && !check) {
+          var span = document.createElement('span');
+          span.className = 'fcp-check';
+          span.textContent = '✓';
+          item.appendChild(span);
+        } else if (!isNowAssigned && check) {
+          check.remove();
+        }
+      });
+    }
+    // Refresh the card's cat dots live without full re-render
+    var cardEl = document.querySelector('.forge-dg-card[data-id="' + cardId + '"]');
+    if (cardEl) {
+      var bar = cardEl.querySelector('.forge-dg-cat-bar');
+      var newCats = _forgeAssignments[cardId] || [];
+      var dots = newCats.map(function(c){ return '<div class="forge-dg-cat-dot" style="background:'+_forgeCatColor(c)+'" title="'+_escHtml(c)+'"></div>'; }).join('');
+      if (bar) { bar.innerHTML = dots; if (!dots) bar.remove(); }
+      else if (dots) {
+        var newBar = document.createElement('div');
+        newBar.className = 'forge-dg-cat-bar';
+        newBar.innerHTML = dots;
+        cardEl.insertBefore(newBar, cardEl.querySelector('.forge-dg-actions'));
+      }
+    }
     if (_forgeRightTab === 'categories') forgeRenderRight();
   }
 
