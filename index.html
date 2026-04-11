@@ -13529,6 +13529,7 @@
   // Show on load if not seen before
   window.addEventListener('load', function() {
     try {
+      _cur = 0;
       _render();
       document.getElementById('tutorialOverlay').classList.add('open');
     } catch(e) {}
