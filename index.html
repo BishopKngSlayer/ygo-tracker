@@ -257,7 +257,6 @@
     flex: 1;
     min-height: 0;
     overflow-x: auto;
-    --lp-font-size: clamp(48px, 8vw, 74px);
   }
 
   /* ── Player Card ── */
@@ -271,7 +270,6 @@
     display: flex;
     flex-direction: column;
     overflow-y: auto;
-    container-type: inline-size;
   }
   .player-card.rotate-90  { transform: rotate(90deg)  scale(0.92); }
   .player-card.rotate-180 { transform: rotate(180deg) scale(0.92); }
@@ -4051,7 +4049,7 @@
       <button class="mode-tab active" id="mtab-bestof"     onclick="switchModeTab('bestof')">&#x1F3AE; Best of X</button>
       <button class="mode-tab"        id="mtab-tournament" onclick="switchModeTab('tournament');renderModeModal();renderTournamentSlots()">&#x1F3C6; Tournament</button>
       <button class="mode-tab"        id="mtab-team"       onclick="switchModeTab('team');renderModeModal()">&#x1F91D; Team Battle</button>
-      <button class="mode-tab"        id="mtab-teamtourney" onclick="switchModeTab('teamtourney');renderTeamTourneyModal()">&#x2694;&#xFE0F; Team Tourney</button>
+      <button class="mode-tab"        id="mtab-teamtourney" onclick="switchModeTab('teamtourney');renderTeamTourneyModal()">&#x2694;&#xFE0F; TBR</button>
       <button class="mode-tab"        id="mtab-koth"       onclick="switchModeTab('koth');renderKothModal()">&#x1F451; King of the Hill</button>
       <button class="mode-tab"        id="mtab-rules"      onclick="switchModeTab('rules')">&#x2696;&#xFE0F; Rules</button>
       <button class="mode-tab"        id="mtab-sync"       onclick="switchModeTab('sync');openSyncModalPanel()">&#x1F534; Sync</button>
@@ -4170,7 +4168,7 @@
     </div>
     <!-- Team Tournament -->
     <div class="mode-panel" id="mpanel-teamtourney">
-      <p class="mode-info">Two teams face off in a series of 1v1 duels. A1 vs B1, A2 vs B2, etc. The team with the most wins takes the match.</p>
+      <p class="mode-info">⚔️ <b>Team Battle Royale (TBR)</b> — The winner of each duel stays on the field and faces the next member of the opposing team. Last team standing wins.</p>
       <div class="mode-field" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
         <div style="display:flex;align-items:center;gap:8px;">
           <label style="flex:none;font-family:'Cinzel',serif;font-size:10px;letter-spacing:1px;color:var(--dim);">TEAM SIZE</label>
@@ -4207,7 +4205,7 @@
       </div>
       <div class="mode-actions">
         <button class="btn btn-dim" onclick="closeModeModal()">Cancel</button>
-        <button class="mode-start-btn" onclick="startTeamTourney()">&#x2694;&#xFE0F; Start Tournament</button>
+        <button class="mode-start-btn" onclick="startTeamTourney()">&#x2694;&#xFE0F; Start TBR</button>
       </div>
     </div>
 
@@ -4287,6 +4285,14 @@
           <input type="checkbox" id="rule-lowlp-on" onchange="toggleRule('lowlp')" checked>
           <span class="rule-slider"></span>
         </label>
+      </div>
+
+      <div class="rule-row">
+        <div class="rule-info">
+          <div class="rule-name">🎓 Tutorial</div>
+          <div class="rule-desc">Replay the feature overview shown on first load.</div>
+        </div>
+        <button onclick="replayTutorial()" style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;padding:6px 14px;border-radius:5px;cursor:pointer;background:rgba(201,162,39,0.1);border:1px solid rgba(201,162,39,0.35);color:var(--gold);transition:all .14s;" onmouseover="this.style.background='rgba(201,162,39,0.22)'" onmouseout="this.style.background='rgba(201,162,39,0.1)'">Replay</button>
       </div>
 
     </div>
@@ -4487,6 +4493,10 @@
               <div class="csearch-filter-label">Archetype</div>
               <input class="csearch-filter-input" type="text" id="cf-archetype" placeholder="e.g. Blue-Eyes" style="width:100%;box-sizing:border-box;">
             </div>
+            <div class="csearch-filter-group" style="grid-column:1/-1;">
+              <div class="csearch-filter-label">🔍 Keyword in Effect Text</div>
+              <input class="csearch-filter-input" type="text" id="cf-keyword" placeholder="e.g. negate, destroy, draw, special summon, graveyard" style="width:100%;box-sizing:border-box;">
+            </div>
           </div>
           <div class="csearch-filter-actions">
             <button class="csearch-filter-clear" onclick="clearCardFilters()">&#x2715; Clear Filters</button>
@@ -4659,6 +4669,10 @@
           <div class="forge-fg-full">
             <div class="forge-fg-label">Archetype</div>
             <input class="forge-fg-inp" id="fgf-arch" placeholder="e.g. Blue-Eyes, Tearlaments…" style="width:100%;">
+          </div>
+          <div class="forge-fg-full">
+            <div class="forge-fg-label">🔍 Keyword in Effect Text</div>
+            <input class="forge-fg-inp" id="fgf-keyword" placeholder="e.g. negate, destroy, draw" style="width:100%;">
           </div>
         </div>
         <div class="forge-filter-clear-row">
@@ -5311,11 +5325,11 @@
     document.querySelectorAll('.lp-value').forEach(function(el) {
       var card = el.closest('.player-card');
       if (!card) return;
-      var avail = card.clientWidth - 28; // 14px padding each side
-      if (avail <= 0) return;
-      // Binary search: largest font size where scrollWidth fits avail
+      var rect  = card.getBoundingClientRect();
+      var avail = rect.width - 28; // 14px padding each side
+      if (avail < 40) return; // card not laid out yet
       var lo = 12, hi = 600;
-      for (var i = 0; i < 12; i++) {
+      for (var i = 0; i < 14; i++) {
         var mid = Math.floor((lo + hi) / 2);
         el.style.fontSize = mid + 'px';
         if (el.scrollWidth <= avail) lo = mid; else hi = mid - 1;
@@ -5390,6 +5404,15 @@
     lastTurnRemaining = moveIdx(lastTurnRemaining);
     chainCount       = moveIdx(chainCount);
     chainDebt        = moveIdx(chainDebt);
+    lpOverTime       = moveIdx(lpOverTime);
+    // dmgTypeState is keyed by index — rebuild
+    var newDmgType = {};
+    var dmgKeys = Object.keys(dmgTypeState).map(Number);
+    var dmgVals = [];
+    for (var _di = 0; _di < players.length; _di++) dmgVals.push(dmgTypeState[_di] || null);
+    var movedDmg = moveIdx(dmgVals);
+    movedDmg.forEach(function(v, idx){ if (v) newDmgType[idx] = v; });
+    dmgTypeState = newDmgType;
     lpHistory        = moveObj(lpHistory);
 
     // Adjust activeTurn to follow the moved player
@@ -8518,7 +8541,9 @@
   }
 
   // ── Match Banner ─────────────────────────────
-  /* ━━ TEAM TOURNAMENT ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  /* ━━ TEAM BATTLE ROYALE (TBR) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  // Gauntlet format: winner stays on, loser's team sends next player.
+  // Tournament ends when one team runs out of players.
 
   function renderTeamTourneyModal() {
     var size  = parseInt(document.getElementById('tt-size').value) || 2;
@@ -8538,7 +8563,6 @@
           + '<select class="mode-slot-select" data-tt-team="'+team+'" data-tt-idx="'+i+'">' + optHtml + '</select>'
           + '</div>';
       }
-      // Restore prev selections
       Array.from(container.querySelectorAll('select')).forEach(function(sel, idx){
         if (prev[idx]) sel.value = prev[idx];
       });
@@ -8561,42 +8585,57 @@
       teamA.push(na);
       teamB.push(nb);
     }
-
     var allNames = teamA.concat(teamB);
-    var unique = new Set(allNames.map(function(n){ return n.toLowerCase(); }));
-    if (unique.size < allNames.length) { alert('Each player must be unique'); return; }
-
-    // Build matchups: A1 vs B1, A2 vs B2, …
-    var matchups = [];
-    for (var j = 0; j < size; j++) {
-      matchups.push({ a: teamA[j], b: teamB[j], winner: null, scores: { a: 0, b: 0 } });
+    if (new Set(allNames.map(function(n){return n.toLowerCase();})).size < allNames.length) {
+      alert('Each player must be unique'); return;
     }
 
     gameMode = 'team-tourney';
     matchCtx = {
-      teamNames: [nameA, nameB],
-      teamPlayers: [teamA.slice(), teamB.slice()],
-      matchups: matchups,
-      currentMatchup: 0,
-      teamScores: [0, 0],
-      bestOf: bestOf,
-      winsNeeded: Math.ceil(bestOf / 2)
+      teamNames:   [nameA, nameB],
+      teamPlayers: [teamA.slice(), teamB.slice()], // full rosters
+      teamIdx:     [0, 0],       // next-to-fight pointer per team
+      teamScores:  [0, 0],       // wins per team
+      championTeam: -1,          // which team the current champion belongs to (-1 = first match)
+      championName: null,        // name of the reigning champion
+      matchNum:    1,
+      matchHistory: [],          // [{a, b, winner, winTeam}]
+      bestOf:      bestOf,
+      winsNeeded:  Math.ceil(bestOf / 2),
+      currentSeries: { scores: [0, 0] } // wins within current bestOf series
     };
 
     closeModeModal();
-    _ttStartMatchup(0);
+    _tbrStartMatch();
   }
 
-  function _ttStartMatchup(idx) {
-    if (!matchCtx || !matchCtx.matchups || idx >= matchCtx.matchups.length) return;
-    matchCtx.currentMatchup = idx;
-    var mu = matchCtx.matchups[idx];
-    mu.scores = { a: 0, b: 0 }; // reset per-matchup scores
+  function _tbrCurrentPlayers() {
+    // Returns {playerA, playerB, teamA, teamB} for the current match
+    // Champion plays from their team's current slot; challenger from the other team's current slot
+    var ctx = matchCtx;
+    if (ctx.championTeam === -1) {
+      // Very first match: A's first vs B's first
+      return { nameA: ctx.teamPlayers[0][ctx.teamIdx[0]], nameB: ctx.teamPlayers[1][ctx.teamIdx[1]], teamA: 0, teamB: 1 };
+    }
+    var champTeam = ctx.championTeam;
+    var challTeam = 1 - champTeam;
+    return {
+      nameA: ctx.championName,
+      nameB: ctx.teamPlayers[challTeam][ctx.teamIdx[challTeam]],
+      teamA: champTeam,
+      teamB: challTeam
+    };
+  }
+
+  function _tbrStartMatch() {
+    var ctx = matchCtx;
+    var match = _tbrCurrentPlayers();
+    ctx.currentSeries = { scores: [0, 0], nameA: match.nameA, nameB: match.nameB, teamA: match.teamA, teamB: match.teamB };
 
     var baseLp = parseInt(document.getElementById('startingLPInput').value) || 8000;
     initPlayers(2);
-    players[0].name = mu.a;
-    players[1].name = mu.b;
+    players[0].name = match.nameA;
+    players[1].name = match.nameB;
     MAX_LP = baseLp;
     players[0].lp = baseLp; players[0].prevLP = baseLp;
     players[1].lp = baseLp; players[1].prevLP = baseLp;
@@ -8604,23 +8643,24 @@
     render();
     updateMatchBanner();
 
-    var mu_idx = idx + 1;
-    var total  = matchCtx.matchups.length;
-    showToast('⚔️ Match ' + mu_idx + '/' + total + ' — ' + mu.a + ' vs ' + mu.b, 'info', 3500);
+    var challTeam = ctx.championTeam === -1 ? 1 : 1 - ctx.championTeam;
+    var challIdx  = ctx.teamIdx[challTeam] + 1;
+    var challSize = ctx.teamPlayers[challTeam].length;
+    showToast('⚔️ TBR Match ' + ctx.matchNum + ' — ' + match.nameA + ' vs ' + match.nameB, 'info', 3500);
   }
 
   function handleTeamTourneyDuelEnd(winner) {
-    if (!matchCtx || !matchCtx.matchups) return;
-    var idx = matchCtx.currentMatchup;
-    var mu  = matchCtx.matchups[idx];
-    var winnerName = winner ? winner.name : null;
-    var winSide = (winnerName === mu.a) ? 'a' : 'b';
-    var losSide = winSide === 'a' ? 'b' : 'a';
-    mu.scores[winSide]++;
+    if (!matchCtx) return;
+    var ctx    = matchCtx;
+    var series = ctx.currentSeries;
+    var winnerName  = winner ? winner.name : null;
+    var winnerIsA   = (winnerName === series.nameA);
+    var winnerTeam  = winnerIsA ? series.teamA : series.teamB;
+    var loserTeam   = 1 - winnerTeam;
+    var loserName   = winnerIsA ? series.nameB : series.nameA;
 
     // Update roster
     if (winner) {
-      var loserName = winSide === 'a' ? mu.b : mu.a;
       var wk = winner.name.trim().toLowerCase();
       var lk = loserName.trim().toLowerCase();
       if (!roster[wk]) roster[wk] = {name:winner.name, w:0, l:0, f:0, duels:0};
@@ -8630,108 +8670,99 @@
       rosterSave();
     }
 
-    var winsNeeded = matchCtx.winsNeeded;
+    // Tally series score
+    if (winnerIsA) series.scores[0]++; else series.scores[1]++;
+    var seriesWinsNeeded = ctx.winsNeeded;
+    var seriesWon = (series.scores[0] >= seriesWinsNeeded || series.scores[1] >= seriesWinsNeeded);
 
-    // Check if this matchup's bestOf series is decided
-    if (mu.scores[winSide] >= winsNeeded) {
-      // Matchup winner decided
-      mu.winner = winnerName;
-      var winTeam = (winSide === 'a') ? 0 : 1;
-      matchCtx.teamScores[winTeam]++;
-    }
-
-    // Show summary with next-match/rematch buttons
     showSummary(winner);
     var sub  = document.getElementById('summarySubtitle');
     var btns = document.getElementById('summaryButtons');
+    var scoreLine = ctx.teamNames[0] + ' ' + ctx.teamScores[0] + ' – ' + ctx.teamScores[1] + ' ' + ctx.teamNames[1];
 
-    var scoreLine = matchCtx.teamNames[0] + ' ' + matchCtx.teamScores[0] + ' – ' + matchCtx.teamScores[1] + ' ' + matchCtx.teamNames[1];
-    var seriesLine = matchCtx.bestOf > 1 ? ' · Series ' + mu.scores.a + '–' + mu.scores.b : '';
-
-    // Matchup still ongoing (best of 3/5, series not decided)
-    if (!mu.winner) {
-      if (sub) sub.textContent = 'TEAM TOURNEY · Match ' + (idx+1) + '/' + matchCtx.matchups.length + seriesLine + ' · ' + scoreLine;
+    // Best-of series not yet decided
+    if (!seriesWon) {
+      if (sub) sub.textContent = 'TBR · Match ' + ctx.matchNum + ' · Series ' + series.scores[0] + '–' + series.scores[1] + ' · ' + scoreLine;
       if (btns) btns.innerHTML =
-        '<button class="summary-btn gold" onclick="ttNextDuelInSeries()">▶ Duel Again</button>'
+        '<button class="summary-btn gold" onclick="tbrNextDuelInSeries()">▶ Duel Again</button>'
         + '<button class="summary-btn dim" onclick="closeSummary(false)">↩ Review Board</button>';
       updateMatchBanner();
       return;
     }
 
-    // Matchup decided — check if all matchups are done
-    var allDone = matchCtx.matchups.every(function(m){ return m.winner !== null; });
-    var nextIdx = null;
-    for (var i = idx + 1; i < matchCtx.matchups.length; i++) {
-      if (!matchCtx.matchups[i].winner) { nextIdx = i; break; }
-    }
+    // Series decided — record the match result
+    ctx.teamScores[winnerTeam]++;
+    ctx.teamIdx[loserTeam]++;    // loser's team sends next player
+    ctx.championTeam  = winnerTeam;
+    ctx.championName  = winnerName;
+    ctx.matchNum++;
+    ctx.matchHistory.push({ a: series.nameA, b: series.nameB, winner: winnerName, winTeam: winnerTeam });
 
-    if (sub) sub.textContent = 'TEAM TOURNEY · Match ' + (idx+1) + '/' + matchCtx.matchups.length + ' · ' + scoreLine;
+    // Check if loser's team is out of players
+    var loserTeamEliminated = ctx.teamIdx[loserTeam] >= ctx.teamPlayers[loserTeam].length;
+    // Check if winner's team also has no one left (shouldn't normally happen, but safety check)
+    var winnerTeamEliminated = ctx.teamIdx[winnerTeam] >= ctx.teamPlayers[winnerTeam].length;
 
-    if (allDone) {
+    if (sub) sub.textContent = 'TBR · Match ' + (ctx.matchNum - 1) + ' · ' + scoreLine;
+
+    if (loserTeamEliminated || winnerTeamEliminated) {
       // Tournament over
-      var teamWinner = matchCtx.teamScores[0] > matchCtx.teamScores[1] ? 0 : matchCtx.teamScores[1] > matchCtx.teamScores[0] ? 1 : -1;
-      var teamWinnerName = teamWinner >= 0 ? matchCtx.teamNames[teamWinner] : 'TIE';
-      document.getElementById('summaryTitle').textContent = (teamWinner >= 0 ? teamWinnerName + ' Wins!' : 'It\'s a Tie!');
-      if (sub) sub.textContent = '🏆 TEAM TOURNAMENT COMPLETE · ' + matchCtx.teamNames[0] + ' ' + matchCtx.teamScores[0] + ' – ' + matchCtx.teamScores[1] + ' ' + matchCtx.teamNames[1];
+      var tWinner = loserTeamEliminated ? winnerTeam : loserTeam;
+      document.getElementById('summaryTitle').textContent = ctx.teamNames[tWinner] + ' Wins the TBR!';
+      if (sub) sub.textContent = '🏆 TEAM BATTLE ROYALE COMPLETE · ' + ctx.teamNames[0] + ' ' + ctx.teamScores[0] + ' – ' + ctx.teamScores[1] + ' ' + ctx.teamNames[1];
       if (btns) btns.innerHTML =
         '<button class="summary-btn gold" onclick="closeSummary(false)">↩ Review Board</button>'
         + '<button class="summary-btn dim" onclick="openMatchHistory();">📋 Match Record</button>'
-        + '<button class="summary-btn dim" onclick="closeSummary(true)">✕ End Tournament</button>';
-      _ttShowScoreboard();
+        + '<button class="summary-btn dim" onclick="closeSummary(true)">✕ End TBR</button>';
+      _tbrShowScoreboard();
     } else {
-      // More matchups remain
+      // Next challenger steps up
+      var nextChallenger = ctx.teamPlayers[loserTeam][ctx.teamIdx[loserTeam]];
       if (btns) btns.innerHTML =
-        '<button class="summary-btn gold" onclick="ttNextMatchup()">⚔️ Next Match: ' + matchCtx.matchups[nextIdx].a + ' vs ' + matchCtx.matchups[nextIdx].b + '</button>'
+        '<button class="summary-btn gold" onclick="tbrNextMatch()">⚔️ ' + winnerName + ' vs ' + nextChallenger + '</button>'
         + '<button class="summary-btn dim" onclick="closeSummary(false)">↩ Review Board</button>';
     }
     updateMatchBanner();
   }
 
-  function ttNextDuelInSeries() {
+  function tbrNextDuelInSeries() {
     document.getElementById('summaryOverlay').classList.remove('show');
-    var idx = matchCtx.currentMatchup;
-    var mu  = matchCtx.matchups[idx];
+    var series = matchCtx.currentSeries;
     var baseLp = parseInt(document.getElementById('startingLPInput').value) || 8000;
     initPlayers(2);
-    players[0].name = mu.a;
-    players[1].name = mu.b;
+    players[0].name = series.nameA;
+    players[1].name = series.nameB;
     players[0].lp = baseLp; players[0].prevLP = baseLp;
     players[1].lp = baseLp; players[1].prevLP = baseLp;
     currentPhase = 1;
     render();
     updateMatchBanner();
-    showToast('🎴 Side Deck time — Game ' + (mu.scores.a + mu.scores.b + 1), 'info', 3000);
+    showToast('🎴 Side Deck — Game ' + (series.scores[0] + series.scores[1] + 1), 'info', 3000);
   }
 
-  function ttNextMatchup() {
+  function tbrNextMatch() {
     document.getElementById('summaryOverlay').classList.remove('show');
-    var nextIdx = matchCtx.currentMatchup + 1;
-    // Find the first unsettled matchup
-    for (var i = 0; i < matchCtx.matchups.length; i++) {
-      if (!matchCtx.matchups[i].winner) { nextIdx = i; break; }
-    }
-    _ttStartMatchup(nextIdx);
+    _tbrStartMatch();
   }
 
-  function _ttShowScoreboard() {
+  function _tbrShowScoreboard() {
     var grid = document.getElementById('summaryGrid');
-    if (!grid || !matchCtx) return;
-    var mu = matchCtx.matchups;
-    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;margin-bottom:6px;">'
-      + '<div style="font-family:\'Cinzel\',serif;font-size:11px;letter-spacing:3px;color:var(--dim);margin-bottom:12px;">MATCH RESULTS</div>'
-      + '<div style="display:flex;justify-content:center;gap:24px;margin-bottom:12px;">'
-      + '<div style="text-align:center;"><div style="font-family:\'Cinzel\',serif;font-size:9px;letter-spacing:2px;color:#8899ff;">' + matchCtx.teamNames[0] + '</div><div style="font-family:\'Cinzel Decorative\',serif;font-size:32px;color:#8899ff;">' + matchCtx.teamScores[0] + '</div></div>'
+    var ctx  = matchCtx;
+    if (!grid || !ctx) return;
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;">'
+      + '<div style="font-family:\'Cinzel\',serif;font-size:11px;letter-spacing:3px;color:var(--dim);margin-bottom:12px;">BATTLE ROYALE RESULTS</div>'
+      + '<div style="display:flex;justify-content:center;gap:24px;margin-bottom:14px;">'
+      + '<div style="text-align:center;"><div style="font-family:\'Cinzel\',serif;font-size:9px;letter-spacing:2px;color:#8899ff;">' + ctx.teamNames[0] + '</div><div style="font-family:\'Cinzel Decorative\',serif;font-size:32px;color:#8899ff;">' + ctx.teamScores[0] + '</div></div>'
       + '<div style="font-family:\'Cinzel Decorative\',serif;font-size:20px;color:var(--dim);align-self:center;">–</div>'
-      + '<div style="text-align:center;"><div style="font-family:\'Cinzel\',serif;font-size:9px;letter-spacing:2px;color:#ff8888;">' + matchCtx.teamNames[1] + '</div><div style="font-family:\'Cinzel Decorative\',serif;font-size:32px;color:#ff8888;">' + matchCtx.teamScores[1] + '</div></div>'
+      + '<div style="text-align:center;"><div style="font-family:\'Cinzel\',serif;font-size:9px;letter-spacing:2px;color:#ff8888;">' + ctx.teamNames[1] + '</div><div style="font-family:\'Cinzel Decorative\',serif;font-size:32px;color:#ff8888;">' + ctx.teamScores[1] + '</div></div>'
       + '</div>'
-      + mu.map(function(m, i) {
-          var side = m.winner === m.a ? 'a' : 'b';
-          var clrA = side === 'a' ? '#8899ff' : 'var(--dim)';
-          var clrB = side === 'b' ? '#ff8888' : 'var(--dim)';
+      + ctx.matchHistory.map(function(m, i) {
+          var clrA = m.winner === m.a ? '#8899ff' : 'var(--dim)';
+          var clrB = m.winner === m.b ? '#ff8888' : 'var(--dim)';
           return '<div style="font-family:\'Cinzel\',serif;font-size:10px;letter-spacing:1px;margin:4px 0;display:flex;align-items:center;justify-content:center;gap:8px;">'
-            + '<span style="color:'+clrA+';font-weight:'+(side==='a'?'700':'400')+'">'+m.a+'</span>'
-            + '<span style="color:var(--dim);font-size:8px;">Match '+(i+1)+'</span>'
-            + '<span style="color:'+clrB+';font-weight:'+(side==='b'?'700':'400')+'">'+m.b+'</span>'
+            + '<span style="color:'+clrA+';font-weight:'+(m.winner===m.a?'700':'400')+'">'+m.a+'</span>'
+            + '<span style="color:var(--dim);font-size:8px;">⚔ '+(i+1)+'</span>'
+            + '<span style="color:'+clrB+';font-weight:'+(m.winner===m.b?'700':'400')+'">'+m.b+'</span>'
             + '</div>';
         }).join('')
       + '</div>';
@@ -8789,9 +8820,12 @@
       }
     } else if (gameMode === 'team-tourney' && matchCtx) {
       banner.classList.add('visible');
-      var mu = matchCtx.matchups[matchCtx.currentMatchup];
-      label.textContent = '⚔️ Team Tourney · Match ' + (matchCtx.currentMatchup + 1) + '/' + matchCtx.matchups.length;
+      label.textContent = '⚔️ TBR · Match ' + matchCtx.matchNum;
       bbtn.style.display = 'none';
+      var champ = matchCtx.championName || (matchCtx.teamPlayers[0] && matchCtx.teamPlayers[0][0]) || '?';
+      var challTeam = matchCtx.championTeam === -1 ? 1 : 1 - matchCtx.championTeam;
+      var challIdx  = matchCtx.teamIdx[challTeam] || 0;
+      var chall = (matchCtx.teamPlayers[challTeam] && matchCtx.teamPlayers[challTeam][challIdx]) || '?';
       score.innerHTML = '<span class="banner-player" style="color:#8899ff;">' + matchCtx.teamNames[0] + ' <strong>' + matchCtx.teamScores[0] + '</strong></span>'
         + '<span class="banner-vs">vs</span>'
         + '<span class="banner-player" style="color:#ff8888;"><strong>' + matchCtx.teamScores[1] + '</strong> ' + matchCtx.teamNames[1] + '</span>';
@@ -9405,6 +9439,13 @@
         if (f.levelMax != null && lv > f.levelMax) continue;
       }
       if (f.archetype && !(c.archetype||'').toLowerCase().includes(f.archetype) && !(c.name||'').toLowerCase().includes(f.archetype)) continue;
+      // Keyword: ALL space-separated terms must appear in the card's effect text
+      if (f.keyword) {
+        var desc = (c.desc || '').toLowerCase();
+        var terms = f.keyword.split(/\s+/).filter(Boolean);
+        var allMatch = terms.every(function(t){ return desc.includes(t); });
+        if (!allMatch) continue;
+      }
       results.push(c);
     }
     if (q) {
@@ -9436,13 +9477,14 @@
       defMax:    n('cf-def-max'),
       levelMin:  n('cf-level-min'),
       levelMax:  n('cf-level-max'),
-      archetype: s('cf-archetype').toLowerCase()
+      archetype: s('cf-archetype').toLowerCase(),
+      keyword:   s('cf-keyword').toLowerCase()
     };
   }
 
   function _hasActiveFilters() {
     var f = _getCardFilters();
-    return f.type || f.attribute || f.race || f.banlist || f.atkMin != null || f.atkMax != null || f.defMin != null || f.defMax != null || f.levelMin != null || f.levelMax != null || f.archetype;
+    return f.type || f.attribute || f.race || f.banlist || f.atkMin != null || f.atkMax != null || f.defMin != null || f.defMax != null || f.levelMin != null || f.levelMax != null || f.archetype || f.keyword;
   }
 
   function toggleCardFilters() {
@@ -9461,6 +9503,7 @@
       var el = document.getElementById(id); if (el) el.value = '';
     });
     var arch = document.getElementById('cf-archetype'); if (arch) arch.value = '';
+    var kw   = document.getElementById('cf-keyword');   if (kw)   kw.value   = '';
   }
 
   // ── Ban badge helper ─────────────────────────────────────────
@@ -9768,9 +9811,12 @@
   }
 
   function clearDeck() {
-    _deckList = { main: [], extra: [], side: [] };
-    _renderDeckPanel();
-    _updateDeckBadges();
+    if (_deckTotalCount('main') + _deckTotalCount('extra') + _deckTotalCount('side') === 0) return;
+    openConfirm('Clear the current deck?', function() {
+      _deckList = { main: [], extra: [], side: [] };
+      _renderDeckPanel();
+      _updateDeckBadges();
+    });
   }
 
   function addToDeckSide(card) {
@@ -9956,6 +10002,20 @@
     try { localStorage.setItem('ygo_deck', JSON.stringify(_deckList)); } catch(e) {}
   }
 
+  function _savePhaseEffectsToStorage() {
+    try { localStorage.setItem('ygo_phase_effects', JSON.stringify(phaseEffects)); } catch(e) {}
+  }
+
+  function _loadPhaseEffectsFromStorage() {
+    try {
+      var saved = localStorage.getItem('ygo_phase_effects');
+      if (saved) {
+        var parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) phaseEffects = parsed;
+      }
+    } catch(e) {}
+  }
+
   function _loadDeckFromStorage() {
     try {
       var saved = localStorage.getItem('ygo_deck');
@@ -9968,6 +10028,7 @@
 
   // Load deck on startup
   _loadDeckFromStorage();
+  _loadPhaseEffectsFromStorage();
 
   function exportDeckText() {
     var lines = [];
@@ -10590,7 +10651,7 @@
     if (!_cardDbReady || !_cardDb) { document.getElementById('forgeSearchStatus').textContent = 'DB loading…'; return; }
     var q = (document.getElementById('forgeSearchInput').value || '').trim().toLowerCase();
     var f = _forgeGetFilters();
-    var hasF = q || f.type||f.attr||f.race||f.ban||f.arch||f.lvmin!=null||f.lvmax!=null||f.atkmin!=null||f.atkmax!=null;
+    var hasF = q || f.type||f.attr||f.race||f.ban||f.arch||f.keyword||f.lvmin!=null||f.lvmax!=null||f.atkmin!=null||f.atkmax!=null;
     if (!hasF) { document.getElementById('forgeSearchStatus').textContent = ''; document.getElementById('forgeSearchGrid').innerHTML = ''; return; }
     var results = [];
     for (var i = 0; i < _cardDb.length; i++) {
@@ -10601,6 +10662,11 @@
       if (f.race && c.race !== f.race) continue;
       if (f.ban) { if (f.ban==='Unlimited'){if(c.banlist)continue;} else {if(c.banlist!==f.ban)continue;} }
       if (f.arch) { var la=f.arch.toLowerCase(); if(!c.archetype.toLowerCase().includes(la)&&!c.name.toLowerCase().includes(la)) continue; }
+      if (f.keyword) {
+        var fdesc = (c.desc || '').toLowerCase();
+        var fterms = f.keyword.split(/\s+/).filter(Boolean);
+        if (!fterms.every(function(t){ return fdesc.includes(t); })) continue;
+      }
       var lv = c.level!=null?c.level:(c.rank!=null?c.rank:(c.linkval!=null?c.linkval:null));
       if (f.lvmin!=null && (lv==null||lv<f.lvmin)) continue;
       if (f.lvmax!=null && (lv==null||lv>f.lvmax)) continue;
@@ -10623,6 +10689,7 @@
     var n=function(id){var v=parseInt((document.getElementById(id)||{}).value);return isNaN(v)?null:v;};
     var s=function(id){return ((document.getElementById(id)||{}).value||'').trim();};
     return {type:s('fgf-type'),attr:s('fgf-attr'),race:s('fgf-race'),ban:s('fgf-ban'),arch:s('fgf-arch'),
+      keyword:s('fgf-keyword').toLowerCase(),
       lvmin:n('fgf-lvmin'),lvmax:n('fgf-lvmax'),atkmin:n('fgf-atkmin'),atkmax:n('fgf-atkmax')};
   }
 
@@ -10630,6 +10697,7 @@
     ['fgf-type','fgf-attr','fgf-race','fgf-ban'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
     ['fgf-lvmin','fgf-lvmax','fgf-atkmin','fgf-atkmax'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
     var a=document.getElementById('fgf-arch');if(a)a.value='';
+    var k=document.getElementById('fgf-keyword');if(k)k.value='';
   }
 
   function forgeToggleFilters() {
@@ -12215,6 +12283,7 @@
     });
 
     closePhaseEffect();
+    _savePhaseEffectsToStorage();
     render();
     var targetLabel = playerVal === '__others__'
       ? 'all other players'
@@ -12225,6 +12294,7 @@
   function removePhaseEffect(playerIdx, effectIdx) {
     if (!phaseEffects[playerIdx]) return;
     phaseEffects[playerIdx].splice(effectIdx, 1);
+    _savePhaseEffectsToStorage();
     render();
   }
 
@@ -12237,12 +12307,12 @@
         if (ef.turnsLeft <= 0) expired.push(ei);
       }
     });
-    // Remove expired (reverse order to preserve indices)
     for (var i = expired.length - 1; i >= 0; i--) {
       var ef = phaseEffects[playerIdx][expired[i]];
       showToast('⧗ ' + ef.name + ' expired on ' + players[playerIdx].name, 'info', 3000);
       phaseEffects[playerIdx].splice(expired[i], 1);
     }
+    if (expired.length) _savePhaseEffectsToStorage();
   }
 
   // LP Transfer
@@ -13447,13 +13517,20 @@
     try { localStorage.setItem('ygo_tutorial_done', '1'); } catch(e) {}
   };
 
+  window.replayTutorial = function() {
+    _cur = 0;
+    _render();
+    document.getElementById('tutorialOverlay').classList.add('open');
+    // Close mode modal if open
+    var mModal = document.getElementById('modeModal');
+    if (mModal && mModal.classList.contains('open')) closeModeModal();
+  };
+
   // Show on load if not seen before
   window.addEventListener('load', function() {
     try {
-      if (!localStorage.getItem('ygo_tutorial_done')) {
-        _render();
-        document.getElementById('tutorialOverlay').classList.add('open');
-      }
+      _render();
+      document.getElementById('tutorialOverlay').classList.add('open');
     } catch(e) {}
   });
 
