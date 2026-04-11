@@ -3141,6 +3141,15 @@
   .csearch-filter-range .csearch-filter-input { flex:1; min-width:0; }
   .csearch-filter-range span { color:var(--dim); font-size:11px; flex-shrink:0; }
   .csearch-filter-actions { display:flex; gap:10px; margin-top:14px; }
+  .cf-marker-label {
+    display:inline-flex; align-items:center; gap:4px; cursor:pointer;
+    font-family:'Cinzel Decorative',serif; font-size:14px; color:var(--dim);
+    background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1);
+    border-radius:4px; padding:3px 7px; transition:all .12s; user-select:none;
+  }
+  .cf-marker-label:hover { border-color:rgba(201,162,39,0.4); color:var(--gold); }
+  .cf-marker-label input[type="checkbox"] { display:none; }
+  .cf-marker-label:has(input:checked) { border-color:rgba(201,162,39,0.7); background:rgba(201,162,39,0.12); color:var(--gold); }
   .csearch-filter-clear {
     background:none; border:1px solid rgba(255,255,255,0.1); border-radius:5px;
     color:var(--dim); font-family:'Cinzel',serif; font-size:11px; letter-spacing:1px;
@@ -4412,10 +4421,16 @@
           <div class="csearch-filter-grid">
             <div class="csearch-filter-group">
               <div class="csearch-filter-label">Card Type</div>
-              <select class="csearch-filter-select" id="cf-type">
+              <select class="csearch-filter-select" id="cf-type" onchange="_cfTypeChanged()">
                 <option value="">All Types</option>
                 <option value="Effect Monster">Effect Monster</option>
                 <option value="Normal Monster">Normal Monster</option>
+                <option value="Flip Effect Monster">Flip Monster</option>
+                <option value="Toon Monster">Toon Monster</option>
+                <option value="Spirit Monster">Spirit Monster</option>
+                <option value="Union Effect Monster">Union Monster</option>
+                <option value="Gemini Monster">Gemini Monster</option>
+                <option value="Tuner Monster">Tuner Monster</option>
                 <option value="Fusion Monster">Fusion Monster</option>
                 <option value="Synchro Monster">Synchro Monster</option>
                 <option value="XYZ Monster">XYZ Monster</option>
@@ -4470,6 +4485,27 @@
                 <option value="Zombie">Zombie</option>
               </select>
             </div>
+            <div class="csearch-filter-group" id="cf-spelltype-group" style="display:none;">
+              <div class="csearch-filter-label">Spell Type</div>
+              <select class="csearch-filter-select" id="cf-spelltype">
+                <option value="">All</option>
+                <option value="Normal">Normal</option>
+                <option value="Quick-Play">Quick-Play</option>
+                <option value="Continuous">Continuous</option>
+                <option value="Equip">Equip</option>
+                <option value="Field">Field</option>
+                <option value="Ritual">Ritual</option>
+              </select>
+            </div>
+            <div class="csearch-filter-group" id="cf-traptype-group" style="display:none;">
+              <div class="csearch-filter-label">Trap Type</div>
+              <select class="csearch-filter-select" id="cf-traptype">
+                <option value="">All</option>
+                <option value="Normal">Normal</option>
+                <option value="Continuous">Continuous</option>
+                <option value="Counter">Counter</option>
+              </select>
+            </div>
             <div class="csearch-filter-group">
               <div class="csearch-filter-label">Ban Status (TCG)</div>
               <select class="csearch-filter-select" id="cf-banlist">
@@ -4502,6 +4538,35 @@
                 <input class="csearch-filter-input" type="number" id="cf-level-min" placeholder="Min" min="1" max="12">
                 <span>–</span>
                 <input class="csearch-filter-input" type="number" id="cf-level-max" placeholder="Max" min="1" max="12">
+              </div>
+            </div>
+            <div class="csearch-filter-group" id="cf-scale-group" style="display:none;">
+              <div class="csearch-filter-label">Pendulum Scale</div>
+              <div class="csearch-filter-range">
+                <input class="csearch-filter-input" type="number" id="cf-scale-min" placeholder="Min" min="0" max="13">
+                <span>–</span>
+                <input class="csearch-filter-input" type="number" id="cf-scale-max" placeholder="Max" min="0" max="13">
+              </div>
+            </div>
+            <div class="csearch-filter-group" id="cf-linkval-group" style="display:none;">
+              <div class="csearch-filter-label">Link Rating</div>
+              <div class="csearch-filter-range">
+                <input class="csearch-filter-input" type="number" id="cf-link-min" placeholder="Min" min="1" max="6">
+                <span>–</span>
+                <input class="csearch-filter-input" type="number" id="cf-link-max" placeholder="Max" min="1" max="6">
+              </div>
+            </div>
+            <div class="csearch-filter-group" id="cf-linkmarkers-group" style="grid-column:1/-1;display:none;">
+              <div class="csearch-filter-label">Link Markers (card must have ALL selected)</div>
+              <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:4px;">
+                <label class="cf-marker-label"><input type="checkbox" class="cf-marker" value="Top-Left">↖</label>
+                <label class="cf-marker-label"><input type="checkbox" class="cf-marker" value="Top">↑</label>
+                <label class="cf-marker-label"><input type="checkbox" class="cf-marker" value="Top-Right">↗</label>
+                <label class="cf-marker-label"><input type="checkbox" class="cf-marker" value="Left">←</label>
+                <label class="cf-marker-label"><input type="checkbox" class="cf-marker" value="Right">→</label>
+                <label class="cf-marker-label"><input type="checkbox" class="cf-marker" value="Bottom-Left">↙</label>
+                <label class="cf-marker-label"><input type="checkbox" class="cf-marker" value="Bottom">↓</label>
+                <label class="cf-marker-label"><input type="checkbox" class="cf-marker" value="Bottom-Right">↘</label>
               </div>
             </div>
             <div class="csearch-filter-group">
@@ -4625,9 +4690,12 @@
         <div class="forge-filter-grid">
           <div>
             <div class="forge-fg-label">Card Type</div>
-            <select class="forge-fg-sel" id="fgf-type">
+            <select class="forge-fg-sel" id="fgf-type" onchange="_fgfTypeChanged()">
               <option value="">All</option>
               <option>Effect Monster</option><option>Normal Monster</option>
+              <option>Flip Effect Monster</option><option>Toon Monster</option>
+              <option>Spirit Monster</option><option>Union Effect Monster</option>
+              <option>Gemini Monster</option><option>Tuner Monster</option>
               <option>Fusion Monster</option><option>Synchro Monster</option>
               <option>XYZ Monster</option><option>Link Monster</option>
               <option>Ritual Monster</option><option>Pendulum Effect Monster</option>
@@ -4653,6 +4721,23 @@
               <option>Psychic</option><option>Thunder</option><option>Pyro</option>
               <option>Rock</option><option>Plant</option><option>Insect</option>
               <option>Winged Beast</option><option>Sea Serpent</option>
+              <option>Wyrm</option><option>Illusion</option><option>Reptile</option>
+              <option>Fish</option><option>Divine-Beast</option>
+            </select>
+          </div>
+          <div id="fgf-spelltype-grp" style="display:none;">
+            <div class="forge-fg-label">Spell Type</div>
+            <select class="forge-fg-sel" id="fgf-spelltype">
+              <option value="">All</option>
+              <option>Normal</option><option>Quick-Play</option><option>Continuous</option>
+              <option>Equip</option><option>Field</option><option>Ritual</option>
+            </select>
+          </div>
+          <div id="fgf-traptype-grp" style="display:none;">
+            <div class="forge-fg-label">Trap Type</div>
+            <select class="forge-fg-sel" id="fgf-traptype">
+              <option value="">All</option>
+              <option>Normal</option><option>Continuous</option><option>Counter</option>
             </select>
           </div>
           <div>
@@ -4679,6 +4764,43 @@
               <input class="forge-fg-inp" type="number" id="fgf-atkmin" placeholder="Min">
               <span>–</span>
               <input class="forge-fg-inp" type="number" id="fgf-atkmax" placeholder="Max">
+            </div>
+          </div>
+          <div>
+            <div class="forge-fg-label">DEF</div>
+            <div class="forge-filter-range">
+              <input class="forge-fg-inp" type="number" id="fgf-defmin" placeholder="Min">
+              <span>–</span>
+              <input class="forge-fg-inp" type="number" id="fgf-defmax" placeholder="Max">
+            </div>
+          </div>
+          <div id="fgf-scale-grp" style="display:none;">
+            <div class="forge-fg-label">Pendulum Scale</div>
+            <div class="forge-filter-range">
+              <input class="forge-fg-inp" type="number" id="fgf-scalemin" placeholder="Min" min="0" max="13">
+              <span>–</span>
+              <input class="forge-fg-inp" type="number" id="fgf-scalemax" placeholder="Max" min="0" max="13">
+            </div>
+          </div>
+          <div id="fgf-link-grp" style="display:none;">
+            <div class="forge-fg-label">Link Rating</div>
+            <div class="forge-filter-range">
+              <input class="forge-fg-inp" type="number" id="fgf-linkmin" placeholder="Min" min="1" max="6">
+              <span>–</span>
+              <input class="forge-fg-inp" type="number" id="fgf-linkmax" placeholder="Max" min="1" max="6">
+            </div>
+          </div>
+          <div class="forge-fg-full" id="fgf-markers-grp" style="display:none;">
+            <div class="forge-fg-label">Link Markers (must have ALL selected)</div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:4px;">
+              <label class="cf-marker-label"><input type="checkbox" class="fgf-marker" value="Top-Left">↖</label>
+              <label class="cf-marker-label"><input type="checkbox" class="fgf-marker" value="Top">↑</label>
+              <label class="cf-marker-label"><input type="checkbox" class="fgf-marker" value="Top-Right">↗</label>
+              <label class="cf-marker-label"><input type="checkbox" class="fgf-marker" value="Left">←</label>
+              <label class="cf-marker-label"><input type="checkbox" class="fgf-marker" value="Right">→</label>
+              <label class="cf-marker-label"><input type="checkbox" class="fgf-marker" value="Bottom-Left">↙</label>
+              <label class="cf-marker-label"><input type="checkbox" class="fgf-marker" value="Bottom">↓</label>
+              <label class="cf-marker-label"><input type="checkbox" class="fgf-marker" value="Bottom-Right">↘</label>
             </div>
           </div>
           <div class="forge-fg-full">
@@ -9344,9 +9466,9 @@
     _cardIdbGet().then(function(stored) {
       if (stored && stored.cards && stored.cards.length > 1000) {
         // Check if cached DB has banlist field — if not, re-download silently
-        var needsRefresh = stored.cards[0] && (stored.cards[0].banlist === undefined || stored.cards[0].genesys === undefined);
+        var needsRefresh = stored.cards[0] && (stored.cards[0].banlist === undefined || stored.cards[0].genesys === undefined || stored.cards[0].linkmarkers === undefined);
         if (needsRefresh) {
-          _setCardDbStatus('⬇️ UPDATING DB (banlist)…', 'var(--gold)');
+          _setCardDbStatus('⬇️ UPDATING DB…', 'var(--gold)');
           cardDbDownload(false);
           return;
         }
@@ -9399,6 +9521,7 @@
             rank:     c.rank     != null ? c.rank  : null,
             linkval:  c.linkval  != null ? c.linkval : null,
             scale:    c.scale    != null ? c.scale : null,
+            linkmarkers: c.linkmarkers || [],
             archetype: c.archetype || '',
             banlist:  ban.ban_tcg || '',   // TCG ban status
             genesys:  (c.misc_info && c.misc_info[0] && c.misc_info[0].genesys_points) ? c.misc_info[0].genesys_points : 0,
@@ -9458,6 +9581,20 @@
         if (f.levelMax != null && lv > f.levelMax) continue;
       }
       if (f.archetype && !(c.archetype||'').toLowerCase().includes(f.archetype) && !(c.name||'').toLowerCase().includes(f.archetype)) continue;
+      // Spell/Trap sub-type: YGOPRODeck stores e.g. "Quick-Play Spell Card" or "Continuous Trap Card" in c.type
+      if (f.spellType && !(c.type||'').includes(f.spellType)) continue;
+      if (f.trapType  && !(c.type||'').includes(f.trapType))  continue;
+      // Pendulum scale
+      if (f.scaleMin != null && (c.scale == null || c.scale < f.scaleMin)) continue;
+      if (f.scaleMax != null && (c.scale == null || c.scale > f.scaleMax)) continue;
+      // Link rating
+      if (f.linkMin != null && (c.linkval == null || c.linkval < f.linkMin)) continue;
+      if (f.linkMax != null && (c.linkval == null || c.linkval > f.linkMax)) continue;
+      // Link markers
+      if (f.markers && f.markers.length) {
+        var cMarkers = c.linkmarkers || [];
+        if (!f.markers.every(function(m){ return cMarkers.includes(m); })) continue;
+      }
       // Keyword: ALL space-separated terms must appear in the card's effect text
       if (f.keyword) {
         var desc = (c.desc || '').toLowerCase();
@@ -9496,6 +9633,13 @@
       defMax:    n('cf-def-max'),
       levelMin:  n('cf-level-min'),
       levelMax:  n('cf-level-max'),
+      scaleMin:  n('cf-scale-min'),
+      scaleMax:  n('cf-scale-max'),
+      linkMin:   n('cf-link-min'),
+      linkMax:   n('cf-link-max'),
+      spellType: s('cf-spelltype'),
+      trapType:  s('cf-traptype'),
+      markers:   Array.from(document.querySelectorAll('.cf-marker:checked')).map(function(el){return el.value;}),
       archetype: s('cf-archetype').toLowerCase(),
       keyword:   s('cf-keyword').toLowerCase()
     };
@@ -9503,7 +9647,7 @@
 
   function _hasActiveFilters() {
     var f = _getCardFilters();
-    return f.type || f.attribute || f.race || f.banlist || f.atkMin != null || f.atkMax != null || f.defMin != null || f.defMax != null || f.levelMin != null || f.levelMax != null || f.archetype || f.keyword;
+    return f.type || f.attribute || f.race || f.banlist || f.atkMin != null || f.atkMax != null || f.defMin != null || f.defMax != null || f.levelMin != null || f.levelMax != null || f.scaleMin != null || f.scaleMax != null || f.linkMin != null || f.linkMax != null || f.spellType || f.trapType || (f.markers && f.markers.length) || f.archetype || f.keyword;
   }
 
   function toggleCardFilters() {
@@ -9514,15 +9658,35 @@
     if (btn) { btn.textContent = (open ? '▲' : '▼') + ' Filters'; btn.classList.toggle('active', open); }
   }
 
+  function _cfTypeChanged() {
+    var t = (document.getElementById('cf-type') || {}).value || '';
+    var isSpell = t === 'Spell Card';
+    var isTrap  = t === 'Trap Card';
+    var isLink  = t === 'Link Monster';
+    var isPend  = t.includes('Pendulum');
+    var sg = document.getElementById('cf-spelltype-group');
+    var tg = document.getElementById('cf-traptype-group');
+    var lg = document.getElementById('cf-linkval-group');
+    var lm = document.getElementById('cf-linkmarkers-group');
+    var sc = document.getElementById('cf-scale-group');
+    if (sg) sg.style.display = isSpell ? '' : 'none';
+    if (tg) tg.style.display = isTrap  ? '' : 'none';
+    if (lg) lg.style.display = isLink  ? '' : 'none';
+    if (lm) lm.style.display = isLink  ? '' : 'none';
+    if (sc) sc.style.display = isPend  ? '' : 'none';
+  }
+
   function clearCardFilters() {
-    ['cf-type','cf-attribute','cf-race','cf-banlist'].forEach(function(id) {
+    ['cf-type','cf-attribute','cf-race','cf-banlist','cf-spelltype','cf-traptype'].forEach(function(id) {
       var el = document.getElementById(id); if (el) el.value = '';
     });
-    ['cf-atk-min','cf-atk-max','cf-def-min','cf-def-max','cf-level-min','cf-level-max'].forEach(function(id) {
+    ['cf-atk-min','cf-atk-max','cf-def-min','cf-def-max','cf-level-min','cf-level-max','cf-scale-min','cf-scale-max','cf-link-min','cf-link-max'].forEach(function(id) {
       var el = document.getElementById(id); if (el) el.value = '';
     });
+    document.querySelectorAll('.cf-marker').forEach(function(el){ el.checked = false; });
     var arch = document.getElementById('cf-archetype'); if (arch) arch.value = '';
     var kw   = document.getElementById('cf-keyword');   if (kw)   kw.value   = '';
+    _cfTypeChanged();
   }
 
   // ── Ban badge helper ─────────────────────────────────────────
@@ -10670,7 +10834,7 @@
     if (!_cardDbReady || !_cardDb) { document.getElementById('forgeSearchStatus').textContent = 'DB loading…'; return; }
     var q = (document.getElementById('forgeSearchInput').value || '').trim().toLowerCase();
     var f = _forgeGetFilters();
-    var hasF = q || f.type||f.attr||f.race||f.ban||f.arch||f.keyword||f.lvmin!=null||f.lvmax!=null||f.atkmin!=null||f.atkmax!=null;
+    var hasF = q || f.type||f.attr||f.race||f.ban||f.arch||f.keyword||f.spellType||f.trapType||(f.markers&&f.markers.length)||f.scaleMin!=null||f.scaleMax!=null||f.linkMin!=null||f.linkMax!=null||f.defmin!=null||f.defmax!=null||f.lvmin!=null||f.lvmax!=null||f.atkmin!=null||f.atkmax!=null;
     if (!hasF) { document.getElementById('forgeSearchStatus').textContent = ''; document.getElementById('forgeSearchGrid').innerHTML = ''; return; }
     var results = [];
     for (var i = 0; i < _cardDb.length; i++) {
@@ -10681,6 +10845,18 @@
       if (f.race && c.race !== f.race) continue;
       if (f.ban) { if (f.ban==='Unlimited'){if(c.banlist)continue;} else {if(c.banlist!==f.ban)continue;} }
       if (f.arch) { var la=f.arch.toLowerCase(); if(!c.archetype.toLowerCase().includes(la)&&!c.name.toLowerCase().includes(la)) continue; }
+      if (f.spellType && !(c.type||'').includes(f.spellType)) continue;
+      if (f.trapType  && !(c.type||'').includes(f.trapType))  continue;
+      if (f.scaleMin!=null && (c.scale==null||c.scale<f.scaleMin)) continue;
+      if (f.scaleMax!=null && (c.scale==null||c.scale>f.scaleMax)) continue;
+      if (f.linkMin!=null  && (c.linkval==null||c.linkval<f.linkMin)) continue;
+      if (f.linkMax!=null  && (c.linkval==null||c.linkval>f.linkMax)) continue;
+      if (f.defmin!=null   && (c.def==null||c.def<f.defmin)) continue;
+      if (f.defmax!=null   && (c.def==null||c.def>f.defmax)) continue;
+      if (f.markers && f.markers.length) {
+        var cm = c.linkmarkers || [];
+        if (!f.markers.every(function(m){ return cm.includes(m); })) continue;
+      }
       if (f.keyword) {
         var fdesc = (c.desc || '').toLowerCase();
         var fterms = f.keyword.split(/\s+/).filter(Boolean);
@@ -10708,15 +10884,38 @@
     var n=function(id){var v=parseInt((document.getElementById(id)||{}).value);return isNaN(v)?null:v;};
     var s=function(id){return ((document.getElementById(id)||{}).value||'').trim();};
     return {type:s('fgf-type'),attr:s('fgf-attr'),race:s('fgf-race'),ban:s('fgf-ban'),arch:s('fgf-arch'),
+      spellType:s('fgf-spelltype'), trapType:s('fgf-traptype'),
       keyword:s('fgf-keyword').toLowerCase(),
+      scaleMin:n('fgf-scalemin'), scaleMax:n('fgf-scalemax'),
+      linkMin:n('fgf-linkmin'),   linkMax:n('fgf-linkmax'),
+      defmin:n('fgf-defmin'),     defmax:n('fgf-defmax'),
+      markers: Array.from(document.querySelectorAll('.fgf-marker:checked')).map(function(el){return el.value;}),
       lvmin:n('fgf-lvmin'),lvmax:n('fgf-lvmax'),atkmin:n('fgf-atkmin'),atkmax:n('fgf-atkmax')};
   }
 
+  function _fgfTypeChanged() {
+    var t = (document.getElementById('fgf-type') || {}).value || '';
+    var isSpell = t === 'Spell Card', isTrap = t === 'Trap Card';
+    var isLink  = t === 'Link Monster', isPend = t.includes('Pendulum');
+    var sg = document.getElementById('fgf-spelltype-grp');
+    var tg = document.getElementById('fgf-traptype-grp');
+    var lg = document.getElementById('fgf-link-grp');
+    var lm = document.getElementById('fgf-markers-grp');
+    var sc = document.getElementById('fgf-scale-grp');
+    if (sg) sg.style.display = isSpell ? '' : 'none';
+    if (tg) tg.style.display = isTrap  ? '' : 'none';
+    if (lg) lg.style.display = isLink  ? '' : 'none';
+    if (lm) lm.style.display = isLink  ? '' : 'none';
+    if (sc) sc.style.display = isPend  ? '' : 'none';
+  }
+
   function forgeClearFilters() {
-    ['fgf-type','fgf-attr','fgf-race','fgf-ban'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
-    ['fgf-lvmin','fgf-lvmax','fgf-atkmin','fgf-atkmax'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
+    ['fgf-type','fgf-attr','fgf-race','fgf-ban','fgf-spelltype','fgf-traptype'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
+    ['fgf-lvmin','fgf-lvmax','fgf-atkmin','fgf-atkmax','fgf-defmin','fgf-defmax','fgf-scalemin','fgf-scalemax','fgf-linkmin','fgf-linkmax'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
+    document.querySelectorAll('.fgf-marker').forEach(function(el){ el.checked = false; });
     var a=document.getElementById('fgf-arch');if(a)a.value='';
     var k=document.getElementById('fgf-keyword');if(k)k.value='';
+    _fgfTypeChanged();
   }
 
   function forgeToggleFilters() {
@@ -11271,9 +11470,21 @@
           + '</div>';
       }).join('');
     var rect = event.target.getBoundingClientRect();
-    popup.style.top = (rect.bottom + 5) + 'px';
-    popup.style.left = Math.min(rect.left, window.innerWidth - 220) + 'px';
     popup.classList.add('open');
+    var popH = popup.offsetHeight;
+    var spaceBelow = window.innerHeight - rect.bottom - 10;
+    var topPos;
+    if (spaceBelow >= popH || spaceBelow >= 120) {
+      // Enough room below — open downward
+      topPos = rect.bottom + 5;
+    } else {
+      // Not enough room — open upward above the click point
+      topPos = Math.max(8, rect.top - popH - 5);
+    }
+    // Final clamp: never exceed viewport height
+    topPos = Math.min(topPos, window.innerHeight - popH - 8);
+    popup.style.top = Math.max(8, topPos) + 'px';
+    popup.style.left = Math.min(Math.max(8, rect.left), window.innerWidth - 225) + 'px';
   }
 
   function forgeToggleCatAssign(cardId, catName) {
@@ -11970,7 +12181,7 @@
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-opus-4-6',
         max_tokens: 2000,
         system: systemPrompt,
         messages: [{ role: 'user', content: userMsg }]
