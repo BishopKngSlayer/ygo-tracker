@@ -1,13 +1,12 @@
 /* ── YGO Tracker Service Worker ── */
-const CACHE_NAME = 'ygo-tracker-v1';
+const CACHE_NAME = 'ygo-tracker-v2';
 
 // Core files to cache on install
 const PRECACHE = [
   '/',
   '/index.html',
   '/manifest.json',
-  '/icon-192.png',
-  '/icon-512.png',
+  '/icon512.png',
 ];
 
 // External resources to cache when first fetched
