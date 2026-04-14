@@ -11205,13 +11205,21 @@
     }
   }
 
-  // Tutorial keyboard nav
-  document.getElementById('tutorialOverlay').addEventListener('keydown', function(e) {
-    if (e.key === 'ArrowRight' || e.key === 'Enter') { e.preventDefault(); tutorialNext(); }
-    else if (e.key === 'ArrowLeft') { e.preventDefault(); tutorialPrev(); }
-    else if (e.key === 'Escape') { closeTutorial(); }
-  });
-  document.getElementById('tutorialOverlay').setAttribute('tabindex', '-1');
+  // Tutorial keyboard nav (deferred until DOM ready)
+  (function() {
+    function _initTutorialKeys() {
+      var overlay = document.getElementById('tutorialOverlay');
+      if (!overlay) return;
+      overlay.setAttribute('tabindex', '-1');
+      overlay.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowRight' || e.key === 'Enter') { e.preventDefault(); tutorialNext(); }
+        else if (e.key === 'ArrowLeft') { e.preventDefault(); tutorialPrev(); }
+        else if (e.key === 'Escape') { closeTutorial(); }
+      });
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', _initTutorialKeys);
+    else _initTutorialKeys();
+  })();
 
   // Auto-show on first visit
   if (!localStorage.getItem('ygo_tutorial_done')) {
