@@ -11520,13 +11520,70 @@
           setResult('-'+amt.toLocaleString()+' → '+players[tgt].name+' ✓','ok'); return;
         }
       }
-      // bare number = damage to default target  e.g. "800"
-      var bareNum = wordsToNum(t);
-      if (!isNaN(bareNum) && bareNum > 0) {
-        var tgt0 = defaultDmgTarget();
-        if (players[tgt0] && !players[tgt0].eliminated) {
-          adjustLP(tgt0, -bareNum, dmgTypeState[activeTurn]||'effect', activeTurn);
-          setResult('-'+bareNum.toLocaleString()+' → '+players[tgt0].name+' ✓','ok'); return;
+
+      // ── BATTLE DAMAGE ─────────────────────────────────────────
+      // Patterns:
+      //   "3000 attacks into 2500"             → active attacks, default opponent takes 500
+      //   "3000 attacks into player 2 2500"    → explicit target
+      //   "attack 3000 into 2500"              → synonym
+      //   "my 3000 attacks their 2500"         → natural
+      //   "3000 attacks 2500"                  → short form
+      //   "direct attack 3000"                 → direct, def=0
+      //   "direct 3000"                        → direct, def=0
+      // direct attack
+      if (/^(?:direct attack|direct)\s+(.+)$/.test(t)) {
+        var dm = t.match(/^(?:direct attack|direct)\s+(.+)$/);
+        var dAmt = wordsToNum(dm[1]);
+        if (!isNaN(dAmt) && dAmt > 0) {
+          var dTgt = players.findIndex(function(p,pi){ return pi!==activeTurn && !p.eliminated; });
+          if (dTgt >= 0) {
+            adjustLP(dTgt, -dAmt, 'battle', activeTurn);
+            setResult('⚔️ Direct ' + dAmt.toLocaleString() + ' → ' + players[dTgt].name + ' ✓','ok');
+          } else { setResult('No valid target', 'err'); }
+          return;
+        }
+      }
+      // "ATK attacks [into] [player N] DEF"  /  "ATK attacks DEF"  /  "attack ATK into DEF"
+      var bPat = t.match(/^(?:attack\s+)?(\w[\w\s,]*?)\s+attacks?\s+(?:into\s+)?(?:(player\s+\w+)\s+)?(\w[\w\s,]*)$/)
+               || t.match(/^(\w[\w\s,]*?)\s+attacks?\s+(\w[\w\s,]*)$/);
+      // also handle "my N attacks their M"
+      var bPat2 = t.match(/^(?:my\s+)?(\w[\w\s,]+?)\s+attacks?\s+(?:their\s+|(?:player\s+\w+\s+))?(\w[\w\s,]+)$/);
+
+      if (bPat || bPat2) {
+        var pat = bPat || bPat2;
+        var atkStr  = pat[1].trim();
+        // pat[3] exists only in the 3-group regex; pat[2] is either "player N" or DEF depending on which regex matched
+        var maybeTarget = pat[2] && /^player\s+/i.test(pat[2].trim()) ? pat[2].trim() : null;
+        // Use pat[3] if it exists (3-group regex), otherwise fall back to pat[2] (2-group regex)
+        var defStr  = (pat[3] !== undefined) ? pat[3].trim() : (maybeTarget ? '' : (pat[2]||'').trim());
+
+        // If no explicit target provided via "player N", try parsing from defStr prefix
+        if (!maybeTarget && defStr) {
+          var plPrefix = defStr.match(/^(player\s+\w+)\s+(.+)$/);
+          if (plPrefix) { maybeTarget = plPrefix[1]; defStr = plPrefix[2]; }
+        }
+
+        var atkVal = wordsToNum(atkStr);
+        var defVal = wordsToNum(defStr);
+
+        if (!isNaN(atkVal) && !isNaN(defVal)) {
+          var diff = atkVal - defVal;
+          var dmg  = Math.abs(diff);
+          var btgt;
+          if (maybeTarget) {
+            btgt = findPlayer(maybeTarget);
+            if (btgt < 0) btgt = players.findIndex(function(p,pi){ return pi!==activeTurn && !p.eliminated; });
+          } else {
+            btgt = diff > 0
+              ? players.findIndex(function(p,pi){ return pi!==activeTurn && !p.eliminated; })
+              : activeTurn; // attacker takes damage
+          }
+          if (diff === 0) { setResult('Equal ATK/DEF — no battle damage',''); return; }
+          if (btgt < 0) { setResult('No valid target', 'err'); return; }
+          var srcIdx = diff > 0 ? activeTurn : null;
+          adjustLP(btgt, -dmg, 'battle', srcIdx);
+          setResult('⚔️ ' + atkVal.toLocaleString() + ' vs ' + defVal.toLocaleString() + ' → ' + dmg.toLocaleString() + ' to ' + players[btgt].name + ' ✓','ok');
+          return;
         }
       }
 
@@ -11579,73 +11636,6 @@
       if (/^(transfer lp|give lp|send lp|transfer life|open transfer)/.test(t)) {
         openTransfer(activeTurn); setResult('Transfer panel opened','ok'); return;
       }
-
-      // ── BATTLE DAMAGE ─────────────────────────────────────────
-      // Patterns:
-      //   "3000 attacks into 2500"             → active attacks, default opponent takes 500
-      //   "3000 attacks into player 2 2500"    → explicit target
-      //   "attack 3000 into 2500"              → synonym
-      //   "my 3000 attacks their 2500"         → natural
-      //   "3000 attacks 2500"                  → short form
-      //   "direct attack 3000"                 → direct, def=0
-      //   "direct 3000"                        → direct, def=0
-      var battleMatch = null;
-      // direct attack
-      if (/^(?:direct attack|direct)\s+(.+)$/.test(t)) {
-        var dm = t.match(/^(?:direct attack|direct)\s+(.+)$/);
-        var dAmt = wordsToNum(dm[1]);
-        if (!isNaN(dAmt) && dAmt > 0) {
-          var dTgt = players.findIndex(function(p,pi){ return pi!==activeTurn && !p.eliminated; });
-          if (dTgt >= 0) {
-            adjustLP(dTgt, -dAmt, 'battle', activeTurn);
-            setResult('⚔️ Direct ' + dAmt.toLocaleString() + ' → ' + players[dTgt].name + ' ✓','ok');
-          } else { setResult('No valid target', 'err'); }
-          return;
-        }
-      }
-      // "ATK attacks [into] [player N] DEF"  /  "ATK attacks DEF"  /  "attack ATK into DEF"
-      var bPat = t.match(/^(?:attack\s+)?(\w[\w\s,]*?)\s+attacks?\s+(?:into\s+)?(?:(player\s+\w+)\s+)?(\w[\w\s,]*)$/)
-               || t.match(/^(\w[\w\s,]*?)\s+attacks?\s+(\w[\w\s,]*)$/);
-      // also handle "my N attacks their M"
-      var bPat2 = t.match(/^(?:my\s+)?(\w[\w\s,]+?)\s+attacks?\s+(?:their\s+|(?:player\s+\w+\s+))?(\w[\w\s,]+)$/);
-
-      if (bPat || bPat2) {
-        var pat = bPat || bPat2;
-        var atkStr  = pat[1].trim();
-        var maybeTarget = pat[2] && /^player\s+/i.test(pat[2].trim()) ? pat[2].trim() : null;
-        var defStr  = maybeTarget ? pat[3].trim() : (pat[2]||'').trim();
-
-        // If no explicit target provided via "player N", try parsing from defStr prefix
-        if (!maybeTarget) {
-          var plPrefix = defStr.match(/^(player\s+\w+)\s+(.+)$/);
-          if (plPrefix) { maybeTarget = plPrefix[1]; defStr = plPrefix[2]; }
-        }
-
-        var atkVal = wordsToNum(atkStr);
-        var defVal = wordsToNum(defStr);
-
-        if (!isNaN(atkVal) && !isNaN(defVal)) {
-          var diff = atkVal - defVal;
-          var dmg  = Math.abs(diff);
-          var btgt;
-          if (maybeTarget) {
-            btgt = findPlayer(maybeTarget);
-            if (btgt < 0) btgt = players.findIndex(function(p,pi){ return pi!==activeTurn && !p.eliminated; });
-          } else {
-            btgt = diff > 0
-              ? players.findIndex(function(p,pi){ return pi!==activeTurn && !p.eliminated; })
-              : activeTurn; // attacker takes damage
-          }
-          if (diff === 0) { setResult('Equal ATK/DEF — no battle damage',''); return; }
-          if (btgt < 0) { setResult('No valid target', 'err'); return; }
-          var srcIdx = diff > 0 ? activeTurn : null;
-          adjustLP(btgt, -dmg, 'battle', srcIdx);
-          var who = diff > 0 ? players[btgt].name + ' takes' : players[activeTurn].name + ' takes (reflect)';
-          setResult('⚔️ ' + atkVal.toLocaleString() + ' vs ' + defVal.toLocaleString() + ' → ' + dmg.toLocaleString() + ' to ' + players[btgt].name + ' ✓','ok');
-          return;
-        }
-      }
-
 
       // ── TIMER ────────────────────────────────────────────────
       if (/^(start timer|start clock|begin timer|resume timer)/.test(t)) {
@@ -12286,7 +12276,6 @@
 
     <div class="vcmd-section">Life Points</div>
     <div class="vcmd-row"><span class="vcmd-example">"damage 800"</span><span class="vcmd-desc">Deal 800 to default opponent</span></div>
-    <div class="vcmd-row"><span class="vcmd-example">"800"</span><span class="vcmd-desc">Bare number — damage to opponent</span></div>
     <div class="vcmd-row"><span class="vcmd-example">"deal 1500 to player 2"</span><span class="vcmd-desc">Deal LP to a specific player</span></div>
     <div class="vcmd-row"><span class="vcmd-example">"hit all 1000"</span><span class="vcmd-desc">Deal to all non-active players</span></div>
     <div class="vcmd-row"><span class="vcmd-example">"heal 500"</span><span class="vcmd-desc">Heal active player</span></div>
