@@ -171,15 +171,15 @@
 
   /* ── Controls ── */
   .controls {
-    display: flex; gap: 10px;
-    justify-content: center; align-items: center;
-    flex-wrap: wrap; padding: 12px 16px;
+    display: flex; gap: 8px;
+    align-items: center;
+    flex-wrap: wrap; padding: 10px 16px;
     border-bottom: 1px solid rgba(255,255,255,0.04);
     background: rgba(0,0,0,0.2);
     backdrop-filter: blur(6px);
-    transition: max-height 0.3s cubic-bezier(0.4,0,0.2,1), padding 0.3s ease, opacity 0.25s ease;
+    transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), padding 0.3s ease, opacity 0.25s ease;
     overflow: hidden;
-    max-height: 200px;
+    max-height: 500px;
     opacity: 1;
   }
   .controls.collapsed {
@@ -3502,7 +3502,7 @@
   .tutorial-credit a { color:var(--gold); text-decoration:none; }
 
   /* ── Menu logo ── */
-  .menu-logo { display:block; width:100px; height:100px; border-radius:50%; margin:8px auto 6px; filter:drop-shadow(0 0 14px rgba(201,162,39,0.3)); }
+  .menu-logo { width:64px; height:64px; border-radius:50%; flex-shrink:0; filter:drop-shadow(0 0 14px rgba(201,162,39,0.3)); }
 
   /* Bug Report Modal */
 
@@ -3690,7 +3690,7 @@
   <button class="btn btn-gold" onclick="openPlayersModal()">👤 Players</button>
   <button class="btn btn-mode" onclick="openModeModal()">&#x1F3C6; Mode</button>
   <button class="btn btn-dim"  onclick="shuffleNow()" title="Randomly shuffle turn order" style="border-color:rgba(120,200,120,0.3);color:#99dd99;">🔀 Shuffle Order</button>
-  <button class="btn btn-gold" onclick="openCalc()" style="letter-spacing:1px;">🧮 Calculator</button>
+  <button class="btn btn-gold" onclick="openCalc()" style="letter-spacing:1px;">🧮 Calc</button>
   <button class="btn btn-dim"  onclick="openLog()">📜 Game Log</button>
   <button class="btn btn-dim"  onclick="openRoster()">👥 Roster</button>
   <button class="btn btn-dim"  onclick="openCardSearch()">🃏 Cards</button>
@@ -3798,56 +3798,6 @@
       <button class="c-btn num" style="grid-column:span 2" onclick="calcNum('0')">0</button>
       <button class="c-btn num" onclick="calcDot()">.</button>
       <button class="c-btn equals" onclick="calcEquals()">=</button>
-    </div>
-    <div class="calc-apply">
-      <div class="calc-apply-label">Apply Result to Player</div>
-      <div class="calc-apply-row" style="margin-bottom:6px">
-        <select class="calc-apply-select" id="calcPlayerSelect"></select>
-        <select class="calc-apply-select" id="calcSourceSelect" style="min-width:110px">
-          <option value="">— Source —</option>
-        </select>
-      </div>
-      <div class="calc-apply-row" style="justify-content:center;gap:8px;margin-bottom:4px">
-        <button class="dmg-type-btn calc-dmg-type-btn selected" data-type="effect" onclick="calcSetDmgType('effect')" style="font-size:9px;padding:5px 12px;border-color:rgba(204,34,0,0.5);color:#ff8888">Effect</button>
-        <button class="dmg-type-btn calc-dmg-type-btn" data-type="battle" onclick="calcSetDmgType('battle')" style="font-size:9px;padding:5px 12px;border-color:rgba(255,150,0,0.4);color:#ffaa66">Battle</button>
-      </div>
-      <div class="calc-apply-row">
-        <button class="calc-apply-btn dmg"  onclick="calcApply(-1)">− Damage</button>
-        <button class="calc-apply-btn heal" onclick="calcApply(1)">+ Heal</button>
-      </div>
-      <div class="calc-apply-divider"></div>
-      <div class="calc-apply-label">⚔️ Battle Damage Calculator</div>
-      <div class="calc-apply-row" style="gap:6px;align-items:center;">
-        <div style="flex:1;display:flex;flex-direction:column;gap:3px;">
-          <label style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:var(--dim);">ATTACKER ATK</label>
-          <input type="number" class="panel-input" id="battleAtk" placeholder="e.g. 2500" min="0" oninput="calcBattleDiff()" style="font-size:13px;padding:7px 8px;text-align:center;">
-        </div>
-        <div style="font-family:'Cinzel Decorative',serif;font-size:14px;color:var(--dim);padding-top:14px;">vs</div>
-        <div style="flex:1;display:flex;flex-direction:column;gap:3px;">
-          <label style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:var(--dim);">DEFENDER ATK/DEF</label>
-          <input type="number" class="panel-input" id="battleDef" placeholder="e.g. 2000" min="0" oninput="calcBattleDiff()" style="font-size:13px;padding:7px 8px;text-align:center;">
-        </div>
-      </div>
-      <div id="battleDiffResult" style="display:none;margin-top:6px;padding:8px 10px;border-radius:4px;text-align:center;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);">
-        <div id="battleDiffAmount" style="font-family:'Cinzel Decorative',serif;font-size:20px;color:var(--gold);letter-spacing:2px;"></div>
-        <div id="battleDiffLabel" style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:var(--dim);margin-top:2px;"></div>
-      </div>
-      <div class="calc-apply-row" style="margin-top:6px;gap:6px;">
-        <select class="calc-apply-select" id="battlePlayerSelect" style="flex:1;"></select>
-        <button class="calc-apply-btn dmg" style="flex:0 0 auto;padding:6px 14px;" onclick="applyBattleDiff()">Apply Damage</button>
-      </div>
-      <div class="calc-apply-divider"></div>
-      <div class="calc-apply-label">⚡ Damage All Players</div>
-      <div class="calc-apply-row" style="flex-wrap:wrap;gap:5px;justify-content:center;">
-        <button class="calc-all-preset" onclick="applyAllDmg(100)">−100</button>
-        <button class="calc-all-preset" onclick="applyAllDmg(500)">−500</button>
-        <button class="calc-all-preset" onclick="applyAllDmg(1000)">−1000</button>
-        <button class="calc-all-preset" onclick="applyAllDmg(2000)">−2000</button>
-      </div>
-      <div class="calc-apply-row" style="gap:6px;">
-        <input type="number" class="panel-input" id="calcAllDmgInput" placeholder="Custom" min="1" style="flex:1;font-size:12px;padding:6px 8px;">
-        <button class="calc-apply-btn dmg" style="flex:0 0 auto;padding:6px 14px;" onclick="calcApplyAll()">Apply All</button>
-      </div>
     </div>
   </div>
 </div>
@@ -4852,6 +4802,8 @@
   var _fbListener    = null;   // host→guest state listener handle
   var _fbGuestListener = null; // guest→host LP listener handle
   var _fbPushTimer   = null;   // debounce timer
+  var _lastHostPushTs = 0;     // timestamp of last host push
+  var _fbApplying    = false;  // guard against sync loops
   var _fbMySlot      = 0;      // which player index am I? host=0, guest=1
   var _fbGuestSlot   = 1;      // which slot is the remote guest? always 1
   // Hardcoded Firebase config — no setup needed
@@ -5322,9 +5274,9 @@
           checkWinCondition();
         }
       }
-      // Sync: host pushes full state; guest pushes their own slot
+      // Sync: host pushes full state; guest pushes full state too
       if (_fbRoom && _fbIsHost) fbPushState();
-      if (_fbRoom && !_fbIsHost && i === _fbMySlot) fbPushGuestState();
+      if (_fbRoom && !_fbIsHost) fbPushGuestState();
     }
   }
 
@@ -5485,7 +5437,8 @@
   }
   function updateTurnLabel() {
     const el = document.getElementById('turnLabel');
-    fbPushState(); // sync after every render
+    fbPushState(); // host sync after every render
+    if (_fbRoom && !_fbIsHost) fbPushGuestState(); // guest sync too
     // Update turn counter display
     const tc = document.getElementById('turnCounterDisplay');
     if (tc) tc.textContent = globalTurnNum - 1;
@@ -5907,24 +5860,6 @@
   let calcActiveOp   = null;
 
   function openCalc() {
-    const sel = document.getElementById('calcPlayerSelect');
-    sel.innerHTML = players.map((p,i) => `<option value="${i}">${escHtml(p.name)}</option>`).join('');
-    sel.value = activeTurn;
-    const srcSel = document.getElementById('calcSourceSelect');
-    srcSel.innerHTML = '<option value="">— Source —</option>' +
-      players.map((p,i) => `<option value="${i}">${escHtml(p.name)}</option>`).join('');
-    // Battle diff player select
-    const bSel = document.getElementById('battlePlayerSelect');
-    if (bSel) {
-      bSel.innerHTML = players.map((p,i) => `<option value="${i}">${escHtml(p.name)}</option>`).join('');
-      bSel.value = activeTurn;
-    }
-    // Clear battle fields
-    ['battleAtk','battleDef'].forEach(function(id) {
-      var el = document.getElementById(id); if (el) el.value = '';
-    });
-    var res = document.getElementById('battleDiffResult');
-    if (res) res.style.display = 'none';
     document.getElementById('calcModal').classList.add('open');
   }
 
@@ -8330,30 +8265,25 @@
   }
 
   function fbPushState() {
-    if (!_fbIsHost || !_fbDb || !_fbRoom) return;
+    if (!_fbIsHost || !_fbDb || !_fbRoom || _fbApplying) return;
     clearTimeout(_fbPushTimer);
     _fbPushTimer = setTimeout(function() {
+      _lastHostPushTs = Date.now();
       _fbDb.ref('rooms/' + _fbRoom + '/state').set(_getGameSnapshot()).catch(function(e) {
         console.warn('Firebase push failed:', e);
       });
     }, 120);
   }
 
-  // Guest pushes only their own slot back to host
+  // Guest pushes full game state so host sees all changes (LP, phases, turns)
   function fbPushGuestState() {
-    if (_fbIsHost || !_fbDb || !_fbRoom) return;
-    var p = players[_fbMySlot];
-    if (!p) return;
-    _fbDb.ref('rooms/' + _fbRoom + '/guest').set({
-      lp:        p.lp,
-      eliminated:p.eliminated,
-      name:      p.name,
-      ts:        Date.now()
-    }).catch(function(e) { console.warn('Guest push failed:', e); });
+    if (_fbIsHost || !_fbDb || !_fbRoom || _fbApplying) return;
+    _fbDb.ref('rooms/' + _fbRoom + '/guest').set(_getGameSnapshot()).catch(function(e) { console.warn('Guest push failed:', e); });
   }
 
   function _applySnapshot(snap) {
     if (!snap) return;
+    _fbApplying = true;
     // Guest preserves their own LP/eliminated — host's snapshot may be stale for their slot
     var savedLP   = (!_fbIsHost && _fbRoom && players[_fbMySlot]) ? players[_fbMySlot].lp        : null;
     var savedElim = (!_fbIsHost && _fbRoom && players[_fbMySlot]) ? players[_fbMySlot].eliminated : null;
@@ -8373,6 +8303,7 @@
     render();
     updateMatchBanner();
     renderTurnLabel();
+    _fbApplying = false;
   }
 
   function renderTurnLabel() {
@@ -8392,18 +8323,31 @@
     // Ensure 2 players for remote duel
     if (players.length < 2) { initPlayers(2); }
     fbPushState();
-    // Listen for guest LP updates
+    // Listen for guest state updates (full snapshot)
     _fbGuestListener = _fbDb.ref('rooms/' + code + '/guest').on('value', function(snapshot) {
       var data = snapshot.val();
-      if (!data || !players[_fbGuestSlot]) return;
-      players[_fbGuestSlot].lp        = data.lp        != null ? data.lp        : players[_fbGuestSlot].lp;
-      players[_fbGuestSlot].eliminated = data.eliminated != null ? data.eliminated : players[_fbGuestSlot].eliminated;
-      if (data.name) players[_fbGuestSlot].name = data.name;
+      if (!data || !data.players) return;
+      // Only apply if guest's timestamp is newer than our last push
+      if (data.ts && data.ts > (_lastHostPushTs || 0)) {
+        _fbApplying = true;
+        // Apply guest's full state
+        players       = data.players      || players;
+        activeTurn    = data.activeTurn   != null ? data.activeTurn : activeTurn;
+        currentPhase  = data.currentPhase != null ? data.currentPhase : currentPhase;
+        globalTurnNum = data.globalTurnNum|| globalTurnNum;
+        gameMode      = data.gameMode     || gameMode;
+        matchCtx      = data.matchCtx     || matchCtx;
+        teamLP        = data.teamLP       || teamLP;
+        if (data.MAX_LP) MAX_LP = data.MAX_LP;
+        render();
+        updateMatchBanner();
+        renderTurnLabel();
+        _fbApplying = false;
+      }
       // Update guest connected indicator
+      var gName = data.players && data.players[_fbGuestSlot] ? data.players[_fbGuestSlot].name : 'Guest';
       var gs = document.getElementById('syncGuestStatus');
-      if (gs) { gs.textContent = '🟢 ' + (data.name || 'Guest') + ' connected'; gs.className = 'sync-status connected'; }
-      updateLPDisplay(_fbGuestSlot);
-      render();
+      if (gs) { gs.textContent = '🟢 ' + gName + ' connected'; gs.className = 'sync-status connected'; }
     });
     _updateSyncDot();
     _renderSyncPanel();
