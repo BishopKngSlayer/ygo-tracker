@@ -11782,7 +11782,13 @@
     // ── Start / Stop ─────────────────────────────────────────────
     window.toggleVoice = function() {
       if (!SpeechRec) { showToast('Voice control not supported in this browser','warning'); return; }
-      if (_active) stopVoice(); else startVoice();
+      if (_active) { stopVoice(); showToast('🎤 Voice control stopped', 'info'); }
+      else {
+        // Close menu so user can see the HUD
+        var menu = document.getElementById('gameMenu');
+        if (menu && !menu.classList.contains('collapsed')) toggleGameMenu();
+        startVoice();
+      }
     };
     window.startVoice = function() {
       if (_active) return;
@@ -11792,6 +11798,7 @@
       _rec.continuous = true;
       _rec.interimResults = true;
       _rec.maxAlternatives = 1;
+      var _speechTimeout = null;
       _rec.onstart = function() {
         _active = true; _restartOnEnd = true;
         var btn = document.getElementById('voiceBtn');
@@ -11799,8 +11806,14 @@
         var hud = document.getElementById('voiceHUD');
         if (hud) hud.classList.add('active');
         setHeard(''); setResult('Say a command…');
+        showToast('🎤 Voice control active', 'info');
+        // Timeout: if no speech detected in 8s, show hint
+        _speechTimeout = setTimeout(function() {
+          if (_active) setResult('No speech detected — check microphone permissions', 'err');
+        }, 8000);
       };
       _rec.onresult = function(e) {
+        clearTimeout(_speechTimeout);
         var interim = '', final_ = '';
         for (var i = e.resultIndex; i < e.results.length; i++) {
           if (e.results[i].isFinal) final_ += e.results[i][0].transcript;
@@ -11810,11 +11823,21 @@
         if (final_.trim()) handleCommand(final_.trim());
       };
       _rec.onerror = function(e) {
+        clearTimeout(_speechTimeout);
         if (e.error === 'no-speech') return;
-        if (e.error === 'not-allowed') { showToast('Microphone access denied','warning'); stopVoice(); return; }
-        setResult('Error: '+e.error,'err');
+        if (e.error === 'not-allowed' || e.error === 'service-not-allowed' || e.error === 'audio-capture') {
+          showToast('🎤 Microphone access denied — check browser permissions','warning');
+          stopVoice();
+          return;
+        }
+        if (e.error === 'network') {
+          setResult('Network error — speech service unavailable', 'err');
+          return;
+        }
+        setResult('Error: ' + e.error, 'err');
       };
       _rec.onend = function() {
+        clearTimeout(_speechTimeout);
         if (_restartOnEnd && _active) { try { _rec.start(); } catch(ex) {} }
         else {
           _active = false;
@@ -11822,7 +11845,7 @@
           var hud = document.getElementById('voiceHUD'); if (hud) hud.classList.remove('active');
         }
       };
-      try { _rec.start(); } catch(ex) { showToast('Could not start voice: '+ex.message,'warning'); }
+      try { _rec.start(); } catch(ex) { showToast('Could not start voice: ' + ex.message, 'warning'); }
     };
     window.stopVoice = function() {
       _restartOnEnd = false; _active = false;
