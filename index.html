@@ -5011,26 +5011,30 @@
         <!-- Battle Phase Panel -->
         ${currentPhase === 3 && i === activeTurn && !p.eliminated ? `
         <div class="battle-panel" id="battle-panel-${i}">
-          <div class="battle-panel-title">⚔️ Battle Damage</div>
+          <div class="battle-panel-title">⚔️ Battle Damage <span style="font-size:9px;color:var(--dim);letter-spacing:1px;margin-left:6px;">Enter = advance · D = direct</span></div>
           <div class="battle-panel-row">
             <div class="battle-field">
               <label class="battle-field-label">My ATK</label>
               <input type="number" class="battle-input" id="batk-${i}" placeholder="0" min="0"
-                oninput="calcCardBattle(${i})">
+                oninput="calcCardBattle(${i})"
+                onkeydown="battleKeyFlow(event,${i},'atk')">
             </div>
             <div class="battle-vs">vs</div>
             <div class="battle-field">
               <label class="battle-field-label">Opp ATK/DEF</label>
               <input type="number" class="battle-input" id="bdef-${i}" placeholder="0" min="0"
-                oninput="calcCardBattle(${i})">
+                oninput="calcCardBattle(${i})"
+                onkeydown="battleKeyFlow(event,${i},'def')">
             </div>
           </div>
           <div class="battle-result" id="bres-${i}" style="display:none;"></div>
           <div class="battle-panel-row" style="margin-top:6px;gap:6px;">
             <select class="battle-target-select" id="btgt-${i}">
-              ${players.map((pl,pi) => pi !== i && !pl.eliminated ? `<option value="${pi}">${pl.name}</option>` : '').join('')}
+              ${players.map((pl,pi) => pi !== i && !pl.eliminated ? `<option value="${pi}">${escHtml(pl.name)}</option>` : '').join('')}
             </select>
-            <button class="battle-apply-btn" onclick="applyCardBattle(${i})">Apply</button>
+            <button class="battle-apply-btn" onclick="applyCardBattle(${i})" id="bbtn-apply-${i}">Apply</button>
+            <button class="battle-apply-btn" onclick="directAttack(${i})" style="background:rgba(255,140,0,0.1);border-color:rgba(255,140,0,0.4);color:#ffaa44;">Direct</button>
+            <button class="battle-apply-btn" onclick="applyHalfBattle(${i})" style="background:rgba(255,180,40,0.08);border-color:rgba(255,180,40,0.35);color:#ffcc88;font-size:15px;" title="Apply half the battle damage">½</button>
           </div>
         </div>` : ''}
 
@@ -5106,6 +5110,10 @@
     });
     updateTurnLabel();
     updateHeaderVisibility();
+    // Auto-focus battle ATK input when in battle phase
+    if (currentPhase === 3) {
+      setTimeout(function() { var a = document.getElementById('batk-' + activeTurn); if (a && !a.value) a.focus(); }, 80);
+    }
   }
 
   /* ── Panel toggle ─────────────────────── */
@@ -5918,6 +5926,76 @@
     document.getElementById('bdef-' + i).value = '';
     var res = document.getElementById('bres-' + i);
     if (res) res.style.display = 'none';
+    var btn = document.querySelector('#battle-panel-' + i + ' .battle-apply-btn');
+    if (btn) btn.disabled = true;
+    // Refocus ATK for next battle
+    setTimeout(function() { var a = document.getElementById('batk-' + i); if (a) a.focus(); }, 60);
+  }
+
+  // ── Enter-key flow: ATK → DEF → Apply → back to ATK ────────
+  function battleKeyFlow(e, i, field) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (field === 'atk') {
+        var defInp = document.getElementById('bdef-' + i);
+        if (defInp) defInp.focus();
+      } else if (field === 'def') {
+        var atk = parseInt(document.getElementById('batk-' + i).value);
+        var def = parseInt(document.getElementById('bdef-' + i).value);
+        if (!isNaN(atk) && !isNaN(def) && atk !== def) {
+          applyCardBattle(i);
+        }
+      }
+    } else if (e.key === 'd' || e.key === 'D') {
+      // Only trigger direct if the current input is empty or we're in the ATK field with a value
+      var atkVal = document.getElementById('batk-' + i).value;
+      var thisVal = e.target.value;
+      if (field === 'atk' && atkVal && !thisVal.includes('d')) {
+        e.preventDefault();
+        directAttack(i);
+      } else if (field === 'def' && !thisVal) {
+        e.preventDefault();
+        directAttack(i);
+      }
+    }
+  }
+
+  // ── Direct attack: full ATK as damage, no DEF needed ────────
+  function directAttack(i) {
+    var atkInp = document.getElementById('batk-' + i);
+    var atk = parseInt(atkInp ? atkInp.value : '');
+    if (isNaN(atk) || atk <= 0) { if (atkInp) { atkInp.style.borderColor = 'rgba(255,100,100,0.8)'; setTimeout(function(){ atkInp.style.borderColor = ''; }, 800); atkInp.focus(); } return; }
+    var target = parseInt(document.getElementById('btgt-' + i).value);
+    if (isNaN(target)) return;
+    adjustLP(target, -atk, 'battle', i);
+    // Clear and refocus
+    atkInp.value = '';
+    var defInp = document.getElementById('bdef-' + i);
+    if (defInp) defInp.value = '';
+    var res = document.getElementById('bres-' + i);
+    if (res) res.style.display = 'none';
+    setTimeout(function() { if (atkInp) atkInp.focus(); }, 60);
+  }
+
+  // ── Half battle damage: apply half the ATK-DEF difference ───
+  function applyHalfBattle(i) {
+    var atk = parseInt(document.getElementById('batk-' + i).value);
+    var def = parseInt(document.getElementById('bdef-' + i).value);
+    if (isNaN(atk) || isNaN(def) || atk === def) return;
+    var diff = atk - def;
+    var dmg = Math.floor(Math.abs(diff) / 2);
+    if (dmg <= 0) return;
+    var target = diff > 0
+      ? parseInt(document.getElementById('btgt-' + i).value)
+      : i;
+    adjustLP(target, -dmg, 'battle', diff > 0 ? i : null);
+    document.getElementById('batk-' + i).value = '';
+    document.getElementById('bdef-' + i).value = '';
+    var res = document.getElementById('bres-' + i);
+    if (res) res.style.display = 'none';
+    var btn = document.querySelector('#battle-panel-' + i + ' .battle-apply-btn');
+    if (btn) btn.disabled = true;
+    setTimeout(function() { var a = document.getElementById('batk-' + i); if (a) a.focus(); }, 60);
   }
 
   function calcBattleDiff() {
