@@ -3648,6 +3648,91 @@
   .koth-queue-del:hover { color:#ff8888; }
   .koth-champion-banner { font-family:'Cinzel',serif; font-size:9px; letter-spacing:2px; color:var(--gold); background:rgba(201,162,39,0.1); border:1px solid rgba(201,162,39,0.25); border-radius:3px; padding:3px 10px; margin-bottom:8px; text-align:center; }
 
+  /* ── Partner Modal ── */
+  #partnerModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:3000; align-items:center; justify-content:center; }
+  #partnerModal.open { display:flex; }
+  .partner-wrap {
+    background: linear-gradient(145deg, #0d0d14 0%, #111118 50%, #0d0d14 100%);
+    border:1px solid rgba(0,200,120,0.2); border-radius:12px;
+    padding:0; max-width:420px; width:92%; max-height:85vh; overflow-y:auto;
+    box-shadow: 0 0 40px rgba(0,200,120,0.08), 0 4px 20px rgba(0,0,0,0.5);
+  }
+  .partner-header {
+    display:flex; justify-content:space-between; align-items:center;
+    padding:18px 24px 14px; border-bottom:1px solid rgba(0,200,120,0.1);
+  }
+  .partner-title {
+    font-family:'Cinzel Decorative',serif; font-size:14px; letter-spacing:3px; color:#44ddaa;
+    text-shadow:0 0 20px rgba(0,200,120,0.3);
+  }
+  .partner-close {
+    background:none; border:none; color:var(--dim); font-size:18px; cursor:pointer; padding:0 4px;
+  }
+  .partner-close:hover { color:#ff8888; }
+  .partner-card {
+    padding:24px; border-bottom:1px solid rgba(255,255,255,0.04);
+  }
+  .partner-card:last-child { border-bottom:none; }
+  .partner-badge {
+    display:inline-block; font-family:'Cinzel',serif; font-size:8px; letter-spacing:2px;
+    color:#0a0a0f; background:linear-gradient(135deg,#44ddaa,#22aa77); border-radius:3px;
+    padding:3px 10px; margin-bottom:12px; text-transform:uppercase; font-weight:bold;
+  }
+  .partner-name {
+    font-family:'Cinzel Decorative',serif; font-size:20px; color:#ffffff;
+    letter-spacing:2px; margin-bottom:6px;
+    text-shadow:0 0 10px rgba(0,200,120,0.15);
+  }
+  .partner-tagline {
+    font-family:'Rajdhani',sans-serif; font-size:14px; color:var(--dim);
+    line-height:1.6; margin-bottom:16px;
+  }
+  .partner-discount-box {
+    background: linear-gradient(135deg, rgba(0,200,120,0.08), rgba(0,200,120,0.03));
+    border:1px solid rgba(0,200,120,0.25); border-radius:8px;
+    padding:16px 20px; text-align:center; margin-bottom:16px;
+  }
+  .partner-discount-label {
+    font-family:'Cinzel',serif; font-size:9px; letter-spacing:3px; color:rgba(0,200,120,0.6);
+    margin-bottom:8px; text-transform:uppercase;
+  }
+  .partner-discount-value {
+    font-family:'Cinzel Decorative',serif; font-size:28px; color:#44ddaa;
+    letter-spacing:3px; text-shadow:0 0 20px rgba(0,200,120,0.3);
+  }
+  .partner-discount-code {
+    display:inline-flex; align-items:center; gap:8px; margin-top:10px;
+    background:rgba(0,0,0,0.3); border:1px dashed rgba(0,200,120,0.4);
+    border-radius:6px; padding:8px 16px; cursor:pointer; transition:all 0.15s;
+  }
+  .partner-discount-code:hover { background:rgba(0,200,120,0.08); border-color:rgba(0,200,120,0.6); }
+  .partner-discount-code:active { transform:scale(0.97); }
+  .partner-code-text {
+    font-family:'Cinzel Decorative',serif; font-size:18px; letter-spacing:4px; color:#44ddaa; font-weight:bold;
+  }
+  .partner-code-copy {
+    font-size:14px; color:var(--dim); transition:color 0.15s;
+  }
+  .partner-discount-code:hover .partner-code-copy { color:#44ddaa; }
+  .partner-discount-note {
+    font-family:'Rajdhani',sans-serif; font-size:12px; color:var(--dim); margin-top:8px; opacity:0.7;
+  }
+  .partner-cta {
+    display:block; width:100%; padding:14px 20px; border:none; border-radius:6px; cursor:pointer;
+    font-family:'Cinzel',serif; font-size:12px; letter-spacing:3px; text-transform:uppercase;
+    text-align:center; text-decoration:none; transition:all 0.2s;
+    background:linear-gradient(135deg,#44ddaa,#22aa77); color:#0a0a0f; font-weight:bold;
+    box-shadow:0 2px 12px rgba(0,200,120,0.2);
+  }
+  .partner-cta:hover { transform:translateY(-1px); box-shadow:0 4px 20px rgba(0,200,120,0.35); }
+  .partner-cta:active { transform:translateY(0); }
+  .partner-footer {
+    padding:14px 24px; text-align:center;
+    font-family:'Rajdhani',sans-serif; font-size:11px; color:var(--dim); opacity:0.5;
+    border-top:1px solid rgba(255,255,255,0.04);
+  }
+  .partner-footer a { color:#44ddaa; text-decoration:none; }
+
 </style>
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -3699,6 +3784,7 @@
   <button class="btn btn-dim"  onclick="openShortcutModal()">⌨ Shortcuts</button>
   <button class="btn btn-dim" id="voiceBtn" onclick="toggleVoice()">🎤 Voice</button>
   <button class="btn btn-dim" onclick="openTutorial()" style="border-color:rgba(201,162,39,0.3);color:var(--gold);">📖 Tutorial</button>
+  <button class="btn btn-dim" onclick="openPartners()" style="border-color:rgba(0,200,120,0.35);color:#44ddaa;">🤝 Partners</button>
 </div>
 
 <div id="matchBanner">
@@ -3911,6 +3997,10 @@
       <button class="roster-io-btn folder" id="rosterFolderBtn" onclick="rosterLinkFolder()" title="Link a folder on your computer — tracker auto-saves yugioh-roster.json there">&#x1F4C1; Link Folder</button>
       <span class="roster-io-label" id="rosterFolderLabel"></span>
       <span style="flex:1"></span>
+      <button class="roster-io-btn" onclick="rosterExport()" style="border-color:rgba(80,220,120,0.4);color:#66dd88;" title="Download roster as JSON file">⬇ Export</button>
+      <button class="roster-io-btn" onclick="document.getElementById('rosterImportFile').click()" style="border-color:rgba(120,180,255,0.4);color:#99ccff;" title="Import roster from JSON file">⬆ Import</button>
+      <input type="file" id="rosterImportFile" accept=".json" style="display:none" onchange="rosterImport(event)">
+      <button class="roster-io-btn" onclick="rosterCopyText()" style="border-color:rgba(201,162,39,0.4);color:var(--gold);" title="Copy all names to clipboard">📋 Copy Names</button>
       <button class="roster-io-btn clear"  onclick="rosterClearAll()">&#x1F5D1; Clear All</button>
       <button class="roster-io-btn" id="rosterSoundBtn" onclick="toggleSoundPanel()" style="border-color:rgba(80,180,255,0.4);color:#88ccff;" title="Sound settings">&#x1F50A; Sounds</button>
       <span class="roster-save-dot" id="rosterSaveDot" title="Saved"></span>
@@ -5488,6 +5578,12 @@
     initPlayers(players.length);
     const header = document.getElementById('siteHeader');
     if (header) header.classList.remove('hidden');
+    // Subtle partner tip (shows ~1 in 4 new games)
+    if (Math.random() < 0.25) {
+      setTimeout(function() {
+        showToast('🎮 15% off gaming gear — code BISHOP at GamerXpress', 'info');
+      }, 2000);
+    }
   }
 
   function setStartingLP(val) {
@@ -6194,6 +6290,8 @@
     // Close log modal with Escape
     const logOpen = document.getElementById('logModal').classList.contains('open');
     if (logOpen && e.key === 'Escape') { closeLog(); return; }
+    // Close partner modal with Escape
+    if (e.key === 'Escape' && document.getElementById('partnerModal').classList.contains('open')) { closePartners(); return; }
     // Close randomizer modal with Escape
     const randOpen = document.getElementById('playersModal').classList.contains('open');
     if (randOpen && e.key === 'Escape') { closeModal(); return; }
@@ -6913,6 +7011,74 @@
     matchRecord[i] = roster[newKey] ? {w:roster[newKey].w, l:roster[newKey].l} : {w:0, l:0};
     rosterSave();
     render();
+  }
+
+  // ── Roster Export (download JSON) ──────────────────────────
+  function rosterExport() {
+    var data = JSON.stringify(roster, null, 2);
+    var blob = new Blob([data], { type: 'application/json' });
+    var url  = URL.createObjectURL(blob);
+    var a    = document.createElement('a');
+    a.href = url;
+    a.download = 'yugioh-roster-' + new Date().toISOString().slice(0,10) + '.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
+    showToast('⬇ Roster exported', 'info');
+  }
+
+  // ── Roster Import (load from JSON file) ────────────────────
+  function rosterImport(event) {
+    var file = event.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        var data = JSON.parse(e.target.result);
+        if (!data || typeof data !== 'object') throw new Error('Invalid format');
+        // Merge: imported entries overwrite existing by key, new entries are added
+        var added = 0, updated = 0;
+        Object.keys(data).forEach(function(key) {
+          var entry = data[key];
+          if (!entry || !entry.name) return;
+          var k = rosterKey(entry.name);
+          if (roster[k]) {
+            // Merge: keep higher stats
+            roster[k].w     = Math.max(roster[k].w||0, entry.w||0);
+            roster[k].l     = Math.max(roster[k].l||0, entry.l||0);
+            roster[k].f     = Math.max(roster[k].f||0, entry.f||0);
+            roster[k].duels = (roster[k].w||0) + (roster[k].l||0) + (roster[k].f||0);
+            updated++;
+          } else {
+            roster[k] = { name: entry.name, w: entry.w||0, l: entry.l||0, f: entry.f||0, duels: (entry.w||0)+(entry.l||0)+(entry.f||0) };
+            added++;
+          }
+        });
+        rosterSave();
+        renderRoster();
+        showToast('⬆ Imported: ' + added + ' new, ' + updated + ' updated', 'info');
+      } catch(err) {
+        showToast('⚠ Invalid roster file: ' + err.message, 'warning');
+      }
+    };
+    reader.readAsText(file);
+    // Reset input so same file can be re-imported
+    event.target.value = '';
+  }
+
+  // ── Roster Copy Names (clipboard) ──────────────────────────
+  function rosterCopyText() {
+    var names = Object.values(roster)
+      .sort(function(a,b) { return a.name.localeCompare(b.name); })
+      .map(function(r) { return r.name + ' (' + (r.w||0) + 'W / ' + (r.l||0) + 'L' + (r.f ? ' / ' + r.f + 'F' : '') + ')'; });
+    if (!names.length) { showToast('Roster is empty', 'warning'); return; }
+    var text = 'YGO TRACKER ROSTER\n' + '─'.repeat(30) + '\n' + names.join('\n');
+    navigator.clipboard.writeText(text).then(function() {
+      showToast('📋 ' + names.length + ' players copied', 'info');
+    }).catch(function() {
+      showToast('⚠ Clipboard access denied', 'warning');
+    });
   }
 
   document.getElementById('rosterModal').addEventListener('click', function(e) {
@@ -11648,6 +11814,16 @@
         timerStop(); setResult('Timer stopped ✓','ok'); return;
       }
 
+      // ── CHAIN OVERLAY ─────────────────────────────────────────
+      if (/^(chain|activate chain|call chain|chain link|i chain)$/.test(t)) {
+        if (!_chainActive) toggleChainOverlay();
+        setResult('⛓ Chain activated','ok'); return;
+      }
+      if (/^(resolve|resolve chain|chain resolves|close chain|end chain)$/.test(t)) {
+        if (_chainActive) toggleChainOverlay();
+        setResult('⛓ Chain resolved','ok'); return;
+      }
+
       // ── COIN & DICE ──────────────────────────────────────────
       // KotH next challenger
       if (gameMode === 'koth' && /^(next challenger|next match|next opponent|send in the next)/.test(t)) {
@@ -11859,6 +12035,31 @@
     window.closeVoiceCmds = function() { document.getElementById('voiceCmdModal').classList.remove('open'); };
 
   }());
+
+  /* ══════════════════════════════════════════════════════════
+     PARTNERS
+     ══════════════════════════════════════════════════════════ */
+
+  function openPartners() {
+    document.getElementById('partnerModal').classList.add('open');
+  }
+  function closePartners() {
+    document.getElementById('partnerModal').classList.remove('open');
+  }
+  function copyPartnerCode() {
+    navigator.clipboard.writeText('BISHOP').then(function() {
+      showToast('📋 Code "BISHOP" copied — 15% off at GamerXpress!', 'info');
+    }).catch(function() {
+      showToast('Code: BISHOP', 'info');
+    });
+  }
+  function trackPartnerClick() {
+    // Track partner link clicks (stored locally for analytics)
+    try {
+      var clicks = parseInt(localStorage.getItem('ygo_partner_clicks') || '0');
+      localStorage.setItem('ygo_partner_clicks', String(clicks + 1));
+    } catch(e) {}
+  }
 
   /* ══════════════════════════════════════════════════════════
      KING OF THE HILL
@@ -12290,6 +12491,10 @@
     <div class="vcmd-row"><span class="vcmd-example">"pause"</span><span class="vcmd-desc">Pause the turn timer</span></div>
     <div class="vcmd-row"><span class="vcmd-example">"stop timer"</span><span class="vcmd-desc">Stop and reset the turn timer</span></div>
 
+    <div class="vcmd-section">Chain</div>
+    <div class="vcmd-row"><span class="vcmd-example">"chain"</span><span class="vcmd-desc">Activate chain overlay (pauses timer)</span></div>
+    <div class="vcmd-row"><span class="vcmd-example">"resolve"</span><span class="vcmd-desc">Resolve chain and resume play</span></div>
+
     <div class="vcmd-section">Coin &amp; Dice</div>
     <div class="vcmd-row"><span class="vcmd-example">"flip coin"</span><span class="vcmd-desc">Open coin/dice and flip</span></div>
     <div class="vcmd-row"><span class="vcmd-example">"roll dice"</span><span class="vcmd-desc">Open coin/dice and roll</span></div>
@@ -12324,6 +12529,40 @@
     <div class="vcmd-row"><span class="vcmd-example">"commands"</span><span class="vcmd-desc">Show this list</span></div>
 
     <button class="vcmd-close" onclick="closeVoiceCmds()">CLOSE</button>
+  </div>
+</div>
+
+<!-- Partner Modal -->
+<div id="partnerModal" onclick="if(event.target===this)closePartners()">
+  <div class="partner-wrap">
+    <div class="partner-header">
+      <span class="partner-title">🤝 Partners</span>
+      <button class="partner-close" onclick="closePartners()">✕</button>
+    </div>
+
+    <div class="partner-card">
+      <div class="partner-badge">Official Partner</div>
+      <div class="partner-name">GamerXpress</div>
+      <div class="partner-tagline">Premium gaming accessories for competitive duelists. Deck boxes, sleeves, playmats, dice, and everything you need to level up your setup.</div>
+
+      <div class="partner-discount-box">
+        <div class="partner-discount-label">Exclusive Discount</div>
+        <div class="partner-discount-value">15% OFF</div>
+        <div class="partner-discount-code" onclick="copyPartnerCode()" title="Click to copy code">
+          <span class="partner-code-text">BISHOP</span>
+          <span class="partner-code-copy">📋</span>
+        </div>
+        <div class="partner-discount-note">on orders over $15</div>
+      </div>
+
+      <a class="partner-cta" href="https://www.gmxpressaccessory.com/discount/BISHOP" target="_blank" rel="noopener" onclick="trackPartnerClick()">
+        Shop GamerXpress →
+      </a>
+    </div>
+
+    <div class="partner-footer">
+      Powered by <a href="https://bishopkngslayer.github.io/ygo-tracker/">Y.U.G.I.O.H.</a> · Checkmate Gaming
+    </div>
   </div>
 </div>
 
