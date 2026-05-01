@@ -1,12 +1,12 @@
 {
-  "name": "Yu-Gi-Oh! Tracker",
-  "short_name": "YGO Tracker",
+  "name": "Y.U.G.I.O.H. Tracker",
+  "short_name": "YUGIOH",
   "description": "Yu-Gi-Oh! life point tracker with card search, rulings AI, roster, and real-time sync",
-  "start_url": "/",
+  "start_url": "./",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#06060a",
-  "theme_color": "#06060a",
+  "background_color": "#0a0a0f",
+  "theme_color": "#c9a227",
   "icons": [
     {
       "src": "icon512.png",
@@ -15,6 +15,5 @@
       "purpose": "any maskable"
     }
   ],
-  "categories": ["games", "utilities"],
-  "screenshots": []
+  "categories": ["games", "utilities"]
 }

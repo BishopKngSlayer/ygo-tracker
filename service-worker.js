@@ -1,12 +1,12 @@
 /* ── YGO Tracker Service Worker ── */
-const CACHE_NAME = 'ygo-tracker-v2';
+const CACHE_NAME = 'ygo-tracker-v3';
 
-// Core files to cache on install
+// Core files to cache on install (relative paths work with GitHub Pages subpaths)
 const PRECACHE = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icon512.png',
+  './',
+  './index.html',
+  './manifest.json',
+  './icon512.png',
 ];
 
 // External resources to cache when first fetched
@@ -91,8 +91,8 @@ self.addEventListener('fetch', function(e) {
     return;
   }
 
-  // App shell (index.html + manifest): network-first, fallback to cache
-  if (url.pathname === '/' || url.pathname.endsWith('index.html') || url.pathname.endsWith('manifest.json')) {
+  // App shell: network-first, fallback to cache
+  if (url.pathname.endsWith('/') || url.pathname.endsWith('index.html') || url.pathname.endsWith('manifest.json')) {
     e.respondWith(
       fetch(e.request).then(function(response) {
         if (response.ok) {
