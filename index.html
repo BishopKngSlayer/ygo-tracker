@@ -3732,6 +3732,115 @@
     border-top:1px solid rgba(255,255,255,0.04);
   }
   .partner-footer a { color:#44ddaa; text-decoration:none; }
+  /* ── Collection (inside Cards modal) ── */
+  .coll-wrap {
+    background:var(--card-bg); border:1px solid var(--border); border-radius:8px;
+    width:min(680px,96vw); max-height:90vh; display:flex; flex-direction:column; overflow:hidden;
+  }
+  .coll-header {
+    display:flex; align-items:center; gap:10px; padding:16px 20px 12px;
+    border-bottom:1px solid rgba(255,255,255,0.06);
+  }
+  .coll-title { font-family:'Cinzel Decorative',serif; font-size:14px; letter-spacing:3px; color:var(--gold); flex:1; }
+  .coll-count { font-family:'Rajdhani',sans-serif; font-size:13px; color:var(--dim); }
+  .coll-close { background:none; border:none; color:var(--dim); font-size:18px; cursor:pointer; }
+  .coll-close:hover { color:#ff8888; }
+  .coll-tabs { display:flex; border-bottom:1px solid rgba(255,255,255,0.06); }
+  .coll-tab {
+    flex:1; padding:10px; text-align:center; cursor:pointer;
+    font-family:'Cinzel',serif; font-size:10px; letter-spacing:2px; color:var(--dim);
+    border-bottom:2px solid transparent; transition:all 0.15s;
+  }
+  .coll-tab.active { color:var(--gold); border-bottom-color:var(--gold); }
+  .coll-tab:hover { color:var(--text); }
+  .coll-panel { display:none; flex:1; overflow-y:auto; padding:16px; }
+  .coll-panel.active { display:block; }
+  .coll-search-row { display:flex; gap:8px; margin-bottom:12px; }
+  .coll-search {
+    flex:1; padding:8px 12px; border-radius:4px; border:1px solid var(--border);
+    background:rgba(255,255,255,0.04); color:var(--text); font-family:'Rajdhani',sans-serif; font-size:14px;
+  }
+  .coll-search:focus { border-color:rgba(201,162,39,0.5); outline:none; }
+  .coll-filter-btn {
+    padding:6px 12px; border:1px solid var(--border); border-radius:4px;
+    background:none; color:var(--dim); cursor:pointer; font-size:11px;
+    font-family:'Cinzel',serif; letter-spacing:1px; transition:all 0.15s;
+  }
+  .coll-filter-btn.active { color:var(--gold); border-color:rgba(201,162,39,0.4); background:rgba(201,162,39,0.08); }
+  .coll-grid {
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(120px, 1fr)); gap:10px;
+  }
+  .coll-card {
+    position:relative; border-radius:6px; overflow:hidden; cursor:pointer;
+    border:1px solid rgba(255,255,255,0.08); transition:all 0.15s; background:rgba(0,0,0,0.3);
+  }
+  .coll-card:hover { border-color:rgba(201,162,39,0.4); transform:translateY(-2px); }
+  .coll-card img { width:100%; aspect-ratio:0.686; object-fit:cover; display:block; }
+  .coll-card-qty {
+    position:absolute; top:4px; right:4px; min-width:22px; height:22px;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(0,0,0,0.85); border:1px solid var(--gold); border-radius:11px;
+    font-family:'Cinzel',serif; font-size:11px; color:var(--gold); font-weight:bold; padding:0 6px;
+  }
+  .coll-card-name {
+    padding:4px 6px; font-family:'Rajdhani',sans-serif; font-size:11px; color:var(--text);
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .coll-card-controls {
+    display:flex; justify-content:center; gap:4px; padding:4px 6px 6px;
+  }
+  .coll-qty-btn {
+    width:26px; height:26px; border-radius:4px; border:1px solid rgba(255,255,255,0.15);
+    background:rgba(255,255,255,0.04); color:var(--dim); cursor:pointer;
+    font-size:14px; display:flex; align-items:center; justify-content:center; transition:all 0.15s;
+  }
+  .coll-qty-btn:hover { color:var(--gold); border-color:rgba(201,162,39,0.4); }
+  .coll-qty-btn.remove { color:#ff8888; }
+  .coll-qty-btn.remove:hover { border-color:rgba(255,100,100,0.5); background:rgba(255,60,60,0.1); }
+  .coll-empty {
+    text-align:center; padding:40px 20px; color:var(--dim);
+    font-family:'Rajdhani',sans-serif; font-size:15px;
+  }
+  .coll-empty-icon { font-size:48px; margin-bottom:12px; display:block; }
+  /* Scanner */
+  .coll-scan-area {
+    text-align:center; padding:20px; display:flex; flex-direction:column; align-items:center; gap:14px;
+  }
+  .coll-scan-btn {
+    padding:16px 32px; border-radius:8px; cursor:pointer;
+    font-family:'Cinzel',serif; font-size:13px; letter-spacing:2px;
+    border:2px dashed rgba(201,162,39,0.4); background:rgba(201,162,39,0.06); color:var(--gold);
+    transition:all 0.2s;
+  }
+  .coll-scan-btn:hover { border-color:rgba(201,162,39,0.7); background:rgba(201,162,39,0.12); }
+  .coll-scan-preview { max-width:200px; border-radius:6px; border:1px solid var(--border); display:none; }
+  .coll-scan-result {
+    font-family:'Rajdhani',sans-serif; font-size:14px; color:var(--text);
+    padding:12px 16px; border-radius:6px; background:rgba(255,255,255,0.03);
+    border:1px solid rgba(255,255,255,0.08); width:100%; max-width:360px; min-height:40px;
+  }
+  .coll-scan-match {
+    display:flex; align-items:center; gap:12px; padding:12px; border-radius:6px;
+    background:rgba(0,200,120,0.06); border:1px solid rgba(0,200,120,0.25); margin-top:10px;
+  }
+  .coll-scan-match img { width:60px; border-radius:4px; }
+  .coll-scan-match-info { flex:1; text-align:left; }
+  .coll-scan-match-name { font-family:'Cinzel',serif; font-size:13px; color:#44ddaa; }
+  .coll-scan-match-type { font-family:'Rajdhani',sans-serif; font-size:11px; color:var(--dim); }
+  .coll-scan-add-btn {
+    padding:8px 18px; border-radius:4px; border:1px solid rgba(0,200,120,0.4);
+    background:rgba(0,200,120,0.1); color:#44ddaa; cursor:pointer;
+    font-family:'Cinzel',serif; font-size:10px; letter-spacing:2px; transition:all 0.15s;
+  }
+  .coll-scan-add-btn:hover { background:rgba(0,200,120,0.2); }
+  /* IO row */
+  .coll-io-row { display:flex; gap:6px; padding:12px 16px; border-top:1px solid rgba(255,255,255,0.04); flex-wrap:wrap; }
+  .coll-io-btn {
+    padding:6px 12px; border-radius:4px; border:1px solid var(--border);
+    background:none; cursor:pointer; font-family:'Cinzel',serif; font-size:9px;
+    letter-spacing:1px; transition:all 0.15s;
+  }
+  .coll-io-btn:hover { border-color:rgba(201,162,39,0.4); }
 
 </style>
   <!-- Firebase SDK -->
@@ -3780,7 +3889,6 @@
   <button class="btn btn-dim"  onclick="openRoster()">👥 Roster</button>
   <button class="btn btn-dim"  onclick="openCardSearch()">🃏 Cards</button>
   <button class="btn btn-dim"  onclick="openRulings()" style="border-color:rgba(120,180,255,0.35);color:#99ccff;">⚖️ Rulings</button>
-  <button class="btn btn-dim"  onclick="openCoinDice()">🎲 Coin / Dice</button>
   <button class="btn btn-dim"  onclick="openShortcutModal()">⌨ Shortcuts</button>
   <button class="btn btn-dim" id="voiceBtn" onclick="toggleVoice()">🎤 Voice</button>
   <button class="btn btn-dim" onclick="openTutorial()" style="border-color:rgba(201,162,39,0.3);color:var(--gold);">📖 Tutorial</button>
@@ -3811,6 +3919,7 @@
     <div class="players-tabs">
       <button class="players-tab active" id="ptab-assign" onclick="switchPlayersTab('assign',this)">&#x1F4CB; Assign</button>
       <button class="players-tab" id="ptab-order" onclick="switchPlayersTab('order',this);populateOrderList()">⚄ Turn Order</button>
+      <button class="players-tab" id="ptab-coindice" onclick="switchPlayersTab('coindice',this)">🎲 Coin / Dice</button>
     </div>
 
     <!-- Assign Tab -->
@@ -3841,6 +3950,24 @@
         <div class="modal-actions">
           <button class="btn btn-dim"  onclick="openRandomizer()">&#x2684; Re-Roll</button>
           <button class="btn btn-gold" onclick="applyOrder()">Apply Order</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Coin / Dice Tab -->
+    <div class="players-tab-panel" id="ppanel-coindice">
+      <div style="padding:20px;display:flex;flex-direction:column;align-items:center;gap:16px;">
+        <div class="cd-result" id="cdResult2" style="font-size:64px;min-height:80px;display:flex;align-items:center;justify-content:center;">🎲</div>
+        <div class="cd-label" id="cdLabel2" style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;color:var(--dim);">Choose below</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">
+          <button class="cd-btn coin" onclick="flipCoin()">🪙 Flip Coin</button>
+          <button class="cd-btn dice" onclick="rollDice(6)">⚄ d6</button>
+          <button class="cd-btn dice" onclick="rollDice(20)">🎲 d20</button>
+          <button class="cd-btn dice" onclick="closePlayersModal();openRandomizer();openPlayersModal()" title="Randomize turn order">🔀 Randomize</button>
+        </div>
+        <div id="cdFirstPick2" style="display:none;margin-top:10px;border-top:1px solid rgba(255,255,255,0.08);padding-top:14px;width:100%;">
+          <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:3px;color:var(--dim);text-align:center;margin-bottom:10px;">WHO GOES FIRST?</div>
+          <div id="cdFirstPickBtns2" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;"></div>
         </div>
       </div>
     </div>
@@ -4310,8 +4437,9 @@
 <div id="cardSearchModal">
   <div class="csearch-wrap">
     <div class="csearch-header">
-      <span class="csearch-title">&#x1F0CF; Card Search</span>
+      <span class="csearch-title">&#x1F0CF; Cards</span>
       <div style="display:flex;align-items:center;gap:12px;">
+        <button class="csearch-deck-toggle" id="csCollToggle" onclick="toggleCollectionView()" style="border-color:rgba(0,200,120,0.3);color:#44ddaa;">📦 Collection <span class="cdeck-toggle-count" id="csCollCount" style="background:rgba(0,200,120,0.2);color:#44ddaa;">0</span></button>
         <span id="cardDbStatus" style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;color:var(--dim);"></span>
         <button id="cardDbRefreshBtn" onclick="cardDbDownload(true)" style="display:none;background:none;border:1px solid rgba(201,162,39,0.3);border-radius:4px;color:var(--gold);font-family:'Cinzel',serif;font-size:10px;letter-spacing:1px;padding:5px 12px;cursor:pointer;" title="Re-download card database">&#x21BB; Refresh DB</button>
         <button class="csearch-deck-toggle" id="csDeckToggle" onclick="toggleDeckBuilder()">&#x1F4CB; Deck Builder <span class="cdeck-toggle-count" id="csDeckCount">0</span></button>
@@ -4319,6 +4447,33 @@
       </div>
     </div>
     <div class="csearch-body">
+      <!-- Collection panel (hidden by default) -->
+      <div id="csCollPanel" style="display:none;flex:1;overflow-y:auto;padding:16px;flex-direction:column;gap:12px;">
+        <div class="coll-search-row">
+          <input class="coll-search" id="collSearchInput" placeholder="Search your collection…" oninput="collRenderGrid()">
+          <button class="coll-filter-btn" onclick="collCycleSort()" id="collSortBtn" title="Sort order">A→Z</button>
+        </div>
+        <div class="coll-search-row" style="gap:4px;flex-wrap:wrap;">
+          <button class="coll-filter-btn active" data-filter="all" onclick="collSetFilter('all',this)">All</button>
+          <button class="coll-filter-btn" data-filter="monster" onclick="collSetFilter('monster',this)">Monster</button>
+          <button class="coll-filter-btn" data-filter="spell" onclick="collSetFilter('spell',this)">Spell</button>
+          <button class="coll-filter-btn" data-filter="trap" onclick="collSetFilter('trap',this)">Trap</button>
+          <button class="coll-filter-btn" data-filter="extra" onclick="collSetFilter('extra',this)">Extra Deck</button>
+        </div>
+        <div class="coll-grid" id="collGrid"></div>
+        <div class="coll-empty" id="collEmpty" style="display:none;">
+          <span class="coll-empty-icon">📦</span>
+          Your collection is empty.<br>Search for cards and use the <b>📦+</b> button to add them.
+        </div>
+        <div class="coll-io-row" style="border-top:1px solid rgba(255,255,255,0.04);padding-top:10px;margin-top:10px;">
+          <button class="coll-io-btn" onclick="collScanPrompt()" style="color:#44ddaa;border-color:rgba(0,200,120,0.4);">📷 Scan Card</button>
+          <button class="coll-io-btn" onclick="collExport()" style="color:#66dd88;border-color:rgba(80,220,120,0.4);">⬇ Export</button>
+          <button class="coll-io-btn" onclick="document.getElementById('collImportFile').click()" style="color:#99ccff;border-color:rgba(120,180,255,0.4);">⬆ Import</button>
+          <input type="file" id="collImportFile" accept=".json" style="display:none" onchange="collImport(event)">
+          <span style="flex:1"></span>
+          <button class="coll-io-btn" onclick="collClearAll()" style="color:#ff8888;border-color:rgba(255,100,100,0.3);">🗑 Clear All</button>
+        </div>
+      </div>
       <!-- Left: search UI -->
       <div class="csearch-main">
         <!-- Search bar row -->
@@ -5370,10 +5525,35 @@
     }
   }
 
+  // Auto-collapse +/- panels after applying damage/heal (short delay for visual feedback)
+  var _collapseTimers = {};
+  function _autoCollapsePanel(i) {
+    clearTimeout(_collapseTimers[i]);
+    _collapseTimers[i] = setTimeout(function() {
+      if (panelState[i]) {
+        panelState[i] = null;
+        var card = document.getElementById('card-' + i);
+        if (!card) return;
+        var mt = card.querySelector('.minus-toggle');
+        var pt = card.querySelector('.plus-toggle');
+        if (mt) mt.classList.remove('open');
+        if (pt) pt.classList.remove('open');
+        var panels = document.getElementById('panels-' + i);
+        if (panels) panels.classList.remove('visible');
+        var mp = document.getElementById('minus-panel-' + i);
+        var pp = document.getElementById('plus-panel-' + i);
+        if (mp) mp.classList.add('hidden-panel');
+        if (pp) pp.classList.add('hidden-panel');
+      }
+    }, 800);
+  }
+
   function applyPreset(i, delta) {
     const type = delta < 0 ? (dmgTypeState[i] || 'effect') : 'heal';
     const src  = delta < 0 ? getSourceIdx(i) : null;
     adjustLP(i, delta, type, src);
+    // Auto-collapse panel after applying
+    _autoCollapsePanel(i);
   }
 
   function applyAllPreset(i) {
@@ -5385,6 +5565,7 @@
       players.forEach((p, pi) => { if (pi !== i && !p.eliminated) { adjustLP(pi, -val, type, i); affected++; } });
       if (el) el.value = '';
       if (affected > 0) showToast('💥 Hit All: -' + val.toLocaleString() + ' LP × ' + affected + ' players', 'damage');
+      _autoCollapsePanel(i);
     } else {
       const inp = document.getElementById('cm-' + i);
       if (inp) { inp.style.borderColor = 'rgba(255,100,100,0.8)'; setTimeout(() => inp.style.borderColor = '', 800); inp.focus(); }
@@ -5416,6 +5597,7 @@
       const type = sign < 0 ? (dmgTypeState[i] || 'effect') : 'heal';
       adjustLP(i, sign * val, type, null);
       el.value = '';
+      _autoCollapsePanel(i);
     }
   }
 
@@ -5443,6 +5625,7 @@
       const src  = sign < 0 ? getSourceIdx(i) : null;
       adjustLP(i, sign * val, type, src);
       el.value = '';
+      _autoCollapsePanel(i);
     }
   }
 
@@ -5640,7 +5823,7 @@
       var sel = document.createElement('select');
       sel.className = 'assign-select';
       sel.setAttribute('data-slot', i);
-      sel.setAttribute('onchange', 'refreshAssignSlots()');
+      sel.setAttribute('onchange', '_handleAssignChange(this)');
       row.appendChild(num);
       row.appendChild(sel);
       slots.appendChild(row);
@@ -5662,9 +5845,10 @@
         + rosterNames
             .filter(function(n) { return chosen.indexOf(n) === -1 || n === current; })
             .map(function(n) {
-              return '<option value="' + n + '"' + (n === current ? ' selected' : '') + '>' + n + '</option>';
-            }).join('');
-      if (current) sel.value = current;
+              return '<option value="' + escHtml(n) + '"' + (n === current ? ' selected' : '') + '>' + escHtml(n) + '</option>';
+            }).join('')
+        + '<option value="__new__">➕ New Player…</option>';
+      if (current && current !== '__new__') sel.value = current;
     });
   }
 
@@ -5675,6 +5859,42 @@
     _fillAssignOptions(prev);
   }
 
+  // Handle "New Player" selection — show inline text input
+  function _handleAssignChange(sel) {
+    if (sel.value === '__new__') {
+      var row = sel.closest('.assign-slot');
+      if (!row) return;
+      // Create inline input
+      var inp = document.createElement('input');
+      inp.className = 'assign-select';
+      inp.type = 'text';
+      inp.placeholder = 'Type new name…';
+      inp.maxLength = 24;
+      inp.style.flex = '1';
+      inp.setAttribute('data-slot', sel.getAttribute('data-slot'));
+      inp.setAttribute('data-newplayer', 'true');
+      // Replace select with input
+      sel.style.display = 'none';
+      row.appendChild(inp);
+      inp.focus();
+      // Add cancel button
+      var cancelBtn = document.createElement('button');
+      cancelBtn.textContent = '✕';
+      cancelBtn.className = 'btn btn-dim';
+      cancelBtn.style.cssText = 'padding:4px 8px;font-size:12px;min-width:auto;';
+      cancelBtn.onclick = function() {
+        sel.style.display = '';
+        sel.value = '';
+        inp.remove();
+        cancelBtn.remove();
+        refreshAssignSlots();
+      };
+      row.appendChild(cancelBtn);
+    } else {
+      refreshAssignSlots();
+    }
+  }
+
   function assignApply() {
     var countSel = document.getElementById('assignCountSelect');
     var newCount = countSel ? parseInt(countSel.value) : players.length;
@@ -5682,14 +5902,29 @@
     if (newCount !== players.length) {
       setPlayerCount(newCount);
     }
-    var sels = document.querySelectorAll('#assignSlots .assign-select');
-    sels.forEach(function(sel) {
-      var i    = parseInt(sel.getAttribute('data-slot'));
-      var name = sel.value.trim();
-      if (name && players[i] && name !== players[i].name) {
-        var old = players[i].name;
-        players[i].name = name;
-        rosterOnNameChange_silent(i, old, name);
+    // Gather names from selects AND text inputs (for new players)
+    var slots = document.getElementById('assignSlots');
+    var rows = slots.querySelectorAll('.assign-slot');
+    rows.forEach(function(row) {
+      var sel = row.querySelector('select');
+      var inp = row.querySelector('input[data-newplayer]');
+      var slotIdx = parseInt((inp || sel).getAttribute('data-slot'));
+      var name = '';
+      if (inp && inp.value.trim()) {
+        name = inp.value.trim();
+        // Auto-add to roster
+        var rk = rosterKey(name);
+        if (!roster[rk]) {
+          roster[rk] = { name: name, w: 0, l: 0, f: 0, duels: 0 };
+          rosterSave();
+        }
+      } else if (sel) {
+        name = sel.value.trim();
+      }
+      if (name && name !== '__new__' && players[slotIdx] && name !== players[slotIdx].name) {
+        var old = players[slotIdx].name;
+        players[slotIdx].name = name;
+        rosterOnNameChange_silent(slotIdx, old, name);
       }
     });
     populateOrderList();
@@ -6295,6 +6530,26 @@
     // Close randomizer modal with Escape
     const randOpen = document.getElementById('playersModal').classList.contains('open');
     if (randOpen && e.key === 'Escape') { closeModal(); return; }
+    // Close other modals with Escape
+    if (e.key === 'Escape') {
+      var _escModals = [
+        { id: 'rosterModal',      fn: function(){ closeRoster(); } },
+        { id: 'cardSearchModal',  fn: function(){ if(_collViewActive){toggleCollectionView(false);}else{closeCardSearch();} } },
+        { id: 'rulingsModal',     fn: function(){ closeRulings(); } },
+        { id: 'coinDiceModal',    fn: function(){ closeCoinDice(); } },
+        { id: 'modeModal',        fn: function(){ closeModeModal(); } },
+        { id: 'shortcutModal',    fn: function(){ closeShortcutModal(); } },
+        { id: 'voiceCmdModal',    fn: function(){ closeVoiceCmds(); } },
+        { id: 'chainOverlay',     fn: function(){ toggleChainOverlay(); }, cls: 'active' }
+      ];
+      for (var _em = 0; _em < _escModals.length; _em++) {
+        var _m = document.getElementById(_escModals[_em].id);
+        if (_m && _m.classList.contains(_escModals[_em].cls || 'open')) {
+          _escModals[_em].fn();
+          return;
+        }
+      }
+    }
     // Close deck library / import with Escape
     if (e.key === 'Escape') {
       var dlibOpen = document.getElementById('deckLibraryModal') && document.getElementById('deckLibraryModal').classList.contains('open');
@@ -6744,41 +6999,48 @@
 
   /* ━━ COIN / DICE ━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   function openCoinDice() {
-    document.getElementById('cdResult').innerHTML = '&#x1F3B2;';
-    document.getElementById('cdLabel').textContent = 'Choose below';
-    document.getElementById('cdFirstPick').style.display = 'none';
-    document.getElementById('coinDiceModal').classList.add('open');
+    // Open Players modal on Coin/Dice tab
+    document.getElementById('playersModal').classList.add('open');
+    switchPlayersTab('coindice', document.getElementById('ptab-coindice'));
   }
   function closeCoinDice() {
     document.getElementById('coinDiceModal').classList.remove('open');
   }
   function _cdAnimate() {
-    var el = document.getElementById('cdResult');
-    el.style.animation = 'none'; void el.offsetWidth; el.style.animation = '';
+    ['cdResult','cdResult2'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) { el.style.animation = 'none'; void el.offsetWidth; el.style.animation = ''; }
+    });
   }
   function _showFirstPick() {
-    var fp = document.getElementById('cdFirstPick');
-    var btns = document.getElementById('cdFirstPickBtns');
-    if (!fp || !btns) return;
-    btns.innerHTML = players.filter(function(p){ return !p.eliminated; }).map(function(p, i) {
-      var idx = players.indexOf(p);
-      return '<button class="cd-btn coin" style="min-width:90px;" onclick="_setFirstPlayer(' + idx + ')">'
-        + '▶ ' + (escHtml(p.name) || ('Player ' + (idx+1)))
-        + '</button>';
-    }).join('');
-    fp.style.display = 'block';
+    ['cdFirstPick','cdFirstPick2'].forEach(function(fpId) {
+      var fp = document.getElementById(fpId);
+      var btnsId = fpId === 'cdFirstPick' ? 'cdFirstPickBtns' : 'cdFirstPickBtns2';
+      var btns = document.getElementById(btnsId);
+      if (!fp || !btns) return;
+      btns.innerHTML = players.filter(function(p){ return !p.eliminated; }).map(function(p, i) {
+        var idx = players.indexOf(p);
+        return '<button class="cd-btn coin" style="min-width:90px;" onclick="_setFirstPlayer(' + idx + ')">'
+          + '▶ ' + (escHtml(p.name) || ('Player ' + (idx+1)))
+          + '</button>';
+      }).join('');
+      fp.style.display = 'block';
+    });
   }
   function _setFirstPlayer(idx) {
     activeTurn = idx;
     currentPhase = 1;
     render();
     closeCoinDice();
+    closePlayersModal();
   }
   function flipCoin() {
     playSound('coin');
     var heads = Math.random() < 0.5;
-    document.getElementById('cdResult').innerHTML = heads ? '&#x1FA99;' : '&#x26AB;';
-    document.getElementById('cdLabel').textContent  = heads ? 'HEADS' : 'TAILS';
+    var html = heads ? '&#x1FA99;' : '&#x26AB;';
+    var text = heads ? 'HEADS' : 'TAILS';
+    ['cdResult','cdResult2'].forEach(function(id) { var el = document.getElementById(id); if (el) el.innerHTML = html; });
+    ['cdLabel','cdLabel2'].forEach(function(id) { var el = document.getElementById(id); if (el) el.textContent = text; });
     _cdAnimate();
     _showFirstPick();
     if (!timerRunning) timerStart();
@@ -6787,8 +7049,10 @@
     playSound('dice');
     var val    = Math.floor(Math.random() * sides) + 1;
     var d6face = ['&#x2680;','&#x2681;','&#x2682;','&#x2683;','&#x2684;','&#x2685;'];
-    document.getElementById('cdResult').innerHTML  = sides === 6 ? d6face[val - 1] : String(val);
-    document.getElementById('cdLabel').textContent = 'ROLLED ' + val + (sides !== 6 ? ' (d' + sides + ')' : '');
+    var html = sides === 6 ? d6face[val - 1] : String(val);
+    var text = 'ROLLED ' + val + (sides !== 6 ? ' (d' + sides + ')' : '');
+    ['cdResult','cdResult2'].forEach(function(id) { var el = document.getElementById(id); if (el) el.innerHTML = html; });
+    ['cdLabel','cdLabel2'].forEach(function(id) { var el = document.getElementById(id); if (el) el.textContent = text; });
     _cdAnimate();
     _showFirstPick();
     if (!timerRunning) timerStart();
@@ -7104,13 +7368,14 @@
 
   function _openDB() {
     return new Promise(function(resolve, reject) {
-      var req = indexedDB.open('yugioh_tracker_db', 3);
+      var req = indexedDB.open('yugioh_tracker_db', 4);
       req.onupgradeneeded = function(e) {
         var db = e.target.result;
-        if (!db.objectStoreNames.contains('meta'))    db.createObjectStore('meta');
-        if (!db.objectStoreNames.contains('sounds'))  db.createObjectStore('sounds');
-        if (!db.objectStoreNames.contains('roster'))  db.createObjectStore('roster');
-        if (!db.objectStoreNames.contains('rulings')) db.createObjectStore('rulings');
+        if (!db.objectStoreNames.contains('meta'))       db.createObjectStore('meta');
+        if (!db.objectStoreNames.contains('sounds'))     db.createObjectStore('sounds');
+        if (!db.objectStoreNames.contains('roster'))     db.createObjectStore('roster');
+        if (!db.objectStoreNames.contains('rulings'))    db.createObjectStore('rulings');
+        if (!db.objectStoreNames.contains('collection')) db.createObjectStore('collection');
       };
       req.onsuccess  = function(e) { resolve(e.target.result); };
       req.onerror    = function(e) { reject(e); };
@@ -8842,6 +9107,14 @@
   }
 
   function openCardSearch() {
+    _collViewActive = false;
+    var collPanel = document.getElementById('csCollPanel');
+    var searchMain = document.querySelector('.csearch-main');
+    if (collPanel) collPanel.style.display = 'none';
+    if (searchMain) searchMain.style.display = '';
+    var toggle = document.getElementById('csCollToggle');
+    if (toggle) toggle.style.borderColor = 'rgba(0,200,120,0.3)';
+    collUpdateCount(); // refresh badge
     document.getElementById('cardSearchModal').classList.add('open');
     setTimeout(function() {
       var inp = document.getElementById('cardSearchInput');
@@ -8946,11 +9219,14 @@
       var banLineHTML = '';
       if (banCls) banLineHTML += '<span class="ban-badge ' + banCls + '">' + ban + '</span>';
       if (gPts > 0) banLineHTML += _genesysBadgeHTML(gPts);
+      var collOwned = _collection[String(card.id)];
       div.innerHTML =
         '<img src="' + thumb + '" alt="' + card.name.replace(/"/g,'') + '" loading="lazy" onerror="this.style.opacity=0.2">'
         + (banLineHTML ? '<div class="csearch-card-ban">' + banLineHTML + '</div>' : '')
         + (inDeck ? '<div class="csearch-card-deck-count">×' + inDeck + '</div>' : '')
+        + (collOwned ? '<div class="csearch-card-deck-count" style="left:4px;right:auto;background:rgba(0,200,120,0.85);border-color:#44ddaa;">×' + collOwned.qty + '</div>' : '')
         + '<button class="csearch-card-add" title="Add to deck">+</button>'
+        + '<button class="csearch-card-add" title="Add to collection" style="right:auto;left:4px;bottom:28px;background:rgba(0,200,120,0.85);border-color:#44ddaa;">📦</button>'
         + '<div class="csearch-card-name">' + card.name + '</div>';
       // Add-to-deck button (stops card detail from opening)
       var addBtn = div.querySelector('.csearch-card-add');
@@ -8969,6 +9245,15 @@
           d.insertBefore(badge, d.querySelector('.csearch-card-add'));
         }
       }; })(card, div);
+      // Add-to-collection button
+      var collBtn = div.querySelectorAll('.csearch-card-add')[1]; // second button
+      if (collBtn) collBtn.onclick = (function(c) { return function(e) {
+        e.stopPropagation();
+        collAddCard(c, 1);
+        // Update collection count in header
+        var ce = document.getElementById('csCollCount');
+        if (ce) { var t = 0; Object.values(_collection).forEach(function(x){ t += x.qty||1; }); ce.textContent = t; }
+      }; })(card);
       div.onclick = (function(c) { return function() { openCardDetail(c); }; })(card);
       grid.appendChild(div);
     });
@@ -12035,6 +12320,411 @@
     window.closeVoiceCmds = function() { document.getElementById('voiceCmdModal').classList.remove('open'); };
 
   }());
+
+  /* ══════════════════════════════════════════════════════════
+     CARD COLLECTION
+     ══════════════════════════════════════════════════════════ */
+
+  var _collection = {};  // { cardId: { id, name, type, race, attribute, level, atk, def, qty, img_id, dateAdded } }
+  var _collFilter = 'all';
+  var _collSort   = 'name'; // 'name', 'qty', 'recent'
+  var _collAddTimer = null;
+
+  // ── Persistence ──────────────────────────────────────────
+  function collSave() {
+    _idbPut('collection', 'data', JSON.stringify(_collection)).catch(function(){});
+    try { localStorage.setItem('ygo_collection', JSON.stringify(_collection)); } catch(e) {}
+  }
+  function collLoad() {
+    _idbGet('collection', 'data').then(function(saved) {
+      if (saved) { try { _collection = JSON.parse(saved); } catch(e) {} }
+    }).catch(function() {
+      // Fallback to localStorage
+      try { var ls = localStorage.getItem('ygo_collection'); if (ls) _collection = JSON.parse(ls); } catch(e) {}
+    });
+  }
+
+  // ── Open / Close ─────────────────────────────────────────
+  function openCollection() {
+    openCardSearch();
+    setTimeout(function() { toggleCollectionView(true); }, 50);
+  }
+  function closeCollection() {
+    toggleCollectionView(false);
+  }
+  var _collViewActive = false;
+  function toggleCollectionView(forceOn) {
+    _collViewActive = forceOn != null ? forceOn : !_collViewActive;
+    var collPanel = document.getElementById('csCollPanel');
+    var searchMain = document.querySelector('.csearch-main');
+    var deckPanel = document.getElementById('csearchDeckPanel');
+    var toggle = document.getElementById('csCollToggle');
+    if (_collViewActive) {
+      if (collPanel) collPanel.style.display = 'flex';
+      if (searchMain) searchMain.style.display = 'none';
+      if (deckPanel) deckPanel.style.display = 'none';
+      if (toggle) toggle.style.borderColor = 'rgba(0,200,120,0.6)';
+      collRenderGrid();
+      collUpdateCount();
+    } else {
+      if (collPanel) collPanel.style.display = 'none';
+      if (searchMain) searchMain.style.display = '';
+      if (toggle) toggle.style.borderColor = 'rgba(0,200,120,0.3)';
+    }
+  }
+  function collScanPrompt() {
+    // Create hidden file input for scanning
+    var inp = document.createElement('input');
+    inp.type = 'file'; inp.accept = 'image/*'; inp.capture = 'environment';
+    inp.onchange = function(e) { collScanCard(e); };
+    inp.click();
+  }
+
+  // ── Tab switching ────────────────────────────────────────
+  function collSwitchTab(name, btn) {
+    document.querySelectorAll('.coll-tab').forEach(function(t) { t.classList.remove('active'); });
+    document.querySelectorAll('.coll-panel').forEach(function(p) { p.classList.remove('active'); });
+    if (btn) btn.classList.add('active');
+    var panel = document.getElementById('collPanel-' + name);
+    if (panel) panel.classList.add('active');
+  }
+
+  // ── Add card to collection ───────────────────────────────
+  function collAddCard(card, qty) {
+    var id = String(card.id);
+    if (_collection[id]) {
+      _collection[id].qty = (_collection[id].qty || 1) + (qty || 1);
+    } else {
+      var img_id = card.card_images && card.card_images[0] ? card.card_images[0].id : card.id;
+      _collection[id] = {
+        id: card.id, name: card.name, type: card.type || '',
+        race: card.race || '', attribute: card.attribute || '',
+        level: card.level, atk: card.atk, def: card.def,
+        qty: qty || 1, img_id: img_id,
+        dateAdded: Date.now()
+      };
+    }
+    collSave();
+    collUpdateCount();
+    showToast('📦 ' + card.name + ' ×' + (_collection[id].qty) + ' in collection', 'info');
+  }
+
+  function collRemoveCard(id) {
+    id = String(id);
+    if (_collection[id]) {
+      _collection[id].qty--;
+      if (_collection[id].qty <= 0) delete _collection[id];
+      collSave();
+      collRenderGrid();
+      collUpdateCount();
+    }
+  }
+
+  function collSetQty(id, delta) {
+    id = String(id);
+    if (!_collection[id]) return;
+    _collection[id].qty = Math.max(0, (_collection[id].qty || 1) + delta);
+    if (_collection[id].qty <= 0) delete _collection[id];
+    collSave();
+    collRenderGrid();
+    collUpdateCount();
+  }
+
+  // ── Count ────────────────────────────────────────────────
+  function collUpdateCount() {
+    var total = 0, unique = 0;
+    Object.values(_collection).forEach(function(c) { total += c.qty || 1; unique++; });
+    var el = document.getElementById('collCount');
+    if (el) el.textContent = total + ' cards (' + unique + ' unique)';
+    // Also update the card search header badge
+    var hb = document.getElementById('csCollCount');
+    if (hb) hb.textContent = total;
+  }
+
+  // ── Filter & Sort ────────────────────────────────────────
+  function collSetFilter(f, btn) {
+    _collFilter = f;
+    document.querySelectorAll('.coll-filter-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.filter === f);
+    });
+    collRenderGrid();
+  }
+
+  function collCycleSort() {
+    var sorts = ['name', 'qty', 'recent'];
+    var labels = { name: 'A→Z', qty: 'Qty ↓', recent: 'New ↓' };
+    var idx = (sorts.indexOf(_collSort) + 1) % sorts.length;
+    _collSort = sorts[idx];
+    var btn = document.getElementById('collSortBtn');
+    if (btn) btn.textContent = labels[_collSort];
+    collRenderGrid();
+  }
+
+  function _collMatchFilter(c) {
+    if (_collFilter === 'all') return true;
+    var t = (c.type || '').toLowerCase();
+    if (_collFilter === 'monster') return t.includes('monster');
+    if (_collFilter === 'spell')   return t.includes('spell');
+    if (_collFilter === 'trap')    return t.includes('trap');
+    if (_collFilter === 'extra')   return t.includes('fusion') || t.includes('synchro') || t.includes('xyz') || t.includes('link');
+    return true;
+  }
+
+  // ── Render browse grid ───────────────────────────────────
+  function collRenderGrid() {
+    var grid = document.getElementById('collGrid');
+    var empty = document.getElementById('collEmpty');
+    var query = (document.getElementById('collSearchInput').value || '').toLowerCase().trim();
+
+    var items = Object.values(_collection).filter(function(c) {
+      if (!_collMatchFilter(c)) return false;
+      if (query && c.name.toLowerCase().indexOf(query) === -1) return false;
+      return true;
+    });
+
+    // Sort
+    if (_collSort === 'name') items.sort(function(a,b) { return a.name.localeCompare(b.name); });
+    else if (_collSort === 'qty') items.sort(function(a,b) { return (b.qty||1) - (a.qty||1); });
+    else if (_collSort === 'recent') items.sort(function(a,b) { return (b.dateAdded||0) - (a.dateAdded||0); });
+
+    if (items.length === 0) {
+      grid.innerHTML = '';
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+
+    grid.innerHTML = items.map(function(c) {
+      var thumb = 'https://images.ygoprodeck.com/images/cards_small/' + c.img_id + '.jpg';
+      return '<div class="coll-card">'
+        + '<div class="coll-card-qty">' + (c.qty || 1) + '</div>'
+        + '<img src="' + thumb + '" alt="' + escHtml(c.name) + '" loading="lazy" onerror="this.style.opacity=0.2">'
+        + '<div class="coll-card-name" title="' + escHtml(c.name) + '">' + escHtml(c.name) + '</div>'
+        + '<div class="coll-card-controls">'
+        + '<button class="coll-qty-btn remove" onclick="collSetQty(\'' + c.id + '\',-1)" title="Remove one">−</button>'
+        + '<button class="coll-qty-btn" onclick="collSetQty(\'' + c.id + '\',1)" title="Add one">+</button>'
+        + '</div></div>';
+    }).join('');
+  }
+
+  // ── Add Cards search ─────────────────────────────────────
+  function collAddSearchDebounce() {
+    clearTimeout(_collAddTimer);
+    _collAddTimer = setTimeout(collAddSearch, 300);
+  }
+
+  function collAddSearch() {
+    var query = (document.getElementById('collAddSearch').value || '').toLowerCase().trim();
+    var grid = document.getElementById('collAddGrid');
+    var empty = document.getElementById('collAddEmpty');
+    if (!query || query.length < 2 || !_cardDbReady || !_cardDb) {
+      grid.innerHTML = '';
+      empty.style.display = 'block';
+      empty.innerHTML = '<span class="coll-empty-icon">🔍</span>Type a card name to search.';
+      return;
+    }
+
+    var results = _cardDb.filter(function(c) {
+      return c.name.toLowerCase().indexOf(query) !== -1;
+    }).slice(0, 60);
+
+    if (results.length === 0) {
+      grid.innerHTML = '';
+      empty.style.display = 'block';
+      empty.innerHTML = '<span class="coll-empty-icon">🤷</span>No cards found for "' + escHtml(query) + '"';
+      return;
+    }
+    empty.style.display = 'none';
+
+    grid.innerHTML = results.map(function(c) {
+      var img_id = c.card_images && c.card_images[0] ? c.card_images[0].id : c.id;
+      var thumb = 'https://images.ygoprodeck.com/images/cards_small/' + img_id + '.jpg';
+      var owned = _collection[String(c.id)];
+      var qtyBadge = owned ? '<div class="coll-card-qty" style="background:rgba(0,200,120,0.9);border-color:#44ddaa;">' + owned.qty + '</div>' : '';
+      return '<div class="coll-card" onclick="collAddFromSearch(' + c.id + ')">'
+        + qtyBadge
+        + '<img src="' + thumb + '" alt="' + escHtml(c.name) + '" loading="lazy" onerror="this.style.opacity=0.2">'
+        + '<div class="coll-card-name" title="' + escHtml(c.name) + '">' + escHtml(c.name) + '</div>'
+        + '</div>';
+    }).join('');
+  }
+
+  function collAddFromSearch(cardId) {
+    if (!_cardDb) return;
+    var card = _cardDb.find(function(c) { return c.id === cardId; });
+    if (card) {
+      collAddCard(card, 1);
+      collAddSearch(); // refresh to update qty badges
+    }
+  }
+
+  // ── Scanner: camera → AI → identify → add ────────────────
+  function collScanCard(event) {
+    var file = event.target.files[0];
+    if (!file) return;
+    var preview = document.getElementById('collScanPreview');
+    var result  = document.getElementById('collScanResult');
+    var match   = document.getElementById('collScanMatch');
+
+    // Show preview
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      preview.src = e.target.result;
+      preview.style.display = 'block';
+      result.style.display = 'block';
+      result.innerHTML = '<span style="color:var(--gold);">🔍 Identifying card…</span>';
+      match.style.display = 'none';
+
+      // Extract base64 data
+      var base64 = e.target.result.split(',')[1];
+      var mediaType = file.type || 'image/jpeg';
+
+      // Send to Anthropic API for identification
+      fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514', max_tokens: 300,
+          system: 'You are a Yu-Gi-Oh! card identification expert. The user will show you an image of a Yu-Gi-Oh! card. Identify the card and respond with ONLY a JSON object: {"name": "exact card name", "confidence": "high/medium/low"}. If you cannot identify the card, respond with {"name": null, "confidence": "none", "reason": "brief explanation"}. Do not include any other text.',
+          messages: [{ role: 'user', content: [
+            { type: 'image', source: { type: 'base64', media_type: mediaType, data: base64 } },
+            { type: 'text', text: 'Identify this Yu-Gi-Oh! card. Return only JSON.' }
+          ]}]
+        })
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        var text = (data.content && data.content[0] && data.content[0].text) || '';
+        if (data.error) {
+          var isGitHub = window.location.hostname.includes('github.io');
+          result.innerHTML = isGitHub
+            ? '⚠️ Card scanning requires the AI API. Open this app inside Claude.ai to use the scanner, or add cards manually via the <b>Add Cards</b> tab.'
+            : '⚠️ API Error: ' + escHtml(data.error.message || '');
+          return;
+        }
+        // Parse AI response
+        try {
+          var clean = text.replace(/```json|```/g, '').trim();
+          var parsed = JSON.parse(clean);
+          if (parsed.name && parsed.confidence !== 'none') {
+            _collMatchScannedCard(parsed.name, parsed.confidence);
+          } else {
+            result.innerHTML = '❌ Could not identify card' + (parsed.reason ? ': ' + escHtml(parsed.reason) : '') + '. Try a clearer photo.';
+          }
+        } catch(ex) {
+          // AI responded with text, try to extract card name
+          result.innerHTML = '🤔 AI response: ' + escHtml(text.substring(0, 200));
+        }
+      })
+      .catch(function(err) {
+        result.innerHTML = '⚠️ Connection error. Make sure you are using this app inside Claude.ai for AI features.';
+      });
+    };
+    reader.readAsDataURL(file);
+    // Reset input for re-use
+    event.target.value = '';
+  }
+
+  function _collMatchScannedCard(name, confidence) {
+    var result = document.getElementById('collScanResult');
+    var matchEl = document.getElementById('collScanMatch');
+    if (!_cardDb || !_cardDbReady) {
+      result.innerHTML = '⚠️ Card database not loaded yet. Please wait.';
+      return;
+    }
+    // Fuzzy match: exact first, then includes, then starts-with
+    var lname = name.toLowerCase().trim();
+    var found = _cardDb.find(function(c) { return c.name.toLowerCase() === lname; });
+    if (!found) found = _cardDb.find(function(c) { return c.name.toLowerCase().indexOf(lname) !== -1; });
+    if (!found) {
+      // Try each word
+      var words = lname.split(/\s+/);
+      if (words.length > 1) {
+        found = _cardDb.find(function(c) {
+          var cn = c.name.toLowerCase();
+          return words.every(function(w) { return cn.indexOf(w) !== -1; });
+        });
+      }
+    }
+
+    if (found) {
+      var img_id = found.card_images && found.card_images[0] ? found.card_images[0].id : found.id;
+      var thumb = 'https://images.ygoprodeck.com/images/cards_small/' + img_id + '.jpg';
+      result.innerHTML = '✅ Identified: <b>' + escHtml(found.name) + '</b> (confidence: ' + confidence + ')';
+      matchEl.style.display = 'block';
+      matchEl.innerHTML = '<div class="coll-scan-match">'
+        + '<img src="' + thumb + '">'
+        + '<div class="coll-scan-match-info">'
+        + '<div class="coll-scan-match-name">' + escHtml(found.name) + '</div>'
+        + '<div class="coll-scan-match-type">' + escHtml(found.type || '') + (found.race ? ' · ' + escHtml(found.race) : '') + '</div>'
+        + '</div>'
+        + '<button class="coll-scan-add-btn" onclick="collAddFromSearch(' + found.id + ')">+ Add</button>'
+        + '</div>';
+    } else {
+      result.innerHTML = '⚠️ AI identified "' + escHtml(name) + '" but it wasn\'t found in the database. Try the <b>Add Cards</b> tab.';
+      matchEl.style.display = 'none';
+    }
+  }
+
+  // ── Export / Import / Clear ──────────────────────────────
+  function collExport() {
+    var data = JSON.stringify(_collection, null, 2);
+    var blob = new Blob([data], { type: 'application/json' });
+    var url  = URL.createObjectURL(blob);
+    var a    = document.createElement('a');
+    a.href = url;
+    a.download = 'ygo-collection-' + new Date().toISOString().slice(0,10) + '.json';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
+    showToast('⬇ Collection exported (' + Object.keys(_collection).length + ' cards)', 'info');
+  }
+
+  function collImport(event) {
+    var file = event.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        var data = JSON.parse(e.target.result);
+        var added = 0, updated = 0;
+        Object.keys(data).forEach(function(key) {
+          var c = data[key];
+          if (!c || !c.name) return;
+          var id = String(c.id || key);
+          if (_collection[id]) {
+            _collection[id].qty = Math.max(_collection[id].qty || 1, c.qty || 1);
+            updated++;
+          } else {
+            _collection[id] = c;
+            if (!_collection[id].dateAdded) _collection[id].dateAdded = Date.now();
+            added++;
+          }
+        });
+        collSave();
+        collRenderGrid();
+        collUpdateCount();
+        showToast('⬆ Imported: ' + added + ' new, ' + updated + ' updated', 'info');
+      } catch(err) {
+        showToast('⚠ Invalid collection file', 'warning');
+      }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+  }
+
+  function collClearAll() {
+    if (!Object.keys(_collection).length) { showToast('Collection is already empty', 'info'); return; }
+    openConfirm('Clear entire collection? This cannot be undone.', function() {
+      _collection = {};
+      collSave();
+      collRenderGrid();
+      collUpdateCount();
+      showToast('🗑 Collection cleared', 'info');
+    });
+  }
+
+  // Boot: load collection from IDB
+  collLoad();
 
   /* ══════════════════════════════════════════════════════════
      PARTNERS
