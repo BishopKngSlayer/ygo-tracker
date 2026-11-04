@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-04T04:25:39.315Z",
+  "updated": "2026-11-04T04:55:28.955Z",
   "month": "2026-11",
   "rules": {
     "cap": 3,
@@ -10,6 +10,14 @@
     {
       "rank": 1,
       "name": "BishopKngSlayer",
+      "rating": 1500,
+      "points": 100,
+      "wins": 0,
+      "losses": 0
+    },
+    {
+      "rank": 2,
+      "name": "Brakergamer",
       "rating": 1500,
       "points": 100,
       "wins": 0,
