@@ -7440,23 +7440,32 @@
   // ── On startup: restore folder handle + load sounds + load roster ──
   (function() {
     // Load roster from IDB (supplements localStorage)
-    _idbGet('roster', 'data').then(function(saved) {
+    var _rosterIdbLoad = _idbGet('roster', 'data').then(function(saved) {
       if (saved) {
         try {
           var parsed = typeof saved === 'string' ? JSON.parse(saved) : saved;
           Object.assign(roster, parsed);
         } catch(e) {}
       }
-    });
+    }).catch(function(){});
 
     // Restore folder handle (desktop only)
-    _idbGet('meta', 'folderHandle').then(function(handle) {
+    var _rosterFolderLoad = _idbGet('meta', 'folderHandle').then(function(handle) {
       if (handle) {
         _fsDir = handle;
         _updateFolderUI(handle.name);
-        _fsReadFile().catch(function(){});
+        return _fsReadFile().catch(function(){});
       }
+    }).catch(function(){});
+
+    // Lets the "Who's playing?" prompt wait until saved names are loaded.
+    window._rosterReady = Promise.all([_rosterIdbLoad, _rosterFolderLoad]).then(function() {
+      window._rosterLoaded = true;
+      rosterSave();   // write the merged roster back to every store
+      if (document.getElementById('rosterModal') && document.getElementById('rosterModal').classList.contains('open')) renderRoster();
     });
+    // Safety net: if storage never answers, don't block saving forever.
+    setTimeout(function() { if (!window._rosterLoaded) { window._rosterLoaded = true; if (window._rosterSaveQueued) rosterSave(); } }, 5000);
 
     // Load all stored sounds into AudioBuffers
     _idbGetAllKeys('sounds').then(function(keys) {
@@ -7548,6 +7557,8 @@
       // also persist merged result back to localStorage
       try { localStorage.setItem('yugioh_tracker_roster', JSON.stringify(roster)); } catch(e) {}
       if (document.getElementById('rosterList')) renderRoster();
+      var _pm = document.getElementById('playersModal');
+      if (_pm && _pm.classList.contains('open') && typeof refreshAssignSlots === 'function') refreshAssignSlots();
     } catch(e) {
       // file doesn't exist yet — that's fine, will be created on first save
     }
@@ -7572,6 +7583,9 @@
   }
 
   function rosterSave() {
+    // Until saved names have finished loading at startup, don't write anything:
+    // saving now would overwrite the stored roster with an empty/partial one.
+    if (!window._rosterLoaded) { window._rosterSaveQueued = true; return; }
     // 1. Always save to localStorage as instant fallback
     try { localStorage.setItem('yugioh_tracker_roster', JSON.stringify(roster)); } catch(e) {}
     // 1b. Also write to IndexedDB (works on iOS/iPad)
@@ -13335,8 +13349,15 @@
     if (!askPlayersOnOpen()) return;
     var tutorialFirst = false;
     try { tutorialFirst = !localStorage.getItem('ygo_tutorial_done'); } catch (e) {}
-    if (tutorialFirst) window._whoIsPlayingPending = true;   // ask right after the tutorial closes
-    else setTimeout(openWhoIsPlaying, 700);
+    if (tutorialFirst) { window._whoIsPlayingPending = true; return; }   // ask right after the tutorial closes
+    var ready = window._rosterReady || Promise.resolve();
+    var timeout = new Promise(function (r) { setTimeout(r, 3000); });
+    Promise.race([ready, timeout]).then(function () { setTimeout(openWhoIsPlaying, 200); });
+    // If saved names finish loading after the prompt is already open, refresh its dropdowns.
+    ready.then(function () {
+      var m = document.getElementById('playersModal');
+      if (m && m.classList.contains('open') && typeof refreshAssignSlots === 'function') refreshAssignSlots();
+    });
   })();
 </script>
 </body>
