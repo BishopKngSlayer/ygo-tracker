@@ -3916,7 +3916,7 @@
 <div id="playersModal">
   <div class="players-wrap">
     <div class="players-header">
-      <span class="players-title">&#x1F465; Players</span>
+      <span class="players-title" id="playersTitle">&#x1F465; Players</span>
       <button class="players-close" onclick="closePlayersModal()">&#x2715;</button>
     </div>
     <div class="players-tabs">
@@ -3941,7 +3941,10 @@
       </div>
       <div class="assign-slots" id="assignSlots"></div>
       <div class="assign-actions">
-        <button class="btn btn-dim" onclick="closePlayersModal()">Cancel</button>
+        <label style="display:flex;align-items:center;gap:6px;margin-right:auto;font-size:11px;color:var(--dim);cursor:pointer;">
+          <input type="checkbox" id="askPlayersToggle" onchange="setAskPlayersOnOpen(this.checked)"> Ask when the tracker opens
+        </label>
+        <button class="btn btn-dim" id="assignCancelBtn" onclick="closePlayersModal()">Cancel</button>
         <button class="btn btn-gold" onclick="assignApply()">&#x2714; Apply Names</button>
       </div>
     </div>
@@ -5772,6 +5775,9 @@
     if (countSel) { countSel._initialised = false; }
     renderAssignSlots();
     switchPlayersTab('assign', document.getElementById('ptab-assign'));
+    var _pt = document.getElementById('playersTitle'); if (_pt) _pt.innerHTML = '&#x1F465; Players';
+    var _cb = document.getElementById('assignCancelBtn'); if (_cb) _cb.textContent = 'Cancel';
+    var _tg = document.getElementById('askPlayersToggle'); if (_tg) _tg.checked = askPlayersOnOpen();
     document.getElementById('playersModal').classList.add('open');
   }
 
@@ -11636,6 +11642,7 @@
   function closeTutorial() {
     document.getElementById('tutorialOverlay').classList.remove('open');
     localStorage.setItem('ygo_tutorial_done', '1');
+    if (window._whoIsPlayingPending) { window._whoIsPlayingPending = false; setTimeout(openWhoIsPlaying, 300); }
   }
 
   function tutorialNext() {
@@ -13302,6 +13309,35 @@
   function closeLadder() {
     document.getElementById('ladderModal').classList.remove('open');
   }
+</script>
+
+<!-- ═══ "Who's playing?" prompt on startup (reuses the Players window) ═══ -->
+<script>
+  function askPlayersOnOpen() {
+    try { return localStorage.getItem('ygo_ask_players') !== '0'; } catch (e) { return true; }
+  }
+  function setAskPlayersOnOpen(on) {
+    try { localStorage.setItem('ygo_ask_players', on ? '1' : '0'); } catch (e) {}
+    if (typeof showToast === 'function') showToast(on ? "Will ask who's playing on open" : "Won't ask on open", 'info');
+  }
+  function openWhoIsPlaying() {
+    var modal = document.getElementById('playersModal');
+    if (!modal || modal.classList.contains('open')) return;
+    openPlayersModal();
+    var pt = document.getElementById('playersTitle'); if (pt) pt.innerHTML = '&#x1F3B4; Who\'s playing?';
+    var cb = document.getElementById('assignCancelBtn'); if (cb) cb.textContent = 'Skip';
+  }
+  (function () {
+    try {
+      // Don't interrupt someone joining a synced room from a link.
+      if (new URLSearchParams(window.location.search).get('room')) return;
+    } catch (e) {}
+    if (!askPlayersOnOpen()) return;
+    var tutorialFirst = false;
+    try { tutorialFirst = !localStorage.getItem('ygo_tutorial_done'); } catch (e) {}
+    if (tutorialFirst) window._whoIsPlayingPending = true;   // ask right after the tutorial closes
+    else setTimeout(openWhoIsPlaying, 700);
+  })();
 </script>
 </body>
 </html>
