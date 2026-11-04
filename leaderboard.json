@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-04T22:15:54.013Z",
+  "updated": "2026-11-04T23:30:36.814Z",
   "month": "2026-11",
   "rules": {
     "cap": 3,
@@ -9,16 +9,16 @@
   "players": [
     {
       "rank": 1,
-      "name": "Brakergamer",
-      "rating": 1516,
-      "points": 110,
-      "wins": 1,
+      "name": "BrakerGaming",
+      "rating": 1553,
+      "points": 130,
+      "wins": 4,
       "losses": 0
     },
     {
       "rank": 2,
-      "name": "BrakerGaming",
-      "rating": 1515,
+      "name": "Brakergamer",
+      "rating": 1516,
       "points": 110,
       "wins": 1,
       "losses": 0
@@ -50,13 +50,28 @@
     {
       "rank": 6,
       "name": "BishopKngSlayer",
-      "rating": 1469,
+      "rating": 1431,
       "points": 100,
       "wins": 0,
-      "losses": 2
+      "losses": 5
     }
   ],
   "recent": [
+    {
+      "kind": "rated",
+      "summary": "BrakerGaming defeated BishopKngSlayer. BrakerGaming +0 pts (monthly cap), rating ±12. BrakerGaming has earned from BishopKngSlayer 3/3 times this month.",
+      "at": "2026-11-04 23:26:13Z"
+    },
+    {
+      "kind": "rated",
+      "summary": "BrakerGaming defeated BishopKngSlayer. BrakerGaming +10 pts, rating ±13. BrakerGaming has earned from BishopKngSlayer 3/3 times this month.",
+      "at": "2026-11-04 23:25:23Z"
+    },
+    {
+      "kind": "rated",
+      "summary": "BrakerGaming defeated BishopKngSlayer. BrakerGaming +10 pts, rating ±14. BrakerGaming has earned from BishopKngSlayer 2/3 times this month.",
+      "at": "2026-11-04 23:24:36Z"
+    },
     {
       "kind": "rated",
       "summary": "BrakerGaming defeated BishopKngSlayer. BrakerGaming +10 pts, rating ±15. BrakerGaming has earned from BishopKngSlayer 1/3 times this month.",
