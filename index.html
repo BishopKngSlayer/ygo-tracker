@@ -9129,6 +9129,7 @@
         _cardDbReady = true;
         var d = stored.date ? new Date(stored.date).toLocaleDateString() : '?';
         _setCardDbStatus('📦 ' + _cardDb.length.toLocaleString() + ' CARDS  ·  ' + d, '#88cc88');
+        _cardDbCheckForUpdate(stored);   // keep ban list / Genesys points current
       } else {
         _setCardDbStatus('⬇️ DOWNLOADING DB…', 'var(--gold)');
         cardDbDownload(false);
@@ -9136,6 +9137,25 @@
     }).catch(function() {
       _setCardDbStatus('⬇️ DOWNLOADING DB…', 'var(--gold)');
       cardDbDownload(false);
+    });
+  }
+
+  // ── Freshness: ask YGOPRODeck for its database version (tiny request) and
+  //    re-download in the background when it changed. The cached cards stay usable meanwhile.
+  //    If the version check fails, fall back to refreshing anything older than 7 days.
+  function _cardDbFetchVersion() {
+    return fetch('https://db.ygoprodeck.com/api/v7/checkDBVer.php', { cache: 'no-store' })
+      .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function(j) { var row = Array.isArray(j) ? j[0] : j; return (row && row.database_version) ? String(row.database_version) : null; });
+  }
+  function _cardDbCheckForUpdate(stored) {
+    _cardDbFetchVersion().then(function(v) {
+      if (v && v !== stored.version) {
+        _setCardDbStatus('⬇️ UPDATING CARD DATA…', 'var(--gold)');
+        cardDbDownload(false);
+      }
+    }).catch(function() {
+      if (Date.now() - (stored.date || 0) > 7 * 864e5) cardDbDownload(false);
     });
   }
 
@@ -9185,14 +9205,22 @@
         var d = new Date().toLocaleDateString();
         _setCardDbStatus('📦 ' + _cardDb.length.toLocaleString() + ' CARDS  ·  ' + d, '#88cc88');
 
-        // Persist to IDB
-        _cardIdbPut({ cards: _cardDb, date: Date.now() });
+        // Persist to IDB, with YGOPRODeck's version so we know when it changes
+        var _saved = _cardDb;
+        _cardDbFetchVersion()
+          .then(function(v) { _cardIdbPut({ cards: _saved, date: Date.now(), version: v }); })
+          .catch(function() { _cardIdbPut({ cards: _saved, date: Date.now(), version: null }); });
       })
       .catch(function(err) {
         _cardDbLoading = false;
+        console.warn('Card DB download failed:', err);
+        if (_cardDb && _cardDb.length) {   // background update failed: keep using the cached cards
+          _cardDbReady = true;
+          _setCardDbStatus('📦 ' + _cardDb.length.toLocaleString() + ' CARDS  ·  update failed, using saved copy', '#ccaa66');
+          return;
+        }
         _cardDbReady = false;
         _setCardDbStatus('⚠️ DB UNAVAILABLE — LIVE SEARCH', '#ff8888');
-        console.warn('Card DB download failed:', err);
       });
   }
 
