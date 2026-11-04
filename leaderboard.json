@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-04T17:42:38.534Z",
+  "updated": "2026-11-04T17:53:56.364Z",
   "month": "2026-11",
   "rules": {
     "cap": 3,
@@ -25,6 +25,14 @@
     },
     {
       "rank": 3,
+      "name": "tcgmany",
+      "rating": 1500,
+      "points": 100,
+      "wins": 0,
+      "losses": 0
+    },
+    {
+      "rank": 4,
       "name": "BishopKngSlayer",
       "rating": 1484,
       "points": 100,
