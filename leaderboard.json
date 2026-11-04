@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-04T19:50:41.667Z",
+  "updated": "2026-11-04T20:07:51.456Z",
   "month": "2026-11",
   "rules": {
     "cap": 3,
@@ -41,6 +41,14 @@
     },
     {
       "rank": 5,
+      "name": "wolfmaster",
+      "rating": 1500,
+      "points": 100,
+      "wins": 0,
+      "losses": 0
+    },
+    {
+      "rank": 6,
       "name": "BishopKngSlayer",
       "rating": 1469,
       "points": 100,
