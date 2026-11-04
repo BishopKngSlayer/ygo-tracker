@@ -1,0 +1,11 @@
+{
+  "updated": "2026-11-04T03:04:57.007Z",
+  "month": "2026-11",
+  "rules": {
+    "cap": 3,
+    "maxStake": 50,
+    "basePoints": 10
+  },
+  "players": [],
+  "recent": []
+}
