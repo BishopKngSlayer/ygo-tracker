@@ -3889,13 +3889,13 @@
   <button class="btn btn-gold" onclick="openAllDmg()" style="letter-spacing:1px;">⚔️ Dmg All</button>
   <button class="btn btn-dim"  onclick="openLog()">📜 Game Log</button>
   <button class="btn btn-dim"  onclick="openRoster()">👥 Roster</button>
+  <button class="btn btn-dim"  onclick="openLadder()" style="border-color:rgba(201,162,39,0.35);color:var(--gold);">🏆 Ladder</button>
   <button class="btn btn-dim"  onclick="openCardSearch()">🃏 Cards</button>
   <button class="btn btn-dim"  onclick="openRulings()" style="border-color:rgba(120,180,255,0.35);color:#99ccff;">⚖️ Rulings</button>
   <button class="btn btn-dim"  onclick="openShortcutModal()">⌨ Shortcuts</button>
   <button class="btn btn-dim" id="voiceBtn" onclick="toggleVoice()">🎤 Voice</button>
   <button class="btn btn-dim" onclick="openTutorial()" style="border-color:rgba(201,162,39,0.3);color:var(--gold);">📖 Tutorial</button>
   <button class="btn btn-dim" onclick="openPartners()" style="border-color:rgba(0,200,120,0.35);color:#44ddaa;">🤝 Partners</button>
-  <button class="btn btn-dim" onclick="window.open(DISCORD_INVITE,'_blank','noopener')" style="border-color:rgba(88,101,242,0.5);color:#99aaff;" title="Join the Discord server">💬 Discord</button>
 </div>
 
 <div id="matchBanner">
@@ -4167,7 +4167,6 @@
       <button class="roster-io-btn" onclick="document.getElementById('rosterImportFile').click()" style="border-color:rgba(120,180,255,0.4);color:#99ccff;" title="Import roster from JSON file">⬆ Import</button>
       <input type="file" id="rosterImportFile" accept=".json" style="display:none" onchange="rosterImport(event)">
       <button class="roster-io-btn" onclick="rosterCopyText()" style="border-color:rgba(201,162,39,0.4);color:var(--gold);" title="Copy all names to clipboard">📋 Copy Names</button>
-      <button class="roster-io-btn" onclick="discordPostLeaderboard(true)" style="border-color:rgba(88,101,242,0.5);color:#99aaff;" title="Post the leaderboard to your Discord channel (set up in Mode → Rules)">📣 Discord</button>
       <button class="roster-io-btn clear"  onclick="rosterClearAll()">&#x1F5D1; Clear All</button>
       <button class="roster-io-btn" id="rosterSoundBtn" onclick="toggleSoundPanel()" style="border-color:rgba(80,180,255,0.4);color:#88ccff;" title="Sound settings">&#x1F50A; Sounds</button>
       <span class="roster-save-dot" id="rosterSaveDot" title="Saved"></span>
@@ -4401,27 +4400,6 @@
         </label>
       </div>
 
-      <div class="rule-row">
-        <div class="rule-info">
-          <div class="rule-name">💬 Discord Posting</div>
-          <div class="rule-desc">Post duel results and the leaderboard to your Discord server when a duel ends. Paste a channel webhook URL (Server Settings → Integrations → Webhooks). Saved only on this device — never shared or synced.</div>
-          <div class="rule-sub" id="rule-discord-sub" style="display:none;flex-direction:column;align-items:stretch;gap:8px;margin-top:8px;">
-            <input type="password" class="rule-input" id="rule-discord-webhook" placeholder="https://discord.com/api/webhooks/…" autocomplete="off" oninput="saveDiscordSettings()" style="width:100%;letter-spacing:normal;">
-            <label style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--dim);cursor:pointer;">
-              <input type="checkbox" id="rule-discord-lb" checked onchange="saveDiscordSettings()"> Include leaderboard with each result
-            </label>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;">
-              <button class="tourn-btn view" type="button" onclick="discordTest()">🧪 Test Webhook</button>
-              <button class="tourn-btn play" type="button" onclick="discordPostLeaderboard(true)">🏆 Post Leaderboard Now</button>
-            </div>
-          </div>
-        </div>
-        <label class="rule-toggle">
-          <input type="checkbox" id="rule-discord-on" onchange="toggleRule('discord')">
-          <span class="rule-slider"></span>
-        </label>
-      </div>
-
     </div>
 
     <!-- Sync Panel -->
@@ -4527,7 +4505,6 @@
           Your collection is empty.<br>Search for cards and use the <b>📦+</b> button to add them.
         </div>
         <div class="coll-io-row" style="border-top:1px solid rgba(255,255,255,0.04);padding-top:10px;margin-top:10px;">
-          <button class="coll-io-btn" onclick="collScanPrompt()" style="color:#44ddaa;border-color:rgba(0,200,120,0.4);">📷 Scan Card</button>
           <button class="coll-io-btn" onclick="collExport()" style="color:#66dd88;border-color:rgba(80,220,120,0.4);">⬇ Export</button>
           <button class="coll-io-btn" onclick="document.getElementById('collImportFile').click()" style="color:#99ccff;border-color:rgba(120,180,255,0.4);">⬆ Import</button>
           <input type="file" id="collImportFile" accept=".json" style="display:none" onchange="collImport(event)">
@@ -4710,8 +4687,6 @@
       <div class="cdetail-stats" id="cdetailStats"></div>
       <div class="cdetail-desc" id="cdetailDesc"></div>
       <div class="cdetail-actions">
-        <button class="cdetail-action-btn field" onclick="addCardToRulingsField(_currentDetailCard)">⛨ Add to Field</button>
-        <button class="cdetail-action-btn chain" onclick="addCardToRulingsChain(_currentDetailCard)">⛓ Add to Chain</button>
         <button class="cdetail-action-btn deck"  onclick="addToDeck(_currentDetailCard); _updateDeckBadges()">➕ Add to Deck</button>
         <button class="cdetail-action-btn" style="background:rgba(80,120,200,0.1);border:1px solid rgba(80,120,200,0.3);color:#aabbee;" onclick="addToDeckSide(_currentDetailCard); _updateDeckBadges()">🔄 Side Deck</button>
       </div>
@@ -4937,84 +4912,13 @@
     <div class="rulings-header">
       <span class="rulings-title">⚖️ Card Rulings</span>
       <div class="rulings-tabs">
-        <button class="rulings-tab active" id="rtab-ask"    onclick="switchRulingsTab('ask')">🤖 Ask AI</button>
-        <button class="rulings-tab"        id="rtab-manage" onclick="switchRulingsTab('manage')">✍️ Manual</button>
+        <button class="rulings-tab active" id="rtab-manage" onclick="switchRulingsTab('manage')">✍️ Manual</button>
       </div>
       <button class="rulings-close" onclick="closeRulings()">✕</button>
     </div>
 
-    <!-- Ask AI Tab -->
-    <div class="rulings-tab-panel active" id="rpanel-ask">
-
-      <!-- Quick Ask bar -->
-      <div class="rulings-quick-wrap">
-        <div class="rulings-quick-row">
-          <textarea class="rulings-quick-input" id="rulingsQuickInput" placeholder="Ask anything… e.g. 'Can Ash Blossom negate Pot of Greed?' or 'Does Skill Drain negate Jinzo?'" rows="1" onkeydown="rulingsQuickKeydown(event)"></textarea>
-          <button class="rulings-quick-submit" id="rulingsQuickBtn" onclick="quickAskRuling()">⚖️ Ask</button>
-        </div>
-        <div class="rulings-quick-hint">
-          <kbd>Ctrl+Enter</kbd> to submit · Need specific cards? Use
-          <span style="color:#ffaa44;cursor:pointer;" onclick="toggleRulingsBuilder()">⛓ Chain Builder ▼</span>
-        </div>
-      </div>
-
-      <!-- Advanced Builder (collapsed by default) -->
-      <div class="rulings-builder-toggle" onclick="toggleRulingsBuilder()">
-        <span class="rulings-builder-toggle-icon" id="builderToggleIcon">▶</span>
-        <span class="rulings-builder-toggle-label">CHAIN BUILDER</span>
-        <span class="rulings-builder-toggle-count" id="builderCardCount">0</span>
-      </div>
-      <div class="rulings-builder-body" id="rulingsBuilderBody">
-
-        <!-- Field Cards (dynamic) -->
-        <div class="rulings-section-label">⛨ FIELD &amp; FLOODGATES <span class="rulings-section-sub">cards already active on field</span></div>
-        <div class="rulings-floodgate-row" id="floodgateSlots"></div>
-        <button class="rulings-add-field-btn" onclick="addFieldSlot()">+ Add Field Card</button>
-
-        <!-- Chain -->
-        <div class="rulings-section-label" style="margin-top:14px;">⛓ CHAIN <span class="rulings-section-sub">CL1 activates first, CL last resolves first</span></div>
-        <div class="rulings-chain-list" id="chainLinks"></div>
-        <button class="rulings-add-chain-btn" onclick="addChainLink()">+ Add Chain Link</button>
-
-        <!-- Notes -->
-        <div class="rulings-section-label" style="margin-top:14px;">📝 NOTES <span class="rulings-section-sub">optional extra context</span></div>
-        <textarea class="rulings-notes-input" id="rulingsNotes" placeholder="Any extra context… e.g. 'opponent controls Skill Drain', 'card was just sent to GY this turn'…" rows="2"></textarea>
-
-        <!-- Builder submit -->
-        <div style="display:flex;gap:10px;align-items:center;padding:14px 0 4px;">
-          <button class="rulings-ask-btn" id="rulingsAskBtn" onclick="askRuling()">⚖️ Analyze Chain</button>
-          <button class="rulings-ask-btn" onclick="clearRulingBuilder()" style="background:none;border-color:rgba(255,255,255,0.1);color:var(--dim);font-size:11px;">✕ Clear</button>
-        </div>
-      </div>
-
-      <!-- Results area -->
-      <div class="rulings-results-wrap">
-        <div class="ruling-typing" id="rulingTyping">
-          <div class="ruling-dots"><span></span><span></span><span></span></div>
-          AI IS THINKING…
-        </div>
-        <div class="rulings-results-bar">
-          <span class="rulings-results-bar-label">RULINGS</span>
-          <input class="rulings-filter-input" id="rulingsFilterInput" placeholder="Filter rulings…" oninput="filterRulings()">
-          <button class="rulings-clear-all-btn" onclick="clearAllRulingResults()">Clear All</button>
-        </div>
-        <div class="rulings-results" id="rulingsResults">
-          <div class="rulings-placeholder" id="rulingsPlaceholder">
-            TYPE A QUESTION ABOVE AND HIT ASK<br>
-            <span style="font-size:9px;letter-spacing:2px;opacity:0.5;">OR USE THE CHAIN BUILDER FOR COMPLEX RULINGS</span>
-          </div>
-        </div>
-      </div>
-
-      <div id="rulingsGhNotice" style="display:none;margin:10px 16px;padding:12px 16px;border-radius:8px;background:rgba(255,180,50,0.08);border:1px solid rgba(255,180,50,0.25);font-family:'Cinzel',serif;font-size:10px;letter-spacing:1px;color:#ffcc66;line-height:1.8;">
-        ⚠️ AI RULINGS UNAVAILABLE ON GITHUB PAGES<br>
-        <span style="opacity:0.7;font-size:9px;">This feature requires a secure API proxy. It works natively inside Claude.ai.<br>Manual Rulings (✍️ tab) are fully available.</span>
-      </div>
-
-    </div>
-
     <!-- Manual Rulings Tab -->
-    <div class="rulings-tab-panel" id="rpanel-manage">
+    <div class="rulings-tab-panel active" id="rpanel-manage">
       <div class="rulings-manage-wrap">
         <div class="rulings-manage-form">
           <div class="rulings-manage-label">Add / Edit a Manual Ruling</div>
@@ -5042,6 +4946,8 @@
 
   // ── HTML escape utility ──
   function escHtml(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+  // Several features call _escHtml (with underscore); it was never defined, which broke them.
+  function _escHtml(s) { return escHtml(s == null ? '' : String(s)); }
 
   // ── Timer state ──
   let gameSeconds  = 0;
@@ -6631,6 +6537,7 @@
     if (e.key === 'Escape') {
       var _escModals = [
         { id: 'rosterModal',      fn: function(){ closeRoster(); } },
+        { id: 'ladderModal',      fn: function(){ closeLadder(); } },
         { id: 'cardSearchModal',  fn: function(){ if(_collViewActive){toggleCollectionView(false);}else{closeCardSearch();} } },
         { id: 'rulingsModal',     fn: function(){ closeRulings(); } },
         { id: 'coinDiceModal',    fn: function(){ closeCoinDice(); } },
@@ -7073,17 +6980,6 @@
       + '<button class="summary-btn dim" onclick="closeSummary(true)">&#x2715; New Game</button>';
     playSound('win');
     document.getElementById('summaryOverlay').classList.add('show');
-    // Discord: post duel result (host device with webhook configured only)
-    try {
-      var modeLabel = gameMode === 'bestof' ? 'Best of X' : gameMode === 'tournament' ? 'Tournament' : gameMode === 'koth' ? 'King of the Hill' : 'Standard Duel';
-      var dLines = ['**Mode:** ' + modeLabel + ' · **Turns:** ' + Math.max(0, globalTurnNum - 1) + ' · **Time:** ' + _fmtClock(gameSeconds)];
-      players.forEach(function(p, i) {
-        var rk = p.name.trim().toLowerCase();
-        var rr = roster[rk] || {w:0, l:0};
-        dLines.push((i === wi ? '👑 ' : '💀 ') + '**' + p.name + '** — ' + p.lp.toLocaleString() + ' LP · ' + (rr.w||0) + 'W-' + (rr.l||0) + 'L');
-      });
-      discordPostDuelResult('🏆 ' + winner.name + ' wins!', dLines);
-    } catch(e) {}
   }
 
   function closeSummary(newGame) {
@@ -7752,12 +7648,6 @@
       gameRules.lowLPWarning = document.getElementById('rule-lowlp-on').checked;
       document.getElementById('rule-lowlp-sub').style.display = gameRules.lowLPWarning ? 'flex' : 'none';
     }
-    if (key === 'discord') {
-      var dOn = document.getElementById('rule-discord-on').checked;
-      document.getElementById('rule-discord-sub').style.display = dOn ? 'flex' : 'none';
-      saveDiscordSettings();
-      return;
-    }
     saveRules();
   }
 
@@ -7790,99 +7680,6 @@
     if (lpOn) lpOn.checked = gameRules.lowLPWarning;
     if (lpV)  lpV.value    = gameRules.lowLPThreshold;
     if (lpS)  lpS.style.display = gameRules.lowLPWarning ? 'flex' : 'none';
-    loadDiscordUI();
-  }
-
-  /* ━━ DISCORD INTEGRATION ━━━━━━━━━━━━━━━━━━━ */
-  var DISCORD_INVITE = 'https://discord.gg/vTJnQcgpa3';
-  var _discord = { enabled:false, webhook:'', includeLb:true };
-  try { var _ds = JSON.parse(localStorage.getItem('ygo_discord') || 'null'); if (_ds) _discord = Object.assign(_discord, _ds); } catch(e) {}
-
-  function saveDiscordSettings() {
-    var on = document.getElementById('rule-discord-on');
-    var wh = document.getElementById('rule-discord-webhook');
-    var lb = document.getElementById('rule-discord-lb');
-    if (on) _discord.enabled   = on.checked;
-    if (wh) _discord.webhook   = wh.value.trim();
-    if (lb) _discord.includeLb = lb.checked;
-    try { localStorage.setItem('ygo_discord', JSON.stringify(_discord)); } catch(e) {}
-  }
-
-  function loadDiscordUI() {
-    var on  = document.getElementById('rule-discord-on');
-    var wh  = document.getElementById('rule-discord-webhook');
-    var lb  = document.getElementById('rule-discord-lb');
-    var sub = document.getElementById('rule-discord-sub');
-    if (on)  on.checked  = _discord.enabled;
-    if (wh)  wh.value    = _discord.webhook;
-    if (lb)  lb.checked  = _discord.includeLb;
-    if (sub) sub.style.display = _discord.enabled ? 'flex' : 'none';
-  }
-
-  function _discordReady() {
-    return _discord.enabled && /^https:\/\/(discord\.com|discordapp\.com)\/api\/webhooks\//.test(_discord.webhook);
-  }
-
-  function _discordSend(payload, quiet) {
-    if (!_discordReady()) { if (!quiet) showToast('Enable Discord posting and paste a webhook URL first', 'warning'); return; }
-    fetch(_discord.webhook, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    }).then(function(r) {
-      if (r.ok) { if (!quiet) showToast('Posted to Discord', 'heal'); }
-      else if (!quiet) showToast('Discord post failed (' + r.status + ')', 'warning');
-    }).catch(function() { if (!quiet) showToast('Discord post failed — check connection', 'warning'); });
-  }
-
-  function _fmtClock(secs) {
-    secs = Math.max(0, secs || 0);
-    var m = Math.floor(secs / 60), s = secs % 60;
-    return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
-  }
-
-  function _leaderboardEmbed() {
-    var medals = ['🥇','🥈','🥉'];
-    var lines = Object.keys(roster).map(function(k) { return roster[k]; })
-      .filter(function(r) { return (r.w||0) + (r.l||0) + (r.f||0) > 0; })
-      .sort(function(a, b) { return (b.w||0) - (a.w||0) || (a.l||0) - (b.l||0); })
-      .slice(0, 10)
-      .map(function(r, i) {
-        var duels = (r.w||0) + (r.l||0) + (r.f||0);
-        var pct = duels ? Math.round((r.w||0) / duels * 100) : 0;
-        var rank = medals[i] || '`#' + (i+1) + '`';
-        return rank + ' **' + r.name + '** — ' + (r.w||0) + 'W · ' + (r.l||0) + 'L' + (r.f ? ' · ' + r.f + 'F' : '') + ' (' + pct + '%)';
-      });
-    return {
-      title: '🏆 Leaderboard',
-      description: lines.length ? lines.join('\n') : '_No duels recorded yet._',
-      color: 0xC9A227,
-      footer: { text: 'Y.U.G.I.O.H. · Checkmate Gaming' },
-      timestamp: new Date().toISOString()
-    };
-  }
-
-  function discordPostLeaderboard(manual) {
-    if (manual) saveDiscordSettings();
-    _discordSend({ username: 'Y.U.G.I.O.H.', embeds: [_leaderboardEmbed()] }, !manual);
-  }
-
-  function discordTest() {
-    saveDiscordSettings();
-    _discordSend({ username: 'Y.U.G.I.O.H.', content: '✅ Webhook connected — duel results will post here.\nJoin the server: ' + DISCORD_INVITE });
-  }
-
-  function discordPostDuelResult(title, lines) {
-    if (!_discordReady()) return;
-    var embeds = [{
-      title: title,
-      description: lines.join('\n'),
-      color: 0x5865F2,
-      footer: { text: 'Y.U.G.I.O.H. · Checkmate Gaming' },
-      timestamp: new Date().toISOString()
-    }];
-    if (_discord.includeLb) embeds.push(_leaderboardEmbed());
-    _discordSend({ username: 'Y.U.G.I.O.H.', embeds: embeds }, true);
   }
 
   function openModeModal() {
@@ -8537,16 +8334,6 @@
       roster[k].name = p.name.trim();
     });
     rosterSave();
-    // Discord: post team battle result
-    try {
-      var dLines = ['**Mode:** Team Battle · ' + matchCtx.format.toUpperCase() + ' · **Time:** ' + _fmtClock(gameSeconds)];
-      matchCtx.teams.forEach(function(team, ti) {
-        var names = team.map(function(pi) { return players[pi] ? players[pi].name : '?'; }).join(', ');
-        var lpStr = matchCtx.separateLP ? '' : ' — ' + (teamLP[ti] || 0).toLocaleString() + ' LP';
-        dLines.push((ti === winTeamIdx ? '👑 ' : '💀 ') + '**' + matchCtx.teamNames[ti] + '**' + lpStr + ': ' + names);
-      });
-      discordPostDuelResult('🏆 ' + winName + ' wins!', dLines);
-    } catch(e) {}
     var grid = document.getElementById('summaryGrid');
     grid.innerHTML = matchCtx.teams.map(function(team, ti) {
       var isWin = (ti === winTeamIdx);
@@ -11232,14 +11019,7 @@
   function openRulings() {
     var modal = document.getElementById('rulingsModal');
     modal.classList.add('open');
-    renderManualRulingsList();
-    _restoreAiRulings();
-    var notice = document.getElementById('rulingsGhNotice');
-    if (notice) notice.style.display = window.location.hostname.includes('github.io') ? 'block' : 'none';
-    setTimeout(function() {
-      var qi = document.getElementById('rulingsQuickInput');
-      if (qi) qi.focus();
-    }, 80);
+    switchRulingsTab('manage');
   }
   function closeRulings() { document.getElementById('rulingsModal').classList.remove('open'); }
   function switchRulingsTab(name) {
@@ -12460,20 +12240,6 @@
         setResult(closed ? 'Closed ✓' : 'Nothing to close', closed?'ok':''); return;
       }
 
-      // ── RULINGS ACTIONS ──────────────────────────────────────
-      if (/^(ask the ruling|get ruling|check the ruling|ruling query)/.test(t)) {
-        if (typeof askRuling === 'function') { askRuling(); setResult('Asking ruling…','ok'); return; }
-      }
-      if (/^(add chain link|chain link|add to chain)/.test(t)) {
-        if (typeof addChainLink === 'function') { addChainLink(); setResult('Chain link added ✓','ok'); return; }
-      }
-      if (/^(remove chain link|remove from chain)/.test(t)) {
-        if (typeof removeChainLink === 'function') { removeChainLink(); setResult('Chain link removed ✓','ok'); return; }
-      }
-      if (/^(clear ruling|clear chain|reset ruling)/.test(t)) {
-        if (typeof clearRulingBuilder === 'function') { clearRulingBuilder(); setResult('Ruling cleared ✓','ok'); return; }
-      }
-
       // ── HELP ─────────────────────────────────────────────────
       if (/^(commands|help|what can i say|voice commands|list commands)/.test(t)) {
         openVoiceCmds(); setResult('Command list opened','ok'); return;
@@ -13265,10 +13031,10 @@
 
     <div class="tutorial-slide" data-slide="4">
       <div class="tutorial-slide-icon">⚖️</div>
-      <div class="tutorial-slide-title">AI RULINGS</div>
+      <div class="tutorial-slide-title">RULINGS</div>
       <div class="tutorial-slide-body">
-        Open <strong>Rulings</strong> from the menu. Type any question for an instant AI judge ruling, or use the Chain Builder for complex interactions.<br><br>
-        Highlight specific card text to focus the AI's analysis.
+        Open <strong>Rulings</strong> from the menu to save rulings your group has agreed on: the question, the answer, and who made the call.<br><br>
+        Saved rulings stay on this device, and you can edit or delete them any time.
       </div>
     </div>
 
@@ -13458,12 +13224,6 @@
     <div class="vcmd-row"><span class="vcmd-example">"sync"</span><span class="vcmd-desc">Open multiplayer sync panel</span></div>
     <div class="vcmd-row"><span class="vcmd-example">"close"</span><span class="vcmd-desc">Close the active modal</span></div>
 
-    <div class="vcmd-section">Rulings</div>
-    <div class="vcmd-row"><span class="vcmd-example">"ask the ruling"</span><span class="vcmd-desc">Submit current ruling query to AI</span></div>
-    <div class="vcmd-row"><span class="vcmd-example">"add chain link"</span><span class="vcmd-desc">Add a link to the chain</span></div>
-    <div class="vcmd-row"><span class="vcmd-example">"remove chain link"</span><span class="vcmd-desc">Remove last chain link</span></div>
-    <div class="vcmd-row"><span class="vcmd-example">"clear ruling"</span><span class="vcmd-desc">Reset the ruling builder</span></div>
-
     <div class="vcmd-section">Help</div>
     <div class="vcmd-row"><span class="vcmd-example">"commands"</span><span class="vcmd-desc">Show this list</span></div>
 
@@ -13505,5 +13265,43 @@
   </div>
 </div>
 
+
+<!-- ═══ Duel Ladder (wager points leaderboard, data from leaderboard.json, written by the Discord bot) ═══ -->
+<style>
+  #ladderModal {
+    display:none; position:fixed; inset:0; z-index:400;
+    background:rgba(0,0,0,0.88); backdrop-filter:blur(12px);
+    align-items:center; justify-content:center;
+  }
+  #ladderModal.open { display:flex; }
+  #ladderBody { padding:14px 18px; overflow:auto; color:var(--text); }
+  #ladderBody .lb-rk { color:var(--gold); }
+  #ladderBody h4 { color:var(--gold); font-family:'Cinzel Decorative',serif; font-size:12px; letter-spacing:2px; }
+</style>
+<div id="ladderModal" onclick="if(event.target===this)closeLadder()">
+  <div class="roster-wrap">
+    <div class="roster-header">
+      <span class="roster-title">&#x1F3C6; Duel Ladder</span>
+      <button class="roster-close" onclick="closeLadder()">&#x2715;</button>
+    </div>
+    <div id="ladderBody">Loading&#x2026;</div>
+  </div>
+</div>
+<script src="leaderboard.js"></script>
+<script>
+  var _ladderMounted = false;
+  function openLadder() {
+    document.getElementById('ladderModal').classList.add('open');
+    if (!_ladderMounted && window.YGOLeaderboard) {
+      _ladderMounted = true;
+      YGOLeaderboard.mount(document.getElementById('ladderBody'));
+    } else if (!window.YGOLeaderboard) {
+      document.getElementById('ladderBody').textContent = 'Leaderboard script not found. Make sure leaderboard.js is uploaded next to index.html.';
+    }
+  }
+  function closeLadder() {
+    document.getElementById('ladderModal').classList.remove('open');
+  }
+</script>
 </body>
 </html>
