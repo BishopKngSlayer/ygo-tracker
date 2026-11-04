@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-04T14:54:12.694Z",
+  "updated": "2026-11-04T17:12:05.766Z",
   "month": "2026-11",
   "rules": {
     "cap": 3,
@@ -18,6 +18,14 @@
     {
       "rank": 2,
       "name": "Brakergamer",
+      "rating": 1500,
+      "points": 100,
+      "wins": 0,
+      "losses": 0
+    },
+    {
+      "rank": 3,
+      "name": "Mac.Meta.slayer.U.D.C",
       "rating": 1500,
       "points": 100,
       "wins": 0,
