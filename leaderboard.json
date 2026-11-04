@@ -1,11 +1,20 @@
 {
-  "updated": "2026-11-04T03:05:36.154Z",
+  "updated": "2026-11-04T03:13:15.705Z",
   "month": "2026-11",
   "rules": {
     "cap": 3,
     "maxStake": 50,
     "basePoints": 10
   },
-  "players": [],
+  "players": [
+    {
+      "rank": 1,
+      "name": "BishopKngSlayer",
+      "rating": 1500,
+      "points": 100,
+      "wins": 0,
+      "losses": 0
+    }
+  ],
   "recent": []
 }
