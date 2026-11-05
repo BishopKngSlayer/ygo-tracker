@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="YGO Tracker">
-<link rel="apple-touch-icon" href="icon512.png">
+<link rel="apple-touch-icon" href="icon-512.png">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1484,6 +1484,8 @@
     border-bottom:1px solid rgba(255,255,255,0.03); transition:background 0.15s;
   }
   .roster-row:hover { background:rgba(255,255,255,0.02); }
+  .ladder-tag { font-family:'Rajdhani',sans-serif; font-size:10px; letter-spacing:.5px; color:var(--dim); border:1px solid rgba(255,255,255,0.12); border-radius:3px; padding:0 4px; margin-left:4px; white-space:nowrap; }
+  .ladder-tag.linked { color:#99aaff; border-color:rgba(88,101,242,0.45); }
   .roster-row-name {
     flex:1; font-family:'Cinzel',serif; font-size:12px; color:var(--text); letter-spacing:1px;
   }
@@ -3043,410 +3045,6 @@
     .cdetail-desc { font-size:14px; }
   }
 
-  /* ── Rulings Modal ── */
-  #rulingsModal {
-    display:none; position:fixed; inset:0; z-index:520;
-    background:rgba(0,0,0,0.92); backdrop-filter:blur(14px);
-    align-items:flex-start; justify-content:center; padding-top:30px;
-  }
-  #rulingsModal.open { display:flex; }
-  .rulings-wrap {
-    background:rgba(6,6,18,0.99); border:1px solid rgba(120,180,255,0.3);
-    border-radius:14px; width:min(860px,96vw); max-height:92vh;
-    display:flex; flex-direction:column; overflow:hidden;
-  }
-  .rulings-header {
-    display:flex; align-items:center; justify-content:space-between;
-    padding:16px 24px; border-bottom:1px solid rgba(255,255,255,0.07); flex-shrink:0;
-    gap:10px;
-  }
-  .rulings-title { font-family:'Cinzel Decorative',serif; font-size:16px; color:#99ccff; letter-spacing:3px; flex:1; }
-  .rulings-tabs { display:flex; gap:6px; flex-shrink:0; }
-  .rulings-tab {
-    background:none; border:1px solid rgba(255,255,255,0.1); border-radius:5px;
-    color:var(--dim); font-family:'Cinzel',serif; font-size:10px; letter-spacing:2px;
-    padding:6px 14px; cursor:pointer; transition:all .15s;
-  }
-  .rulings-tab.active { border-color:rgba(120,180,255,0.5); color:#99ccff; background:rgba(120,180,255,0.08); }
-  .rulings-close { background:none; border:none; color:var(--dim); font-size:26px; cursor:pointer; padding:2px 8px; }
-  .rulings-close:hover { color:var(--text); }
-  .rulings-tab-panel { display:none; flex:1; overflow:hidden; flex-direction:column; }
-  .rulings-tab-panel.active { display:flex; }
-
-  /* ── Quick Ask bar ── */
-  .rulings-quick-wrap {
-    padding:16px 24px 12px; border-bottom:1px solid rgba(255,255,255,0.06); flex-shrink:0;
-  }
-  .rulings-quick-row {
-    display:flex; gap:10px; align-items:stretch;
-  }
-  .rulings-quick-input {
-    flex:1; background:rgba(120,180,255,0.06); border:1px solid rgba(120,180,255,0.3);
-    border-radius:8px; color:var(--text); font-family:'Segoe UI',sans-serif; font-size:14px;
-    padding:12px 16px; outline:none; resize:none; line-height:1.5; min-height:48px; max-height:100px;
-  }
-  .rulings-quick-input:focus { border-color:rgba(120,180,255,0.6); box-shadow:0 0 12px rgba(120,180,255,0.1); }
-  .rulings-quick-input::placeholder { color:var(--dim); font-size:13px; }
-  .rulings-quick-submit {
-    background:rgba(120,180,255,0.15); border:1px solid rgba(120,180,255,0.45); border-radius:8px;
-    color:#99ccff; font-family:'Cinzel',serif; font-size:12px; letter-spacing:1px;
-    padding:10px 20px; cursor:pointer; transition:all .15s; white-space:nowrap; flex-shrink:0;
-  }
-  .rulings-quick-submit:hover { background:rgba(120,180,255,0.28); }
-  .rulings-quick-submit:disabled { opacity:0.4; cursor:not-allowed; }
-  .rulings-quick-hint {
-    font-family:'Cinzel',serif; font-size:8px; letter-spacing:2px; color:var(--dim);
-    margin-top:8px; display:flex; align-items:center; gap:6px;
-  }
-  .rulings-quick-hint kbd {
-    font-family:monospace; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15);
-    border-radius:3px; padding:1px 5px; font-size:9px; color:var(--text);
-  }
-
-  /* ── Advanced builder toggle ── */
-  .rulings-builder-toggle {
-    display:flex; align-items:center; gap:8px; padding:10px 24px;
-    cursor:pointer; border-bottom:1px solid rgba(255,255,255,0.04);
-    transition:background .12s; user-select:none;
-  }
-  .rulings-builder-toggle:hover { background:rgba(255,255,255,0.02); }
-  .rulings-builder-toggle-icon {
-    font-size:10px; color:var(--dim); transition:transform .2s; display:inline-block;
-  }
-  .rulings-builder-toggle-icon.open { transform:rotate(90deg); }
-  .rulings-builder-toggle-label {
-    font-family:'Cinzel',serif; font-size:10px; letter-spacing:2px; color:var(--dim);
-  }
-  .rulings-builder-toggle-count {
-    font-family:'Rajdhani',sans-serif; font-size:11px; color:#ffaa44;
-    background:rgba(255,140,0,0.12); border:1px solid rgba(255,140,0,0.3);
-    border-radius:10px; padding:1px 8px; min-width:18px; text-align:center;
-    display:none;
-  }
-  .rulings-builder-body {
-    display:none; overflow-y:auto; max-height:40vh;
-    padding:14px 24px 8px; border-bottom:1px solid rgba(255,255,255,0.06);
-  }
-  .rulings-builder-body.open { display:block; }
-
-  /* ── Results area ── */
-  .rulings-results-wrap { flex:1; display:flex; flex-direction:column; overflow:hidden; min-height:0; }
-  .rulings-results-bar {
-    display:flex; align-items:center; gap:10px; padding:10px 24px; flex-shrink:0;
-  }
-  .rulings-results-bar-label {
-    font-family:'Cinzel',serif; font-size:9px; letter-spacing:2px; color:var(--dim); flex-shrink:0;
-  }
-  .rulings-filter-input {
-    flex:1; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
-    border-radius:5px; color:var(--text); font-family:'Segoe UI',sans-serif; font-size:12px;
-    padding:6px 10px; outline:none;
-  }
-  .rulings-filter-input:focus { border-color:rgba(120,180,255,0.35); }
-  .rulings-filter-input::placeholder { color:var(--dim); font-size:11px; }
-  .rulings-clear-all-btn {
-    background:none; border:1px solid rgba(255,80,80,0.2); border-radius:4px;
-    color:rgba(255,80,80,0.5); font-family:'Cinzel',serif; font-size:9px; letter-spacing:1px;
-    padding:4px 10px; cursor:pointer; transition:all .12s; white-space:nowrap;
-  }
-  .rulings-clear-all-btn:hover { border-color:rgba(255,80,80,0.5); color:#ff8888; }
-  .rulings-results { flex:1; overflow-y:auto; padding:8px 24px 16px; display:flex; flex-direction:column; gap:12px; }
-
-  /* ── Builder sections ── */
-  .rulings-section-label {
-    font-family:'Cinzel',serif; font-size:10px; letter-spacing:3px;
-    color:#99ccff; text-transform:uppercase; margin-bottom:8px; display:flex; align-items:center; gap:10px;
-  }
-  .rulings-section-sub {
-    font-size:8px; letter-spacing:2px; color:var(--dim); text-transform:lowercase; font-style:italic;
-  }
-
-  /* Floodgate row - dynamic */
-  .rulings-floodgate-row { display:flex; gap:8px; flex-wrap:wrap; }
-  .rulings-fg-slot {
-    display:flex; flex-direction:column; gap:5px;
-    flex:1; min-width:180px; max-width:280px;
-  }
-  .rulings-fg-top { display:flex; align-items:center; gap:6px; }
-  .rulings-fg-remove {
-    flex-shrink:0; background:none; border:none; color:rgba(255,80,80,0.4);
-    font-size:14px; cursor:pointer; padding:2px 4px; line-height:1; transition:color .12s;
-  }
-  .rulings-fg-remove:hover { color:#ff8888; }
-  .rulings-fg-card-body {
-    display:none; flex-direction:column; align-items:center; gap:5px;
-  }
-  .rulings-fg-img { width:90px; border-radius:5px; box-shadow:0 4px 14px rgba(0,0,0,0.7); }
-  .rulings-card-desc {
-    font-family:'Segoe UI',sans-serif; font-size:10px; line-height:1.6;
-    color:rgba(200,200,200,0.7); background:rgba(255,255,255,0.03);
-    border:1px solid rgba(255,255,255,0.06); border-radius:5px;
-    padding:7px 9px; white-space:pre-wrap; width:100%; box-sizing:border-box;
-    user-select:text; cursor:text; position:relative;
-  }
-  .rulings-card-desc::after {
-    content:'TIP: Select text → click Highlight to focus the AI';
-    position:absolute; bottom:4px; right:6px; font-size:8px; letter-spacing:0.5px;
-    color:rgba(255,210,0,0.25); pointer-events:none;
-  }
-  .rulings-card-desc:empty::after { display:none; }
-  .rulings-add-field-btn {
-    background:none; border:1px dashed rgba(120,180,255,0.25); border-radius:6px;
-    color:rgba(120,180,255,0.5); font-family:'Cinzel',serif; font-size:10px; letter-spacing:2px;
-    padding:7px 0; cursor:pointer; width:100%; margin-top:4px; transition:all .15s;
-  }
-  .rulings-add-field-btn:hover { border-color:rgba(120,180,255,0.5); color:#99ccff; background:rgba(120,180,255,0.04); }
-
-  /* Chain link layout */
-  .rulings-chain-link { display:flex; flex-direction:column; gap:5px; }
-  .rulings-chain-top  { display:flex; align-items:center; gap:10px; }
-  .rulings-cl-card-row {
-    display:none; flex-direction:row; align-items:flex-start;
-    gap:12px; padding-left:54px;
-  }
-  .rulings-cl-img { width:80px; flex-shrink:0; border-radius:5px; box-shadow:0 4px 14px rgba(0,0,0,0.7); }
-  .rulings-cl-desc-wrap { flex:1; min-width:0; display:flex; flex-direction:column; gap:5px; }
-  .rulings-cl-desc {
-    font-family:'Segoe UI',sans-serif; font-size:11px; line-height:1.65;
-    color:rgba(200,200,200,0.75); background:rgba(255,140,0,0.03);
-    border:1px solid rgba(255,140,0,0.1); border-radius:5px;
-    padding:8px 10px; white-space:pre-wrap; user-select:text; cursor:text;
-    position:relative;
-  }
-  .rulings-cl-desc::after {
-    content:'Select text → Highlight to focus AI';
-    position:absolute; bottom:4px; right:6px; font-size:8px; letter-spacing:0.5px;
-    color:rgba(255,210,0,0.2); pointer-events:none;
-  }
-  .rulings-cl-desc:empty::after { display:none; }
-
-  /* Highlight controls */
-  .rulings-highlight-btns { display:flex; gap:6px; flex-wrap:wrap; }
-  .rulings-hl-btn {
-    background:none; border:1px solid rgba(255,210,0,0.2); border-radius:4px;
-    color:rgba(255,210,0,0.55); font-family:'Cinzel',serif; font-size:9px; letter-spacing:1px;
-    padding:4px 10px; cursor:pointer; transition:all .13s; white-space:nowrap;
-  }
-  .rulings-hl-btn:hover { color:#ffe066; border-color:rgba(255,210,0,0.5); background:rgba(255,210,0,0.05); }
-  .ruling-effect-highlight {
-    background:rgba(255,220,0,0.22); color:#ffe566;
-    border-radius:2px; padding:0 1px;
-  }
-
-  /* Card autocomplete */
-  .rulings-card-search-wrap { position:relative; flex:1; }
-  .rulings-card-input {
-    width:100%; box-sizing:border-box;
-    background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
-    border-radius:6px; color:var(--text); font-family:'Cinzel',serif; font-size:12px;
-    padding:8px 12px; outline:none; letter-spacing:0.5px;
-  }
-  .rulings-card-input:focus { border-color:rgba(120,180,255,0.45); }
-  .rulings-card-input.matched { border-color:rgba(80,220,120,0.5); color:#88ffaa; }
-  .rulings-card-input::placeholder { color:var(--dim); font-size:11px; }
-  .rulings-card-dropdown {
-    display:none; position:absolute; top:calc(100% + 3px); left:0; right:0;
-    background:rgba(10,10,26,0.98); border:1px solid rgba(120,180,255,0.3);
-    border-radius:6px; z-index:600; max-height:180px; overflow-y:auto;
-  }
-  .rulings-card-dropdown.open { display:block; }
-  .rulings-dd-item {
-    padding:8px 14px; font-family:'Cinzel',serif; font-size:11px; letter-spacing:0.5px;
-    color:var(--dim); cursor:pointer; border-bottom:1px solid rgba(255,255,255,0.04);
-    display:flex; align-items:center; gap:8px;
-  }
-  .rulings-dd-item:hover, .rulings-dd-item.focused { background:rgba(120,180,255,0.1); color:var(--text); }
-  .rulings-dd-item:last-child { border-bottom:none; }
-  .rulings-dd-type {
-    font-size:8px; letter-spacing:1px; color:#88aacc; flex-shrink:0;
-    background:rgba(120,180,255,0.08); border-radius:3px; padding:2px 5px;
-  }
-  .rulings-fg-badge {
-    font-family:'Cinzel',serif; font-size:9px; letter-spacing:1px; color:#88aacc;
-    background:rgba(120,180,255,0.1); border:1px solid rgba(120,180,255,0.25);
-    border-radius:4px; padding:4px 7px; white-space:nowrap; flex-shrink:0;
-  }
-
-  /* Chain links */
-  .rulings-chain-list { display:flex; flex-direction:column; gap:8px; }
-  .rulings-chain-badge {
-    flex-shrink:0; width:44px; height:44px; border-radius:50%;
-    background:rgba(255,140,0,0.12); border:2px solid rgba(255,140,0,0.4);
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    font-family:'Cinzel',serif; color:#ffaa44; position:relative;
-  }
-  .rulings-chain-icon { font-size:14px; line-height:1; }
-  .rulings-chain-num  { font-size:8px; letter-spacing:1px; line-height:1; margin-top:1px; }
-  .rulings-chain-link .rulings-card-search-wrap { flex:1; }
-  .rulings-chain-remove {
-    flex-shrink:0; background:none; border:none; color:rgba(255,80,80,0.4);
-    font-size:16px; cursor:pointer; padding:4px 6px; line-height:1; transition:color .12s;
-  }
-  .rulings-chain-remove:hover { color:#ff8888; }
-  .rulings-add-chain-btn {
-    background:none; border:1px dashed rgba(255,140,0,0.3); border-radius:6px;
-    color:rgba(255,140,0,0.6); font-family:'Cinzel',serif; font-size:11px; letter-spacing:2px;
-    padding:8px 0; cursor:pointer; width:100%; margin-top:6px; transition:all .15s;
-  }
-  .rulings-add-chain-btn:hover { border-color:rgba(255,140,0,0.6); color:#ffaa44; background:rgba(255,140,0,0.05); }
-
-  /* Notes */
-  .rulings-notes-input {
-    width:100%; box-sizing:border-box;
-    background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
-    border-radius:6px; color:var(--text); font-family:'Segoe UI',sans-serif; font-size:13px;
-    padding:10px 14px; outline:none; resize:none; line-height:1.6;
-  }
-  .rulings-notes-input:focus { border-color:rgba(120,180,255,0.35); }
-  .rulings-notes-input::placeholder { color:var(--dim); font-size:12px; }
-  .rulings-question-input {
-    width:100%; box-sizing:border-box;
-    background:rgba(120,180,255,0.04); border:1px solid rgba(120,180,255,0.2);
-    border-radius:6px; color:var(--text); font-family:'Segoe UI',sans-serif; font-size:13px;
-    padding:10px 14px; outline:none; resize:none; line-height:1.6;
-  }
-  .rulings-question-input:focus { border-color:rgba(120,180,255,0.5); }
-  .rulings-question-input::placeholder { color:var(--dim); font-size:12px; }
-  .rulings-placeholder {
-    font-family:'Cinzel',serif; font-size:11px; letter-spacing:3px;
-    color:var(--dim); text-align:center; padding:36px 0 20px; line-height:2;
-  }
-  .rulings-ask-btn {
-    background:rgba(120,180,255,0.12); border:1px solid rgba(120,180,255,0.4); border-radius:7px;
-    color:#99ccff; font-family:'Cinzel',serif; font-size:13px; letter-spacing:1px;
-    padding:12px 22px; cursor:pointer; transition:background .15s; white-space:nowrap; align-self:center;
-  }
-  .rulings-ask-btn:hover { background:rgba(120,180,255,0.22); }
-  .rulings-ask-btn:disabled { opacity:0.4; cursor:not-allowed; }
-
-  /* Ruling card */
-  .ruling-card {
-    background:rgba(255,255,255,0.03); border-radius:10px;
-    border:1px solid rgba(255,255,255,0.08); padding:18px 22px;
-    display:flex; flex-direction:column; gap:10px;
-  }
-  .ruling-card.filtered-out { display:none; }
-  .ruling-card-q {
-    font-family:'Cinzel',serif; font-size:12px; color:var(--text);
-    letter-spacing:0.5px; line-height:1.5;
-  }
-  .ruling-card-a {
-    font-family:'Segoe UI',sans-serif; font-size:13px; color:rgba(220,220,220,0.9);
-    line-height:1.75;
-  }
-  .ruling-card-a strong { color:#ffe066; font-weight:600; }
-  .ruling-card-a em { color:#99ccff; }
-  .ruling-card-a p { margin:0 0 8px; }
-  .ruling-card-a p:last-child { margin-bottom:0; }
-  .ruling-card-a ul, .ruling-card-a ol { margin:4px 0 8px 20px; padding:0; }
-  .ruling-card-a li { margin-bottom:4px; }
-  .ruling-card-a code { background:rgba(255,255,255,0.08); border-radius:3px; padding:1px 5px; font-size:12px; }
-  .ruling-card-a h3, .ruling-card-a h4 {
-    font-family:'Cinzel',serif; font-size:12px; letter-spacing:1px;
-    color:#99ccff; margin:10px 0 4px; padding:0;
-  }
-  .ruling-card-a hr { border:none; border-top:1px solid rgba(255,255,255,0.08); margin:8px 0; }
-  .ruling-card-meta {
-    display:flex; align-items:center; gap:8px; flex-wrap:wrap;
-  }
-  .ruling-badge {
-    display:inline-flex; align-items:center; gap:5px;
-    font-family:'Cinzel',serif; font-size:9px; letter-spacing:2px;
-    padding:4px 10px; border-radius:4px;
-  }
-  .ruling-badge.ai {
-    background:rgba(180,100,255,0.12); border:1px solid rgba(180,100,255,0.35); color:#cc88ff;
-  }
-  .ruling-badge.human {
-    background:rgba(80,220,120,0.1); border:1px solid rgba(80,220,120,0.35); color:#66dd88;
-  }
-  .ruling-badge.cached {
-    background:rgba(120,180,255,0.08); border:1px solid rgba(120,180,255,0.25);
-    color:#88aacc; font-size:8px;
-  }
-  .ruling-card-date { font-family:'Cinzel',serif; font-size:9px; color:var(--dim); letter-spacing:1px; }
-  .ruling-card-actions { display:flex; gap:6px; margin-left:auto; flex-wrap:wrap; }
-  .ruling-action-btn {
-    background:none; border:1px solid rgba(255,255,255,0.1); border-radius:4px;
-    color:var(--dim); font-size:10px; padding:3px 8px; cursor:pointer; font-family:'Cinzel',serif;
-    letter-spacing:1px; transition:all .12s;
-  }
-  .ruling-action-btn:hover { border-color:rgba(255,255,255,0.3); color:var(--text); }
-  .ruling-action-btn.promote { border-color:rgba(80,220,120,0.3); color:#66dd88; }
-  .ruling-action-btn.promote:hover { background:rgba(80,220,120,0.1); }
-  .ruling-action-btn.followup { border-color:rgba(120,180,255,0.3); color:#99ccff; }
-  .ruling-action-btn.followup:hover { background:rgba(120,180,255,0.08); }
-  .ruling-action-btn.del { border-color:rgba(255,80,80,0.3); color:#ff8888; }
-  .ruling-action-btn.del:hover { background:rgba(255,80,80,0.1); }
-  .ruling-typing {
-    display:none; align-items:center; gap:10px;
-    font-family:'Cinzel',serif; font-size:11px; color:#cc88ff; letter-spacing:2px;
-    padding:12px 24px;
-  }
-  .ruling-typing.active { display:flex; }
-  .ruling-dots span {
-    display:inline-block; width:6px; height:6px; border-radius:50%;
-    background:#cc88ff; margin:0 2px; animation:dotPulse 1.2s infinite;
-  }
-  .ruling-dots span:nth-child(2) { animation-delay:.2s; }
-  .ruling-dots span:nth-child(3) { animation-delay:.4s; }
-  @keyframes dotPulse { 0%,80%,100%{opacity:.2;transform:scale(.8);} 40%{opacity:1;transform:scale(1);} }
-
-  /* Manual Rulings tab */
-  .rulings-manage-wrap { display:flex; flex-direction:column; flex:1; overflow:hidden; }
-  .rulings-manage-form {
-    padding:16px 24px; border-bottom:1px solid rgba(255,255,255,0.06); flex-shrink:0;
-    display:flex; flex-direction:column; gap:10px;
-  }
-  .rulings-manage-label {
-    font-family:'Cinzel',serif; font-size:9px; letter-spacing:3px; color:var(--dim); text-transform:uppercase;
-  }
-  .rulings-manage-input {
-    background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
-    border-radius:6px; color:var(--text); font-family:'Cinzel',serif; font-size:13px;
-    padding:10px 14px; outline:none; letter-spacing:0.5px;
-  }
-  .rulings-manage-input:focus { border-color:rgba(80,220,120,0.4); }
-  .rulings-manage-textarea {
-    background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
-    border-radius:6px; color:var(--text); font-family:'Segoe UI',sans-serif; font-size:13px;
-    padding:10px 14px; outline:none; resize:vertical; min-height:80px; line-height:1.6;
-  }
-  .rulings-manage-textarea:focus { border-color:rgba(80,220,120,0.4); }
-  .rulings-manage-author {
-    background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
-    border-radius:6px; color:var(--text); font-family:'Cinzel',serif; font-size:12px;
-    padding:8px 14px; outline:none; letter-spacing:0.5px;
-  }
-  .rulings-manage-save {
-    background:rgba(80,220,120,0.12); border:1px solid rgba(80,220,120,0.4); border-radius:6px;
-    color:#66dd88; font-family:'Cinzel',serif; font-size:12px; letter-spacing:2px;
-    padding:10px 20px; cursor:pointer; align-self:flex-start; transition:background .15s;
-  }
-  .rulings-manage-save:hover { background:rgba(80,220,120,0.22); }
-  .rulings-manage-list { flex:1; overflow-y:auto; padding:14px 24px; display:flex; flex-direction:column; gap:10px; }
-  .rulings-manage-empty {
-    font-family:'Cinzel',serif; font-size:11px; letter-spacing:3px;
-    color:var(--dim); text-align:center; padding:40px 0;
-  }
-
-  /* Mobile */
-  @media(max-width:600px) {
-    .rulings-header { padding:12px 16px; gap:6px; flex-wrap:wrap; }
-    .rulings-title { font-size:13px; letter-spacing:2px; }
-    .rulings-quick-wrap { padding:12px 16px 10px; }
-    .rulings-quick-row { flex-direction:column; gap:8px; }
-    .rulings-quick-submit { align-self:stretch; }
-    .rulings-builder-body { padding:10px 16px 6px; max-height:35vh; }
-    .rulings-results-bar { padding:8px 16px; flex-wrap:wrap; }
-    .rulings-results { padding:6px 16px 12px; }
-    .rulings-fg-slot { min-width:100%; max-width:100%; }
-    .ruling-card { padding:14px 16px; }
-    .ruling-card-actions { margin-left:0; margin-top:4px; }
-    .rulings-manage-form { padding:12px 16px; }
-    .rulings-manage-list { padding:10px 16px; }
-  }
-
   /* ── Tutorial Overlay ── */
   #tutorialOverlay {
     display:none; position:fixed; inset:0; z-index:5000;
@@ -3803,37 +3401,6 @@
     font-family:'Rajdhani',sans-serif; font-size:15px;
   }
   .coll-empty-icon { font-size:48px; margin-bottom:12px; display:block; }
-  /* Scanner */
-  .coll-scan-area {
-    text-align:center; padding:20px; display:flex; flex-direction:column; align-items:center; gap:14px;
-  }
-  .coll-scan-btn {
-    padding:16px 32px; border-radius:8px; cursor:pointer;
-    font-family:'Cinzel',serif; font-size:13px; letter-spacing:2px;
-    border:2px dashed rgba(201,162,39,0.4); background:rgba(201,162,39,0.06); color:var(--gold);
-    transition:all 0.2s;
-  }
-  .coll-scan-btn:hover { border-color:rgba(201,162,39,0.7); background:rgba(201,162,39,0.12); }
-  .coll-scan-preview { max-width:200px; border-radius:6px; border:1px solid var(--border); display:none; }
-  .coll-scan-result {
-    font-family:'Rajdhani',sans-serif; font-size:14px; color:var(--text);
-    padding:12px 16px; border-radius:6px; background:rgba(255,255,255,0.03);
-    border:1px solid rgba(255,255,255,0.08); width:100%; max-width:360px; min-height:40px;
-  }
-  .coll-scan-match {
-    display:flex; align-items:center; gap:12px; padding:12px; border-radius:6px;
-    background:rgba(0,200,120,0.06); border:1px solid rgba(0,200,120,0.25); margin-top:10px;
-  }
-  .coll-scan-match img { width:60px; border-radius:4px; }
-  .coll-scan-match-info { flex:1; text-align:left; }
-  .coll-scan-match-name { font-family:'Cinzel',serif; font-size:13px; color:#44ddaa; }
-  .coll-scan-match-type { font-family:'Rajdhani',sans-serif; font-size:11px; color:var(--dim); }
-  .coll-scan-add-btn {
-    padding:8px 18px; border-radius:4px; border:1px solid rgba(0,200,120,0.4);
-    background:rgba(0,200,120,0.1); color:#44ddaa; cursor:pointer;
-    font-family:'Cinzel',serif; font-size:10px; letter-spacing:2px; transition:all 0.15s;
-  }
-  .coll-scan-add-btn:hover { background:rgba(0,200,120,0.2); }
   /* IO row */
   .coll-io-row { display:flex; gap:6px; padding:12px 16px; border-top:1px solid rgba(255,255,255,0.04); flex-wrap:wrap; }
   .coll-io-btn {
@@ -3891,7 +3458,6 @@
   <button class="btn btn-dim"  onclick="openRoster()">👥 Roster</button>
   <button class="btn btn-dim"  onclick="openLadder()" style="border-color:rgba(201,162,39,0.35);color:var(--gold);">🏆 Ladder</button>
   <button class="btn btn-dim"  onclick="openCardSearch()">🃏 Cards</button>
-  <button class="btn btn-dim"  onclick="openRulings()" style="border-color:rgba(120,180,255,0.35);color:#99ccff;">⚖️ Rulings</button>
   <button class="btn btn-dim"  onclick="openShortcutModal()">⌨ Shortcuts</button>
   <button class="btn btn-dim" id="voiceBtn" onclick="toggleVoice()">🎤 Voice</button>
   <button class="btn btn-dim" onclick="openTutorial()" style="border-color:rgba(201,162,39,0.3);color:var(--gold);">📖 Tutorial</button>
@@ -4411,9 +3977,6 @@
           <div class="rule-desc">Post duel results and the leaderboard to your Discord server when a duel ends. Paste a channel webhook URL (Server Settings → Integrations → Webhooks). Saved only on this device — never shared or synced.</div>
           <div class="rule-sub" id="rule-discord-sub" style="display:none;flex-direction:column;align-items:stretch;gap:8px;margin-top:8px;">
             <input type="password" class="rule-input" id="rule-discord-webhook" placeholder="https://discord.com/api/webhooks/…" autocomplete="off" oninput="saveDiscordSettings()" style="width:100%;letter-spacing:normal;">
-            <label style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--dim);cursor:pointer;">
-              <input type="checkbox" id="rule-discord-lb" checked onchange="saveDiscordSettings()"> Include leaderboard with each result
-            </label>
             <div style="display:flex;gap:8px;flex-wrap:wrap;">
               <button class="tourn-btn view" type="button" onclick="discordTest()">🧪 Test Webhook</button>
               <button class="tourn-btn play" type="button" onclick="discordPostLeaderboard(true)">🏆 Post Leaderboard Now</button>
@@ -4928,36 +4491,6 @@
     <div class="dimport-btns">
       <button class="dimport-btn go" onclick="executeDeckImport()">&#x2B07; Import Deck</button>
       <button class="dimport-btn cancel" onclick="closeDeckImport()">Cancel</button>
-    </div>
-  </div>
-</div>
-
-<!-- Rulings Modal -->
-<div id="rulingsModal">
-  <div class="rulings-wrap">
-    <div class="rulings-header">
-      <span class="rulings-title">⚖️ Card Rulings</span>
-      <div class="rulings-tabs">
-        <button class="rulings-tab active" id="rtab-manage" onclick="switchRulingsTab('manage')">✍️ Manual</button>
-      </div>
-      <button class="rulings-close" onclick="closeRulings()">✕</button>
-    </div>
-
-    <!-- Manual Rulings Tab -->
-    <div class="rulings-tab-panel active" id="rpanel-manage">
-      <div class="rulings-manage-wrap">
-        <div class="rulings-manage-form">
-          <div class="rulings-manage-label">Add / Edit a Manual Ruling</div>
-          <input  class="rulings-manage-input"    id="manualRulingQ"      placeholder="Question (e.g. card name + interaction)" maxlength="300">
-          <textarea class="rulings-manage-textarea" id="manualRulingA"    placeholder="Official ruling / known interaction / judge ruling…" rows="4"></textarea>
-          <div style="display:flex;gap:10px;align-items:center;">
-            <input class="rulings-manage-author" id="manualRulingAuthor" placeholder="Your name / source (optional)" maxlength="60" style="flex:1;">
-            <button class="rulings-manage-save" onclick="saveManualRuling()">💾 Save Ruling</button>
-          </div>
-          <div id="manualRulingSaveMsg" style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:#66dd88;min-height:14px;"></div>
-        </div>
-        <div class="rulings-manage-list" id="manualRulingsList"></div>
-      </div>
     </div>
   </div>
 </div>
@@ -6568,7 +6101,6 @@
         { id: 'rosterModal',      fn: function(){ closeRoster(); } },
         { id: 'ladderModal',      fn: function(){ closeLadder(); } },
         { id: 'cardSearchModal',  fn: function(){ if(_collViewActive){toggleCollectionView(false);}else{closeCardSearch();} } },
-        { id: 'rulingsModal',     fn: function(){ closeRulings(); } },
         { id: 'coinDiceModal',    fn: function(){ closeCoinDice(); } },
         { id: 'modeModal',        fn: function(){ closeModeModal(); } },
         { id: 'shortcutModal',    fn: function(){ closeShortcutModal(); } },
@@ -7014,11 +6546,14 @@
       var modeLabel = gameMode === 'bestof' ? 'Best of X' : gameMode === 'tournament' ? 'Tournament' : gameMode === 'koth' ? 'King of the Hill' : 'Standard Duel';
       var dLines = ['**Mode:** ' + modeLabel + ' · **Turns:** ' + Math.max(0, globalTurnNum - 1) + ' · **Time:** ' + _fmtClock(gameSeconds)];
       players.forEach(function(p, i) {
-        var rk = p.name.trim().toLowerCase();
-        var rr = roster[rk] || {w:0, l:0};
-        dLines.push((i === wi ? '👑 ' : '💀 ') + '**' + p.name + '** — ' + p.lp.toLocaleString() + ' LP · ' + (rr.w||0) + 'W-' + (rr.l||0) + 'L');
+        // Ladder standing (from the bot's leaderboard.json) instead of this device's roster, so Discord shows one set of numbers.
+        var lad = window.YGOLeaderboard ? YGOLeaderboard.find(p.name) : null;
+        var ladTxt = lad ? ' · ' + (lad.tier || 'Unranked') + ' ' + lad.rating + ' (' + lad.wins + '-' + lad.losses + ')' : '';
+        dLines.push((i === wi ? '👑 ' : '💀 ') + '**' + p.name + '** — ' + p.lp.toLocaleString() + ' LP' + ladTxt);
       });
+      if (window._wagerDuel && players.length === 2) dLines.push('⚔️ **Wager challenge**');
       discordPostDuelResult('🏆 ' + winner.name + ' wins!', dLines);
+      if (window._wagerDuel && typeof setWagerDuel === 'function') setWagerDuel(false);
     } catch(e) {}
   }
 
@@ -7158,6 +6693,16 @@
     renderRoster();
   }
 
+  /** Small tag after a roster name: 🔗 linked to Discord, ⛓ on the ladder but not linked, nothing if not on the ladder. */
+  function _ladderTag(name) {
+    var p = window.YGOLeaderboard ? YGOLeaderboard.find(name) : null;
+    if (!p) return '';
+    var tier = p.tier ? ' ' + p.tier : (p.ranked === false ? ' placement' : '');
+    return p.linked
+      ? ' <span class="ladder-tag linked" title="On the Discord ladder and linked to Discord">🔗' + tier + '</span>'
+      : ' <span class="ladder-tag" title="On the Discord ladder but not linked to Discord yet (a mod can use /duelist link)">⛓ not linked' + tier + '</span>';
+  }
+
   function renderRoster() {
     var list = document.getElementById('rosterList');
     if (!list) return;
@@ -7188,7 +6733,7 @@
       row.className = 'roster-row';
       row.setAttribute('data-rkey', key);
       row.innerHTML =
-        '<span class="roster-row-name">' + r.name + '</span>'
+        '<span class="roster-row-name">' + r.name + _ladderTag(r.name) + '</span>'
         + '<span class="r-stat w">' + (r.w||0) + '</span>'
         + '<span class="r-stat l">' + (r.l||0) + '</span>'
         + '<span class="r-stat f" style="color:#bbbbbb;">' + (r.f||0) + '</span>'
@@ -7828,6 +7373,22 @@
     return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
   }
 
+  // The server ladder (leaderboard.json from the Discord bot). Falls back to this device's roster if it can't load.
+  function _ladderEmbed(d) {
+    var medals = ['🥇','🥈','🥉'];
+    var ranked = (d.players || []).filter(function(p) { return p.ranked !== false; }).slice(0, 10);
+    var lines = ranked.map(function(p, i) {
+      return (medals[i] || '`#' + p.rank + '`') + ' **' + p.name + '** — ' + (p.tier ? p.tier + ' · ' : '') + p.rating + ' · ' + p.wins + 'W-' + p.losses + 'L';
+    });
+    return {
+      title: '🏆 Duel Ladder — ' + d.month,
+      description: lines.length ? lines.join('\n') : '_Nobody has finished placement yet._',
+      color: 0xC9A227,
+      footer: { text: 'Y.U.G.I.O.H. · Checkmate Gaming · from the Discord ladder' },
+      timestamp: new Date().toISOString()
+    };
+  }
+
   function _leaderboardEmbed() {
     var medals = ['🥇','🥈','🥉'];
     var lines = Object.keys(roster).map(function(k) { return roster[k]; })
@@ -7851,7 +7412,9 @@
 
   function discordPostLeaderboard(manual) {
     if (manual) saveDiscordSettings();
-    _discordSend({ username: 'Y.U.G.I.O.H.', embeds: [_leaderboardEmbed()] }, !manual);
+    var send = function(embed) { _discordSend({ username: 'Y.U.G.I.O.H.', embeds: [embed] }, !manual); };
+    if (window.YGOLeaderboard) YGOLeaderboard.refresh().then(function(d) { send(_ladderEmbed(d)); }).catch(function() { send(_leaderboardEmbed()); });
+    else send(_leaderboardEmbed());
   }
 
   function discordTest() {
@@ -7868,7 +7431,6 @@
       footer: { text: 'Y.U.G.I.O.H. · Checkmate Gaming' },
       timestamp: new Date().toISOString()
     }];
-    if (_discord.includeLb) embeds.push(_leaderboardEmbed());
     _discordSend({ username: 'Y.U.G.I.O.H.', embeds: embeds }, true);
   }
 
@@ -11116,736 +10678,6 @@
     if (popup && popup.classList.contains('open') && !popup.contains(e.target)) forgeCatPopupClose();
   });
 
-  /* ━━ ADD CARD TO RULINGS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-
-  function _populateRulingsInput(inp, card) {
-    if (!inp || !card) return;
-    inp.value = card.name;
-    inp.dataset.cardId = card.id;
-    inp.classList.add('matched');
-    _closeDropdown(inp.parentElement.querySelector('.rulings-card-dropdown'));
-    _populateCardPreview(inp, card);
-    _updateBuilderCount();
-  }
-
-  function addCardToRulingsField(card) {
-    if (!card) return;
-    closeCardDetail();
-    if (!document.getElementById('rulingsModal').classList.contains('open')) openRulings();
-    var body = document.getElementById('rulingsBuilderBody');
-    if (!body.classList.contains('open')) toggleRulingsBuilder();
-    var inputs = document.querySelectorAll('#floodgateSlots .rulings-card-input');
-    var target = null;
-    inputs.forEach(function(inp) { if (!target && !inp.value.trim()) target = inp; });
-    if (!target) { addFieldSlot(); var slots = document.querySelectorAll('#floodgateSlots .rulings-card-input'); target = slots[slots.length - 1]; }
-    _populateRulingsInput(target, card);
-    setTimeout(function(){ if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 180);
-  }
-
-  function addCardToRulingsChain(card) {
-    if (!card) return;
-    closeCardDetail();
-    if (!document.getElementById('rulingsModal').classList.contains('open')) openRulings();
-    var body = document.getElementById('rulingsBuilderBody');
-    if (!body.classList.contains('open')) toggleRulingsBuilder();
-    var links = document.querySelectorAll('#chainLinks .rulings-chain-link');
-    if (links.length === 1) {
-      var onlyInp = links[0].querySelector('.rulings-card-input');
-      if (onlyInp && !onlyInp.value.trim()) links[0].remove();
-      _chainLinkCount = 0;
-    }
-    addChainLink();
-    setTimeout(function() {
-      var newLink = document.querySelector('#chainLinks .rulings-chain-link:last-child');
-      if (!newLink) return;
-      var inp = newLink.querySelector('.rulings-card-input');
-      _populateRulingsInput(inp, card);
-      newLink.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 60);
-  }
-
-
-  /* ━━ CARD RULINGS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-
-  var _manualRulings = {};
-  var _aiRulingHistory = [];
-  var _cardNameIndex = null;
-  var _floodgateSlotCount = 0;
-
-  // ── IDB helpers ─────────────────────────────────────────────
-  function _rulingsIdbGetAll() {
-    return _openDB().then(function(db) {
-      return new Promise(function(resolve) {
-        var txn = db.transaction('rulings', 'readonly');
-        var req = txn.objectStore('rulings').getAll();
-        req.onsuccess = function() { resolve(req.result || []); };
-        req.onerror   = function() { resolve([]); };
-      });
-    });
-  }
-  function _rulingsIdbPut(id, obj) {
-    return _openDB().then(function(db) {
-      return new Promise(function(resolve) {
-        var txn = db.transaction('rulings', 'readwrite');
-        txn.objectStore('rulings').put(obj, id);
-        txn.oncomplete = function() { resolve(); };
-        txn.onerror    = function() { resolve(); };
-      });
-    });
-  }
-  function _rulingsIdbDelete(id) {
-    return _openDB().then(function(db) {
-      return new Promise(function(resolve) {
-        var txn = db.transaction('rulings', 'readwrite');
-        txn.objectStore('rulings').delete(id);
-        txn.oncomplete = function() { resolve(); };
-        txn.onerror    = function() { resolve(); };
-      });
-    });
-  }
-
-  // ── Load rulings from IDB on startup ────────────────────────
-  (function() {
-    _rulingsIdbGetAll().then(function(items) {
-      items.forEach(function(item) {
-        if (item && item.id) {
-          if (item.source === 'ai') _aiRulingHistory.push(item);
-          else _manualRulings[item.id] = item;
-        }
-      });
-      _aiRulingHistory.sort(function(a,b) { return (b.ts||0) - (a.ts||0); });
-    });
-  })();
-
-  // ── Markdown-lite renderer ──────────────────────────────────
-  function _renderMarkdown(text) {
-    if (!text) return '';
-    var s = _escHtml(text);
-    s = s.replace(/^#### (.+)$/gm, '<h4>$1</h4>');
-    s = s.replace(/^### (.+)$/gm, '<h3>$1</h3>');
-    s = s.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
-    s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-    s = s.replace(/\*(.+?)\*/g, '<em>$1</em>');
-    s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
-    s = s.replace(/^---$/gm, '<hr>');
-    s = s.replace(/^[•\-]\s+(.+)$/gm, '<li>$1</li>');
-    s = s.replace(/(<li>.*<\/li>\n?)+/g, function(m) { return '<ul>' + m + '</ul>'; });
-    s = s.replace(/^\d+[\.\)]\s+(.+)$/gm, '<li>$1</li>');
-    s = s.replace(/\n\n+/g, '</p><p>');
-    s = '<p>' + s + '</p>';
-    s = s.replace(/<p>\s*<\/p>/g, '');
-    s = s.replace(/<p>\s*(<h[34]>)/g, '$1');
-    s = s.replace(/(<\/h[34]>)\s*<\/p>/g, '$1');
-    s = s.replace(/<p>\s*(<ul>)/g, '$1');
-    s = s.replace(/(<\/ul>)\s*<\/p>/g, '$1');
-    s = s.replace(/<p>\s*(<hr>)\s*<\/p>/g, '$1');
-    s = s.replace(/<p>([^<]*)\n([^<]*)<\/p>/g, function(m) { return m.replace(/\n/g, '<br>'); });
-    return s;
-  }
-
-  // ── Modal open/close ────────────────────────────────────────
-  function openRulings() {
-    var modal = document.getElementById('rulingsModal');
-    modal.classList.add('open');
-    switchRulingsTab('manage');
-  }
-  function closeRulings() { document.getElementById('rulingsModal').classList.remove('open'); }
-  function switchRulingsTab(name) {
-    document.querySelectorAll('.rulings-tab').forEach(function(t) { t.classList.remove('active'); });
-    document.querySelectorAll('.rulings-tab-panel').forEach(function(p) { p.classList.remove('active'); });
-    var tab = document.getElementById('rtab-' + name);
-    var panel = document.getElementById('rpanel-' + name);
-    if (tab) tab.classList.add('active');
-    if (panel) panel.classList.add('active');
-    if (name === 'manage') renderManualRulingsList();
-  }
-
-  function _restoreAiRulings() {
-    var container = document.getElementById('rulingsResults');
-    if (container.querySelectorAll('.ruling-card').length > 0) return;
-    _aiRulingHistory.forEach(function(r) {
-      _prependRulingCard(container, {
-        q: r.q, a: r.a, source: r.source || 'ai',
-        author: r.author, date: r.date, isError: r.isError,
-        skipPersist: true, append: true
-      });
-    });
-  }
-
-  // ── Builder toggle ──────────────────────────────────────────
-  function toggleRulingsBuilder() {
-    var body = document.getElementById('rulingsBuilderBody');
-    var icon = document.getElementById('builderToggleIcon');
-    body.classList.toggle('open');
-    icon.classList.toggle('open');
-    if (body.classList.contains('open') && document.getElementById('chainLinks').children.length === 0) addChainLink();
-  }
-
-  function _updateBuilderCount() {
-    var count = 0;
-    document.querySelectorAll('#floodgateSlots .rulings-card-input, #chainLinks .rulings-card-input').forEach(function(inp) {
-      if (inp.value.trim()) count++;
-    });
-    var badge = document.getElementById('builderCardCount');
-    if (count > 0) { badge.textContent = count; badge.style.display = 'inline-block'; }
-    else { badge.style.display = 'none'; }
-  }
-
-  // ── Dynamic field slots ─────────────────────────────────────
-  function addFieldSlot() {
-    _floodgateSlotCount++;
-    var n = _floodgateSlotCount;
-    var row = document.getElementById('floodgateSlots');
-    var slot = document.createElement('div');
-    slot.className = 'rulings-fg-slot';
-    slot.innerHTML =
-      '<div class="rulings-fg-top">'
-      + '<div class="rulings-fg-badge">F' + n + '</div>'
-      + '<div class="rulings-card-search-wrap">'
-      +   '<input class="rulings-card-input" placeholder="Card name…" oninput="rulingsCardInput(this)" onkeydown="rulingsCardKeydown(event,this)" autocomplete="off">'
-      +   '<div class="rulings-card-dropdown"></div>'
-      + '</div>'
-      + '<button class="rulings-fg-remove" onclick="removeFieldSlot(this)" title="Remove">✕</button>'
-      + '</div>'
-      + '<div class="rulings-fg-card-body"><img class="rulings-fg-img" src="" alt="">'
-      + '<div class="rulings-card-desc"></div>'
-      + '<div class="rulings-highlight-btns"><button class="rulings-hl-btn" onclick="highlightEffect(this)">🖍 Highlight</button><button class="rulings-hl-btn" onclick="clearHighlight(this)" style="display:none">✕ Clear</button></div>'
-      + '</div>';
-    row.appendChild(slot);
-    slot.querySelector('.rulings-card-input').focus();
-    return slot;
-  }
-
-  function removeFieldSlot(btn) {
-    var slot = btn.closest('.rulings-fg-slot');
-    if (slot) slot.remove();
-    document.querySelectorAll('#floodgateSlots .rulings-fg-slot').forEach(function(s, i) {
-      var badge = s.querySelector('.rulings-fg-badge');
-      if (badge) badge.textContent = 'F' + (i + 1);
-    });
-    _floodgateSlotCount = document.querySelectorAll('#floodgateSlots .rulings-fg-slot').length;
-    _updateBuilderCount();
-  }
-
-  // ── Fuzzy matching ──────────────────────────────────────────
-  function _rulingKey(text) { return (text || '').toLowerCase().replace(/[^a-z0-9]/g, ' ').replace(/\s+/g, ' ').trim(); }
-  function _findManualRuling(question) {
-    var qKey = _rulingKey(question);
-    var qWords = qKey.split(' ').filter(function(w) { return w.length > 2; });
-    var best = null, bestScore = 0;
-    Object.values(_manualRulings).forEach(function(r) {
-      var rKey = _rulingKey(r.q);
-      var score = 0;
-      qWords.forEach(function(w) { if (rKey.includes(w)) score++; });
-      var overlap = score / Math.max(qWords.length, 1);
-      if (overlap > 0.55 && overlap > bestScore) { bestScore = overlap; best = r; }
-    });
-    return best;
-  }
-
-  // ── Chain builder state ─────────────────────────────────────
-  var _chainLinkCount = 0;
-  var _rulingsDropdownTimer = null;
-
-  // ── Autocomplete ────────────────────────────────────────────
-  function rulingsCardInput(inp) {
-    clearTimeout(_rulingsDropdownTimer);
-    var val = inp.value.trim();
-    inp.classList.remove('matched');
-    _clearCardPreview(inp);
-    _updateBuilderCount();
-    var dd = inp.parentElement.querySelector('.rulings-card-dropdown');
-    if (!val || val.length < 2 || !_cardDbReady || !_cardDb) { _closeDropdown(dd); return; }
-    _rulingsDropdownTimer = setTimeout(function() {
-      if (!_cardNameIndex) { _cardNameIndex = {}; _cardDb.forEach(function(card) { _cardNameIndex[card.name.toLowerCase()] = card; }); }
-      var vl = val.toLowerCase();
-      var exact = [], starts = [], contains = [];
-      _cardDb.forEach(function(card) {
-        var n = card.name.toLowerCase();
-        if (n === vl) exact.push(card);
-        else if (n.startsWith(vl)) starts.push(card);
-        else if (n.includes(vl)) contains.push(card);
-      });
-      var results = exact.concat(starts, contains).slice(0, 10);
-      if (!results.length) { _closeDropdown(dd); return; }
-      dd.innerHTML = '';
-      results.forEach(function(card) {
-        var item = document.createElement('div');
-        item.className = 'rulings-dd-item';
-        var typeShort = (card.type || '').replace('Effect Monster','Effect').replace('Normal Monster','Normal').replace(' Card','').replace('Quick-Play','Quick');
-        item.innerHTML = '<span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + _escHtml(card.name) + '</span>'
-          + '<span class="rulings-dd-type">' + _escHtml(typeShort.substring(0,14)) + '</span>';
-        item.onmousedown = function(e) {
-          e.preventDefault();
-          inp.value = card.name; inp.dataset.cardId = card.id; inp.classList.add('matched');
-          _closeDropdown(dd); _populateCardPreview(inp, card); _updateBuilderCount();
-        };
-        dd.appendChild(item);
-      });
-      dd.classList.add('open');
-      dd._focusIdx = -1;
-    }, 160);
-  }
-
-  function rulingsCardKeydown(e, inp) {
-    var dd = inp.parentElement.querySelector('.rulings-card-dropdown');
-    var items = dd.querySelectorAll('.rulings-dd-item');
-    if (e.key === 'ArrowDown') { e.preventDefault(); dd._focusIdx = Math.min((dd._focusIdx || -1) + 1, items.length - 1); items.forEach(function(it, i) { it.classList.toggle('focused', i === dd._focusIdx); }); }
-    else if (e.key === 'ArrowUp') { e.preventDefault(); dd._focusIdx = Math.max((dd._focusIdx || 0) - 1, 0); items.forEach(function(it, i) { it.classList.toggle('focused', i === dd._focusIdx); }); }
-    else if (e.key === 'Enter') { e.preventDefault(); var focused = dd.querySelector('.rulings-dd-item.focused') || dd.querySelector('.rulings-dd-item'); if (focused) focused.onmousedown(e); else if (dd.classList.contains('open')) _closeDropdown(dd); }
-    else if (e.key === 'Escape') { _closeDropdown(dd); }
-  }
-
-  function _populateCardPreview(inp, card) {
-    var imgId = card.card_images && card.card_images[0] ? card.card_images[0].id : card.id;
-    var imgUrl = 'https://images.ygoprodeck.com/images/cards_small/' + imgId + '.jpg';
-    var fgSlot = inp.closest('.rulings-fg-slot');
-    if (fgSlot) {
-      var img = fgSlot.querySelector('.rulings-fg-img'), desc = fgSlot.querySelector('.rulings-card-desc'), body = fgSlot.querySelector('.rulings-fg-card-body');
-      if (img) img.src = imgUrl; if (desc) desc.textContent = card.desc || ''; if (body && card.desc) body.style.display = 'flex';
-      return;
-    }
-    var clRow = inp.closest('.rulings-chain-link');
-    if (clRow) {
-      var img = clRow.querySelector('.rulings-cl-img'), desc = clRow.querySelector('.rulings-cl-desc'), cBody = clRow.querySelector('.rulings-cl-card-row');
-      if (img) img.src = imgUrl; if (desc) desc.textContent = card.desc || ''; if (cBody && card.desc) cBody.style.display = 'flex';
-    }
-  }
-
-  function _clearCardPreview(inp) {
-    var fgSlot = inp.closest('.rulings-fg-slot');
-    if (fgSlot) { var img = fgSlot.querySelector('.rulings-fg-img'), desc = fgSlot.querySelector('.rulings-card-desc'), body = fgSlot.querySelector('.rulings-fg-card-body'); if (img) img.src = ''; if (desc) desc.innerHTML = ''; if (body) body.style.display = 'none'; return; }
-    var clRow = inp.closest('.rulings-chain-link');
-    if (clRow) { var img = clRow.querySelector('.rulings-cl-img'), desc = clRow.querySelector('.rulings-cl-desc'), cBody = clRow.querySelector('.rulings-cl-card-row'); if (img) img.src = ''; if (desc) desc.innerHTML = ''; if (cBody) cBody.style.display = 'none'; }
-  }
-
-  function _closeDropdown(dd) { if (dd) { dd.classList.remove('open'); dd.innerHTML = ''; } }
-
-  document.addEventListener('click', function(e) {
-    if (!e.target.closest('.rulings-card-search-wrap')) {
-      document.querySelectorAll('.rulings-card-dropdown.open').forEach(function(dd) { _closeDropdown(dd); });
-    }
-  });
-
-  // ── Chain link add/remove ───────────────────────────────────
-  function addChainLink() {
-    _chainLinkCount++;
-    var n = _chainLinkCount;
-    var list = document.getElementById('chainLinks');
-    var row = document.createElement('div');
-    row.className = 'rulings-chain-link'; row.dataset.cl = n;
-    row.innerHTML =
-      '<div class="rulings-chain-top">'
-      + '<div class="rulings-chain-badge"><div class="rulings-chain-icon">⛓</div><div class="rulings-chain-num">CL' + n + '</div></div>'
-      + '<div class="rulings-card-search-wrap"><input class="rulings-card-input" placeholder="Chain Link ' + n + ' — card name…" oninput="rulingsCardInput(this)" onkeydown="rulingsCardKeydown(event,this)" autocomplete="off"><div class="rulings-card-dropdown"></div></div>'
-      + '<button class="rulings-chain-remove" onclick="removeChainLink(this)" title="Remove">✕</button>'
-      + '</div>'
-      + '<div class="rulings-cl-card-row"><img class="rulings-cl-img" src="" alt=""><div class="rulings-cl-desc-wrap"><div class="rulings-cl-desc"></div>'
-      + '<div class="rulings-highlight-btns"><button class="rulings-hl-btn" onclick="highlightEffect(this)">🖍 Highlight</button><button class="rulings-hl-btn" onclick="clearHighlight(this)" style="display:none">✕ Clear</button></div></div></div>';
-    list.appendChild(row);
-    row.querySelector('.rulings-card-input').focus();
-  }
-
-  function removeChainLink(btn) {
-    var row = btn ? btn.closest('.rulings-chain-link') : document.querySelector('#chainLinks .rulings-chain-link:last-child');
-    if (row) row.remove();
-    var list = document.getElementById('chainLinks');
-    list.querySelectorAll('.rulings-chain-link').forEach(function(r, i) {
-      var n = i + 1; r.dataset.cl = n;
-      var numEl = r.querySelector('.rulings-chain-num'); if (numEl) numEl.textContent = 'CL' + n;
-      var inp = r.querySelector('.rulings-card-input'); if (inp && !inp.value) inp.placeholder = 'Chain Link ' + n + ' — card name…';
-    });
-    _chainLinkCount = list.querySelectorAll('.rulings-chain-link').length;
-    _updateBuilderCount();
-  }
-
-  function clearRulingBuilder() {
-    document.getElementById('floodgateSlots').innerHTML = '';
-    _floodgateSlotCount = 0;
-    document.getElementById('chainLinks').innerHTML = '';
-    _chainLinkCount = 0;
-    var notes = document.getElementById('rulingsNotes'); if (notes) notes.value = '';
-    _updateBuilderCount();
-  }
-
-  // ── Highlight ───────────────────────────────────────────────
-  function highlightEffect(btn) {
-    var sel = window.getSelection();
-    if (!sel || sel.isCollapsed) { showToast('Select card text first, then click Highlight', 'info'); return; }
-    var range = sel.getRangeAt(0);
-    var container = btn.closest('.rulings-cl-desc-wrap, .rulings-fg-card-body');
-    if (!container) return;
-    var descEl = container.querySelector('.rulings-cl-desc, .rulings-card-desc');
-    if (!descEl || !descEl.contains(range.commonAncestorContainer)) return;
-    try {
-      var mark = document.createElement('mark'); mark.className = 'ruling-effect-highlight';
-      range.surroundContents(mark); sel.removeAllRanges();
-      var btns = btn.parentElement.querySelectorAll('.rulings-hl-btn'); if (btns[1]) btns[1].style.display = 'inline-block';
-    } catch(e) {}
-  }
-
-  function clearHighlight(btn) {
-    var container = btn.closest('.rulings-cl-desc-wrap, .rulings-fg-card-body'); if (!container) return;
-    var descEl = container.querySelector('.rulings-cl-desc, .rulings-card-desc');
-    if (descEl) { descEl.querySelectorAll('mark.ruling-effect-highlight').forEach(function(m) { var p = m.parentNode; while (m.firstChild) p.insertBefore(m.firstChild, m); p.removeChild(m); }); }
-    btn.style.display = 'none';
-  }
-
-  function _getHighlightedText(descEl) {
-    if (!descEl) return null;
-    var marks = descEl.querySelectorAll('mark.ruling-effect-highlight');
-    if (!marks.length) return null;
-    return Array.from(marks).map(function(m){ return m.textContent.trim(); }).filter(Boolean);
-  }
-
-  function _collectBuilderCards() {
-    var floodgates = [], chain = [];
-    document.querySelectorAll('#floodgateSlots .rulings-fg-slot').forEach(function(slot, i) {
-      var inp = slot.querySelector('.rulings-card-input'), name = inp ? inp.value.trim() : '';
-      if (name) { var descEl = slot.querySelector('.rulings-card-desc'); floodgates.push({ slot: 'F' + (i + 1), name: name, highlights: _getHighlightedText(descEl) }); }
-    });
-    document.querySelectorAll('#chainLinks .rulings-chain-link').forEach(function(row, i) {
-      var inp = row.querySelector('.rulings-card-input'), name = inp ? inp.value.trim() : '';
-      if (name) { var descEl = row.querySelector('.rulings-cl-desc'); chain.push({ cl: i + 1, name: name, highlights: _getHighlightedText(descEl) }); }
-    });
-    return { floodgates: floodgates, chain: chain };
-  }
-
-  function _getCardData(name) {
-    if (!_cardDbReady || !_cardDb) return null;
-    if (!_cardNameIndex) { _cardNameIndex = {}; _cardDb.forEach(function(card) { _cardNameIndex[card.name.toLowerCase()] = card; }); }
-    return _cardNameIndex[name.toLowerCase()] || null;
-  }
-
-  function _formatCardBlock(card, highlights) {
-    if (!card) return null;
-    var stats = '';
-    if (card.level != null) stats += ' | Level ' + card.level;
-    if (card.rank != null) stats += ' | Rank ' + card.rank;
-    if (card.linkval != null) stats += ' | Link ' + card.linkval;
-    if (card.atk != null) stats += ' | ATK ' + card.atk;
-    if (card.def != null) stats += ' | DEF ' + card.def;
-    if (card.scale != null) stats += ' | Scale ' + card.scale;
-    var block = '[' + card.name + ']\nType: ' + (card.type || '?')
-      + (card.race ? ' / ' + card.race : '') + (card.attribute ? ' / ' + card.attribute : '')
-      + stats + '\nEffect:\n' + (card.desc || '(no text)');
-    if (highlights && highlights.length) block += '\n⚡ PLAYER IS ACTIVATING THIS SPECIFIC EFFECT:\n"' + highlights.join('" / "') + '"';
-    return block;
-  }
-
-  // ── Quick ask ───────────────────────────────────────────────
-  function rulingsQuickKeydown(e) { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); quickAskRuling(); } }
-
-  function _buildRulingsSystemPrompt(cardDataBlocks, isChain) {
-    var s = 'You are a certified Yu-Gi-Oh! TCG Head Judge with deep mastery of all official rules, PSCT (Problem-Solving Card Text), and the current TCG rulebook.\n\n'
-      + '═══ CORE CHAIN RULES ═══\n'
-      + '• Chains resolve LIFO — Last In First Out.\n'
-      + '• A card can only be chained to another of equal or lower Spell Speed: SS1 (monsters, normal spells), SS2 (Quick-Play, Traps, Quick Effects), SS3 (Counter Traps).\n'
-      + '• "When… you can" effects CAN miss timing if they are not the last thing to happen.\n\n'
-      + '═══ FORMAT ═══\n'
-      + 'Use markdown: **bold** for key terms, bullet points for steps, ### for section headers.\n'
-      + 'Be concise. Cite exact card text when relevant. Conclude with a one-line **Verdict:**.\n\n';
-    if (cardDataBlocks && cardDataBlocks.length) {
-      s += '═══ CARD DATABASE ═══\nEXACT card text from the local database. Use ONLY this text when quoting card effects:\n\n' + cardDataBlocks.join('\n\n');
-    }
-    return s;
-  }
-
-  function quickAskRuling() {
-    var inp = document.getElementById('rulingsQuickInput');
-    var question = (inp.value || '').trim();
-    if (!question) return;
-    var btn = document.getElementById('rulingsQuickBtn');
-    var resultsEl = document.getElementById('rulingsResults');
-    var typingEl = document.getElementById('rulingTyping');
-
-    var manual = _findManualRuling(question);
-    if (manual) {
-      _prependRulingCard(resultsEl, { q: question, a: manual.a, source: 'human', author: manual.author || 'Manual', date: manual.date, matchedQ: manual.q });
-      inp.value = '';
-      return;
-    }
-
-    btn.disabled = true;
-    typingEl.classList.add('active');
-
-    var cardDataBlocks = [];
-    if (_cardDbReady && _cardDb) {
-      var ql = question.toLowerCase();
-      _cardDb.forEach(function(card) {
-        if (card.name.length > 3 && ql.includes(card.name.toLowerCase())) {
-          var block = _formatCardBlock(card);
-          if (block) cardDataBlocks.push(block);
-        }
-      });
-    }
-
-    var _apiKey = localStorage.getItem('ygo_anthropic_key') || '';
-    if (!_apiKey) {
-      typingEl.classList.remove('active'); btn.disabled = false;
-      _prependRulingCard(resultsEl, { q: question, a: '⚠️ No API key configured. Go to Settings → AI Rulings and enter your Anthropic API key.', source: 'ai', date: new Date().toLocaleDateString() });
-      return;
-    }
-    fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': _apiKey, 'anthropic-version': '2023-06-01' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514', max_tokens: 2000,
-        system: _buildRulingsSystemPrompt(cardDataBlocks, false),
-        messages: [{ role: 'user', content: question }]
-      })
-    })
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      typingEl.classList.remove('active'); btn.disabled = false;
-      var answer = (data.content && data.content[0] && data.content[0].text) || 'No response received.';
-      if (data.error) answer = 'API Error: ' + (data.error.message || JSON.stringify(data.error));
-      _prependRulingCard(resultsEl, { q: question, a: answer, source: 'ai', date: new Date().toLocaleDateString() });
-      inp.value = '';
-    })
-    .catch(function(err) {
-      typingEl.classList.remove('active'); btn.disabled = false;
-      var isGitHub = window.location.hostname.includes('github.io');
-      _prependRulingCard(resultsEl, {
-        q: question,
-        a: isGitHub ? '⚠️ AI Rulings unavailable on GitHub Pages. Open this app inside Claude.ai or use ✍️ Manual Rulings.' : 'Connection error: ' + err.message,
-        source: 'ai', date: new Date().toLocaleDateString(), isError: true
-      });
-    });
-  }
-
-  // ── Ask AI (chain builder) ──────────────────────────────────
-  function askRuling() {
-    var builder = _collectBuilderCards();
-    var notes = (document.getElementById('rulingsNotes').value || '').trim();
-    var allCardItems = builder.floodgates.concat(builder.chain);
-    var quickQ = (document.getElementById('rulingsQuickInput').value || '').trim();
-
-    if (!allCardItems.length && !quickQ) {
-      _prependRulingCard(document.getElementById('rulingsResults'), {
-        q: '(Nothing entered)', a: 'Please add cards or type a question before analyzing.',
-        source: 'ai', date: new Date().toLocaleDateString(), isError: true
-      });
-      return;
-    }
-
-    var resultsEl = document.getElementById('rulingsResults');
-    var typingEl = document.getElementById('rulingTyping');
-    var askBtn = document.getElementById('rulingsAskBtn');
-
-    var qParts = [];
-    if (quickQ) qParts.push('Q: ' + quickQ);
-    if (builder.floodgates.length) qParts.push('Field: ' + builder.floodgates.map(function(f){ return f.name; }).join(', '));
-    if (builder.chain.length) qParts.push('Chain: ' + builder.chain.map(function(c){ return 'CL'+c.cl+' '+c.name; }).join(' → '));
-    if (notes) qParts.push('Notes: ' + notes);
-    var qSummary = qParts.join(' | ') || quickQ;
-
-    var manual = _findManualRuling(qSummary);
-    if (manual) {
-      _prependRulingCard(resultsEl, { q: qSummary, a: manual.a, source: 'human', author: manual.author || 'Manual', date: manual.date, matchedQ: manual.q });
-      return;
-    }
-
-    askBtn.disabled = true;
-    typingEl.classList.add('active');
-
-    var cardDataBlocks = [];
-    allCardItems.forEach(function(item) {
-      var card = _getCardData(item.name);
-      var block = _formatCardBlock(card, item.highlights);
-      cardDataBlocks.push(block || ('[' + item.name + ']\n(Card not found — use training knowledge)'));
-    });
-
-    var userMsg = '';
-    if (quickQ) userMsg += '=== PLAYER\'S QUESTION ===\n' + quickQ + '\n\n';
-    if (builder.floodgates.length) {
-      userMsg += '=== FIELD / FLOODGATES ===\n';
-      builder.floodgates.forEach(function(f) { userMsg += f.slot + ': ' + f.name; if (f.highlights && f.highlights.length) userMsg += '  [ACTIVE EFFECT: "' + f.highlights.join('" / "') + '"]'; userMsg += '\n'; });
-      userMsg += '\n';
-    }
-    if (builder.chain.length) {
-      userMsg += '=== CHAIN (CL1 activates first — last CL resolves first) ===\n';
-      builder.chain.forEach(function(c) { userMsg += 'CL' + c.cl + ': ' + c.name; if (c.highlights && c.highlights.length) userMsg += '  [ACTIVATING: "' + c.highlights.join('" / "') + '"]'; userMsg += '\n'; });
-      userMsg += '\n';
-    }
-    if (notes) userMsg += '=== CONTEXT ===\n' + notes + '\n\n';
-    userMsg += quickQ ? 'Answer the player\'s question, citing exact card text.' : 'Analyze how this chain resolves step by step.';
-
-    var _apiKey2 = localStorage.getItem('ygo_anthropic_key') || '';
-    if (!_apiKey2) {
-      typingEl.classList.remove('active'); askBtn.disabled = false;
-      _prependRulingCard(resultsEl, { q: qSummary, a: '⚠️ No API key configured. Go to Settings → AI Rulings and enter your Anthropic API key.', source: 'ai', date: new Date().toLocaleDateString() });
-      return;
-    }
-    fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': _apiKey2, 'anthropic-version': '2023-06-01' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514', max_tokens: 2000,
-        system: _buildRulingsSystemPrompt(cardDataBlocks, true),
-        messages: [{ role: 'user', content: userMsg }]
-      })
-    })
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      typingEl.classList.remove('active'); askBtn.disabled = false;
-      var answer = (data.content && data.content[0] && data.content[0].text) || 'No response received.';
-      if (data.error) answer = 'API Error: ' + (data.error.message || JSON.stringify(data.error));
-      _prependRulingCard(resultsEl, { q: qSummary, a: answer, source: 'ai', date: new Date().toLocaleDateString() });
-      document.getElementById('rulingsQuickInput').value = '';
-    })
-    .catch(function(err) {
-      typingEl.classList.remove('active'); askBtn.disabled = false;
-      var isGitHub = window.location.hostname.includes('github.io');
-      _prependRulingCard(resultsEl, {
-        q: qSummary,
-        a: isGitHub ? '⚠️ AI Rulings unavailable on GitHub Pages. Open this app inside Claude.ai or use ✍️ Manual Rulings.' : 'Connection error: ' + err.message,
-        source: 'ai', date: new Date().toLocaleDateString(), isError: true
-      });
-    });
-  }
-
-  // ── Prepend ruling card ─────────────────────────────────────
-  function _prependRulingCard(container, opts) {
-    var placeholder = container.querySelector('.rulings-placeholder');
-    if (placeholder) placeholder.style.display = 'none';
-
-    var div = document.createElement('div');
-    div.className = 'ruling-card';
-
-    var badgeHtml = opts.source === 'human'
-      ? '<span class="ruling-badge human">✍️ MANUAL</span>'
-      : '<span class="ruling-badge ai">🤖 AI</span>';
-
-    var matchBadge = opts.matchedQ
-      ? '<span class="ruling-badge cached">matched: ' + opts.matchedQ.substring(0,40) + (opts.matchedQ.length > 40 ? '…' : '') + '</span>' : '';
-
-    var author = opts.author ? '<span class="ruling-card-date">— ' + opts.author + '</span>' : '';
-    var dateStr = opts.date ? '<span class="ruling-card-date">' + opts.date + '</span>' : '';
-
-    var answerHtml = (opts.source === 'ai' && !opts.isError) ? _renderMarkdown(opts.a) : _escHtml(opts.a);
-
-    div.innerHTML =
-      '<div class="ruling-card-q">❓ ' + _escHtml(opts.q) + '</div>'
-      + '<div class="ruling-card-a">' + answerHtml + '</div>'
-      + '<div class="ruling-card-meta">'
-      + badgeHtml + matchBadge + author + dateStr
-      + '<div class="ruling-card-actions">'
-      + (opts.source === 'ai' && !opts.isError
-          ? '<button class="ruling-action-btn followup" onclick="followUpRuling(this)">💬 Follow Up</button>'
-          + '<button class="ruling-action-btn promote" onclick="promoteToManual(this)">💾 Save</button>'
-          : '')
-      + '</div></div>';
-
-    div._ruling = opts;
-    if (opts.append) container.appendChild(div);
-    else container.insertBefore(div, container.firstChild);
-
-    if (opts.source === 'ai' && !opts.isError && !opts.skipPersist) {
-      var id = 'ai_ruling_' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
-      var record = { id: id, q: opts.q, a: opts.a, source: 'ai', date: opts.date, ts: Date.now() };
-      _aiRulingHistory.unshift(record);
-      if (_aiRulingHistory.length > 50) _aiRulingHistory = _aiRulingHistory.slice(0, 50);
-      _rulingsIdbPut(id, record);
-    }
-  }
-
-  function followUpRuling(btn) {
-    var card = btn.closest('.ruling-card');
-    if (!card || !card._ruling) return;
-    var qi = document.getElementById('rulingsQuickInput');
-    qi.value = 'Follow-up on: ' + card._ruling.q + '\n\n';
-    qi.focus();
-    qi.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
-
-  function promoteToManual(btn) {
-    var card = btn.closest('.ruling-card');
-    if (!card || !card._ruling) return;
-    var r = card._ruling;
-    document.getElementById('manualRulingQ').value = r.q;
-    document.getElementById('manualRulingA').value = r.a;
-    document.getElementById('manualRulingAuthor').value = 'Promoted from AI';
-    switchRulingsTab('manage');
-    document.getElementById('manualRulingQ').focus();
-  }
-
-  // ── Filter + clear ──────────────────────────────────────────
-  function filterRulings() {
-    var query = (document.getElementById('rulingsFilterInput').value || '').toLowerCase().trim();
-    document.querySelectorAll('#rulingsResults .ruling-card').forEach(function(card) {
-      if (!query) { card.classList.remove('filtered-out'); return; }
-      card.classList.toggle('filtered-out', !(card.textContent || '').toLowerCase().includes(query));
-    });
-  }
-
-  function clearAllRulingResults() {
-    var container = document.getElementById('rulingsResults');
-    container.querySelectorAll('.ruling-card').forEach(function(c) { c.remove(); });
-    var ph = container.querySelector('.rulings-placeholder');
-    if (ph) ph.style.display = '';
-    _aiRulingHistory.forEach(function(r) { if (r.id) _rulingsIdbDelete(r.id); });
-    _aiRulingHistory = [];
-  }
-
-  // ── Manual rulings CRUD ─────────────────────────────────────
-  function saveManualRuling() {
-    var q = (document.getElementById('manualRulingQ').value || '').trim();
-    var a = (document.getElementById('manualRulingA').value || '').trim();
-    var author = (document.getElementById('manualRulingAuthor').value || '').trim();
-    var msg = document.getElementById('manualRulingSaveMsg');
-    if (!q || !a) { msg.textContent = '⚠ Question and ruling are required'; msg.style.color='#ff8888'; return; }
-    var id = 'ruling_' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
-    var obj = { id: id, q: q, a: a, author: author, date: new Date().toLocaleDateString(), source: 'manual' };
-    _manualRulings[id] = obj;
-    _rulingsIdbPut(id, obj).then(function() {
-      document.getElementById('manualRulingQ').value = '';
-      document.getElementById('manualRulingA').value = '';
-      document.getElementById('manualRulingAuthor').value = '';
-      msg.textContent = '✔ Ruling saved'; msg.style.color = '#66dd88';
-      renderManualRulingsList();
-    });
-  }
-
-  function deleteManualRuling(id) { if (!confirm('Delete this manual ruling?')) return; delete _manualRulings[id]; _rulingsIdbDelete(id).then(renderManualRulingsList); }
-
-  function editManualRuling(id) {
-    var r = _manualRulings[id]; if (!r) return;
-    document.getElementById('manualRulingQ').value = r.q;
-    document.getElementById('manualRulingA').value = r.a;
-    document.getElementById('manualRulingAuthor').value = r.author || '';
-    delete _manualRulings[id]; _rulingsIdbDelete(id);
-    document.getElementById('manualRulingQ').focus();
-    document.getElementById('manualRulingSaveMsg').textContent = 'Editing — save to update';
-    document.getElementById('manualRulingSaveMsg').style.color = '#aaaacc';
-    renderManualRulingsList();
-  }
-
-  function renderManualRulingsList() {
-    var list = document.getElementById('manualRulingsList');
-    list.innerHTML = '';
-    var items = Object.values(_manualRulings).sort(function(a,b) { return (b.date || '').localeCompare(a.date || ''); });
-    if (!items.length) { list.innerHTML = '<div class="rulings-manage-empty">NO MANUAL RULINGS YET<br><span style="font-size:9px;opacity:0.5;">ADD YOUR FIRST RULING ABOVE</span></div>'; return; }
-    items.forEach(function(r) {
-      var div = document.createElement('div');
-      div.className = 'ruling-card';
-      div.innerHTML =
-        '<div class="ruling-card-q">❓ ' + _escHtml(r.q) + '</div>'
-        + '<div class="ruling-card-a">' + _escHtml(r.a) + '</div>'
-        + '<div class="ruling-card-meta">'
-        + '<span class="ruling-badge human">✍️ MANUAL</span>'
-        + (r.author ? '<span class="ruling-card-date">— ' + _escHtml(r.author) + '</span>' : '')
-        + (r.date ? '<span class="ruling-card-date">' + _escHtml(r.date) + '</span>' : '')
-        + '<div class="ruling-card-actions">'
-        + '<button class="ruling-action-btn" onclick="editManualRuling(\'' + r.id + '\')">✏️ Edit</button>'
-        + '<button class="ruling-action-btn del" onclick="deleteManualRuling(\'' + r.id + '\')">🗑 Delete</button>'
-        + '</div></div>';
-      list.appendChild(div);
-    });
-  }
-
-  document.getElementById('rulingsModal').addEventListener('click', function(e) { if (e.target === this) closeRulings(); });
-
   /* ── Tutorial System ── */
   var _tutorialSlide = 0;
   var _tutorialTotal = 10;
@@ -12452,9 +11284,6 @@
         setTimeout(function(){ openForge(); }, 300);
         setResult('Deck Forge opened','ok'); return;
       }
-      if (/^(rulings|open rulings|check ruling|ask ruling|rulings search)/.test(t)) {
-        openRulings(); setResult('Rulings opened','ok'); return;
-      }
       if (/^(roster|open roster|show roster|player roster)/.test(t)) {
         openRoster(); setResult('Roster opened','ok'); return;
       }
@@ -12463,7 +11292,7 @@
       }
       if (/^(close|close modal|dismiss|exit|go back)$/.test(t)) {
         // Close whatever modal is open
-        var modals = ['logModal','calcModal','rosterModal','rulesModal','playersModal','modeModal','syncModal','summaryOverlay','coinDiceModal','cardSearchModal','rulingsModal'];
+        var modals = ['logModal','calcModal','rosterModal','rulesModal','playersModal','modeModal','syncModal','summaryOverlay','coinDiceModal','cardSearchModal'];
         var closed = false;
         modals.forEach(function(id){ var m=document.getElementById(id); if(m&&(m.classList.contains('open')||m.style.display==='flex')){ m.classList.remove('open'); if(id==='summaryOverlay') closeSummary(false); closed=true; } });
         setResult(closed ? 'Closed ✓' : 'Nothing to close', closed?'ok':''); return;
@@ -12610,13 +11439,6 @@
       if (searchMain) searchMain.style.display = '';
       if (toggle) toggle.style.borderColor = 'rgba(0,200,120,0.3)';
     }
-  }
-  function collScanPrompt() {
-    // Create hidden file input for scanning
-    var inp = document.createElement('input');
-    inp.type = 'file'; inp.accept = 'image/*'; inp.capture = 'environment';
-    inp.onchange = function(e) { collScanCard(e); };
-    inp.click();
   }
 
   // ── Tab switching ────────────────────────────────────────
@@ -12794,119 +11616,6 @@
     if (card) {
       collAddCard(card, 1);
       collAddSearch(); // refresh to update qty badges
-    }
-  }
-
-  // ── Scanner: camera → AI → identify → add ────────────────
-  function collScanCard(event) {
-    var file = event.target.files[0];
-    if (!file) return;
-    var preview = document.getElementById('collScanPreview');
-    var result  = document.getElementById('collScanResult');
-    var match   = document.getElementById('collScanMatch');
-
-    // Show preview
-    var reader = new FileReader();
-    reader.onload = function(e) {
-      preview.src = e.target.result;
-      preview.style.display = 'block';
-      result.style.display = 'block';
-      result.innerHTML = '<span style="color:var(--gold);">🔍 Identifying card…</span>';
-      match.style.display = 'none';
-
-      // Extract base64 data
-      var base64 = e.target.result.split(',')[1];
-      var mediaType = file.type || 'image/jpeg';
-
-      // Send to Anthropic API for identification
-      var _scanKey = localStorage.getItem('ygo_anthropic_key') || '';
-      if (!_scanKey) {
-        result.innerHTML = '⚠️ No API key configured. Enter your Anthropic API key in Settings → AI Rulings to use card scanning.';
-        return;
-      }
-      fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-api-key': _scanKey, 'anthropic-version': '2023-06-01' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514', max_tokens: 300,
-          system: 'You are a Yu-Gi-Oh! card identification expert. The user will show you an image of a Yu-Gi-Oh! card. Identify the card and respond with ONLY a JSON object: {"name": "exact card name", "confidence": "high/medium/low"}. If you cannot identify the card, respond with {"name": null, "confidence": "none", "reason": "brief explanation"}. Do not include any other text.',
-          messages: [{ role: 'user', content: [
-            { type: 'image', source: { type: 'base64', media_type: mediaType, data: base64 } },
-            { type: 'text', text: 'Identify this Yu-Gi-Oh! card. Return only JSON.' }
-          ]}]
-        })
-      })
-      .then(function(r) { return r.json(); })
-      .then(function(data) {
-        var text = (data.content && data.content[0] && data.content[0].text) || '';
-        if (data.error) {
-          var isGitHub = window.location.hostname.includes('github.io');
-          result.innerHTML = isGitHub
-            ? '⚠️ Card scanning requires the AI API. Open this app inside Claude.ai to use the scanner, or add cards manually via the <b>Add Cards</b> tab.'
-            : '⚠️ API Error: ' + escHtml(data.error.message || '');
-          return;
-        }
-        // Parse AI response
-        try {
-          var clean = text.replace(/```json|```/g, '').trim();
-          var parsed = JSON.parse(clean);
-          if (parsed.name && parsed.confidence !== 'none') {
-            _collMatchScannedCard(parsed.name, parsed.confidence);
-          } else {
-            result.innerHTML = '❌ Could not identify card' + (parsed.reason ? ': ' + escHtml(parsed.reason) : '') + '. Try a clearer photo.';
-          }
-        } catch(ex) {
-          // AI responded with text, try to extract card name
-          result.innerHTML = '🤔 AI response: ' + escHtml(text.substring(0, 200));
-        }
-      })
-      .catch(function(err) {
-        result.innerHTML = '⚠️ Connection error. Make sure you are using this app inside Claude.ai for AI features.';
-      });
-    };
-    reader.readAsDataURL(file);
-    // Reset input for re-use
-    event.target.value = '';
-  }
-
-  function _collMatchScannedCard(name, confidence) {
-    var result = document.getElementById('collScanResult');
-    var matchEl = document.getElementById('collScanMatch');
-    if (!_cardDb || !_cardDbReady) {
-      result.innerHTML = '⚠️ Card database not loaded yet. Please wait.';
-      return;
-    }
-    // Fuzzy match: exact first, then includes, then starts-with
-    var lname = name.toLowerCase().trim();
-    var found = _cardDb.find(function(c) { return c.name.toLowerCase() === lname; });
-    if (!found) found = _cardDb.find(function(c) { return c.name.toLowerCase().indexOf(lname) !== -1; });
-    if (!found) {
-      // Try each word
-      var words = lname.split(/\s+/);
-      if (words.length > 1) {
-        found = _cardDb.find(function(c) {
-          var cn = c.name.toLowerCase();
-          return words.every(function(w) { return cn.indexOf(w) !== -1; });
-        });
-      }
-    }
-
-    if (found) {
-      var img_id = found.card_images && found.card_images[0] ? found.card_images[0].id : found.id;
-      var thumb = 'https://images.ygoprodeck.com/images/cards_small/' + img_id + '.jpg';
-      result.innerHTML = '✅ Identified: <b>' + escHtml(found.name) + '</b> (confidence: ' + confidence + ')';
-      matchEl.style.display = 'block';
-      matchEl.innerHTML = '<div class="coll-scan-match">'
-        + '<img src="' + thumb + '">'
-        + '<div class="coll-scan-match-info">'
-        + '<div class="coll-scan-match-name">' + escHtml(found.name) + '</div>'
-        + '<div class="coll-scan-match-type">' + escHtml(found.type || '') + (found.race ? ' · ' + escHtml(found.race) : '') + '</div>'
-        + '</div>'
-        + '<button class="coll-scan-add-btn" onclick="collAddFromSearch(' + found.id + ')">+ Add</button>'
-        + '</div>';
-    } else {
-      result.innerHTML = '⚠️ AI identified "' + escHtml(name) + '" but it wasn\'t found in the database. Try the <b>Add Cards</b> tab.';
-      matchEl.style.display = 'none';
     }
   }
 
@@ -13259,11 +11968,11 @@
     </div>
 
     <div class="tutorial-slide" data-slide="4">
-      <div class="tutorial-slide-icon">⚖️</div>
-      <div class="tutorial-slide-title">RULINGS</div>
+      <div class="tutorial-slide-icon">🏆</div>
+      <div class="tutorial-slide-title">DUEL LADDER</div>
       <div class="tutorial-slide-body">
-        Open <strong>Rulings</strong> from the menu to save rulings your group has agreed on: the question, the answer, and who made the call.<br><br>
-        Saved rulings stay on this device, and you can edit or delete them any time.
+        Finished 1v1 duels post to Discord, and once your opponent confirms, they count on the server ladder. Open <strong>Ladder</strong> from the menu to see ratings, rank tiers and points. 🔗 marks duelists linked to Discord.<br><br>
+        Playing an accepted wager? Turn on <strong>⚔️ Wager challenge</strong> in the Ladder menu before the duel so the result settles the wager.
       </div>
     </div>
 
@@ -13271,7 +11980,7 @@
       <div class="tutorial-slide-icon">🃏</div>
       <div class="tutorial-slide-title">CARDS &amp; DECK FORGE</div>
       <div class="tutorial-slide-body">
-        Search 13,000+ cards from the menu. View full card details, add cards to rulings, or open <strong>Deck Forge</strong> to build and manage decks.<br><br>
+        Search 13,000+ cards from the menu. View full card details or open <strong>Deck Forge</strong> to build and manage decks.<br><br>
         Import YDK files or build from scratch with draw simulation.
       </div>
     </div>
@@ -13448,7 +12157,6 @@
     <div class="vcmd-row"><span class="vcmd-example">"match record"</span><span class="vcmd-desc">Open match history</span></div>
     <div class="vcmd-row"><span class="vcmd-example">"card search"</span><span class="vcmd-desc">Open card search</span></div>
     <div class="vcmd-row"><span class="vcmd-example">"deck builder"</span><span class="vcmd-desc">Open card search + deck builder</span></div>
-    <div class="vcmd-row"><span class="vcmd-example">"rulings"</span><span class="vcmd-desc">Open the rulings panel</span></div>
     <div class="vcmd-row"><span class="vcmd-example">"roster"</span><span class="vcmd-desc">Open the player roster</span></div>
     <div class="vcmd-row"><span class="vcmd-example">"sync"</span><span class="vcmd-desc">Open multiplayer sync panel</span></div>
     <div class="vcmd-row"><span class="vcmd-example">"close"</span><span class="vcmd-desc">Close the active modal</span></div>
@@ -13495,6 +12203,8 @@
 </div>
 
 
+<div id="wagerBadge" onclick="setWagerDuel(false)" title="Wager challenge is on. Tap to turn it off." style="display:none;position:fixed;top:8px;left:50%;transform:translateX(-50%);z-index:350;align-items:center;gap:6px;padding:4px 12px;border-radius:999px;border:1px solid rgba(201,162,39,0.6);background:rgba(20,16,4,0.9);color:var(--gold);font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;cursor:pointer;">&#x2694;&#xFE0F; WAGER</div>
+
 <!-- ═══ Duel Ladder (wager points leaderboard, data from leaderboard.json, written by the Discord bot) ═══ -->
 <style>
   #ladderModal {
@@ -13513,6 +12223,10 @@
       <span class="roster-title">&#x1F3C6; Duel Ladder</span>
       <button class="roster-close" onclick="closeLadder()">&#x2715;</button>
     </div>
+    <label id="wagerToggleRow" style="display:flex;align-items:center;gap:10px;margin:12px 18px 0;padding:10px 12px;border:1px solid rgba(201,162,39,0.35);border-radius:6px;background:rgba(201,162,39,0.06);cursor:pointer;font-family:'Rajdhani',sans-serif;color:var(--text);">
+      <input type="checkbox" id="wagerDuelToggle" onchange="setWagerDuel(this.checked)" style="width:18px;height:18px;accent-color:var(--gold);">
+      <span><b style="color:var(--gold);">&#x2694;&#xFE0F; Wager challenge</b><br><span style="font-size:12px;color:var(--dim);">This duel is an accepted wager. The result settles the wager on Discord instead of counting as a regular match. 1v1 only; turns off after the result posts.</span></span>
+    </label>
     <div id="ladderBody">Loading&#x2026;</div>
   </div>
 </div>
@@ -13531,6 +12245,41 @@
   function closeLadder() {
     document.getElementById('ladderModal').classList.remove('open');
   }
+
+  /* ── Wager toggle: marks the next 1v1 result post as a wager so the bot settles the accepted wager ── */
+  window._wagerDuel = false;
+  function setWagerDuel(on) {
+    if (on && typeof players !== 'undefined' && players.length !== 2) {
+      showToast('Wagers are 1v1 only. Set the board to 2 players first.', 'warning');
+      on = false;
+    }
+    window._wagerDuel = !!on;
+    var t = document.getElementById('wagerDuelToggle'); if (t) t.checked = window._wagerDuel;
+    var b = document.getElementById('wagerBadge'); if (b) b.style.display = window._wagerDuel ? 'flex' : 'none';
+    if (on) showToast('⚔️ Wager challenge on: this result will settle the wager', 'heal');
+  }
+
+  /* ── Ladder data elsewhere in the tracker: roster tags and name suggestions ── */
+  (function () {
+    var dl = document.createElement('datalist'); dl.id = 'ladderNameList'; document.body.appendChild(dl);
+    function fillNames(d) {
+      dl.innerHTML = '';
+      ((d && d.players) || []).forEach(function(p) { var o = document.createElement('option'); o.value = p.name; dl.appendChild(o); });
+    }
+    window.addEventListener('ygo-ladder', function(e) {
+      fillNames(e.detail);
+      var rm = document.getElementById('rosterModal');
+      if (rm && rm.classList.contains('open') && typeof renderRoster === 'function') renderRoster();
+    });
+    if (window.YGOLeaderboard && YGOLeaderboard.get()) fillNames(YGOLeaderboard.get());
+    // Any player-name box suggests ladder names while typing, so the same person isn't entered two ways.
+    document.addEventListener('focusin', function(e) {
+      var el = e.target;
+      if (el && el.tagName === 'INPUT' && (el.id === 'rosterAddInput' || el.classList.contains('player-name') || el.classList.contains('roster-row-name-input') || (el.classList.contains('assign-select') && el.type === 'text'))) {
+        el.setAttribute('list', 'ladderNameList'); el.setAttribute('autocomplete', 'off');
+      }
+    });
+  })();
 </script>
 
 <!-- ═══ "Who's playing?" prompt on startup (reuses the Players window) ═══ -->
