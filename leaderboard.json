@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-05T14:21:48.142Z",
+  "updated": "2026-11-05T14:28:02.620Z",
   "month": "2026-11",
   "rules": {
     "cap": 3,
@@ -10,9 +10,9 @@
     {
       "rank": 1,
       "name": "BrakerGaming",
-      "rating": 1569,
+      "rating": 1558,
       "points": 140,
-      "wins": 5,
+      "wins": 4,
       "losses": 0
     },
     {
@@ -33,30 +33,32 @@
     },
     {
       "rank": 4,
-      "name": "MacMetaslayerUDC",
-      "rating": 1496,
-      "points": 110,
-      "wins": 1,
-      "losses": 1
+      "name": "BishopKngSlayer",
+      "rating": 1482,
+      "points": 130,
+      "wins": 3,
+      "losses": 5
     },
     {
       "rank": 5,
-      "name": "BishopKngSlayer",
-      "rating": 1471,
-      "points": 130,
-      "wins": 3,
-      "losses": 6
-    },
-    {
-      "rank": 6,
-      "name": "Mac.Meta.slayer.U.D.C",
-      "rating": 1464,
-      "points": 100,
-      "wins": 0,
-      "losses": 2
+      "name": "MacMetaslayerUDC",
+      "rating": 1460,
+      "points": 110,
+      "wins": 1,
+      "losses": 3
     }
   ],
   "recent": [
+    {
+      "kind": "merged",
+      "summary": "A mod merged duelist Mac.Meta.slayer.U.D.C into MacMetaslayerUDC. 2 duels moved over.",
+      "at": "2026-11-05 14:26:37Z"
+    },
+    {
+      "kind": "undo",
+      "summary": "Duel #5 (BrakerGaming beat BishopKngSlayer) was undone by a mod. Rating ±12.",
+      "at": "2026-11-05 14:22:02Z"
+    },
     {
       "kind": "rated",
       "summary": "BishopKngSlayer defeated MacMetaslayerUDC. BishopKngSlayer +10 pts, rating ±19. BishopKngSlayer has earned from MacMetaslayerUDC 1/3 times this month.",
@@ -96,16 +98,6 @@
       "kind": "rated",
       "summary": "BishopKngSlayer defeated MacMetaslayerUDC. BishopKngSlayer +10 pts, rating ±19. BishopKngSlayer has earned from MacMetaslayerUDC 1/3 times this month.",
       "at": "2026-11-05 03:01:01Z"
-    },
-    {
-      "kind": "merged",
-      "summary": "A mod merged duelist Brakergamer into BrakerGaming. 1 duel moved over.",
-      "at": "2026-11-05 01:27:07Z"
-    },
-    {
-      "kind": "rated",
-      "summary": "BrakerGaming defeated BishopKngSlayer. BrakerGaming +0 pts (monthly cap), rating ±12. BrakerGaming has earned from BishopKngSlayer 3/3 times this month.",
-      "at": "2026-11-04 23:26:13Z"
     }
   ]
 }
