@@ -1484,6 +1484,16 @@
     border-bottom:1px solid rgba(255,255,255,0.03); transition:background 0.15s;
   }
   .roster-row:hover { background:rgba(255,255,255,0.02); }
+  .setup-block { margin:4px 16px 0; padding:10px 12px; border:1px solid rgba(201,162,39,0.25); border-radius:6px; background:rgba(201,162,39,0.04); display:flex; flex-direction:column; gap:8px; }
+  .setup-row { display:flex; align-items:center; gap:10px; }
+  .setup-label { font-family:'Cinzel',serif; font-size:9px; letter-spacing:2px; color:var(--dim); white-space:nowrap; min-width:44px; }
+  .setup-wager { display:flex; align-items:center; gap:8px; font-family:'Rajdhani',sans-serif; font-size:13px; color:var(--gold); cursor:pointer; }
+  .setup-wager input { width:16px; height:16px; accent-color:var(--gold); }
+  .setup-wager.disabled { opacity:.45; cursor:default; }
+  .setup-hint { color:var(--dim); font-size:11px; }
+  .setup-info { font-family:'Rajdhani',sans-serif; font-size:12px; color:var(--dim); line-height:1.5; }
+  .setup-info .ok { color:#99aaff; } .setup-info .new { color:#e6b422; } .setup-info .warn { color:#ff9b6b; }
+  .tutorial-slide-body .tut-small { display:block; margin-top:8px; font-size:11px; color:var(--dim); }
   .ladder-tag { font-family:'Rajdhani',sans-serif; font-size:10px; letter-spacing:.5px; color:var(--dim); border:1px solid rgba(255,255,255,0.12); border-radius:3px; padding:0 4px; margin-left:4px; white-space:nowrap; }
   .ladder-tag.linked { color:#99aaff; border-color:rgba(88,101,242,0.45); }
   .roster-row-name {
@@ -3084,6 +3094,19 @@
   .tutorial-nav {
     display:flex; gap:14px; align-items:center;
   }
+  /* Logo only on the welcome slide; Back/Next stay reachable while the text scrolls. */
+  .tutorial-wrap.tut-compact .tutorial-logo { display:none; }
+  .tutorial-wrap .tutorial-nav { position:sticky; bottom:-28px; padding:10px 0 28px; background:linear-gradient(to bottom, rgba(0,0,0,0), #000 14px); width:100%; justify-content:center; }
+  @media (max-width:600px) {
+    .tutorial-logo { width:180px; height:180px; }
+    .tutorial-wrap { padding:24px 18px 28px; }
+    .tutorial-slide-title { font-size:22px; letter-spacing:3px; }
+    .tutorial-slide-body { font-size:17px; line-height:1.55; }
+    .tutorial-slide-icon { font-size:40px; }
+    .tutorial-dots { margin:14px 0 10px; gap:7px; }
+    .tutorial-dot { width:9px; height:9px; }
+    .tutorial-nav-btn { padding:10px 16px; font-size:12px; }
+  }
   .tutorial-nav-btn {
     font-family:'Cinzel',serif; font-size:14px; letter-spacing:2px;
     padding:12px 28px; border-radius:6px; cursor:pointer; transition:all 0.15s;
@@ -3507,12 +3530,30 @@
         </select>
       </div>
       <div class="assign-slots" id="assignSlots"></div>
+      <div class="setup-block" id="gameSetupBlock">
+        <div class="setup-row">
+          <span class="setup-label">GAME</span>
+          <select class="assign-select" id="setupMode" onchange="refreshSetupInfo()" style="flex:1;">
+            <option value="standard">Standard duel</option>
+            <option value="bo3">Best of 3</option>
+            <option value="bo5">Best of 5</option>
+            <option value="koth">King of the Hill&#x2026;</option>
+            <option value="tournament">Tournament&#x2026;</option>
+            <option value="team">Team Battle&#x2026;</option>
+          </select>
+        </div>
+        <label class="setup-wager" id="setupWagerRow">
+          <input type="checkbox" id="setupWager" onchange="refreshSetupInfo()">
+          <span><b>&#x2694;&#xFE0F; Wager match</b> <span class="setup-hint" id="setupWagerHint">settles the two players' accepted wager on Discord</span></span>
+        </label>
+        <div class="setup-info" id="setupLadderInfo"></div>
+      </div>
       <div class="assign-actions">
         <label style="display:flex;align-items:center;gap:6px;margin-right:auto;font-size:11px;color:var(--dim);cursor:pointer;">
-          <input type="checkbox" id="askPlayersToggle" onchange="setAskPlayersOnOpen(this.checked)"> Ask when the tracker opens
+          <input type="checkbox" id="askPlayersToggle" onchange="setAskPlayersOnOpen(this.checked)"> Ask before each game
         </label>
         <button class="btn btn-dim" id="assignCancelBtn" onclick="closePlayersModal()">Cancel</button>
-        <button class="btn btn-gold" onclick="assignApply()">&#x2714; Apply Names</button>
+        <button class="btn btn-gold" id="assignApplyBtn" onclick="assignApply()">&#x2714; Apply</button>
       </div>
     </div>
 
@@ -5334,7 +5375,79 @@
     var _pt = document.getElementById('playersTitle'); if (_pt) _pt.innerHTML = '&#x1F465; Players';
     var _cb = document.getElementById('assignCancelBtn'); if (_cb) _cb.textContent = 'Cancel';
     var _tg = document.getElementById('askPlayersToggle'); if (_tg) _tg.checked = askPlayersOnOpen();
+    var _ab = document.getElementById('assignApplyBtn'); if (_ab) _ab.innerHTML = '&#x2714; Apply';
+    var _sm = document.getElementById('setupMode');
+    if (_sm) _sm.value = (gameMode === 'bestof' && matchCtx) ? (String(matchCtx.format) === '5' ? 'bo5' : 'bo3') : 'standard';
+    var _sw = document.getElementById('setupWager'); if (_sw) _sw.checked = !!window._wagerDuel;
+    refreshSetupInfo();
     document.getElementById('playersModal').classList.add('open');
+  }
+
+  /* ── Game setup: mode, wager, and who's on the Discord ladder (checked before the game starts) ── */
+  function _setupNames() {
+    var slots = document.getElementById('assignSlots');
+    if (!slots) return [];
+    return Array.from(slots.querySelectorAll('.assign-slot')).map(function(row) {
+      var inp = row.querySelector('input[data-newplayer]');
+      var sel = row.querySelector('select');
+      var v = inp ? inp.value.trim() : (sel ? sel.value : '');
+      return v === '__new__' ? '' : v;
+    });
+  }
+  function refreshSetupInfo() {
+    var modeEl = document.getElementById('setupMode'), wEl = document.getElementById('setupWager');
+    var info = document.getElementById('setupLadderInfo'), wRow = document.getElementById('setupWagerRow'), hint = document.getElementById('setupWagerHint');
+    if (!modeEl || !info) return;
+    var mode = modeEl.value;
+    var countSel = document.getElementById('assignCountSelect');
+    var count = countSel ? parseInt(countSel.value) : players.length;
+    var wagerOk = count === 2 && (mode === 'standard' || mode === 'bo3' || mode === 'bo5');
+    if (!wagerOk && wEl.checked) wEl.checked = false;
+    wEl.disabled = !wagerOk;
+    wRow.classList.toggle('disabled', !wagerOk);
+    hint.textContent = wagerOk
+      ? (mode === 'standard' ? "this duel settles the two players' accepted wager" : 'the match result settles the accepted wager')
+      : (count !== 2 ? '1v1 only' : 'not available in this mode');
+    var names = _setupNames().filter(Boolean);
+    var lad = window.YGOLeaderboard && YGOLeaderboard.get();
+    var lines = [];
+    if (!lad) lines.push('Ladder not loaded yet, so names can’t be checked. Results still post to Discord.');
+    else names.forEach(function(n) {
+      var p = YGOLeaderboard.find(n);
+      if (!p) lines.push('<span class="new">🆕 ' + escHtml(n) + '</span> isn’t on the ladder yet. The result creates a profile; they can claim it later with <b>/duelist register</b>.');
+      else if (!p.linked) lines.push('<span class="new">⛓ ' + escHtml(n) + '</span> is on the ladder as ' + escHtml(p.name) + ' but not linked to Discord yet.');
+      else lines.push('<span class="ok">🔗 ' + escHtml(n) + '</span>' + (p.name === n ? '' : ' → ' + escHtml(p.name)) + ' · on the ladder' + (p.tier ? ' · ' + p.tier : (p.ranked === false ? ' · in placement' : '')) + ' · ' + p.rating);
+    });
+    if (wEl.checked && lad) {
+      var notLinked = names.filter(function(n) { var p = YGOLeaderboard.find(n); return !p || !p.linked; });
+      if (notLinked.length) lines.push('<span class="warn">⚠️ Wagers need both players registered on Discord with an accepted wager. Otherwise this counts as a regular match.</span>');
+    }
+    if (mode === 'koth' || mode === 'tournament' || mode === 'team') lines.push('The Mode window opens next to finish setting up ' + modeEl.options[modeEl.selectedIndex].text.replace('…', '') + '.');
+    info.innerHTML = lines.join('<br>');
+  }
+  document.addEventListener('input', function(e) { if (e.target && e.target.closest && e.target.closest('#assignSlots')) refreshSetupInfo(); });
+  document.addEventListener('change', function(e) { if (e.target && e.target.closest && e.target.closest('#assignSlots')) refreshSetupInfo(); });
+  window.addEventListener('ygo-ladder', function() { var m = document.getElementById('playersModal'); if (m && m.classList.contains('open')) refreshSetupInfo(); });
+
+  /** Start the chosen mode after the names are applied. */
+  function _applySetup() {
+    var modeEl = document.getElementById('setupMode'), wEl = document.getElementById('setupWager');
+    var mode = modeEl ? modeEl.value : 'standard';
+    var wager = !!(wEl && wEl.checked && !wEl.disabled);
+    if (mode === 'bo3' || mode === 'bo5') {
+      if (players.length !== 2) { showToast('Best-of matches are 1v1. Set 2 players.', 'warning'); mode = 'standard'; }
+      else { startBestOfWith(mode === 'bo5' ? '5' : '3', players[0].name, players[1].name); }
+    }
+    if (mode === 'standard' && gameMode !== 'standard') { gameMode = 'standard'; matchCtx = null; updateMatchBanner(); }
+    if (mode === 'koth' || mode === 'tournament' || mode === 'team') {
+      setWagerDuel(false);
+      openModeModal(); switchModeTab(mode);
+      if (mode === 'tournament') { renderModeModal(); renderTournamentSlots(); }
+      else if (mode === 'team') renderModeModal();
+      else if (mode === 'koth') renderKothModal();
+      return;
+    }
+    setWagerDuel(wager);
   }
 
   function closePlayersModal() {
@@ -5400,6 +5513,7 @@
         + '<option value="__new__">➕ New Player…</option>';
       if (current && current !== '__new__') sel.value = current;
     });
+    if (typeof refreshSetupInfo === 'function') refreshSetupInfo();
   }
 
   function refreshAssignSlots() {
@@ -5462,6 +5576,9 @@
       var name = '';
       if (inp && inp.value.trim()) {
         name = inp.value.trim();
+        // Use the ladder's spelling when the typed name is the same person ("macmetaslayerudc" → "Mac.Meta.slayer.U.D.C").
+        var ladderHit = window.YGOLeaderboard ? YGOLeaderboard.find(name) : null;
+        if (ladderHit) name = ladderHit.name;
         // Auto-add to roster
         var rk = rosterKey(name);
         if (!roster[rk]) {
@@ -5480,6 +5597,7 @@
     populateOrderList();
     closePlayersModal();
     render();
+    _applySetup();
   }
 
   function populateOrderList() {
@@ -6551,9 +6669,19 @@
         var ladTxt = lad ? ' · ' + (lad.tier || 'Unranked') + ' ' + lad.rating + ' (' + lad.wins + '-' + lad.losses + ')' : '';
         dLines.push((i === wi ? '👑 ' : '💀 ') + '**' + p.name + '** — ' + p.lp.toLocaleString() + ' LP' + ladTxt);
       });
-      if (window._wagerDuel && players.length === 2) dLines.push('⚔️ **Wager challenge**');
+      // In a Best-of, the wager is settled by the game that decides the match; earlier games are marked so the bot skips them.
+      var boCtx = (gameMode === 'bestof' && matchCtx) ? matchCtx : null;
+      var deciding = !boCtx || Math.max(boCtx.scores[0], boCtx.scores[1]) >= boCtx.winsNeeded;
+      if (window._wagerDuel && players.length === 2) {
+        if (deciding) {
+          dLines.push('⚔️ **Wager challenge**');
+          if (boCtx) dLines.push('**Match:** ' + boCtx.names[0] + ' ' + boCtx.scores[0] + '–' + boCtx.scores[1] + ' ' + boCtx.names[1]);
+        } else {
+          dLines.push('⚔️ Wager match: game ' + boCtx.duelNum + ' (settled when the match ends)');
+        }
+      }
       discordPostDuelResult('🏆 ' + winner.name + ' wins!', dLines);
-      if (window._wagerDuel && typeof setWagerDuel === 'function') setWagerDuel(false);
+      if (window._wagerDuel && deciding && typeof setWagerDuel === 'function') setWagerDuel(false);
     } catch(e) {}
   }
 
@@ -6573,6 +6701,9 @@
       // KotH cleanup
       if (gameMode === 'koth') { _kothQueue = []; }
       gameMode = 'standard'; matchCtx = null; updateMatchBanner(); resetGame();
+      if (typeof setWagerDuel === 'function') setWagerDuel(false);
+      // Set up the next game (mode, wager, players) before it starts.
+      if (typeof askPlayersOnOpen === 'function' && askPlayersOnOpen() && typeof openWhoIsPlaying === 'function') setTimeout(openWhoIsPlaying, 250);
     }
   }
 
@@ -7536,6 +7667,10 @@
     var p2name = document.getElementById('bo-p2').value.trim();
     if (!p1name || !p2name) { alert('Select both players'); return; }
     if (p1name === p2name)  { alert('Players must be different'); return; }
+    startBestOfWith(fmt, p1name, p2name);
+  }
+
+  function startBestOfWith(fmt, p1name, p2name) {
     var needed = Math.ceil(parseInt(fmt) / 2);
     gameMode = 'bestof';
     matchCtx = { winsNeeded: needed, format: fmt, names: [p1name, p2name], scores: [0,0], duelNum: 1 };
@@ -10680,10 +10815,17 @@
 
   /* ── Tutorial System ── */
   var _tutorialSlide = 0;
-  var _tutorialTotal = 10;
+  var _tutorialTotal = document.querySelectorAll('#tutorialOverlay .tutorial-slide').length || 13;
 
   function openTutorial() {
     _tutorialSlide = 0;
+    _tutorialTotal = document.querySelectorAll('#tutorialOverlay .tutorial-slide').length || _tutorialTotal;
+    // Live numbers from the Discord ladder (placement games, tier names) when it's loaded.
+    try {
+      var _ld = window.YGOLeaderboard && YGOLeaderboard.get();
+      if (_ld && _ld.rules && _ld.rules.placementGames) document.querySelectorAll('.tut-placement').forEach(function(el) { el.textContent = _ld.rules.placementGames; });
+      if (_ld && _ld.tiers && _ld.tiers.length) document.querySelectorAll('.tut-tiers').forEach(function(el) { el.textContent = _ld.tiers.map(function(t) { return t.name; }).join(' → '); });
+    } catch (e) {}
     var overlay = document.getElementById('tutorialOverlay');
     overlay.classList.add('open');
     _renderTutorialDots();
@@ -10711,6 +10853,8 @@
 
   function _showTutorialSlide(n) {
     _tutorialSlide = n;
+    var _tw = document.querySelector('#tutorialOverlay .tutorial-wrap');
+    if (_tw) { _tw.classList.toggle('tut-compact', n > 0); _tw.scrollTop = 0; }
     document.querySelectorAll('#tutorialOverlay .tutorial-slide').forEach(function(s, i) {
       s.classList.toggle('active', i === n);
     });
@@ -11941,6 +12085,14 @@
     </div>
 
     <div class="tutorial-slide" data-slide="1">
+      <div class="tutorial-slide-icon">🎴</div>
+      <div class="tutorial-slide-title">GAME SETUP</div>
+      <div class="tutorial-slide-body">
+        Before each game the <strong>Who's playing?</strong> window asks for the players, the <strong>game mode</strong>, and whether it's a <strong>⚔️ Wager match</strong>.<br><br>It checks names against the Discord ladder as you type: <span style="color:#99aaff;">🔗</span> on the ladder, 🆕 new player. New players can still play and claim their record later. Turn the prompt off with <em>Ask before each game</em>.
+      </div>
+    </div>
+
+    <div class="tutorial-slide" data-slide="2">
       <div class="tutorial-slide-icon">❤️</div>
       <div class="tutorial-slide-title">LIFE POINTS</div>
       <div class="tutorial-slide-body">
@@ -11949,7 +12101,7 @@
       </div>
     </div>
 
-    <div class="tutorial-slide" data-slide="2">
+    <div class="tutorial-slide" data-slide="3">
       <div class="tutorial-slide-icon">⚔️</div>
       <div class="tutorial-slide-title">BATTLE DAMAGE</div>
       <div class="tutorial-slide-body">
@@ -11958,7 +12110,7 @@
       </div>
     </div>
 
-    <div class="tutorial-slide" data-slide="3">
+    <div class="tutorial-slide" data-slide="4">
       <div class="tutorial-slide-icon">🔄</div>
       <div class="tutorial-slide-title">TURNS &amp; PHASES</div>
       <div class="tutorial-slide-body">
@@ -11967,16 +12119,39 @@
       </div>
     </div>
 
-    <div class="tutorial-slide" data-slide="4">
-      <div class="tutorial-slide-icon">🏆</div>
-      <div class="tutorial-slide-title">DUEL LADDER</div>
+    <div class="tutorial-slide" data-slide="5">
+      <div class="tutorial-slide-icon">🎮</div>
+      <div class="tutorial-slide-title">GAME MODES</div>
       <div class="tutorial-slide-body">
-        Finished 1v1 duels post to Discord, and once your opponent confirms, they count on the server ladder. Open <strong>Ladder</strong> from the menu to see ratings, rank tiers and points. 🔗 marks duelists linked to Discord.<br><br>
-        Playing an accepted wager? Turn on <strong>⚔️ Wager challenge</strong> in the Ladder menu before the duel so the result settles the wager.
+        <strong>Standard duel</strong> for 2–8 players, <strong>Best of 3 / 5</strong>, <strong>King of the Hill</strong> (winner stays on), a <strong>single-elimination Tournament</strong> with automatic byes, and <strong>Team Battle</strong> (2v2 up to 5v5, or a team vs one player).<br><br>Pick one in game setup, or any time from the <strong>Mode</strong> menu.
       </div>
     </div>
 
-    <div class="tutorial-slide" data-slide="5">
+    <div class="tutorial-slide" data-slide="6">
+      <div class="tutorial-slide-icon">🔗</div>
+      <div class="tutorial-slide-title">TRACKER + DISCORD</div>
+      <div class="tutorial-slide-body">
+        When a <strong>1v1</strong> ends, the tracker posts the result to the Discord server. The bot matches the names to ladder profiles and asks the loser to <strong>Confirm</strong>; once they do, it counts on the ladder.<br><br>Use the <strong>same name</strong> here and in Discord (<em>/duelist register</em>). Dots, spaces and capitals don't matter. Team battles and 3+ player games don't go on the ladder. <span class="tut-small">Results post from the device with Discord posting on (Mode → Rules).</span>
+      </div>
+    </div>
+
+    <div class="tutorial-slide" data-slide="7">
+      <div class="tutorial-slide-icon">🏆</div>
+      <div class="tutorial-slide-title">LADDER &amp; RANKS</div>
+      <div class="tutorial-slide-body">
+        Open <strong>🏆 Ladder</strong> from the menu for everyone's rating, rank tier, points and record. It updates on its own from Discord.<br><br>Your first <strong><span class="tut-placement">5</span> games</strong> are placement; after that your rating sets your tier: <span class="tut-tiers">Rookie → Bronze → Silver → Gold → Platinum → Legend</span>. The <strong>Roster</strong> marks each name 🔗 linked or ⛓ not linked yet.
+      </div>
+    </div>
+
+    <div class="tutorial-slide" data-slide="8">
+      <div class="tutorial-slide-icon">⚔️</div>
+      <div class="tutorial-slide-title">WAGERS</div>
+      <div class="tutorial-slide-body">
+        <strong>1.</strong> In Discord, challenge someone ranked above you (<em>Duel Hub → ⚔️ Challenge</em> or <em>/wager challenge</em>) and wait for them to accept.<br><strong>2.</strong> Here, tick <strong>⚔️ Wager match</strong> in game setup (or in the Ladder menu). A <span style="color:var(--gold);">⚔️ WAGER</span> badge shows on the board.<br><strong>3.</strong> Play. In <strong>Best of 3/5</strong> the match result settles the wager. The loser confirms in Discord and a mod approves.<br><br>No accepted wager? It just counts as a regular match.
+      </div>
+    </div>
+
+    <div class="tutorial-slide" data-slide="9">
       <div class="tutorial-slide-icon">🃏</div>
       <div class="tutorial-slide-title">CARDS &amp; DECK FORGE</div>
       <div class="tutorial-slide-body">
@@ -11985,16 +12160,7 @@
       </div>
     </div>
 
-    <div class="tutorial-slide" data-slide="6">
-      <div class="tutorial-slide-icon">🏆</div>
-      <div class="tutorial-slide-title">GAME MODES</div>
-      <div class="tutorial-slide-body">
-        Standard 1v1, Best-of-3/5, King of the Hill, Round Robin, Swiss, and Team Duels — all from the <strong>Mode</strong> menu.<br><br>
-        Supports 2-6 players with automatic bracket and match tracking.
-      </div>
-    </div>
-
-    <div class="tutorial-slide" data-slide="7">
+    <div class="tutorial-slide" data-slide="10">
       <div class="tutorial-slide-icon">🎤</div>
       <div class="tutorial-slide-title">VOICE COMMANDS</div>
       <div class="tutorial-slide-body">
@@ -12003,7 +12169,7 @@
       </div>
     </div>
 
-    <div class="tutorial-slide" data-slide="8">
+    <div class="tutorial-slide" data-slide="11">
       <div class="tutorial-slide-icon">📡</div>
       <div class="tutorial-slide-title">MULTIPLAYER SYNC</div>
       <div class="tutorial-slide-body">
@@ -12012,11 +12178,11 @@
       </div>
     </div>
 
-    <div class="tutorial-slide" data-slide="9">
+    <div class="tutorial-slide" data-slide="12">
       <div class="tutorial-slide-icon">⭐</div>
       <div class="tutorial-slide-title">YOU'RE READY!</div>
       <div class="tutorial-slide-body">
-        That covers the essentials. You can replay this tutorial anytime from the <strong>☰ Menu</strong>.<br><br>
+        That covers the essentials. Replay this anytime from the <strong>☰ Menu</strong>. In Discord, <strong>/tutorial</strong> covers the ladder, wagers and ranks in more detail.<br><br>
         Feedback? Find <strong>BishopKngSlayer</strong> on TikTok or Discord.<br><br>
         <span style="color:var(--gold);">Good luck, duelist.</span>
       </div>
@@ -12225,7 +12391,7 @@
     </div>
     <label id="wagerToggleRow" style="display:flex;align-items:center;gap:10px;margin:12px 18px 0;padding:10px 12px;border:1px solid rgba(201,162,39,0.35);border-radius:6px;background:rgba(201,162,39,0.06);cursor:pointer;font-family:'Rajdhani',sans-serif;color:var(--text);">
       <input type="checkbox" id="wagerDuelToggle" onchange="setWagerDuel(this.checked)" style="width:18px;height:18px;accent-color:var(--gold);">
-      <span><b style="color:var(--gold);">&#x2694;&#xFE0F; Wager challenge</b><br><span style="font-size:12px;color:var(--dim);">This duel is an accepted wager. The result settles the wager on Discord instead of counting as a regular match. 1v1 only; turns off after the result posts.</span></span>
+      <span><b style="color:var(--gold);">&#x2694;&#xFE0F; Wager challenge</b><br><span style="font-size:12px;color:var(--dim);">This game is an accepted wager. The result settles the wager on Discord instead of counting as a regular match. In Best of 3/5 the match result settles it. 1v1 only; turns off once it's settled. You can also set this in the game setup window.</span></span>
     </label>
     <div id="ladderBody">Loading&#x2026;</div>
   </div>
@@ -12289,7 +12455,7 @@
   }
   function setAskPlayersOnOpen(on) {
     try { localStorage.setItem('ygo_ask_players', on ? '1' : '0'); } catch (e) {}
-    if (typeof showToast === 'function') showToast(on ? "Will ask who's playing on open" : "Won't ask on open", 'info');
+    if (typeof showToast === 'function') showToast(on ? "Will ask who's playing before each game" : "Won't ask before games", 'info');
   }
   function openWhoIsPlaying() {
     var modal = document.getElementById('playersModal');
@@ -12297,6 +12463,7 @@
     openPlayersModal();
     var pt = document.getElementById('playersTitle'); if (pt) pt.innerHTML = '&#x1F3B4; Who\'s playing?';
     var cb = document.getElementById('assignCancelBtn'); if (cb) cb.textContent = 'Skip';
+    var ab = document.getElementById('assignApplyBtn'); if (ab) ab.innerHTML = '&#x25B6; Start';
   }
   (function () {
     try {
