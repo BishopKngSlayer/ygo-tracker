@@ -5568,7 +5568,7 @@
   }
   document.addEventListener('input', function(e) { if (e.target && e.target.closest && e.target.closest('#assignSlots')) refreshSetupInfo(); });
   document.addEventListener('change', function(e) { if (e.target && e.target.closest && e.target.closest('#assignSlots')) refreshSetupInfo(); });
-  window.addEventListener('ygo-ladder', function() { var m = document.getElementById('playersModal'); if (m && m.classList.contains('open')) refreshSetupInfo(); });
+  window.addEventListener('ygo-ladder', function() { var m = document.getElementById('playersModal'); if (m && m.classList.contains('open')) { if (typeof refreshAssignSlots === 'function') refreshAssignSlots(); refreshSetupInfo(); } });
 
   /** Start the chosen mode after the names are applied. */
   function _applySetup() {
@@ -5614,7 +5614,7 @@
     }
     var slots = document.getElementById('assignSlots');
     if (!slots) return;
-    var rosterNames = Object.values(roster).map(function(r) { return r.name; }).sort(function(a,b) { return a.localeCompare(b); });
+    var rosterNames = _pickerNames();
     // Preserve current selections
     var prev = Array.from(slots.querySelectorAll('select')).map(function(s) { return s.value; });
     slots.innerHTML = '';
@@ -5640,7 +5640,7 @@
   function _fillAssignOptions(prev) {
     var slots = document.getElementById('assignSlots');
     if (!slots) return;
-    var rosterNames = Object.values(roster).map(function(r) { return r.name; }).sort(function(a,b) { return a.localeCompare(b); });
+    var rosterNames = _pickerNames();
     var selects = Array.from(slots.querySelectorAll('select'));
     selects.forEach(function(sel, idx) {
       var chosen = selects.map(function(s, si) { return si !== idx ? s.value : ''; }).filter(Boolean);
@@ -5649,7 +5649,7 @@
         + rosterNames
             .filter(function(n) { return chosen.indexOf(n) === -1 || n === current; })
             .map(function(n) {
-              return '<option value="' + escHtml(n) + '"' + (n === current ? ' selected' : '') + '>' + escHtml(n) + '</option>';
+              return '<option value="' + escHtml(n) + '"' + (n === current ? ' selected' : '') + '>' + (_isLadderOnly(n) ? '🏆 ' : '') + escHtml(n) + '</option>';
             }).join('')
         + '<option value="__new__">➕ New Player…</option>';
       if (current && current !== '__new__') sel.value = current;
@@ -6823,10 +6823,67 @@
           dLines.push('⚔️ Wager match: game ' + boCtx.duelNum + ' (settled when the match ends)');
         }
       }
-      discordPostDuelResult('🏆 ' + winner.name + ' wins!', dLines);
+      if (_discordReady()) {
+        discordPostDuelResult('🏆 ' + winner.name + ' wins!', dLines);
+      } else if (players.length === 2 && gameMode !== 'team' && !(window._wagerDuel && !deciding)) {
+        // No webhook on this device: send the 1v1 through Firebase; the bot DMs both players to confirm.
+        var loserP = players[wi === 0 ? 1 : 0];
+        sendResultViaServer({
+          winner: winner.name, loser: loserP.name, ts: Date.now(), mode: modeLabel,
+          wager: !!(window._wagerDuel && deciding),
+          score: (window._wagerDuel && deciding && boCtx) ? 'Match: ' + boCtx.names[0] + ' ' + boCtx.scores[0] + '–' + boCtx.scores[1] + ' ' + boCtx.names[1] : null
+        });
+      }
       if (window._wagerDuel && deciding && typeof setWagerDuel === 'function') setWagerDuel(false);
     } catch(e) {}
   }
+
+  /* ━━ RESULTS WITHOUT A WEBHOOK ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     Devices without Discord posting send 1v1 results to Firebase (/results). The Discord bot picks them up
+     and DMs both players to confirm. Only duelists linked to Discord count. Unsent results are kept on this
+     device and retried the next time the tracker opens. */
+  var _OUTBOX_KEY = 'ygo_result_outbox';
+  function _outboxGet() { try { return JSON.parse(localStorage.getItem(_OUTBOX_KEY) || '[]'); } catch (e) { return []; } }
+  function _outboxSet(list) { try { localStorage.setItem(_OUTBOX_KEY, JSON.stringify(list.slice(-20))); } catch (e) {} }
+  function _resultsRef() {
+    if (!window.firebase || !firebase.initializeApp) return null;
+    try {
+      if (!firebase.apps.length) firebase.initializeApp(_fbConfig);
+      return firebase.database().ref('results');
+    } catch (e) { return null; }
+  }
+  function _pushOutboxItem(item, quiet) {
+    var ref = _resultsRef();
+    if (!ref) { if (!quiet) showToast('📴 Saved on this device. It will be sent next time you are online.', 'info'); return; }
+    ref.child(item.id).set(item.data).then(function () {
+      _outboxSet(_outboxGet().filter(function (x) { return x.id !== item.id; }));
+      if (!quiet) showToast('📨 Sent to Discord. ' + item.data.winner + ' and ' + item.data.loser + ' confirm by DM.', 'heal');
+    }).catch(function (err) {
+      // Permission denied usually means it was already delivered (results can't be overwritten): drop it.
+      if (err && /permission/i.test(String(err.code || err.message))) _outboxSet(_outboxGet().filter(function (x) { return x.id !== item.id; }));
+      else if (!quiet) showToast('📴 Couldn\'t reach the server. Saved; it will retry next time the tracker opens.', 'info');
+    });
+  }
+  function sendResultViaServer(data) {
+    // Linked players only. If the ladder is loaded, check here so the table knows right away.
+    var lad = window.YGOLeaderboard && YGOLeaderboard.get();
+    if (lad) {
+      var w = YGOLeaderboard.find(data.winner), l = YGOLeaderboard.find(data.loser);
+      var missing = [[data.winner, w], [data.loser, l]].filter(function (x) { return !x[1] || !x[1].linked; }).map(function (x) { return x[0]; });
+      if (missing.length) {
+        showToast('Not sent to the ladder: ' + missing.join(' & ') + (missing.length > 1 ? ' aren\'t' : ' isn\'t') + ' linked to Discord yet. Link with /duelist register.', 'warning');
+        return;
+      }
+      data.winner = w.name; data.loser = l.name;   // ladder spelling
+    }
+    var ref = _resultsRef();
+    var id = ref ? ref.push().key : ('r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8));
+    var item = { id: id, data: data };
+    var box = _outboxGet(); box.push(item); _outboxSet(box);
+    _pushOutboxItem(item, false);
+  }
+  // Retry anything left over from last time (closed tab, no signal).
+  setTimeout(function () { _outboxGet().forEach(function (it) { _pushOutboxItem(it, true); }); }, 5000);
 
   function closeSummary(newGame) {
     document.getElementById('summaryOverlay').classList.remove('show');
@@ -7012,6 +7069,21 @@
       rosterSort.dir = key === 'name' ? 1 : -1;
     }
     renderRoster();
+  }
+
+  /** Names for every player picker: this device's roster plus everyone on the Discord ladder
+      (matched ignoring dots/spaces/capitals, like the bot), so registered players can be picked on any device. */
+  function _pickerNames() {
+    var norm = function(n) { return String(n || '').toLowerCase().replace(/[^a-z0-9]/g, ''); };
+    var seen = {}, out = [];
+    Object.values(roster).forEach(function(r) { var k = norm(r.name); if (k && !seen[k]) { seen[k] = 1; out.push(r.name); } });
+    var lad = window.YGOLeaderboard && YGOLeaderboard.get();
+    ((lad && lad.players) || []).forEach(function(p) { var k = norm(p.name); if (k && !seen[k]) { seen[k] = 1; out.push(p.name); } });
+    return out.sort(function(a, b) { return a.localeCompare(b); });
+  }
+  function _isLadderOnly(name) {
+    var k = String(name || '').trim().toLowerCase();
+    return !roster[k] && !!(window.YGOLeaderboard && YGOLeaderboard.find(name));
   }
 
   /** Small tag after a roster name: 🔗 linked to Discord, ⛓ on the ladder but not linked, nothing if not on the ladder. */
@@ -7773,10 +7845,8 @@
   }
 
   function renderModeModal() {
-    // populate player dropdowns from roster
-    var rosterNames = Object.values(roster)
-      .sort(function(a,b) { return a.name.localeCompare(b.name); })
-      .map(function(r) { return r.name; });
+    // populate player dropdowns from roster + Discord ladder
+    var rosterNames = _pickerNames();
     // also add current player names not in roster
     players.forEach(function(p) {
       var k = p.name.trim().toLowerCase();
@@ -7922,7 +7992,7 @@
     var container = document.getElementById('tourn-slots');
     if (!container) return;
     var count = parseInt(document.getElementById('tourn-count').value) || 4;
-    var rosterNames = Object.values(roster).map(function(r) { return r.name; }).sort();
+    var rosterNames = _pickerNames();
 
     // Preserve current selections
     var prev = Array.from(container.querySelectorAll('select')).map(function(s) { return s.value; });
@@ -7954,7 +8024,7 @@
   function _fillTournamentOptions(prev) {
     var container = document.getElementById('tourn-slots');
     if (!container) return;
-    var rosterNames = Object.values(roster).map(function(r) { return r.name; }).sort();
+    var rosterNames = _pickerNames();
     var selects = Array.from(container.querySelectorAll('select'));
 
     // Collect all currently chosen values (excluding the select being built)
@@ -12059,10 +12129,8 @@
   var _kothDragSrc = null;
 
   function renderKothModal() {
-    // Populate add-player select from roster + current players
-    var rosterNames = Object.values(roster)
-      .sort(function(a,b) { return a.name.localeCompare(b.name); })
-      .map(function(r) { return r.name; });
+    // Populate add-player select from roster + Discord ladder + current players
+    var rosterNames = _pickerNames();
     players.forEach(function(p) {
       var k = p.name.trim().toLowerCase();
       if (!rosterNames.find(function(n) { return n.trim().toLowerCase() === k; }))
@@ -12283,7 +12351,7 @@
       <div class="tutorial-slide-title">WELCOME</div>
       <div class="tutorial-slide-body">
         Welcome to <strong style="color:var(--gold);">Y.U.G.I.O.H.</strong> — the Yu-Gi-Oh Unified Gameplay Identifier and Operation Hub, built by <strong>BishopKngSlayer</strong> for the community.
-        <span class="tutorial-new"><strong style="color:var(--gold);">✨ What's new:</strong> a <strong>touch layout</strong> for tablets and phones (☰ Menu → View), game setup before every game (mode + ⚔️ wager match), the Discord duel ladder with rank tiers, 🔗 linked players on the roster, and name suggestions. Rulings were removed for now.</span>
+        <span class="tutorial-new"><strong style="color:var(--gold);">✨ What's new:</strong> a <strong>touch layout</strong> for tablets and phones (☰ Menu → View), results from <strong>any device</strong> (both players confirm by DM), game setup before every game (mode + ⚔️ wager match), the Discord duel ladder with rank tiers, 🔗 linked players on the roster, and name suggestions. Rulings were removed for now.</span>
       </div>
     </div>
 
@@ -12334,7 +12402,7 @@
       <div class="tutorial-slide-icon">🔗</div>
       <div class="tutorial-slide-title">TRACKER + DISCORD</div>
       <div class="tutorial-slide-body">
-        When a <strong>1v1</strong> ends, the tracker posts the result to the Discord server. The bot matches the names to ladder profiles and asks the loser to <strong>Confirm</strong>; once they do, it counts on the ladder.<br><br>Use the <strong>same name</strong> here and in Discord (<em>/duelist register</em>). Dots, spaces and capitals don't matter. Team battles and 3+ player games don't go on the ladder. <span class="tut-small">Results post from the device with Discord posting on (Mode → Rules).</span>
+        When a <strong>1v1</strong> ends, the tracker posts the result to the Discord server. The bot matches the names to ladder profiles and asks the loser to <strong>Confirm</strong>; once they do, it counts on the ladder.<br><br>Use the <strong>same name</strong> here and in Discord (<em>/duelist register</em>). Dots, spaces and capitals don't matter. Team battles and 3+ player games don't go on the ladder. <span class="tut-small">On a device without Discord posting, 1v1 results still go through: the bot DMs <strong>both</strong> players to confirm (Discord-linked players only).</span>
       </div>
     </div>
 
