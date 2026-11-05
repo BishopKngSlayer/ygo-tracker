@@ -6745,7 +6745,9 @@
   /* ━━ DUEL SUMMARY ━━━━━━━━━━━━━━━━━━━━━━━━━ */
   function showSummary(winner) {
     var wi = players.indexOf(winner);
-    players.forEach(function(p, i) {
+    // Synced room: the device that made the final hit records and sends the result; the other device only shows it.
+    var displayOnly = !!window._summaryDisplayOnly;
+    if (!displayOnly) players.forEach(function(p, i) {
       var k = p.name.trim().toLowerCase();
       if (!roster[k]) roster[k] = {name:p.name.trim(), w:0, l:0, f:0, duels:0};
       // Don't double-count a forfeit as a loss — forfeit already incremented duels in surrenderPlayer
@@ -6768,11 +6770,13 @@
       mode: gameMode,
       timestamp: new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})
     });
-    matchRecord = players.map(function(p) {
-      var k = p.name.trim().toLowerCase();
-      return roster[k] ? {w:roster[k].w, l:roster[k].l, f:roster[k].f||0} : {w:0, l:0, f:0};
-    });
-    rosterSave();
+    if (!displayOnly) {
+      matchRecord = players.map(function(p) {
+        var k = p.name.trim().toLowerCase();
+        return roster[k] ? {w:roster[k].w, l:roster[k].l, f:roster[k].f||0} : {w:0, l:0, f:0};
+      });
+      rosterSave();
+    }
     document.getElementById('summaryTitle').textContent = winner.name + ' Wins!';
     const grid = document.getElementById('summaryGrid');
     grid.innerHTML = players.map(function(p, i) {
@@ -6802,8 +6806,8 @@
       + '<button class="summary-btn dim" onclick="closeSummary(true)">&#x2715; New Game</button>';
     playSound('win');
     document.getElementById('summaryOverlay').classList.add('show');
-    // Discord: post duel result (host device with webhook configured only)
-    try {
+    // Discord: post duel result (host device with webhook configured only). Not from a display-only copy.
+    if (!displayOnly) try {
       var modeLabel = gameMode === 'bestof' ? 'Best of X' : gameMode === 'tournament' ? 'Tournament' : gameMode === 'koth' ? 'King of the Hill' : 'Standard Duel';
       var dLines = ['**Mode:** ' + modeLabel + ' · **Turns:** ' + Math.max(0, globalTurnNum - 1) + ' · **Time:** ' + _fmtClock(gameSeconds)];
       players.forEach(function(p, i) {
@@ -8859,6 +8863,7 @@
       cardRotations: cardRotations.slice(),
       counterTokens: JSON.parse(JSON.stringify(counterTokens)),
       playerColors:  playerColors.slice(),
+      wagerDuel:     !!window._wagerDuel,
       ts:            Date.now()
     };
   }
@@ -8954,6 +8959,7 @@
     if (!count) return false;
     var pendingLocal = !!_fbPushTimer;
     var local = pendingLocal ? _syncParts() : null;
+    var aliveBefore = players.filter(function (pl) { return !pl.eliminated; }).length;
     var changedHere = function (k) { return pendingLocal && local[k] !== undefined && _fbKey(local[k]) !== _fbLastParts[k]; };
     var any = false;
     _fbApplying = true;
@@ -8985,6 +8991,10 @@
         cardRotations = meta.cardRotations || [];
         counterTokens = meta.counterTokens ? JSON.parse(JSON.stringify(meta.counterTokens)) : [];
         if (meta.playerColors) playerColors = meta.playerColors.slice();
+        // Wager toggle set on either device (no toast here; just the badge and checkbox)
+        window._wagerDuel = !!meta.wagerDuel;
+        var _wt = document.getElementById('wagerDuelToggle'); if (_wt) _wt.checked = window._wagerDuel;
+        var _wb = document.getElementById('wagerBadge'); if (_wb) _wb.style.display = window._wagerDuel ? 'flex' : 'none';
         _fbLastParts.meta = _fbKey(meta); any = true;
       }
       if (any) {
@@ -8992,11 +9002,48 @@
         render();
         updateMatchBanner();
         renderTurnLabel();
+        _fbRemoteSummaryCheck(aliveBefore);
       }
     } finally {
       _fbApplying = false;
     }
     return any;
+  }
+
+  /** The other device ended the game: show the same winner screen here (it records and sends the result, not us).
+      When the next game starts there, close it here. */
+  var _fbRemoteSummaryShown = false;
+  function _fbRemoteSummaryCheck(aliveBefore) {
+    var alive = players.filter(function (pl) { return !pl.eliminated; });
+    var overlay = document.getElementById('summaryOverlay');
+    if (alive.length > 1 && aliveBefore <= 1 && overlay && overlay.classList.contains('show')) {   // next game started on the other device
+      _fbRemoteSummaryShown = false;
+      overlay.classList.remove('show');
+      return;
+    }
+    if (gameMode === 'team' || players.length < 2 || aliveBefore <= 1 || alive.length !== 1) return;
+    if (overlay && overlay.classList.contains('show')) return;
+    setTimeout(function () {
+      var still = players.filter(function (pl) { return !pl.eliminated; });
+      if (still.length !== 1 || (overlay && overlay.classList.contains('show'))) return;
+      window._summaryDisplayOnly = true;
+      try {
+        showSummary(still[0]);
+        var sub = document.getElementById('summarySubtitle'), btns = document.getElementById('summaryButtons');
+        if (gameMode === 'bestof' && matchCtx && matchCtx.scores) {
+          var sc = matchCtx.scores, done = Math.max(sc[0], sc[1]) >= matchCtx.winsNeeded;
+          if (sub) sub.textContent = done ? '🏆 MATCH WINNER: ' + (sc[0] >= matchCtx.winsNeeded ? matchCtx.names[0] : matchCtx.names[1]).toUpperCase() + '  (' + sc[0] + '–' + sc[1] + ')'
+            : 'BEST OF ' + matchCtx.format + '  ·  ' + matchCtx.names[0] + ' ' + sc[0] + ' – ' + sc[1] + ' ' + matchCtx.names[1];
+          if (btns) btns.innerHTML = done
+            ? '<button class="summary-btn gold" onclick="closeSummary(false)">&#x21A9; Review Board</button><button class="summary-btn dim" onclick="closeSummary(true)">&#x2715; End Match</button>'
+            : '<button class="summary-btn gold" onclick="bestOfNextDuel()">&#x25B6; Duel ' + matchCtx.duelNum + '</button><button class="summary-btn dim" onclick="closeSummary(false)">&#x21A9; Review Board</button>';
+        }
+        if (sub && !(gameMode === 'bestof')) sub.textContent = 'Result sent from the other device';
+      } finally {
+        window._summaryDisplayOnly = false;
+      }
+      _fbRemoteSummaryShown = true;
+    }, 950);
   }
 
   /** Listen to the room. Used by both the device that created it and the one that joined. */
@@ -12783,6 +12830,7 @@
     var t = document.getElementById('wagerDuelToggle'); if (t) t.checked = window._wagerDuel;
     var b = document.getElementById('wagerBadge'); if (b) b.style.display = window._wagerDuel ? 'flex' : 'none';
     if (on) showToast('⚔️ Wager challenge on: this result will settle the wager', 'heal');
+    if (typeof fbSyncPushSoon === 'function') fbSyncPushSoon();
   }
 
   /* ── Ladder data elsewhere in the tracker: roster tags and name suggestions ── */
