@@ -7961,6 +7961,7 @@
     if (s[0] >= needed || s[1] >= needed) {
       // match over
       var mwinner = s[0] >= needed ? matchCtx.names[0] : matchCtx.names[1];
+      if (typeof fbSyncPushSoon === 'function') fbSyncPushSoon();
       if (sub) sub.textContent = '🏆 MATCH WINNER: ' + mwinner.toUpperCase()
         + '  (' + s[0] + '–' + s[1] + ')';
       if (btns) btns.innerHTML =
@@ -7969,6 +7970,7 @@
         + '<button class="summary-btn dim" onclick="closeSummary(true)">&#x2715; End Match</button>';
     } else {
       matchCtx.duelNum++;
+      if (typeof fbSyncPushSoon === 'function') fbSyncPushSoon();
       if (btns) btns.innerHTML =
         '<button class="summary-btn gold" onclick="bestOfNextDuel()">&#x25B6; Duel ' + matchCtx.duelNum + '</button>'
         + '<button class="summary-btn dim" onclick="closeSummary(false)">&#x21A9; Review Board</button>';
@@ -8861,50 +8863,157 @@
     };
   }
 
-  function fbPushState() {
-    if (!_fbIsHost || !_fbDb || !_fbRoom || _fbApplying) return;
-    clearTimeout(_fbPushTimer);
-    _fbPushTimer = setTimeout(function() {
-      _lastHostPushTs = Date.now();
-      _fbDb.ref('rooms/' + _fbRoom + '/state').set(_getGameSnapshot()).catch(function(e) {
-        console.warn('Firebase push failed:', e);
-      });
-    }, 120);
-  }
+  /* ── Live sync, shared-state design ─────────────────────────────────────────
+     Both devices read and write one shared game at rooms/<code>/state, split into parts:
+     state/meta (turn, phase, mode, match info…) and state/players/<i> (one per player).
+     A device sends only the parts it changed, so two people changing different players at the same
+     moment don't overwrite each other. Incoming parts are applied only if they differ from what was
+     last synced; a part this device changed a moment ago and hasn't sent yet is kept (it goes out next).
+     A device that joins loads the room's game first and never overwrites it with its own blank board. */
+  var _fbClientId   = Math.random().toString(36).slice(2, 10);
+  var _fbLastParts  = {};      // part name → normalized JSON last sent or applied
+  var _fbReady      = false;   // joiner: true once the room's game has loaded
+  var _fbLastJson   = null;    // kept for compatibility (unused)
 
-  // Guest pushes full game state so host sees all changes (LP, phases, turns)
-  function fbPushGuestState() {
-    if (_fbIsHost || !_fbDb || !_fbRoom || _fbApplying) return;
-    _fbDb.ref('rooms/' + _fbRoom + '/guest').set(_getGameSnapshot()).catch(function(e) { console.warn('Guest push failed:', e); });
-  }
-
-  function _applySnapshot(snap) {
-    if (!snap) return;
-    _fbApplying = true;
-    // Guest preserves their own LP/eliminated — host's snapshot may be stale for their slot
-    var savedLP   = (!_fbIsHost && _fbRoom && players[_fbMySlot]) ? players[_fbMySlot].lp        : null;
-    var savedElim = (!_fbIsHost && _fbRoom && players[_fbMySlot]) ? players[_fbMySlot].eliminated : null;
-    players       = snap.players      || players;
-    activeTurn    = snap.activeTurn   != null ? snap.activeTurn : activeTurn;
-    currentPhase  = snap.currentPhase != null ? snap.currentPhase : currentPhase;
-    globalTurnNum = snap.globalTurnNum|| globalTurnNum;
-    gameMode      = snap.gameMode     || 'standard';
-    matchCtx      = snap.matchCtx     || null;
-    teamLP        = snap.teamLP       || [];
-    if (snap.MAX_LP) MAX_LP = snap.MAX_LP;
-    if (snap.cardCollapsed) cardCollapsed = snap.cardCollapsed.slice();
-    if (snap.cardRotations) cardRotations = snap.cardRotations.slice();
-    if (snap.counterTokens) counterTokens = JSON.parse(JSON.stringify(snap.counterTokens));
-    if (snap.playerColors)  playerColors  = snap.playerColors.slice();
-    // Restore guest's own LP so it doesn't get overwritten by stale host data
-    if (savedLP !== null && players[_fbMySlot]) {
-      players[_fbMySlot].lp        = savedLP;
-      players[_fbMySlot].eliminated = savedElim;
+  /** Firebase drops null, undefined and empty lists/objects; compare everything in that form. */
+  function _fbNorm(v) {
+    if (v === null || v === undefined) return undefined;
+    if (typeof v === 'object') {
+      var keys = Object.keys(v), out = Array.isArray(v) ? [] : {}, n = 0;
+      keys.forEach(function (k) { var c = _fbNorm(v[k]); if (c !== undefined) { out[k] = c; n++; } });
+      if (!n) return undefined;
+      if (Array.isArray(out)) out = out.filter(function () { return true; });
+      return out;
     }
-    render();
-    updateMatchBanner();
-    renderTurnLabel();
-    _fbApplying = false;
+    return v;
+  }
+  function _fbKey(v) { var n = _fbNorm(v); return n === undefined ? '' : JSON.stringify(n); }
+
+  function _syncParts() {
+    var c = _getGameSnapshot(); delete c.ts;
+    var meta = Object.assign({}, c); delete meta.players; meta.count = players.length;
+    var parts = { meta: meta };
+    players.forEach(function (pl, i) { parts['p' + i] = JSON.parse(JSON.stringify(pl)); });
+    return parts;
+  }
+  function _fbRememberLocal() {
+    var parts = _syncParts(); _fbLastParts = {};
+    Object.keys(parts).forEach(function (k) { _fbLastParts[k] = _fbKey(parts[k]); });
+  }
+  function fbSyncPushSoon(immediate) {
+    if (!_fbRoom || !_fbDb || _fbApplying || !_fbReady) return;
+    clearTimeout(_fbPushTimer);
+    _fbPushTimer = setTimeout(function () {
+      _fbPushTimer = null;
+      if (!_fbRoom || !_fbDb || _fbApplying) return;
+      var parts = _syncParts(), upd = {}, changed = 0;
+      Object.keys(parts).forEach(function (k) {
+        var key = _fbKey(parts[k]);
+        if (key === _fbLastParts[k]) return;
+        _fbLastParts[k] = key; changed++;
+        upd[k === 'meta' ? 'meta' : 'players/' + k.slice(1)] = parts[k];
+      });
+      // Players removed on this device
+      Object.keys(_fbLastParts).forEach(function (k) {
+        if (k !== 'meta' && Number(k.slice(1)) >= players.length) { upd['players/' + k.slice(1)] = null; delete _fbLastParts[k]; changed++; }
+      });
+      if (!changed) return;                       // nothing changed
+      upd.ts = Date.now(); upd.by = _fbClientId;
+      try {
+        _fbDb.ref('rooms/' + _fbRoom + '/state').update(upd).catch(function (e) { console.warn('Sync send failed:', e); });
+      } catch (e) { console.warn('Sync send failed:', e); }
+    }, immediate ? 0 : 60);
+  }
+  // Old names, still called from a few places
+  function fbPushState() { fbSyncPushSoon(); }
+  function fbPushGuestState() { fbSyncPushSoon(); }
+
+  /** Make every per-player list match the player count (a remote change can add or remove players). */
+  function _fbFitArrays(n) {
+    function fit(arr, make) { arr = Array.isArray(arr) ? arr.slice(0, n) : []; while (arr.length < n) arr.push(make(arr.length)); return arr; }
+    panelState          = fit(panelState, function () { return null; });
+    turnLogs            = fit(turnLogs, function () { return []; });
+    turnLogOpen         = fit(turnLogOpen, function () { return false; });
+    playerTotalTurnTime = fit(playerTotalTurnTime, function () { return 0; });
+    lpOverTime          = fit(lpOverTime, function (i) { return [players[i] ? players[i].lp : MAX_LP]; });
+    biggestHit          = fit(biggestHit, function () { return 0; });
+    matchRecord         = fit(matchRecord, function () { return { w: 0, l: 0, f: 0 }; });
+    cardCollapsed       = fit(cardCollapsed, function () { return false; });
+    cardRotations       = fit(cardRotations, function () { return 0; });
+    counterTokens       = fit(counterTokens, function () { return []; }).map(function (t) { return Array.isArray(t) ? t : []; });
+    playerColors        = fit(playerColors, function (i) { return PLAYER_COLOR_PRESETS[i % PLAYER_COLOR_PRESETS.length]; });
+  }
+
+  /** Apply what changed in the room since we last synced. Parts this device changed and hasn't sent yet are kept. */
+  function _applySnapshot(snap) {
+    if (!snap) return false;
+    var meta = snap.meta || null;
+    var rp = snap.players || {};
+    var rList = Array.isArray(rp) ? rp : Object.keys(rp).map(function (k) { return rp[k]; });
+    var count = meta && meta.count ? meta.count : rList.length;
+    if (!count) return false;
+    var pendingLocal = !!_fbPushTimer;
+    var local = pendingLocal ? _syncParts() : null;
+    var changedHere = function (k) { return pendingLocal && local[k] !== undefined && _fbKey(local[k]) !== _fbLastParts[k]; };
+    var any = false;
+    _fbApplying = true;
+    try {
+      // players
+      var next = [];
+      for (var i = 0; i < count; i++) {
+        var remote = Array.isArray(rp) ? rp[i] : rp[i] || rp[String(i)];
+        var k = 'p' + i, rk = _fbKey(remote);
+        if (remote && rk !== _fbLastParts[k] && !changedHere(k)) {
+          next.push(Object.assign({ eliminated: false, forfeited: false }, remote)); _fbLastParts[k] = rk; any = true;
+        } else {
+          next.push(players[i] || Object.assign({ name: 'Player ' + (i + 1), lp: MAX_LP, eliminated: false, forfeited: false, turnOrder: i + 1 }, remote || {}));
+        }
+      }
+      if (next.length !== players.length) any = true;
+      players = next;
+      Object.keys(_fbLastParts).forEach(function (key) { if (key !== 'meta' && Number(key.slice(1)) >= count) delete _fbLastParts[key]; });
+      // turn, phase, mode…
+      if (meta && _fbKey(meta) !== _fbLastParts.meta && !changedHere('meta')) {
+        activeTurn    = meta.activeTurn   != null ? Math.min(meta.activeTurn, players.length - 1) : activeTurn;
+        currentPhase  = meta.currentPhase != null ? meta.currentPhase : currentPhase;
+        globalTurnNum = meta.globalTurnNum || globalTurnNum;
+        gameMode      = meta.gameMode     || 'standard';
+        matchCtx      = meta.matchCtx     || null;
+        teamLP        = meta.teamLP       || [];
+        if (meta.MAX_LP) MAX_LP = meta.MAX_LP;
+        cardCollapsed = meta.cardCollapsed || [];
+        cardRotations = meta.cardRotations || [];
+        counterTokens = meta.counterTokens ? JSON.parse(JSON.stringify(meta.counterTokens)) : [];
+        if (meta.playerColors) playerColors = meta.playerColors.slice();
+        _fbLastParts.meta = _fbKey(meta); any = true;
+      }
+      if (any) {
+        _fbFitArrays(players.length);
+        render();
+        updateMatchBanner();
+        renderTurnLabel();
+      }
+    } finally {
+      _fbApplying = false;
+    }
+    return any;
+  }
+
+  /** Listen to the room. Used by both the device that created it and the one that joined. */
+  function _fbListen(code) {
+    _fbListener = _fbDb.ref('rooms/' + code + '/state').on('value', function (snapshot) {
+      var data = snapshot.val();
+      if (!data || (!data.meta && !data.players)) {   // empty room: this device's board becomes the game
+        if (!_fbReady) { _fbReady = true; _fbLastParts = {}; fbSyncPushSoon(true); }
+        return;
+      }
+      var changed = _applySnapshot(data);
+      _fbReady = true;
+      if (data.by && data.by !== _fbClientId) {
+        var gs = document.getElementById('syncGuestStatus');
+        if (gs) { gs.textContent = '🟢 Other device connected'; gs.className = 'sync-status connected'; }
+      }
+    });
   }
 
   function renderTurnLabel() {
@@ -8921,35 +9030,11 @@
     _fbRoom   = code;
     _fbIsHost = true;
     _fbMySlot = 0;
-    // Ensure 2 players for remote duel
     if (players.length < 2) { initPlayers(2); }
-    fbPushState();
-    // Listen for guest state updates (full snapshot)
-    _fbGuestListener = _fbDb.ref('rooms/' + code + '/guest').on('value', function(snapshot) {
-      var data = snapshot.val();
-      if (!data || !data.players) return;
-      // Only apply if guest's timestamp is newer than our last push
-      if (data.ts && data.ts > (_lastHostPushTs || 0)) {
-        _fbApplying = true;
-        // Apply guest's full state
-        players       = data.players      || players;
-        activeTurn    = data.activeTurn   != null ? data.activeTurn : activeTurn;
-        currentPhase  = data.currentPhase != null ? data.currentPhase : currentPhase;
-        globalTurnNum = data.globalTurnNum|| globalTurnNum;
-        gameMode      = data.gameMode     || gameMode;
-        matchCtx      = data.matchCtx     || matchCtx;
-        teamLP        = data.teamLP       || teamLP;
-        if (data.MAX_LP) MAX_LP = data.MAX_LP;
-        render();
-        updateMatchBanner();
-        renderTurnLabel();
-        _fbApplying = false;
-      }
-      // Update guest connected indicator
-      var gName = data.players && data.players[_fbGuestSlot] ? data.players[_fbGuestSlot].name : 'Guest';
-      var gs = document.getElementById('syncGuestStatus');
-      if (gs) { gs.textContent = '🟢 ' + gName + ' connected'; gs.className = 'sync-status connected'; }
-    });
+    // New room: this board is the game. Send it, then listen for the other device's changes.
+    _fbReady = true; _fbLastParts = {};
+    fbSyncPushSoon(true);
+    _fbListen(code);
     _updateSyncDot();
     _renderSyncPanel();
     var stab = document.getElementById('mtab-sync');
@@ -8960,25 +9045,19 @@
     if (!_fbInit()) { alert('Firebase connection failed. Check your internet connection.'); return; }
     var code = codeOverride || (document.getElementById('joinCodeInput') ? document.getElementById('joinCodeInput').value.trim().toUpperCase() : '');
     if (!code || code.length !== 6) { alert('Enter a valid 6-digit room code'); return; }
+    if (_fbRoom && _fbListener && _fbDb) _fbDb.ref('rooms/' + _fbRoom + '/state').off('value', _fbListener);
     _fbRoom   = code;
     _fbIsHost = false;
     _fbMySlot = 1;
-    // Listen to host state
-    _fbListener = _fbDb.ref('rooms/' + code + '/state').on('value', function(snapshot) {
-      var data = snapshot.val();
-      if (data) {
-        _applySnapshot(data);
-        // After applying, overwrite our own slot with local values (guest owns their LP)
-        // (host will sync from /guest path)
-      }
-    });
-    // Push our current slot info so host sees us connected
-    fbPushGuestState();
+    // Load the room's game first; nothing is sent from here until it has arrived.
+    _fbReady = false; _fbLastParts = {};
+    _fbListen(code);
     _updateSyncDot();
     _renderSyncPanel();
     closeSyncModal();
     var stab2 = document.getElementById('mtab-sync');
     if (stab2) { stab2.style.color = '#44aaff'; stab2.style.borderBottomColor = '#44aaff'; stab2.textContent = '🔵 Joined'; }
+    if (typeof showToast === 'function') showToast('🔵 Joined room ' + code + '. Loading the game…', 'info');
   }
 
   function leaveRoom() {
@@ -8986,7 +9065,8 @@
       if (_fbListener) _fbDb.ref('rooms/' + _fbRoom + '/state').off('value', _fbListener);
       if (_fbGuestListener) _fbDb.ref('rooms/' + _fbRoom + '/guest').off('value', _fbGuestListener);
     }
-    _fbRoom = null; _fbIsHost = false; _fbListener = null; _fbGuestListener = null; _fbMySlot = 0;
+    clearTimeout(_fbPushTimer); _fbPushTimer = null;
+    _fbRoom = null; _fbIsHost = false; _fbListener = null; _fbGuestListener = null; _fbMySlot = 0; _fbReady = false; _fbLastParts = {};
     _updateSyncDot();
     _renderSyncPanel();
     var stab3 = document.getElementById('mtab-sync');
@@ -9005,6 +9085,12 @@
       tab.style.color = ''; tab.style.borderBottomColor = ''; tab.textContent = '🔴 Sync';
     }
   }
+
+  // Every state change ends with render(), so sending after it covers turns, phases, names and modes too.
+  (function () {
+    var _renderBase = render;
+    render = function () { var r = _renderBase.apply(this, arguments); if (_fbRoom) fbSyncPushSoon(); return r; };
+  })();
 
   // Auto-join from URL param on load
   (function() {
