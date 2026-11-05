@@ -38,6 +38,7 @@
     color: var(--text);
     font-family: 'Rajdhani', sans-serif;
     height: 100vh;
+    height: 100dvh;   /* the visible height, so Safari's toolbar doesn't hide the bottom buttons */
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -300,7 +301,7 @@
     50%       { box-shadow: 0 0 0 1px rgba(100,100,255,0.5), 0 0 50px rgba(68,68,204,0.45), inset 0 0 50px rgba(68,68,204,0.08); }
   }
   .player-card.active::before {
-    content: '\u25b6 TURN';
+    content: '\25B6  TURN';
     position: absolute; top: -1px; right: 14px;
     font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 2px;
     color: #aaaaff; background: var(--active);
@@ -423,6 +424,120 @@
   .lp-label {
     font-size: 9px; letter-spacing: 5px;
     color: var(--dim); text-transform: uppercase; margin-top: 3px;
+  }
+
+
+  /* ═══════════ TOUCH VIEW (tablets & phones) — body.touch-ui; PC layout is untouched ═══════════ */
+  body.touch-ui #siteHeader { display:none; }
+  body.touch-ui .timer-bar { gap:8px; padding:6px 10px; flex-wrap:nowrap; justify-content:space-between; }
+  body.touch-ui .timer-sep { display:none; }
+  body.touch-ui .timer-block { gap:0; flex-direction:column; align-items:flex-start; min-width:0; }
+  body.touch-ui .timer-label { font-size:8px; letter-spacing:1.5px; }
+  body.touch-ui .timer-value { font-size:18px !important; min-width:0 !important; }
+  body.touch-ui .timer-btn { min-height:40px; padding:6px 12px; font-size:12px; white-space:nowrap; }
+
+  /* Menu becomes a drop-down panel over the board instead of pushing it down */
+  body.touch-ui #gameMenu {
+    position:fixed; left:8px; right:8px; top:var(--touch-menu-top, 56px); z-index:320;
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:8px;
+    padding:12px; max-height:calc(100dvh - var(--touch-menu-top, 56px) - 16px); overflow-y:auto;
+    background:rgba(8,8,18,0.97); border:1px solid rgba(201,162,39,0.35); border-radius:10px;
+    box-shadow:0 12px 40px rgba(0,0,0,0.7); opacity:1; transition:none;
+  }
+  body.touch-ui #gameMenu.collapsed { display:none; }
+  body.touch-ui #gameMenu .menu-logo { display:none; }
+  body.touch-ui #gameMenu .btn { min-height:50px; font-size:12px; letter-spacing:1.5px; justify-content:center; padding:8px 10px; }
+  body.touch-ui #gameMenu button[onclick="openShortcutModal()"] { display:none; }
+
+  /* Cards size their text to the card itself */
+  body.touch-ui .grid { gap:8px; padding:8px; }
+  body.touch-ui .player-card { padding:10px 12px; }
+  body.touch-ui .player-card:not(.eliminated):hover { transform:none; }   /* a moved card would also move its bottom sheet */
+  body.touch-ui .player-header { margin-bottom:4px; min-height:0; flex-wrap:nowrap; gap:4px; }
+  body.touch-ui .player-name, body.touch-ui .player-card.active .player-name { font-size:clamp(18px, 3.4vw, 34px); }
+  body.touch-ui .player-name-wrap { min-width:0; flex:1; }
+  body.touch-ui .btn-surrender, body.touch-ui .btn-collapse, body.touch-ui .btn-rotate, body.touch-ui .btn-elim { min-width:34px; min-height:34px; font-size:15px; }
+  body.touch-ui .phase-badge { flex-direction:row; justify-content:center; gap:8px; margin:0; }
+  body.touch-ui .phase-badge-icon { font-size:24px; animation:none; }
+  body.touch-ui .phase-badge-name { font-size:10px; }
+  /* The life point area is its own size reference: the number grows to fill whatever space the card has left */
+  body.touch-ui .lp-display { container-type:size; min-height:56px; margin:2px 0; flex:1 1 0; overflow:hidden; justify-content:center; }
+  body.touch-ui .lp-value { font-size:min(22cqw, 72cqh); overflow:visible; }
+  body.touch-ui .lp-label { font-size:8px; letter-spacing:4px; }
+  body.touch-ui .lp-sparkline { display:none; }
+  body.touch-ui .lp-bar-track { margin:4px 0 8px; }
+  body.touch-ui .toggle-btn { min-height:52px; font-size:26px; }
+  body.touch-ui .phase-indicator { margin-top:8px; padding-top:6px; }
+  body.touch-ui .phase-label-row { display:none; }
+  body.touch-ui .phase-step { min-height:38px; font-size:9px; padding:4px 1px; display:flex; align-items:center; justify-content:center; }
+  body.touch-ui .preset-btn, body.touch-ui .dmg-type-btn, body.touch-ui .undo-btn, body.touch-ui .battle-apply-btn { min-height:44px; }
+  body.touch-ui .battle-input { min-height:44px; font-size:18px; }
+
+  .sheet-head { display:none; }
+  /* Bottom bar: big thumb buttons, no keyboard hints */
+  body.touch-ui .turn-controls { padding:8px 10px calc(8px + env(safe-area-inset-bottom)); gap:8px; flex-wrap:nowrap; }
+  body.touch-ui .turn-controls kbd { display:none; }
+  body.touch-ui .turn-controls .btn { flex:1; min-height:52px; font-size:14px; justify-content:center; }
+  body.touch-ui #turnLabel { display:none; }
+
+  /* Phones: damage/heal panels open as a sheet above the bottom bar, so every card stays visible */
+  @media (max-width: 640px), (max-height: 500px) {
+    body.touch-ui .panels-container.visible {
+      position:fixed; left:8px; right:8px; bottom:calc(76px + env(safe-area-inset-bottom)); z-index:260;
+      max-height:min(62dvh, 460px); overflow-y:auto; grid-template-columns:1fr;
+      padding:10px; margin:0; background:rgba(10,10,22,0.98); border:1px solid rgba(201,162,39,0.4); border-radius:10px;
+      box-shadow:0 -10px 40px rgba(0,0,0,0.75);
+    }
+    body.touch-ui .panels-container.visible .sheet-head {
+      display:flex; align-items:center; justify-content:space-between; gap:8px;
+      font-family:'Cinzel',serif; font-size:12px; letter-spacing:1.5px; color:var(--gold); padding:0 2px 6px;
+      border-bottom:1px solid rgba(201,162,39,0.2); margin-bottom:4px;
+    }
+    body.touch-ui .sheet-head b { color:#e8e8ff; font-size:15px; }
+    body.touch-ui .sheet-close { min-width:40px; min-height:36px; background:none; border:1px solid rgba(255,255,255,0.15); border-radius:6px; color:var(--dim); font-size:16px; }
+  }
+  @media (max-height: 500px) {
+    body.touch-ui .panels-container.visible { bottom:calc(64px + env(safe-area-inset-bottom)); max-height:calc(100dvh - 120px); }
+  }
+
+  /* Phones held upright: stack the cards (2 players = one above the other; 3+ = two columns) */
+  @media (max-width: 640px) and (orientation: portrait) {
+    body.touch-ui .grid { grid-auto-flow:row; grid-template-columns:1fr !important; grid-template-rows:none; grid-auto-rows:minmax(0,1fr); overflow-y:auto; }
+    body.touch-ui .grid:has(> .player-card:nth-child(3)) { grid-template-columns:1fr 1fr !important; }
+    body.touch-ui .timer-bar .timer-block:nth-child(3) { display:none; }   /* turn time: game time is enough on a phone */
+    body.touch-ui .timer-btn { padding:6px 8px; font-size:10px; letter-spacing:1px; min-height:38px; }
+    body.touch-ui .timer-value { font-size:16px !important; }
+    /* Half-height cards: drop the extras so the life points keep their room */
+    body.touch-ui .phase-badge, body.touch-ui .lp-label, body.touch-ui .add-token-btn, body.touch-ui .biggest-hit-badge, body.touch-ui .battle-panel-title { display:none; }
+    body.touch-ui .battle-panel { margin:2px 0; padding:6px; }
+    body.touch-ui .battle-panel .battle-input { min-height:38px; }
+    body.touch-ui .phase-indicator { margin-top:4px; padding-top:4px; }
+    body.touch-ui .phase-step { min-height:34px; }
+    /* 3+ players on a phone: quarter-screen cards, so the phase row goes too (Next Phase is at the bottom) */
+    body.touch-ui .grid:has(> .player-card:nth-child(3)) .phase-indicator,
+    body.touch-ui .grid:has(> .player-card:nth-child(3)) .lp-diff { display:none; }
+    body.touch-ui .grid:has(> .player-card:nth-child(3)) .toggle-btn { min-height:44px; font-size:22px; padding:6px 0; }
+    body.touch-ui .grid:has(> .player-card:nth-child(3)) .btn-rotate,
+    body.touch-ui .grid:has(> .player-card:nth-child(3)) .btn-collapse { display:none; }
+    body.touch-ui .grid:has(> .player-card:nth-child(3)) .btn-surrender,
+    body.touch-ui .grid:has(> .player-card:nth-child(3)) .btn-elim { min-width:26px; min-height:30px; font-size:12px; padding:2px; }
+    body.touch-ui .grid:has(> .player-card:nth-child(3)) .turn-order-badge { display:none; }
+    body.touch-ui .grid:has(> .player-card:nth-child(3)) .player-name { font-size:15px !important; }
+  }
+  /* Phones on their side: very little height */
+  @media (max-height: 500px) {
+    body.touch-ui .phase-badge { display:none; }
+    body.touch-ui .phase-indicator { display:none; }      /* use Next Phase at the bottom instead */
+    body.touch-ui .lp-label, body.touch-ui .add-token-btn { display:none; }
+    body.touch-ui .player-name, body.touch-ui .player-card.active .player-name { font-size:18px; }
+    body.touch-ui .lp-value { font-size:min(17cqw, 34cqh); }
+    body.touch-ui .player-card { padding:6px 10px; }
+    body.touch-ui .timer-bar { padding:4px 10px; }
+    body.touch-ui .timer-btn { min-height:34px; }
+    body.touch-ui .toggle-btn { min-height:44px; font-size:22px; }
+    body.touch-ui .phase-step { min-height:32px; }
+    body.touch-ui .turn-controls .btn { min-height:44px; }
+    body.touch-ui .timer-value { font-size:15px !important; }
   }
 
   /* ── Chain Overlay ── */
@@ -3067,7 +3182,7 @@
     display:flex; flex-direction:column; align-items:center;
     padding:36px 32px 28px; position:relative;
   }
-  .tutorial-logo { width:280px; height:280px; border-radius:50%; margin-bottom:20px; filter:drop-shadow(0 0 30px rgba(201,162,39,0.4)); }
+  .tutorial-logo { width:190px; height:190px; border-radius:50%; margin-bottom:12px; filter:drop-shadow(0 0 30px rgba(201,162,39,0.4)); }
   .tutorial-slide { display:none; flex-direction:column; align-items:center; text-align:center; gap:16px; width:100%; }
   .tutorial-slide.active { display:flex; }
   .tutorial-slide-title {
@@ -3096,9 +3211,12 @@
   }
   /* Logo only on the welcome slide; Back/Next stay reachable while the text scrolls. */
   .tutorial-wrap.tut-compact .tutorial-logo { display:none; }
-  .tutorial-wrap .tutorial-nav { position:sticky; bottom:-28px; padding:10px 0 28px; background:linear-gradient(to bottom, rgba(0,0,0,0), #000 14px); width:100%; justify-content:center; }
+  .tutorial-mode-toggle { flex-basis:100%; justify-content:center; display:flex; align-items:center; gap:8px; margin:0 0 4px; font-family:'Rajdhani',sans-serif; font-size:13px; color:var(--dim); cursor:pointer; }
+  .tutorial-mode-toggle input { width:15px; height:15px; accent-color:var(--gold); }
+  .tutorial-new { display:block; margin-top:14px; padding:8px 12px; border:1px solid rgba(201,162,39,0.35); border-radius:6px; background:rgba(201,162,39,0.06); font-size:0.8em; line-height:1.5; color:var(--text); }
+  .tutorial-wrap .tutorial-nav { position:sticky; bottom:-28px; padding:10px 0 28px; background:linear-gradient(to bottom, rgba(0,0,0,0), #000 14px); width:100%; justify-content:center; flex-wrap:wrap; }
   @media (max-width:600px) {
-    .tutorial-logo { width:180px; height:180px; }
+    .tutorial-logo { width:120px; height:120px; margin-bottom:6px; }
     .tutorial-wrap { padding:24px 18px 28px; }
     .tutorial-slide-title { font-size:22px; letter-spacing:3px; }
     .tutorial-slide-body { font-size:17px; line-height:1.55; }
@@ -3484,6 +3602,7 @@
   <button class="btn btn-dim"  onclick="openShortcutModal()">⌨ Shortcuts</button>
   <button class="btn btn-dim" id="voiceBtn" onclick="toggleVoice()">🎤 Voice</button>
   <button class="btn btn-dim" onclick="openTutorial()" style="border-color:rgba(201,162,39,0.3);color:var(--gold);">📖 Tutorial</button>
+  <button class="btn btn-dim" id="viewModeBtn" onclick="cycleViewMode()" title="Switch between PC and touch (tablet/phone) layouts">🖥️ View: Auto</button>
   <button class="btn btn-dim" onclick="openPartners()" style="border-color:rgba(0,200,120,0.35);color:#44ddaa;">🤝 Partners</button>
   <button class="btn btn-dim" onclick="window.open(DISCORD_INVITE,'_blank','noopener')" style="border-color:rgba(88,101,242,0.5);color:#99aaff;" title="Join the Discord server">💬 Discord</button>
 </div>
@@ -4859,6 +4978,7 @@
 
         <!-- Side-by-side panels -->
         <div class="panels-container ${anyOpen ? 'visible' : ''}" id="panels-${i}">
+          <div class="sheet-head"><span>${escHtml(p.name)} · Life Points <b id="sheet-lp-${i}">${p.lp.toLocaleString()}</b></span><button class="sheet-close" onclick="closeLPPanels(${i})" title="Close">✕</button></div>
 
           <div class="lp-panel minus-panel ${minusOpen ? '' : 'hidden-panel'}" id="minus-panel-${i}">
             <div class="panel-label-row">
@@ -4928,6 +5048,21 @@
   }
 
   /* ── Panel toggle ─────────────────────── */
+  /** Damage/heal panels open as a bottom sheet in touch view on phones. */
+  function _lpSheetMode() {
+    return document.body.classList.contains('touch-ui') && window.matchMedia('(max-width: 640px), (max-height: 500px)').matches;
+  }
+  function _syncPanelDom(i) {
+    var st = panelState[i], mo = st === 'minus' || st === 'both', po = st === 'plus' || st === 'both';
+    var card = document.getElementById('card-' + i); if (!card) return;
+    var a = card.querySelector('.minus-toggle'), b = card.querySelector('.plus-toggle');
+    if (a) a.classList.toggle('open', mo); if (b) b.classList.toggle('open', po);
+    var pc = document.getElementById('panels-' + i); if (pc) pc.classList.toggle('visible', mo || po);
+    var mp = document.getElementById('minus-panel-' + i); if (mp) mp.classList.toggle('hidden-panel', !mo);
+    var pp = document.getElementById('plus-panel-' + i); if (pp) pp.classList.toggle('hidden-panel', !po);
+  }
+  function closeLPPanels(i) { panelState[i] = null; _syncPanelDom(i); }
+
   function togglePanel(i, side) {
     const cur = panelState[i];
     if (side === 'minus') {
@@ -4942,6 +5077,10 @@
       else                      panelState[i] = 'plus';
     }
 
+    if (_lpSheetMode()) {
+      // Phones: the panel opens as a sheet at the bottom, so close any other player's sheet first.
+      for (var _k = 0; _k < panelState.length; _k++) if (_k !== i && panelState[_k]) { panelState[_k] = null; _syncPanelDom(_k); }
+    }
     const state     = panelState[i];
     const minusOpen = state === 'minus' || state === 'both';
     const plusOpen  = state === 'plus'  || state === 'both';
@@ -5233,6 +5372,8 @@
       v.className = `lp-value ${getLPClass(lp)} lp-pop`;
       setTimeout(() => v.classList.remove('lp-pop'), 300);
     }
+    const sh = document.getElementById(`sheet-lp-${i}`);
+    if (sh) sh.textContent = lp.toLocaleString();
     if (b) { b.style.width = pct + '%'; b.style.background = getLPColor(lp); }
   }
 
@@ -5708,6 +5849,8 @@
     var menu = document.getElementById('gameMenu');
     var btn  = document.getElementById('menuToggleBtn');
     if (!menu) return;
+    // Touch view: the menu is a panel over the board, so it only opens when tapped (never automatically).
+    if (open && document.body.classList.contains('touch-ui')) return;
     menu.classList.toggle('collapsed', !open);
     if (btn) btn.classList.toggle('open', open);
   }
@@ -6770,13 +6913,60 @@
   }
 
   /* ━━ FULLSCREEN ━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-  function toggleGameMenu() {
+  function toggleGameMenu(forceOpen) {
     const menu = document.getElementById('gameMenu');
     const btn  = document.getElementById('menuToggleBtn');
-    const open = !menu.classList.contains('collapsed');
+    const open = typeof forceOpen === 'boolean' ? !forceOpen : !menu.classList.contains('collapsed');
+    if (!open && document.body.classList.contains('touch-ui')) {
+      var tb = document.getElementById('timerBar');
+      document.documentElement.style.setProperty('--touch-menu-top', Math.round((tb ? tb.getBoundingClientRect().bottom : 50) + 6) + 'px');
+    }
     menu.classList.toggle('collapsed', open);
     btn.classList.toggle('open', !open);
   }
+
+  /* ── View mode: Auto (touch on tablets/phones), PC, or Touch. Saved per device. ── */
+  function _viewPref() { try { return localStorage.getItem('ygo_view') || 'auto'; } catch (e) { return 'auto'; } }
+  function _autoIsTouch() {
+    try { return window.matchMedia('(pointer: coarse)').matches || (navigator.maxTouchPoints > 1 && /Macintosh|iPad|iPhone|Android/.test(navigator.userAgent)); }
+    catch (e) { return false; }
+  }
+  function applyViewMode() {
+    var pref = _viewPref();
+    var touch = pref === 'touch' || (pref === 'auto' && _autoIsTouch());
+    var wasTouch = document.body.classList.contains('touch-ui');
+    document.body.classList.toggle('touch-ui', touch);
+    if (touch && !wasTouch) { var gm = document.getElementById('gameMenu'), mb = document.getElementById('menuToggleBtn'); if (gm) gm.classList.add('collapsed'); if (mb) mb.classList.remove('open'); }
+    var b = document.getElementById('viewModeBtn');
+    if (b) b.textContent = (touch ? '📱' : '🖥️') + ' View: ' + (pref === 'auto' ? 'Auto (' + (touch ? 'Touch' : 'PC') + ')' : pref === 'touch' ? 'Touch' : 'PC');
+    return touch;
+  }
+  function cycleViewMode() {
+    var next = { auto: 'touch', touch: 'pc', pc: 'auto' }[_viewPref()] || 'auto';
+    try { localStorage.setItem('ygo_view', next); } catch (e) {}
+    var touch = applyViewMode();
+    if (typeof render === 'function') render();
+    if (typeof showToast === 'function') showToast(next === 'auto' ? 'View: Auto (' + (touch ? 'touch' : 'PC') + ' on this device)' : next === 'touch' ? 'Touch view: bigger buttons, tablet/phone layout' : 'PC view: full layout with keyboard shortcuts', 'info');
+    if (touch) toggleGameMenu(true);   // keep the menu open so the button stays in reach
+  }
+  // Touch view: tapping anything in the menu (or outside it) closes the panel.
+  document.addEventListener('click', function(e) {
+    if (!document.body.classList.contains('touch-ui')) return;
+    var menu = document.getElementById('gameMenu');
+    if (!menu || menu.classList.contains('collapsed')) return;
+    if (e.target.closest('#menuToggleBtn') || e.target.closest('#viewModeBtn')) return;
+    if (e.target.closest('#gameMenu button') || !e.target.closest('#gameMenu')) toggleGameMenu(false);
+  });
+  (function () {
+    var touch = applyViewMode();
+    if (touch && _viewPref() === 'auto') {
+      var shown = null; try { shown = localStorage.getItem('ygo_view_hint'); } catch (e) {}
+      if (!shown) {
+        setTimeout(function () { if (typeof showToast === 'function') showToast('📱 Touch view is on for this device. Switch in ☰ Menu → View.', 'info'); }, 2500);
+        try { localStorage.setItem('ygo_view_hint', '1'); } catch (e) {}
+      }
+    }
+  })();
 
   function toggleFullscreen() {
     if (!document.fullscreenElement) {
@@ -10820,6 +11010,7 @@
   function openTutorial() {
     _tutorialSlide = 0;
     _tutorialTotal = document.querySelectorAll('#tutorialOverlay .tutorial-slide').length || _tutorialTotal;
+    var _tou = document.getElementById('tutorialOnlyUpdates'); if (_tou) _tou.checked = _tutorialOnlyUpdates();
     // Live numbers from the Discord ladder (placement games, tier names) when it's loaded.
     try {
       var _ld = window.YGOLeaderboard && YGOLeaderboard.get();
@@ -10835,9 +11026,21 @@
     if (menu && !menu.classList.contains('collapsed')) toggleGameMenu();
   }
 
+  /* Tutorial shows on every open by default. Players can switch to "only when something's new";
+     bump TUTORIAL_VERSION whenever the tutorial changes and it shows again for everyone. */
+  var TUTORIAL_VERSION = '2026-11-05';
+  function _tutorialOnlyUpdates() { try { return localStorage.getItem('ygo_tutorial_mode') === 'updates'; } catch (e) { return false; } }
+  function setTutorialOnlyUpdates(on) { try { localStorage.setItem('ygo_tutorial_mode', on ? 'updates' : 'always'); } catch (e) {} }
+  function tutorialShouldAutoOpen() {
+    try { if (new URLSearchParams(window.location.search).get('room')) return false; } catch (e) {}   // joining a synced room: don't interrupt
+    var seen = null; try { seen = localStorage.getItem('ygo_tutorial_seen'); } catch (e) {}
+    return !_tutorialOnlyUpdates() || seen !== TUTORIAL_VERSION;
+  }
+
   function closeTutorial() {
     document.getElementById('tutorialOverlay').classList.remove('open');
     localStorage.setItem('ygo_tutorial_done', '1');
+    try { localStorage.setItem('ygo_tutorial_seen', TUTORIAL_VERSION); } catch (e) {}
     if (window._whoIsPlayingPending) { window._whoIsPlayingPending = false; setTimeout(openWhoIsPlaying, 300); }
   }
 
@@ -10895,8 +11098,8 @@
     else _initTutorialKeys();
   })();
 
-  // Auto-show on first visit
-  if (!localStorage.getItem('ygo_tutorial_done')) {
+  // Auto-show on open (every time, or only after an update if the player chose that)
+  if (tutorialShouldAutoOpen()) {
     setTimeout(openTutorial, 600);
   }
 
@@ -12079,8 +12282,8 @@
     <div class="tutorial-slide active" data-slide="0">
       <div class="tutorial-slide-title">WELCOME</div>
       <div class="tutorial-slide-body">
-        Welcome to <strong style="color:var(--gold);">Y.U.G.I.O.H.</strong> — the Yu-Gi-Oh Unified Gameplay Identifier and Operation Hub.<br><br>
-        Built by <strong>BishopKngSlayer</strong> for the community. Let's walk through the features.
+        Welcome to <strong style="color:var(--gold);">Y.U.G.I.O.H.</strong> — the Yu-Gi-Oh Unified Gameplay Identifier and Operation Hub, built by <strong>BishopKngSlayer</strong> for the community.
+        <span class="tutorial-new"><strong style="color:var(--gold);">✨ What's new:</strong> a <strong>touch layout</strong> for tablets and phones (☰ Menu → View), game setup before every game (mode + ⚔️ wager match), the Discord duel ladder with rank tiers, 🔗 linked players on the roster, and name suggestions. Rulings were removed for now.</span>
       </div>
     </div>
 
@@ -12190,6 +12393,9 @@
 
     <div class="tutorial-dots" id="tutorialDots"></div>
     <div class="tutorial-nav">
+      <label class="tutorial-mode-toggle">
+        <input type="checkbox" id="tutorialOnlyUpdates" onchange="setTutorialOnlyUpdates(this.checked)"> Only show this when something's new
+      </label>
       <button class="tutorial-nav-btn skip" onclick="closeTutorial()">Skip</button>
       <button class="tutorial-nav-btn" id="tutorialPrevBtn" onclick="tutorialPrev()" style="display:none;">◀ Back</button>
       <button class="tutorial-nav-btn" id="tutorialNextBtn" onclick="tutorialNext()">Next ▶</button>
@@ -12472,7 +12678,7 @@
     } catch (e) {}
     if (!askPlayersOnOpen()) return;
     var tutorialFirst = false;
-    try { tutorialFirst = !localStorage.getItem('ygo_tutorial_done'); } catch (e) {}
+    try { tutorialFirst = typeof tutorialShouldAutoOpen === 'function' ? tutorialShouldAutoOpen() : !localStorage.getItem('ygo_tutorial_done'); } catch (e) {}
     if (tutorialFirst) { window._whoIsPlayingPending = true; return; }   // ask right after the tutorial closes
     var ready = window._rosterReady || Promise.resolve();
     var timeout = new Promise(function (r) { setTimeout(r, 3000); });
