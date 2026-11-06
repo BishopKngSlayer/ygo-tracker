@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-05T19:00:58.697Z",
+  "updated": "2026-11-06T00:15:21.987Z",
   "month": "2026-11",
   "rules": {
     "cap": 3,
@@ -65,6 +65,17 @@
       "losses": 5,
       "tier": "Rookie",
       "ranked": true,
+      "linked": true
+    },
+    {
+      "rank": null,
+      "name": "JD_YGO",
+      "rating": 1500,
+      "points": 100,
+      "wins": 0,
+      "losses": 0,
+      "tier": null,
+      "ranked": false,
       "linked": true
     },
     {
