@@ -540,6 +540,19 @@
     body.touch-ui .timer-value { font-size:15px !important; }
   }
 
+  /* ── Chain button (Touch view) ── */
+  .btn-chain { display:none; }
+  body.touch-ui .turn-controls .btn-chain {
+    display:flex; flex:0 0 auto; min-width:92px;
+    background:rgba(255,140,0,0.12); border:1px solid rgba(255,160,40,0.55); color:#ffbb55;
+  }
+  body.touch-ui .turn-controls .btn-chain.on {
+    position:relative; z-index:510; background:rgba(255,140,0,0.85); color:#1a0e00; border-color:#ffcc66;
+    box-shadow:0 0 18px rgba(255,150,0,0.7);
+  }
+  body.touch-ui .turn-controls:has(.btn-chain.on) { z-index:510; }
+  body.touch-ui #chainOverlay.active { pointer-events:auto; cursor:pointer; }
+
   /* ── Chain Overlay ── */
   #chainOverlay {
     display:none; position:fixed; inset:0; z-index:500;
@@ -3617,6 +3630,7 @@
 
 <div class="turn-controls">
   <span id="turnLabel" style="font-family:'Cinzel',serif;font-size:11px;color:var(--dim);letter-spacing:3px;align-self:center;"></span>
+  <button class="btn btn-chain" id="chainBtn" onclick="toggleChainOverlay()">&#x26D3; Chain</button>
   <button class="btn btn-dim"  onclick="advancePhase()">⟶ Next Phase <kbd style="font-family:monospace;font-size:9px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.18);border-radius:3px;padding:1px 5px;margin-left:4px;letter-spacing:0;">Space</kbd></button>
   <button class="btn btn-gold" onclick="nextTurn()">Next Turn ▶ <kbd style="font-family:monospace;font-size:9px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.18);border-radius:3px;padding:1px 5px;margin-left:4px;letter-spacing:0;">→</kbd></button>
 </div>
@@ -5792,9 +5806,17 @@
     return `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
   }
 
+  /* The clock counts from a start time instead of adding 1 every second, so a phone or tablet that slows
+     the page down in the background still shows the right time. In a synced room both devices share it. */
+  var _clk = { g: 0, t: 0, at: 0 };   // seconds at 'at' (local ms) while running
+  function _clkRebase(atMs) { _clk = { g: gameSeconds, t: turnSeconds, at: atMs != null ? atMs : Date.now() }; }
+  function _clkSample() {
+    if (!timerRunning) return;
+    var el = Math.max(0, Math.floor((Date.now() - _clk.at) / 1000));
+    gameSeconds = _clk.g + el; turnSeconds = _clk.t + el;
+  }
   function timerTick() {
-    gameSeconds++;
-    turnSeconds++;
+    _clkSample();
     document.getElementById('gameTimerDisplay').textContent = fmt(gameSeconds);
     const td = document.getElementById('turnTimerDisplay');
     td.textContent = fmt(turnSeconds);
@@ -5834,16 +5856,25 @@
   }
 
   var _chainActive = false;
-  function toggleChainOverlay() {
+  /** Show or hide the CHAIN screen and set the on-screen Chain button to match (no timer change). */
+  function _setChainUI(on) {
+    _chainActive = !!on;
     var overlay = document.getElementById('chainOverlay');
-    if (!overlay) return;
-    _chainActive = !_chainActive;
-    overlay.classList.toggle('active', _chainActive);
+    if (overlay) overlay.classList.toggle('active', _chainActive);
+    var sub = document.getElementById('chainSub');
+    if (sub) sub.innerHTML = 'Timer Paused &nbsp;&middot;&nbsp; ' + (document.body.classList.contains('touch-ui') ? 'Tap to Resolve' : 'Press &uarr; to Resume');
+    var b = document.getElementById('chainBtn');
+    if (b) { b.classList.toggle('on', _chainActive); b.innerHTML = _chainActive ? '&#x2714; Resolve' : '&#x26D3; Chain'; }
+  }
+  function toggleChainOverlay() {
+    if (!document.getElementById('chainOverlay')) return;
+    _setChainUI(!_chainActive);
     if (_chainActive) {
       if (timerRunning) timerPause();
     } else {
       timerStart();
     }
+    _fbPushClock();
   }
   function _setMenuOpen(open) {
     var menu = document.getElementById('gameMenu');
@@ -5855,19 +5886,22 @@
     if (btn) btn.classList.toggle('open', open);
   }
 
-  function timerStart() {
+  function timerStart(keepBase) {
     if (timerRunning) return;
+    if (!keepBase) _clkRebase();
     timerRunning = true;
-    timerInterval = setInterval(timerTick, 1000);
+    timerInterval = setInterval(timerTick, 250);
     var btn = document.getElementById('timerToggleBtn');
     if (btn) { btn.textContent = '⏸ Pause'; btn.classList.remove('start'); btn.classList.add('pause'); }
     document.getElementById('gameTimerDisplay').classList.add('running');
     document.getElementById('turnTimerDisplay').classList.add('running');
     _setMenuOpen(false); // collapse menu when game is running
+    _fbPushClock();
   }
 
   function timerPause() {
     if (!timerRunning) return;
+    _clkSample();
     timerRunning = false;
     clearInterval(timerInterval);
     timerInterval = null;
@@ -5876,6 +5910,7 @@
     document.getElementById('gameTimerDisplay').classList.remove('running');
     document.getElementById('turnTimerDisplay').classList.remove('running');
     _setMenuOpen(true); // open menu when timer is paused
+    _fbPushClock();
   }
 
   function timerStop() {
@@ -5885,16 +5920,16 @@
     const td = document.getElementById('turnTimerDisplay');
     if (gd) gd.textContent = '00:00';
     if (td) { td.textContent = '00:00'; td.classList.remove('overtime'); }
+    if (_chainActive) _setChainUI(false);
     _setMenuOpen(true);
+    _fbPushClock();
   }
 
   function recordTurnAndAdvance(newActiveFn) {
-    // Dismiss chain overlay if active
-    if (_chainActive) {
-      _chainActive = false;
-      var co = document.getElementById('chainOverlay');
-      if (co) co.classList.remove('active');
-    }
+    // Dismiss chain overlay if active (the chain paused the clock, so it runs again)
+    var _wasChain = _chainActive;
+    if (_chainActive) _setChainUI(false);
+    _clkSample();
     // log this turn for the current player
     const dur = turnSeconds;
     // guard against activeTurn being out of bounds
@@ -5907,6 +5942,9 @@
     });
     globalTurnNum++;
     turnSeconds = 0;
+    _clkRebase();
+    if (_wasChain && !timerRunning) timerStart();
+    _fbPushClock();
     _turnTimeLimitFired = false;
     const td = document.getElementById('turnTimerDisplay');
     if (td) { td.textContent = '00:00'; td.classList.remove('overtime'); }
@@ -8894,6 +8932,53 @@
   }
   function _fbKey(v) { var n = _fbNorm(v); return n === undefined ? '' : JSON.stringify(n); }
 
+  /* ── Shared clock: running or paused, chain on or off, and the time, at rooms/<code>/state/clock.
+     Sent when the clock starts, pauses, resets, a chain is called or resolved, or the turn changes.
+     Times are compared on Firebase's clock so the two devices agree even if their own clocks don't. */
+  var _fbOffset = 0, _fbClockTimer = null, _fbClockApplying = false, _fbClockSeq = 0, _fbClockKey = '';
+  function _fbWatchOffset() {
+    try { _fbDb.ref('.info/serverTimeOffset').on('value', function (s) { var v = s && s.val ? s.val() : 0; _fbOffset = typeof v === 'number' ? v : 0; }); } catch (e) {}
+  }
+  function _fbPushClock() {
+    if (!_fbRoom || !_fbDb || _fbClockApplying || !_fbReady) return;
+    clearTimeout(_fbClockTimer);
+    _fbClockTimer = setTimeout(function () {
+      _fbClockTimer = null;
+      if (!_fbRoom || !_fbDb) return;
+      _clkSample();
+      var c = { run: !!timerRunning, chain: !!_chainActive, g: gameSeconds, t: turnSeconds,
+                at: timerRunning ? _clk.at + _fbOffset : Date.now() + _fbOffset,
+                bg: timerRunning ? _clk.g : gameSeconds, bt: timerRunning ? _clk.t : turnSeconds,
+                by: _fbClientId, n: ++_fbClockSeq };
+      _fbClockKey = c.by + ':' + c.n;
+      try { _fbDb.ref('rooms/' + _fbRoom + '/state/clock').set(c).catch(function (e) { console.warn('Clock sync failed:', e); }); }
+      catch (e) { console.warn('Clock sync failed:', e); }
+    }, 0);
+  }
+  function _fbApplyClock(c) {
+    if (!c || typeof c !== 'object' || c.by === _fbClientId) return;
+    var key = c.by + ':' + c.n;
+    if (key === _fbClockKey) return;
+    _fbClockKey = key;
+    _fbClockApplying = true;
+    try {
+      if (timerRunning) { clearInterval(timerInterval); timerInterval = null; timerRunning = false; }
+      if (c.run) {
+        // base time on the other device + how long it has run since, measured on Firebase's clock
+        gameSeconds = c.bg || 0; turnSeconds = c.bt || 0;
+        var startLocal = (c.at || 0) - _fbOffset;
+        if (startLocal > Date.now()) startLocal = Date.now();
+        _clkRebase(startLocal);
+        timerStart(true);
+      } else {
+        timerRunning = true; timerPause();
+        gameSeconds = c.g || 0; turnSeconds = c.t || 0;
+      }
+      _setChainUI(!!c.chain);
+      timerTick();
+    } finally { _fbClockApplying = false; }
+  }
+
   function _syncParts() {
     var c = _getGameSnapshot(); delete c.ts;
     var meta = Object.assign({}, c); delete meta.players; meta.count = players.length;
@@ -9056,6 +9141,7 @@
       }
       var changed = _applySnapshot(data);
       _fbReady = true;
+      _fbApplyClock(data.clock);
       if (data.by && data.by !== _fbClientId) {
         var gs = document.getElementById('syncGuestStatus');
         if (gs) { gs.textContent = '🟢 Other device connected'; gs.className = 'sync-status connected'; }
@@ -9081,6 +9167,8 @@
     // New room: this board is the game. Send it, then listen for the other device's changes.
     _fbReady = true; _fbLastParts = {};
     fbSyncPushSoon(true);
+    _fbWatchOffset();
+    _fbPushClock();
     _fbListen(code);
     _updateSyncDot();
     _renderSyncPanel();
@@ -9097,7 +9185,8 @@
     _fbIsHost = false;
     _fbMySlot = 1;
     // Load the room's game first; nothing is sent from here until it has arrived.
-    _fbReady = false; _fbLastParts = {};
+    _fbReady = false; _fbLastParts = {}; _fbClockKey = '';
+    _fbWatchOffset();
     _fbListen(code);
     _updateSyncDot();
     _renderSyncPanel();
@@ -11231,7 +11320,7 @@
 
   /* Tutorial shows on every open by default. Players can switch to "only when something's new";
      bump TUTORIAL_VERSION whenever the tutorial changes and it shows again for everyone. */
-  var TUTORIAL_VERSION = '2026-11-05';
+  var TUTORIAL_VERSION = '2026-11-06';
   function _tutorialOnlyUpdates() { try { return localStorage.getItem('ygo_tutorial_mode') === 'updates'; } catch (e) { return false; } }
   function setTutorialOnlyUpdates(on) { try { localStorage.setItem('ygo_tutorial_mode', on ? 'updates' : 'always'); } catch (e) {} }
   function tutorialShouldAutoOpen() {
@@ -12484,7 +12573,7 @@
       <div class="tutorial-slide-title">WELCOME</div>
       <div class="tutorial-slide-body">
         Welcome to <strong style="color:var(--gold);">Y.U.G.I.O.H.</strong> — the Yu-Gi-Oh Unified Gameplay Identifier and Operation Hub, built by <strong>BishopKngSlayer</strong> for the community.
-        <span class="tutorial-new"><strong style="color:var(--gold);">✨ What's new:</strong> a <strong>touch layout</strong> for tablets and phones (☰ Menu → View), results from <strong>any device</strong> (both players confirm by DM), game setup before every game (mode + ⚔️ wager match), the Discord duel ladder with rank tiers, 🔗 linked players on the roster, and name suggestions. Rulings were removed for now.</span>
+        <span class="tutorial-new"><strong style="color:var(--gold);">✨ What's new:</strong> a <strong>touch layout</strong> for tablets and phones (☰ Menu → View) with a <strong>⛓ Chain</strong> button, a <strong>shared timer and chain pause</strong> on synced devices, results from <strong>any device</strong> (both players confirm by DM), game setup before every game (mode + ⚔️ wager match), the Discord duel ladder with rank tiers, 🔗 linked players on the roster, and name suggestions. Rulings were removed for now.</span>
       </div>
     </div>
 
@@ -12606,11 +12695,11 @@
 </div>
 
 <!-- Chain Overlay -->
-<div id="chainOverlay">
+<div id="chainOverlay" onclick="if(document.body.classList.contains('touch-ui')&&_chainActive)toggleChainOverlay()">
   <div class="chain-backdrop"></div>
   <div class="chain-icon">⛓</div>
   <div class="chain-word">CHAIN</div>
-  <div class="chain-sub">Timer Paused &nbsp;·&nbsp; Press ↑ to Resume</div>
+  <div class="chain-sub" id="chainSub">Timer Paused &nbsp;·&nbsp; Press ↑ to Resume</div>
 </div>
 
 <!-- Toast Container -->
