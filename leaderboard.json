@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-06T18:01:49.367Z",
+  "updated": "2026-11-06T21:32:16.789Z",
   "month": "2026-11",
   "rules": {
     "cap": 3,
@@ -37,9 +37,9 @@
     {
       "rank": 1,
       "name": "BrakerGaming",
-      "rating": 1552,
+      "rating": 1579,
       "points": 160,
-      "wins": 7,
+      "wins": 9,
       "losses": 2,
       "tier": "Gold",
       "ranked": true,
@@ -48,11 +48,11 @@
     {
       "rank": 2,
       "name": "BishopKngSlayer",
-      "rating": 1513,
+      "rating": 1486,
       "points": 150,
       "wins": 6,
-      "losses": 7,
-      "tier": "Silver",
+      "losses": 9,
+      "tier": "Bronze",
       "ranked": true,
       "linked": true
     },
@@ -115,6 +115,16 @@
   "recent": [
     {
       "kind": "rated",
+      "summary": "BrakerGaming defeated BishopKngSlayer. BrakerGaming +0 pts (monthly cap), rating ±13. BrakerGaming has earned from BishopKngSlayer 4/3 times this month.",
+      "at": "2026-11-06 21:26:30Z"
+    },
+    {
+      "kind": "rated",
+      "summary": "BrakerGaming defeated BishopKngSlayer. BrakerGaming +0 pts (monthly cap), rating ±14. BrakerGaming has earned from BishopKngSlayer 4/3 times this month.",
+      "at": "2026-11-06 21:26:14Z"
+    },
+    {
+      "kind": "rated",
       "summary": "BishopKngSlayer defeated BrakerGaming. BishopKngSlayer +10 pts, rating ±19. BishopKngSlayer has earned from BrakerGaming 2/3 times this month.",
       "at": "2026-11-06 17:58:13Z"
     },
@@ -152,16 +162,6 @@
       "kind": "undo",
       "summary": "Duel #5 (BrakerGaming beat BishopKngSlayer) was undone by a mod. Rating ±12.",
       "at": "2026-11-05 14:22:02Z"
-    },
-    {
-      "kind": "rated",
-      "summary": "BishopKngSlayer defeated MacMetaslayerUDC. BishopKngSlayer +10 pts, rating ±19. BishopKngSlayer has earned from MacMetaslayerUDC 1/3 times this month.",
-      "at": "2026-11-05 05:17:09Z"
-    },
-    {
-      "kind": "rated",
-      "summary": "MacMetaslayerUDC defeated BishopKngSlayer. MacMetaslayerUDC +10 pts, rating ±14. MacMetaslayerUDC has earned from BishopKngSlayer 1/3 times this month.",
-      "at": "2026-11-05 04:30:16Z"
     }
   ]
 }
