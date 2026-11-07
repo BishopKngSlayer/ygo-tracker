@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-07T00:07:14.794Z",
+  "updated": "2026-11-07T22:01:25.321Z",
   "month": "2026-11",
   "rules": {
     "cap": 3,
@@ -47,22 +47,22 @@
     },
     {
       "rank": 2,
-      "name": "BishopKngSlayer",
-      "rating": 1486,
-      "points": 150,
-      "wins": 6,
-      "losses": 9,
+      "name": "MacMetaslayerUDC",
+      "rating": 1455,
+      "points": 130,
+      "wins": 3,
+      "losses": 6,
       "tier": "Bronze",
       "ranked": true,
       "linked": true
     },
     {
       "rank": 3,
-      "name": "MacMetaslayerUDC",
-      "rating": 1418,
-      "points": 110,
-      "wins": 1,
-      "losses": 6,
+      "name": "BishopKngSlayer",
+      "rating": 1450,
+      "points": 150,
+      "wins": 6,
+      "losses": 11,
       "tier": "Rookie",
       "ranked": true,
       "linked": true
@@ -115,6 +115,16 @@
   "recent": [
     {
       "kind": "rated",
+      "summary": "MacMetaslayerUDC defeated BishopKngSlayer. MacMetaslayerUDC +10 pts, rating ±17. MacMetaslayerUDC has earned from BishopKngSlayer 3/3 times this month.",
+      "at": "2026-11-07 21:59:42Z"
+    },
+    {
+      "kind": "rated",
+      "summary": "MacMetaslayerUDC defeated BishopKngSlayer. MacMetaslayerUDC +10 pts, rating ±19. MacMetaslayerUDC has earned from BishopKngSlayer 2/3 times this month.",
+      "at": "2026-11-07 21:55:24Z"
+    },
+    {
+      "kind": "rated",
       "summary": "BrakerGaming defeated BishopKngSlayer. BrakerGaming +0 pts (monthly cap), rating ±13. BrakerGaming has earned from BishopKngSlayer 4/3 times this month.",
       "at": "2026-11-06 21:26:30Z"
     },
@@ -152,16 +162,6 @@
       "kind": "rated",
       "summary": "BrakerGaming defeated MacMetaslayerUDC. BrakerGaming +10 pts, rating ±11. BrakerGaming has earned from MacMetaslayerUDC 2/3 times this month.",
       "at": "2026-11-05 18:55:38Z"
-    },
-    {
-      "kind": "rated",
-      "summary": "BrakerGaming defeated MacMetaslayerUDC. BrakerGaming +10 pts, rating ±12. BrakerGaming has earned from MacMetaslayerUDC 1/3 times this month.",
-      "at": "2026-11-05 18:54:58Z"
-    },
-    {
-      "kind": "undo",
-      "summary": "Duel #5 (BrakerGaming beat BishopKngSlayer) was undone by a mod. Rating ±12.",
-      "at": "2026-11-05 14:22:02Z"
     }
   ]
 }
