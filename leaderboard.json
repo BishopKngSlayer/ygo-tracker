@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-07T22:01:25.321Z",
+  "updated": "2026-11-08T21:28:15.221Z",
   "month": "2026-11",
   "rules": {
     "cap": 3,
@@ -48,9 +48,9 @@
     {
       "rank": 2,
       "name": "MacMetaslayerUDC",
-      "rating": 1455,
-      "points": 130,
-      "wins": 3,
+      "rating": 1473,
+      "points": 140,
+      "wins": 4,
       "losses": 6,
       "tier": "Bronze",
       "ranked": true,
@@ -80,6 +80,17 @@
     },
     {
       "rank": null,
+      "name": "wolfmaster",
+      "rating": 1482,
+      "points": 100,
+      "wins": 0,
+      "losses": 1,
+      "tier": null,
+      "ranked": false,
+      "linked": true
+    },
+    {
+      "rank": null,
       "name": "JD_YGO",
       "rating": 1500,
       "points": 100,
@@ -99,20 +110,14 @@
       "tier": null,
       "ranked": false,
       "linked": true
-    },
-    {
-      "rank": null,
-      "name": "wolfmaster",
-      "rating": 1500,
-      "points": 100,
-      "wins": 0,
-      "losses": 0,
-      "tier": null,
-      "ranked": false,
-      "linked": true
     }
   ],
   "recent": [
+    {
+      "kind": "rated",
+      "summary": "MacMetaslayerUDC defeated wolfmaster. MacMetaslayerUDC +10 pts, rating ±18. MacMetaslayerUDC has earned from wolfmaster 1/3 times this month.",
+      "at": "2026-11-08 21:22:14Z"
+    },
     {
       "kind": "rated",
       "summary": "MacMetaslayerUDC defeated BishopKngSlayer. MacMetaslayerUDC +10 pts, rating ±17. MacMetaslayerUDC has earned from BishopKngSlayer 3/3 times this month.",
@@ -157,11 +162,6 @@
       "kind": "rated",
       "summary": "BrakerGaming defeated BishopKngSlayer. BrakerGaming +0 pts (monthly cap), rating ±12. BrakerGaming has earned from BishopKngSlayer 4/3 times this month.",
       "at": "2026-11-06 01:38:30Z"
-    },
-    {
-      "kind": "rated",
-      "summary": "BrakerGaming defeated MacMetaslayerUDC. BrakerGaming +10 pts, rating ±11. BrakerGaming has earned from MacMetaslayerUDC 2/3 times this month.",
-      "at": "2026-11-05 18:55:38Z"
     }
   ]
 }
