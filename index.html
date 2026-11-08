@@ -12411,9 +12411,14 @@
     else _initTutorialKeys();
   })();
 
-  // Auto-show on first visit
+  // Auto-show on first visit (wait for DOM to be fully parsed)
   if (!localStorage.getItem('ygo_tutorial_done')) {
-    setTimeout(openTutorial, 600);
+    function _autoTutorial() { setTimeout(openTutorial, 400); }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', _autoTutorial);
+    } else {
+      _autoTutorial();
+    }
   }
 
   /* ── PWA Service Worker Registration ── */
