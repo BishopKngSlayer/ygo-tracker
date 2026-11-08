@@ -5612,7 +5612,6 @@
         oldLP: oldPool,
         newLP: teamLP[teamIdx]
       });
-      if (!dueling) playSound('duelStart');
       dueling = true;
       if (!timerRunning) timerStart();
       if (delta < 0) biggestHit[i] = Math.max(biggestHit[i]||0, Math.abs(actualDelta));
@@ -5663,7 +5662,6 @@
         oldLP:     old,
         newLP:     p.lp
       });
-      if (!dueling) playSound('duelStart');
       dueling = true;
       if (delta < 0 && firstBlood === null) { firstBlood = i; showToast(p.name + " takes first blood! 🩸", "damage"); }
       if (!timerRunning) timerStart(); // auto-start timer on first action
@@ -9078,10 +9076,11 @@
           g.gain.exponentialRampToValueAtTime(0.01, t + 0.06);
           osc.connect(g); g.connect(ctx.destination);
           osc.start(t); osc.stop(t + 0.06);
-          // Announce the phase name
+          // Announce the NEXT phase name (sound fires before currentPhase increments)
           var phaseNames = ['Draw Phase!', 'Standby Phase!', 'Main Phase 1!', 'Battle Phase!', 'Main Phase 2!', 'End Phase!'];
-          if (typeof currentPhase !== 'undefined' && phaseNames[currentPhase]) {
-            _ttsSay(phaseNames[currentPhase]);
+          var nextP = (typeof currentPhase !== 'undefined') ? currentPhase + 1 : -1;
+          if (nextP >= 0 && nextP < phaseNames.length) {
+            _ttsSay(phaseNames[nextP]);
           }
           break;
         }
