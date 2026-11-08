@@ -1,0 +1,7179 @@
+{
+  "updated": "2026-11-08T22:18:55.732Z",
+  "banlist": {
+    "current": "2026-10-19",
+    "upcoming": null,
+    "oldest": "2018-05-21",
+    "source": "konami",
+    "url": "https://www.yugioh-card.com/en/limited/list_2026-10-19/",
+    "counts": {
+      "Forbidden": 156,
+      "Limited": 93,
+      "Semi-Limited": 7
+    },
+    "changes": [
+      {
+        "name": "Amorphage Goliath",
+        "s": "Forbidden",
+        "was": null
+      },
+      {
+        "name": "Amorphage Sloth",
+        "s": "Forbidden",
+        "was": null
+      },
+      {
+        "name": "Elfnote Tinia",
+        "s": "Forbidden",
+        "was": "Was Limited"
+      },
+      {
+        "name": "Magicians' Souls",
+        "s": "Forbidden",
+        "was": null
+      },
+      {
+        "name": "Pharaonic Advent",
+        "s": "Forbidden",
+        "was": null
+      },
+      {
+        "name": "Spell Canceller",
+        "s": "Forbidden",
+        "was": null
+      },
+      {
+        "name": "Aerial Eater",
+        "s": "Forbidden",
+        "was": null
+      },
+      {
+        "name": "Albion the Branded Dragon",
+        "s": "Forbidden",
+        "was": null
+      },
+      {
+        "name": "Azamina Ilia Silvia",
+        "s": "Forbidden",
+        "was": null
+      },
+      {
+        "name": "Red-Eyes Dark Dragoon",
+        "s": "Forbidden",
+        "was": null
+      },
+      {
+        "name": "Charmer Quartet in Bloom",
+        "s": "Forbidden",
+        "was": null
+      },
+      {
+        "name": "Cross-Sheep",
+        "s": "Forbidden",
+        "was": null
+      },
+      {
+        "name": "Saryuja Skull Dread",
+        "s": "Forbidden",
+        "was": null
+      },
+      {
+        "name": "Zenna's Deceiving Doll Maidens",
+        "s": "Forbidden",
+        "was": null
+      },
+      {
+        "name": "Ame no Habakiri no Mitsurugi",
+        "s": "Forbidden",
+        "was": "Was Limited"
+      },
+      {
+        "name": "Beelze of the Diabolic Dragons",
+        "s": "Forbidden",
+        "was": null
+      },
+      {
+        "name": "Crystal Wing Synchro Dragon",
+        "s": "Forbidden",
+        "was": null
+      },
+      {
+        "name": "Cupsy★Yummy Way",
+        "s": "Forbidden",
+        "was": "Was Limited"
+      },
+      {
+        "name": "F.A. Dawn Dragster",
+        "s": "Forbidden",
+        "was": null
+      },
+      {
+        "name": "Naturia Beast",
+        "s": "Forbidden",
+        "was": null
+      },
+      {
+        "name": "Trishula, Dragon of the Ice Barrier",
+        "s": "Forbidden",
+        "was": null
+      },
+      {
+        "name": "XX-Saber Gottoms",
+        "s": "Forbidden",
+        "was": null
+      },
+      {
+        "name": "D/D/D Wave High King Caesar",
+        "s": "Forbidden",
+        "was": null
+      },
+      {
+        "name": "Number 41: Bagooska the Terribly Tired Tapir",
+        "s": "Forbidden",
+        "was": null
+      },
+      {
+        "name": "Number 60: Dugares the Timeless",
+        "s": "Forbidden",
+        "was": null
+      },
+      {
+        "name": "Varudras, the Final Bringer of the End Times",
+        "s": "Forbidden",
+        "was": null
+      },
+      {
+        "name": "Called by the Grave",
+        "s": "Forbidden",
+        "was": "Was Limited"
+      },
+      {
+        "name": "Crossout Designator",
+        "s": "Forbidden",
+        "was": "Was Limited"
+      },
+      {
+        "name": "Secret Village of the Spellcasters",
+        "s": "Forbidden",
+        "was": null
+      },
+      {
+        "name": "Triple Tactics Talent",
+        "s": "Forbidden",
+        "was": "Was Limited"
+      },
+      {
+        "name": "Anti-Spell Fragrance",
+        "s": "Forbidden",
+        "was": "Was Limited"
+      },
+      {
+        "name": "Gozen Match",
+        "s": "Forbidden",
+        "was": "Was Limited"
+      },
+      {
+        "name": "Rivalry of Warlords",
+        "s": "Forbidden",
+        "was": "Was Limited"
+      },
+      {
+        "name": "There Can Be Only One",
+        "s": "Forbidden",
+        "was": "Was Limited"
+      },
+      {
+        "name": "Droll & Lock Bird",
+        "s": "Limited",
+        "was": "Was Semi-Limited"
+      },
+      {
+        "name": "Griffoh",
+        "s": "Limited",
+        "was": null
+      },
+      {
+        "name": "Perfectron Hydradrive Dragon",
+        "s": "Limited",
+        "was": null
+      },
+      {
+        "name": "Superdreadnought Rail Cannon Gustav Max",
+        "s": "Limited",
+        "was": null
+      },
+      {
+        "name": "Branded in High Spirits",
+        "s": "Limited",
+        "was": "Was Semi-Limited"
+      },
+      {
+        "name": "Branded Opening",
+        "s": "Limited",
+        "was": null
+      },
+      {
+        "name": "Toon Bookmark",
+        "s": "Limited",
+        "was": null
+      },
+      {
+        "name": "Toon Table of Contents",
+        "s": "Limited",
+        "was": null
+      },
+      {
+        "name": "Sky Striker Mobilize - Engage!",
+        "s": "Semi-Limited",
+        "was": null
+      }
+    ],
+    "upcomingChanges": [],
+    "cards": {
+      "Abyss Dweller": {
+        "s": "Forbidden",
+        "since": "2025-04-07",
+        "exact": true,
+        "was": null
+      },
+      "Aerial Eater": {
+        "s": "Forbidden",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": null
+      },
+      "Agido the Ancient Sentinel": {
+        "s": "Forbidden",
+        "since": "2024-01-01",
+        "exact": true,
+        "was": "Was Limited"
+      },
+      "Albion the Branded Dragon": {
+        "s": "Forbidden",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": null
+      },
+      "Ame no Habakiri no Mitsurugi": {
+        "s": "Forbidden",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": "Was Limited"
+      },
+      "Amorphage Goliath": {
+        "s": "Forbidden",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": null
+      },
+      "Amorphage Sloth": {
+        "s": "Forbidden",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": null
+      },
+      "Anti-Spell Fragrance": {
+        "s": "Forbidden",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": "Was Limited"
+      },
+      "Apollousa, Bow of the Goddess": {
+        "s": "Forbidden",
+        "since": "2024-09-02",
+        "exact": true,
+        "was": null
+      },
+      "Appointer of the Red Lotus": {
+        "s": "Forbidden",
+        "since": "2023-06-05",
+        "exact": true,
+        "was": "Was Limited"
+      },
+      "Archlord Kristya": {
+        "s": "Forbidden",
+        "since": "2026-09-21",
+        "exact": true,
+        "was": null
+      },
+      "Archnemeses Protos": {
+        "s": "Forbidden",
+        "since": "2025-10-27",
+        "exact": true,
+        "was": "Was Limited"
+      },
+      "Artifact Mjollnir": {
+        "s": "Forbidden",
+        "since": "2025-10-27",
+        "exact": true,
+        "was": null
+      },
+      "Artifact Scythe": {
+        "s": "Forbidden",
+        "since": "2023-02-13",
+        "exact": true,
+        "was": null
+      },
+      "Azamina Ilia Silvia": {
+        "s": "Forbidden",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": null
+      },
+      "Bahamut Shark": {
+        "s": "Forbidden",
+        "since": "2025-04-07",
+        "exact": true,
+        "was": null
+      },
+      "Baronne de Fleur": {
+        "s": "Forbidden",
+        "since": "2024-04-15",
+        "exact": true,
+        "was": null
+      },
+      "Barrier Statue of the Drought": {
+        "s": "Forbidden",
+        "since": "2025-10-27",
+        "exact": true,
+        "was": null
+      },
+      "Barrier Statue of the Inferno": {
+        "s": "Forbidden",
+        "since": "2025-10-27",
+        "exact": true,
+        "was": null
+      },
+      "Barrier Statue of the Stormwinds": {
+        "s": "Forbidden",
+        "since": "2023-02-13",
+        "exact": true,
+        "was": null
+      },
+      "Barrier Statue of the Torrent": {
+        "s": "Forbidden",
+        "since": "2026-02-02",
+        "exact": true,
+        "was": null
+      },
+      "Beatrice, Lady of the Eternal": {
+        "s": "Forbidden",
+        "since": "2024-09-02",
+        "exact": true,
+        "was": "Was Limited"
+      },
+      "Beelze of the Diabolic Dragons": {
+        "s": "Forbidden",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": null
+      },
+      "Blackwing - Gofu the Vague Shadow": {
+        "s": "Forbidden",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Block Dragon": {
+        "s": "Forbidden",
+        "since": "2020-09-14",
+        "exact": true,
+        "was": null
+      },
+      "Borreload Savage Dragon": {
+        "s": "Forbidden",
+        "since": "2024-04-15",
+        "exact": true,
+        "was": null
+      },
+      "Branded Expulsion": {
+        "s": "Forbidden",
+        "since": "2023-06-05",
+        "exact": true,
+        "was": null
+      },
+      "Butterfly Dagger - Elma": {
+        "s": "Forbidden",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Called by the Grave": {
+        "s": "Forbidden",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": "Was Limited"
+      },
+      "Card of Safe Return": {
+        "s": "Forbidden",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Chaos Ruler, the Chaotic Magical Dragon": {
+        "s": "Forbidden",
+        "since": "2022-10-03",
+        "exact": true,
+        "was": null
+      },
+      "Charmer Quartet in Bloom": {
+        "s": "Forbidden",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": null
+      },
+      "Cold Wave": {
+        "s": "Forbidden",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Confiscation": {
+        "s": "Forbidden",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Cross-Sheep": {
+        "s": "Forbidden",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": null
+      },
+      "Crossout Designator": {
+        "s": "Forbidden",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": "Was Limited"
+      },
+      "Crystal Wing Synchro Dragon": {
+        "s": "Forbidden",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": null
+      },
+      "Crystron Halqifibrax": {
+        "s": "Forbidden",
+        "since": "2022-10-03",
+        "exact": true,
+        "was": "Was Limited"
+      },
+      "Cupsy★Yummy Way": {
+        "s": "Forbidden",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": "Was Limited"
+      },
+      "Curious, the Lightsworn Dominion": {
+        "s": "Forbidden",
+        "since": "2022-12-01",
+        "exact": true,
+        "was": null
+      },
+      "CXyz Gimmick Puppet Fanatix Machinix": {
+        "s": "Forbidden",
+        "since": "2026-09-21",
+        "exact": true,
+        "was": null
+      },
+      "Cyber-Stein": {
+        "s": "Forbidden",
+        "since": "2023-06-05",
+        "exact": true,
+        "was": "Was Limited"
+      },
+      "D/D/D Wave High King Caesar": {
+        "s": "Forbidden",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": null
+      },
+      "Dandylion": {
+        "s": "Forbidden",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Delinquent Duo": {
+        "s": "Forbidden",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Dimension Fusion": {
+        "s": "Forbidden",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Dimension Shifter": {
+        "s": "Forbidden",
+        "since": "2026-09-21",
+        "exact": true,
+        "was": "Was Limited"
+      },
+      "Dimensional Barrier": {
+        "s": "Forbidden",
+        "since": "2025-10-27",
+        "exact": true,
+        "was": null
+      },
+      "Djinn Releaser of Rituals": {
+        "s": "Forbidden",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Eclipse Wyvern": {
+        "s": "Forbidden",
+        "since": "2019-07-15",
+        "exact": true,
+        "was": null
+      },
+      "Elfnote Tinia": {
+        "s": "Forbidden",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": "Was Limited"
+      },
+      "Evilswarm Ouroboros": {
+        "s": "Forbidden",
+        "since": "2025-10-27",
+        "exact": true,
+        "was": null
+      },
+      "F.A. Dawn Dragster": {
+        "s": "Forbidden",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": null
+      },
+      "Fiber Jar": {
+        "s": "Forbidden",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Fishborg Blaster": {
+        "s": "Forbidden",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Fossil Dyna Pachycephalo": {
+        "s": "Forbidden",
+        "since": "2025-10-27",
+        "exact": true,
+        "was": null
+      },
+      "Giant Trunade": {
+        "s": "Forbidden",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Gimmick Puppet Nightmare": {
+        "s": "Forbidden",
+        "since": "2024-12-09",
+        "exact": true,
+        "was": null
+      },
+      "Gozen Match": {
+        "s": "Forbidden",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": "Was Limited"
+      },
+      "Graceful Charity": {
+        "s": "Forbidden",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Grinder Golem": {
+        "s": "Forbidden",
+        "since": "2019-01-28",
+        "exact": true,
+        "was": null
+      },
+      "Guardragon Agarpain": {
+        "s": "Forbidden",
+        "since": "2019-10-14",
+        "exact": true,
+        "was": null
+      },
+      "Guardragon Elpy": {
+        "s": "Forbidden",
+        "since": "2021-07-01",
+        "exact": true,
+        "was": null
+      },
+      "Harpie's Feather Storm": {
+        "s": "Forbidden",
+        "since": "2026-02-02",
+        "exact": true,
+        "was": null
+      },
+      "Heavy Storm": {
+        "s": "Forbidden",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Heavymetalfoes Electrumite": {
+        "s": "Forbidden",
+        "since": "2020-01-20",
+        "exact": true,
+        "was": "Was Limited"
+      },
+      "Herald of the Arc Light": {
+        "s": "Forbidden",
+        "since": "2026-02-02",
+        "exact": true,
+        "was": "Was Limited"
+      },
+      "Hot Red Dragon Archfiend King Calamity": {
+        "s": "Forbidden",
+        "since": "2024-09-02",
+        "exact": true,
+        "was": null
+      },
+      "Imperial Order": {
+        "s": "Forbidden",
+        "since": "2022-02-07",
+        "exact": true,
+        "was": "Was Limited"
+      },
+      "Isolde, Two Tales of the Noble Knights": {
+        "s": "Forbidden",
+        "since": "2024-01-01",
+        "exact": true,
+        "was": null
+      },
+      "Jowgen the Spiritualist": {
+        "s": "Forbidden",
+        "since": "2024-12-09",
+        "exact": true,
+        "was": null
+      },
+      "K9-04 Noroi": {
+        "s": "Forbidden",
+        "since": "2026-09-21",
+        "exact": true,
+        "was": null
+      },
+      "Kaiser Colosseum": {
+        "s": "Forbidden",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Kashtira Arise-Heart": {
+        "s": "Forbidden",
+        "since": "2023-09-25",
+        "exact": true,
+        "was": "Was Limited"
+      },
+      "Kelbek the Ancient Vanguard": {
+        "s": "Forbidden",
+        "since": "2024-01-01",
+        "exact": true,
+        "was": "Was Limited"
+      },
+      "Kewl Tune Rotary": {
+        "s": "Forbidden",
+        "since": "2026-09-21",
+        "exact": true,
+        "was": null
+      },
+      "King of the Feral Imps": {
+        "s": "Forbidden",
+        "since": "2025-10-27",
+        "exact": true,
+        "was": null
+      },
+      "Knightmare Goblin": {
+        "s": "Forbidden",
+        "since": "2018-12-03",
+        "exact": true,
+        "was": null
+      },
+      "Knightmare Gryphon": {
+        "s": "Forbidden",
+        "since": "2025-04-07",
+        "exact": true,
+        "was": null
+      },
+      "Knightmare Mermaid": {
+        "s": "Forbidden",
+        "since": "2019-10-14",
+        "exact": true,
+        "was": null
+      },
+      "Last Turn": {
+        "s": "Forbidden",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Last Will": {
+        "s": "Forbidden",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Lavalval Chain": {
+        "s": "Forbidden",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Level Eater": {
+        "s": "Forbidden",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Link Decoder": {
+        "s": "Forbidden",
+        "since": "2025-04-07",
+        "exact": true,
+        "was": null
+      },
+      "Linkross": {
+        "s": "Forbidden",
+        "since": "2020-12-15",
+        "exact": true,
+        "was": null
+      },
+      "Magical Scientist": {
+        "s": "Forbidden",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Magicians' Souls": {
+        "s": "Forbidden",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": null
+      },
+      "Maliss <Q> White Binder": {
+        "s": "Forbidden",
+        "since": "2026-02-02",
+        "exact": true,
+        "was": null
+      },
+      "Mass Driver": {
+        "s": "Forbidden",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Maxx \"C\"": {
+        "s": "Forbidden",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Mecha Phantom Beast Auroradon": {
+        "s": "Forbidden",
+        "since": "2022-05-17",
+        "exact": true,
+        "was": null
+      },
+      "Moon of the Closed Heaven": {
+        "s": "Forbidden",
+        "since": "2025-10-27",
+        "exact": true,
+        "was": null
+      },
+      "Mystic Mine": {
+        "s": "Forbidden",
+        "since": "2022-12-01",
+        "exact": true,
+        "was": null
+      },
+      "Naturia Beast": {
+        "s": "Forbidden",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": null
+      },
+      "Naturia Rosewhip": {
+        "s": "Forbidden",
+        "since": "2026-09-21",
+        "exact": true,
+        "was": null
+      },
+      "Number 16: Shock Master": {
+        "s": "Forbidden",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Number 41: Bagooska the Terribly Tired Tapir": {
+        "s": "Forbidden",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": null
+      },
+      "Number 42: Galaxy Tomahawk": {
+        "s": "Forbidden",
+        "since": "2019-01-28",
+        "exact": true,
+        "was": null
+      },
+      "Number 60: Dugares the Timeless": {
+        "s": "Forbidden",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": null
+      },
+      "Number 67: Pair-a-Dice Smasher": {
+        "s": "Forbidden",
+        "since": "2025-10-27",
+        "exact": true,
+        "was": null
+      },
+      "Number 86: Heroic Champion - Rhongomyniad": {
+        "s": "Forbidden",
+        "since": "2019-01-28",
+        "exact": true,
+        "was": null
+      },
+      "Number 89: Diablosis the Mind Hacker": {
+        "s": "Forbidden",
+        "since": "2023-06-05",
+        "exact": true,
+        "was": null
+      },
+      "Number 95: Galaxy-Eyes Dark Matter Dragon": {
+        "s": "Forbidden",
+        "since": "2019-04-29",
+        "exact": true,
+        "was": null
+      },
+      "Number S0: Utopic ZEXAL": {
+        "s": "Forbidden",
+        "since": "2021-03-15",
+        "exact": true,
+        "was": null
+      },
+      "Original Sinful Spoils - Snake-Eye": {
+        "s": "Forbidden",
+        "since": "2024-12-09",
+        "exact": true,
+        "was": null
+      },
+      "Outer Entity Azathot": {
+        "s": "Forbidden",
+        "since": "2020-01-20",
+        "exact": true,
+        "was": null
+      },
+      "Painful Choice": {
+        "s": "Forbidden",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Phantasmal Lord Ultimitl Bishbaalkin": {
+        "s": "Forbidden",
+        "since": "2026-09-21",
+        "exact": true,
+        "was": null
+      },
+      "Pharaonic Advent": {
+        "s": "Forbidden",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": null
+      },
+      "Phoenixian Cluster Amaryllis": {
+        "s": "Forbidden",
+        "since": "2018-05-21",
+        "exact": true,
+        "was": null
+      },
+      "Pot of Greed": {
+        "s": "Forbidden",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Prank-Kids Meow-Meow-Mu": {
+        "s": "Forbidden",
+        "since": "2022-05-17",
+        "exact": true,
+        "was": "Was Limited"
+      },
+      "Predaplant Verte Anaconda": {
+        "s": "Forbidden",
+        "since": "2022-05-17",
+        "exact": true,
+        "was": null
+      },
+      "Protectcode Talker": {
+        "s": "Forbidden",
+        "since": "2026-09-21",
+        "exact": true,
+        "was": null
+      },
+      "PSY-Framelord Omega": {
+        "s": "Forbidden",
+        "since": "2026-09-21",
+        "exact": true,
+        "was": "Was Limited"
+      },
+      "Red Reboot": {
+        "s": "Forbidden",
+        "since": "2022-10-03",
+        "exact": true,
+        "was": "Was Limited"
+      },
+      "Red-Eyes Dark Dragoon": {
+        "s": "Forbidden",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": null
+      },
+      "Reprodocus": {
+        "s": "Forbidden",
+        "since": "2026-09-21",
+        "exact": true,
+        "was": null
+      },
+      "Return from the Different Dimension": {
+        "s": "Forbidden",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Rivalry of Warlords": {
+        "s": "Forbidden",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": "Was Limited"
+      },
+      "Ronintoadin": {
+        "s": "Forbidden",
+        "since": "2022-10-03",
+        "exact": true,
+        "was": null
+      },
+      "Royal Oppression": {
+        "s": "Forbidden",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Saryuja Skull Dread": {
+        "s": "Forbidden",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": null
+      },
+      "Secret Village of the Spellcasters": {
+        "s": "Forbidden",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": null
+      },
+      "Self-Destruct Button": {
+        "s": "Forbidden",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Simorgh, Bird of Sovereignty": {
+        "s": "Forbidden",
+        "since": "2022-02-07",
+        "exact": true,
+        "was": null
+      },
+      "Sixth Sense": {
+        "s": "Forbidden",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Smoke Grenade of the Thief": {
+        "s": "Forbidden",
+        "since": "2020-12-15",
+        "exact": true,
+        "was": null
+      },
+      "Soul Charge": {
+        "s": "Forbidden",
+        "since": "2019-01-28",
+        "exact": true,
+        "was": null
+      },
+      "Spell Canceller": {
+        "s": "Forbidden",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": null
+      },
+      "Splash Mage": {
+        "s": "Forbidden",
+        "since": "2025-10-27",
+        "exact": true,
+        "was": null
+      },
+      "Spright Elf": {
+        "s": "Forbidden",
+        "since": "2023-02-13",
+        "exact": true,
+        "was": null
+      },
+      "SPYRAL Master Plan": {
+        "s": "Forbidden",
+        "since": "2020-04-01",
+        "exact": true,
+        "was": null
+      },
+      "Summon Limit": {
+        "s": "Forbidden",
+        "since": "2024-04-15",
+        "exact": true,
+        "was": null
+      },
+      "Superheavy Samurai Scarecrow": {
+        "s": "Forbidden",
+        "since": "2023-06-05",
+        "exact": true,
+        "was": null
+      },
+      "Supreme King Dragon Starving Venom": {
+        "s": "Forbidden",
+        "since": "2018-05-21",
+        "exact": true,
+        "was": null
+      },
+      "Tearlaments Kitkallos": {
+        "s": "Forbidden",
+        "since": "2023-02-13",
+        "exact": true,
+        "was": null
+      },
+      "Tempest Magician": {
+        "s": "Forbidden",
+        "since": "2020-01-20",
+        "exact": true,
+        "was": null
+      },
+      "The Forceful Sentry": {
+        "s": "Forbidden",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "The Tyrant Neptune": {
+        "s": "Forbidden",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "There Can Be Only One": {
+        "s": "Forbidden",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": "Was Limited"
+      },
+      "Topologic Gumblar Dragon": {
+        "s": "Forbidden",
+        "since": "2019-01-28",
+        "exact": true,
+        "was": null
+      },
+      "Trap Dustshoot": {
+        "s": "Forbidden",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Triple Tactics Talent": {
+        "s": "Forbidden",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": "Was Limited"
+      },
+      "Trishula, Dragon of the Ice Barrier": {
+        "s": "Forbidden",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": null
+      },
+      "True King of All Calamities": {
+        "s": "Forbidden",
+        "since": "2021-03-15",
+        "exact": true,
+        "was": null
+      },
+      "Ultimate Offering": {
+        "s": "Forbidden",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Union Carrier": {
+        "s": "Forbidden",
+        "since": "2021-03-15",
+        "exact": true,
+        "was": null
+      },
+      "Vanity's Emptiness": {
+        "s": "Forbidden",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Varudras, the Final Bringer of the End Times": {
+        "s": "Forbidden",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": null
+      },
+      "Victory Dragon": {
+        "s": "Forbidden",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Wind-Up Hunter": {
+        "s": "Forbidden",
+        "since": "2026-09-21",
+        "exact": true,
+        "was": null
+      },
+      "XX-Saber Gottoms": {
+        "s": "Forbidden",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": null
+      },
+      "Zenna's Deceiving Doll Maidens": {
+        "s": "Forbidden",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": null
+      },
+      "Zoodiac Broadbull": {
+        "s": "Forbidden",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "\"A Case for K9\"": {
+        "s": "Limited",
+        "since": "2026-02-02",
+        "exact": true,
+        "was": null
+      },
+      "Astrograph Sorcerer": {
+        "s": "Limited",
+        "since": "2022-02-07",
+        "exact": true,
+        "was": null
+      },
+      "Bonfire": {
+        "s": "Limited",
+        "since": "2025-04-07",
+        "exact": true,
+        "was": null
+      },
+      "Branded Fusion": {
+        "s": "Limited",
+        "since": "2026-09-21",
+        "exact": true,
+        "was": null
+      },
+      "Branded in High Spirits": {
+        "s": "Limited",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": "Was Semi-Limited"
+      },
+      "Branded Opening": {
+        "s": "Limited",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": null
+      },
+      "Brilliant Fusion": {
+        "s": "Limited",
+        "since": "2025-04-07",
+        "exact": true,
+        "was": "Was Forbidden"
+      },
+      "Bystial Druiswurm": {
+        "s": "Limited",
+        "since": "2025-04-07",
+        "exact": true,
+        "was": null
+      },
+      "Bystial Magnamhut": {
+        "s": "Limited",
+        "since": "2023-09-25",
+        "exact": true,
+        "was": null
+      },
+      "Card Destruction": {
+        "s": "Limited",
+        "since": "2018-12-03",
+        "exact": true,
+        "was": null
+      },
+      "Card of Demise": {
+        "s": "Limited",
+        "since": "2020-01-20",
+        "exact": true,
+        "was": null
+      },
+      "Chain Strike": {
+        "s": "Limited",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Chaos Space": {
+        "s": "Limited",
+        "since": "2023-09-25",
+        "exact": true,
+        "was": null
+      },
+      "Chicken Game": {
+        "s": "Limited",
+        "since": "2024-04-15",
+        "exact": true,
+        "was": "Was Forbidden"
+      },
+      "Cupsy☆Yummy": {
+        "s": "Limited",
+        "since": "2026-09-21",
+        "exact": true,
+        "was": null
+      },
+      "Daigusto Emeral": {
+        "s": "Limited",
+        "since": "2019-07-15",
+        "exact": true,
+        "was": null
+      },
+      "Divine Wind of Mist Valley": {
+        "s": "Limited",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Dracotail Mululu": {
+        "s": "Limited",
+        "since": "2026-02-02",
+        "exact": true,
+        "was": null
+      },
+      "Droll & Lock Bird": {
+        "s": "Limited",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": "Was Semi-Limited"
+      },
+      "Exodia the Forbidden One": {
+        "s": "Limited",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Ext Ryzeal": {
+        "s": "Limited",
+        "since": "2025-10-27",
+        "exact": true,
+        "was": null
+      },
+      "Fairy Tail - Snow": {
+        "s": "Limited",
+        "since": "2026-09-21",
+        "exact": true,
+        "was": null
+      },
+      "Fiendsmith's Lacrima": {
+        "s": "Limited",
+        "since": "2025-10-27",
+        "exact": true,
+        "was": null
+      },
+      "Final Countdown": {
+        "s": "Limited",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Foolish Burial": {
+        "s": "Limited",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Gateway of the Six": {
+        "s": "Limited",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Gem-Knight Master Diamond": {
+        "s": "Limited",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Gold Sarcophagus": {
+        "s": "Limited",
+        "since": "2019-01-28",
+        "exact": true,
+        "was": null
+      },
+      "Griffoh": {
+        "s": "Limited",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": null
+      },
+      "Harpie's Feather Duster": {
+        "s": "Limited",
+        "since": "2020-09-14",
+        "exact": true,
+        "was": null
+      },
+      "Infernity Launcher": {
+        "s": "Limited",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Instant Fusion": {
+        "s": "Limited",
+        "since": "2020-04-01",
+        "exact": true,
+        "was": null
+      },
+      "Into the Void": {
+        "s": "Limited",
+        "since": "2020-01-20",
+        "exact": true,
+        "was": null
+      },
+      "K9-66a Jokul": {
+        "s": "Limited",
+        "since": "2026-02-02",
+        "exact": true,
+        "was": null
+      },
+      "Keldo the Sacred Protector": {
+        "s": "Limited",
+        "since": "2023-02-13",
+        "exact": true,
+        "was": null
+      },
+      "Ketu Dracotail": {
+        "s": "Limited",
+        "since": "2026-02-02",
+        "exact": true,
+        "was": null
+      },
+      "Left Arm of the Forbidden One": {
+        "s": "Limited",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Left Leg of the Forbidden One": {
+        "s": "Limited",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Linkuriboh": {
+        "s": "Limited",
+        "since": "2025-10-27",
+        "exact": true,
+        "was": null
+      },
+      "Magical Explosion": {
+        "s": "Limited",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Magical Mid-Breaker Field": {
+        "s": "Limited",
+        "since": "2019-01-28",
+        "exact": true,
+        "was": null
+      },
+      "Maliss <P> Dormouse": {
+        "s": "Limited",
+        "since": "2025-10-27",
+        "exact": true,
+        "was": null
+      },
+      "Maliss <P> White Rabbit": {
+        "s": "Limited",
+        "since": "2026-09-21",
+        "exact": true,
+        "was": null
+      },
+      "Mathmech Circular": {
+        "s": "Limited",
+        "since": "2025-04-07",
+        "exact": true,
+        "was": "Was Forbidden"
+      },
+      "Miscellaneousaurus": {
+        "s": "Limited",
+        "since": "2021-07-01",
+        "exact": true,
+        "was": null
+      },
+      "Monster Gate": {
+        "s": "Limited",
+        "since": "2022-02-07",
+        "exact": true,
+        "was": null
+      },
+      "Monster Reborn": {
+        "s": "Limited",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Mudora the Sword Oracle": {
+        "s": "Limited",
+        "since": "2023-02-13",
+        "exact": true,
+        "was": null
+      },
+      "Naturia Sacred Tree": {
+        "s": "Limited",
+        "since": "2023-06-05",
+        "exact": true,
+        "was": null
+      },
+      "Number 40: Gimmick Puppet of Strings": {
+        "s": "Limited",
+        "since": "2024-09-02",
+        "exact": true,
+        "was": null
+      },
+      "Number C40: Gimmick Puppet of Dark Strings": {
+        "s": "Limited",
+        "since": "2024-09-02",
+        "exact": true,
+        "was": null
+      },
+      "Obedience Schooled": {
+        "s": "Limited",
+        "since": "2025-10-27",
+        "exact": true,
+        "was": null
+      },
+      "One Day of Peace": {
+        "s": "Limited",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "One for One": {
+        "s": "Limited",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Perfectron Hydradrive Dragon": {
+        "s": "Limited",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": null
+      },
+      "Phantom of Yubel": {
+        "s": "Limited",
+        "since": "2024-12-09",
+        "exact": true,
+        "was": null
+      },
+      "Pot of Prosperity": {
+        "s": "Limited",
+        "since": "2024-09-02",
+        "exact": true,
+        "was": null
+      },
+      "Prohibited Power Patron Portal - Terminus": {
+        "s": "Limited",
+        "since": "2026-09-21",
+        "exact": true,
+        "was": null
+      },
+      "PSY-Framegear Gamma": {
+        "s": "Limited",
+        "since": "2023-06-05",
+        "exact": true,
+        "was": null
+      },
+      "Radiant Typhoon Chant": {
+        "s": "Limited",
+        "since": "2026-09-21",
+        "exact": true,
+        "was": null
+      },
+      "Rahu Dracotail": {
+        "s": "Limited",
+        "since": "2026-09-21",
+        "exact": true,
+        "was": null
+      },
+      "Reasoning": {
+        "s": "Limited",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Reinforcement of the Army": {
+        "s": "Limited",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Right Arm of the Forbidden One": {
+        "s": "Limited",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Right Leg of the Forbidden One": {
+        "s": "Limited",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Ryzeal Detonator": {
+        "s": "Limited",
+        "since": "2025-04-07",
+        "exact": true,
+        "was": null
+      },
+      "Sangen Kaimen": {
+        "s": "Limited",
+        "since": "2024-12-09",
+        "exact": true,
+        "was": null
+      },
+      "Sangen Summoning": {
+        "s": "Limited",
+        "since": "2024-09-02",
+        "exact": true,
+        "was": null
+      },
+      "Sekka's Light": {
+        "s": "Limited",
+        "since": "2020-01-20",
+        "exact": true,
+        "was": null
+      },
+      "Set Rotation": {
+        "s": "Limited",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Skill Drain": {
+        "s": "Limited",
+        "since": "2024-09-02",
+        "exact": true,
+        "was": null
+      },
+      "Sky Striker Mecha - Hornet Drones": {
+        "s": "Limited",
+        "since": "2018-12-03",
+        "exact": true,
+        "was": null
+      },
+      "Slash Draw": {
+        "s": "Limited",
+        "since": "2019-01-28",
+        "exact": true,
+        "was": null
+      },
+      "Solemn Judgment": {
+        "s": "Limited",
+        "since": "2025-10-27",
+        "exact": true,
+        "was": null
+      },
+      "Striker Dragon": {
+        "s": "Limited",
+        "since": "2021-07-01",
+        "exact": true,
+        "was": null
+      },
+      "Substitoad": {
+        "s": "Limited",
+        "since": "2022-10-03",
+        "exact": true,
+        "was": null
+      },
+      "Summon Sorceress": {
+        "s": "Limited",
+        "since": "2025-10-27",
+        "exact": true,
+        "was": null
+      },
+      "Sunavalon Dryas": {
+        "s": "Limited",
+        "since": "2024-01-01",
+        "exact": true,
+        "was": null
+      },
+      "Sunvine Healer": {
+        "s": "Limited",
+        "since": "2024-01-01",
+        "exact": true,
+        "was": null
+      },
+      "Superdreadnought Rail Cannon Gustav Max": {
+        "s": "Limited",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": null
+      },
+      "Synchro Overtake": {
+        "s": "Limited",
+        "since": "2026-09-21",
+        "exact": true,
+        "was": null
+      },
+      "T.G. Hyper Librarian": {
+        "s": "Limited",
+        "since": "2020-04-01",
+        "exact": true,
+        "was": null
+      },
+      "Tearlaments Havnis": {
+        "s": "Limited",
+        "since": "2023-02-13",
+        "exact": true,
+        "was": null
+      },
+      "Tearlaments Merrli": {
+        "s": "Limited",
+        "since": "2023-02-13",
+        "exact": true,
+        "was": null
+      },
+      "Tearlaments Scheiren": {
+        "s": "Limited",
+        "since": "2023-02-13",
+        "exact": true,
+        "was": null
+      },
+      "Tenpai Dragon Chundra": {
+        "s": "Limited",
+        "since": "2024-12-09",
+        "exact": true,
+        "was": null
+      },
+      "Terraforming": {
+        "s": "Limited",
+        "since": "2019-07-15",
+        "exact": true,
+        "was": null
+      },
+      "That Grass Looks Greener": {
+        "s": "Limited",
+        "since": "2024-09-02",
+        "exact": true,
+        "was": "Was Forbidden"
+      },
+      "Toon Bookmark": {
+        "s": "Limited",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": null
+      },
+      "Toon Table of Contents": {
+        "s": "Limited",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": null
+      },
+      "Vanquish Soul Hollie Sue": {
+        "s": "Limited",
+        "since": "2026-02-02",
+        "exact": true,
+        "was": null
+      },
+      "Yummy★Snatchy": {
+        "s": "Limited",
+        "since": "2026-02-02",
+        "exact": true,
+        "was": null
+      },
+      "Zoodiac Ratpier": {
+        "s": "Limited",
+        "since": "2018-05-21",
+        "exact": false,
+        "was": null
+      },
+      "Dracotail Arthalion": {
+        "s": "Semi-Limited",
+        "since": "2026-09-21",
+        "exact": true,
+        "was": null
+      },
+      "Dracotail Lukias": {
+        "s": "Semi-Limited",
+        "since": "2026-09-21",
+        "exact": true,
+        "was": null
+      },
+      "Ice Ryzeal": {
+        "s": "Semi-Limited",
+        "since": "2025-04-07",
+        "exact": true,
+        "was": null
+      },
+      "Maliss in Underground": {
+        "s": "Semi-Limited",
+        "since": "2025-04-07",
+        "exact": true,
+        "was": null
+      },
+      "Purrely Sleepy Memory": {
+        "s": "Semi-Limited",
+        "since": "2024-01-01",
+        "exact": true,
+        "was": null
+      },
+      "Sky Striker Mobilize - Engage!": {
+        "s": "Semi-Limited",
+        "since": "2026-10-19",
+        "exact": true,
+        "was": null
+      },
+      "Sword Ryzeal": {
+        "s": "Semi-Limited",
+        "since": "2025-04-07",
+        "exact": true,
+        "was": null
+      }
+    }
+  },
+  "similar": {
+    "Abyss Dweller": [
+      {
+        "name": "Cat Shark",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Abysstrite, the Atlantean Spirit",
+        "s": "Unlimited",
+        "why": "also a Sea Serpent"
+      },
+      {
+        "name": "Number 47: Nightmare Shark",
+        "s": "Unlimited",
+        "why": "also a Sea Serpent"
+      }
+    ],
+    "Aerial Eater": [
+      {
+        "name": "The Duke of Demise",
+        "s": "Unlimited",
+        "why": "also a Fiend"
+      },
+      {
+        "name": "Mudragon of the Swamp",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Magikey Dragon - Andrabime",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Agido the Ancient Sentinel": [
+      {
+        "name": "Keldo the Sacred Protector",
+        "s": "Limited",
+        "why": "same archetype (Exchange of the Spirit), also a Fairy"
+      },
+      {
+        "name": "Mudora the Sword Oracle",
+        "s": "Limited",
+        "why": "same archetype (Exchange of the Spirit), also a Fairy"
+      },
+      {
+        "name": "Thron the Disciplined Angel",
+        "s": "Unlimited",
+        "why": "also a Fairy"
+      }
+    ],
+    "Albion the Branded Dragon": [
+      {
+        "name": "Titaniklad the Ash Dragon",
+        "s": "Unlimited",
+        "why": "also a Dragon"
+      },
+      {
+        "name": "Alba-Lenatus the Abyss Dragon",
+        "s": "Unlimited",
+        "why": "also a Dragon"
+      },
+      {
+        "name": "Lubellion the Searing Dragon",
+        "s": "Unlimited",
+        "why": "also a Dragon"
+      }
+    ],
+    "Ame no Habakiri no Mitsurugi": [
+      {
+        "name": "Ame no Murakumo no Mitsurugi",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Mitsurugi)"
+      },
+      {
+        "name": "Futsu no Mitama no Mitsurugi",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Mitsurugi)"
+      },
+      {
+        "name": "Mitsurugi no Mikoto, Aramasa",
+        "s": "Unlimited",
+        "why": "same archetype (Mitsurugi), also a Reptile"
+      }
+    ],
+    "Amorphage Goliath": [
+      {
+        "name": "Amorphage Gluttony",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Amorphage)"
+      },
+      {
+        "name": "Amorphage Lechery",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Amorphage)"
+      },
+      {
+        "name": "Amorphage Wrath",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Amorphage)"
+      }
+    ],
+    "Amorphage Sloth": [
+      {
+        "name": "Amorphage Lechery",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Amorphage)"
+      },
+      {
+        "name": "Amorphage Pride",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Amorphage)"
+      },
+      {
+        "name": "Amorphage Wrath",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Amorphage)"
+      }
+    ],
+    "Anti-Spell Fragrance": [
+      {
+        "name": "Xing Zhen Hu Replica",
+        "s": "Unlimited",
+        "why": "also a Continuous Trap"
+      },
+      {
+        "name": "Dust Tornado",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Ritual Buster",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Apollousa, Bow of the Goddess": [
+      {
+        "name": "Gouki The Giant Ogre",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "The Arrival Cyberse @Ignister",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Berserker of the Tenyi",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Appointer of the Red Lotus": [
+      {
+        "name": "Burst Rebirth",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Normal Trap"
+      },
+      {
+        "name": "Disappear",
+        "s": "Unlimited",
+        "why": "also a Normal Trap"
+      },
+      {
+        "name": "Mind Haxorz",
+        "s": "Unlimited",
+        "why": "also a Normal Trap"
+      }
+    ],
+    "Archlord Kristya": [
+      {
+        "name": "Artifact Lancea",
+        "s": "Unlimited",
+        "why": "also a Fairy"
+      },
+      {
+        "name": "Athena",
+        "s": "Unlimited",
+        "why": "also a Fairy"
+      },
+      {
+        "name": "Eva",
+        "s": "Unlimited",
+        "why": "also a Fairy"
+      }
+    ],
+    "Archnemeses Protos": [
+      {
+        "name": "Archnemeses Eschatos",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Chaos Sorcerer",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Gigantes",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Artifact Mjollnir": [
+      {
+        "name": "Artifact Aegis",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Artifact)"
+      },
+      {
+        "name": "Artifact Failnaught",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Artifact)"
+      },
+      {
+        "name": "Artifact Achilleshield",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Artifact)"
+      }
+    ],
+    "Artifact Scythe": [
+      {
+        "name": "Artifact Moralltach",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Artifact)"
+      },
+      {
+        "name": "Artifact Lancea",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Artifact)"
+      },
+      {
+        "name": "Artifact Failnaught",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Artifact)"
+      }
+    ],
+    "Azamina Ilia Silvia": [
+      {
+        "name": "Azamina Mu Rcielago",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Azamina)"
+      },
+      {
+        "name": "Azamina Sol Erysichthon",
+        "s": "Unlimited",
+        "why": "same archetype (Azamina), also an Illusion"
+      },
+      {
+        "name": "Azamina Moa Regina",
+        "s": "Unlimited",
+        "why": "same archetype (Azamina), also an Illusion"
+      }
+    ],
+    "Bahamut Shark": [
+      {
+        "name": "Black Ray Lancer",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Number 47: Nightmare Shark",
+        "s": "Unlimited",
+        "why": "also a Sea Serpent"
+      },
+      {
+        "name": "Full Armored Black Ray Lancer",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Baronne de Fleur": [
+      {
+        "name": "Stardust Dragon",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Chevalier de Fleur",
+        "s": "Unlimited",
+        "why": "also a Warrior"
+      },
+      {
+        "name": "Clear Wing Synchro Dragon",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Barrier Statue of the Drought": [
+      {
+        "name": "Junk Forward",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Chronomaly Moai Carrier",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Rock"
+      },
+      {
+        "name": "Barrier Statue of the Abyss",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Barrier Statue of the Inferno": [
+      {
+        "name": "Ally of Justice Quarantine",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Vanity's Fiend",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Scary Moth",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Barrier Statue of the Stormwinds": [
+      {
+        "name": "Junk Forward",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Barrier Statue of the Abyss",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Pilica, Descendant of Gusto",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Barrier Statue of the Torrent": [
+      {
+        "name": "Ally of Justice Quarantine",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Vanity's Fiend",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Scary Moth",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Beatrice, Lady of the Eternal": [
+      {
+        "name": "Constellar Ptolemy M7",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Dante, Traveler of the Burning Abyss",
+        "s": "Unlimited",
+        "why": "same archetype (Burning Abyss)"
+      },
+      {
+        "name": "D/D/D Marksman King Tell",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Beelze of the Diabolic Dragons": [
+      {
+        "name": "Beelzeus of the Diabolic Dragons",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Dragon"
+      },
+      {
+        "name": "Infernity Doom Dragon",
+        "s": "Unlimited",
+        "why": "also a Dragon"
+      },
+      {
+        "name": "Void Ogre Dragon",
+        "s": "Unlimited",
+        "why": "also a Dragon"
+      }
+    ],
+    "Blackwing - Gofu the Vague Shadow": [
+      {
+        "name": "Blackwing - Vayu the Emblem of Honor",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Blackwing)"
+      },
+      {
+        "name": "Blackwing - Kochi the Daybreak",
+        "s": "Unlimited",
+        "why": "same archetype (Blackwing), also a Winged Beast"
+      },
+      {
+        "name": "Blackwing - Breeze the Zephyr",
+        "s": "Unlimited",
+        "why": "same archetype (Blackwing), also a Winged Beast"
+      }
+    ],
+    "Block Dragon": [
+      {
+        "name": "Gigantes",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Rock"
+      },
+      {
+        "name": "Rock Band Xenoguitar",
+        "s": "Unlimited",
+        "why": "also a Rock"
+      },
+      {
+        "name": "Primineral Kongreat",
+        "s": "Unlimited",
+        "why": "also a Rock"
+      }
+    ],
+    "Borreload Savage Dragon": [
+      {
+        "name": "Infernity Doom Dragon",
+        "s": "Unlimited",
+        "why": "also a Dragon"
+      },
+      {
+        "name": "Clear Wing Synchro Dragon",
+        "s": "Unlimited",
+        "why": "also a Dragon"
+      },
+      {
+        "name": "Kuibelt the Blade Dragon",
+        "s": "Unlimited",
+        "why": "also a Dragon"
+      }
+    ],
+    "Branded Expulsion": [
+      {
+        "name": "Screams of the Branded",
+        "s": "Unlimited",
+        "why": "same archetype (Branded), also a Normal Trap"
+      },
+      {
+        "name": "Brightest, Blazing, Branded King",
+        "s": "Unlimited",
+        "why": "same archetype (Branded), also a Normal Trap"
+      },
+      {
+        "name": "Branded Sword",
+        "s": "Unlimited",
+        "why": "same archetype (Branded), also a Normal Trap"
+      }
+    ],
+    "Butterfly Dagger - Elma": [
+      {
+        "name": "Gravity Axe - Grarl",
+        "s": "Unlimited",
+        "why": "same archetype (Guardian), also an Equip Spell"
+      },
+      {
+        "name": "Broken Bamboo Sword",
+        "s": "Unlimited",
+        "why": "similar effect text, also an Equip Spell"
+      },
+      {
+        "name": "Rod of Silence - Kay'est",
+        "s": "Unlimited",
+        "why": "same archetype (Guardian), also an Equip Spell"
+      }
+    ],
+    "Called by the Grave": [
+      {
+        "name": "Fist of Fate",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Quick-Play Spell"
+      },
+      {
+        "name": "Forbidden Droplet",
+        "s": "Unlimited",
+        "why": "also a Quick-Play Spell"
+      },
+      {
+        "name": "Mistaken Arrest",
+        "s": "Unlimited",
+        "why": "also a Quick-Play Spell"
+      }
+    ],
+    "Card of Safe Return": [
+      {
+        "name": "Temple of the Sun",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Continuous Spell"
+      },
+      {
+        "name": "Ascending Soul",
+        "s": "Unlimited",
+        "why": "also a Continuous Spell"
+      },
+      {
+        "name": "Lucky Iron Axe",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Chaos Ruler, the Chaotic Magical Dragon": [
+      {
+        "name": "Chaos Beast",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Chaos)"
+      },
+      {
+        "name": "Chaos Angel",
+        "s": "Unlimited",
+        "why": "same archetype (Chaos)"
+      },
+      {
+        "name": "Chaos Archfiend",
+        "s": "Unlimited",
+        "why": "same archetype (Chaos)"
+      }
+    ],
+    "Charmer Quartet in Bloom": [
+      {
+        "name": "Cyberse Contract Witch",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Accesscode Talker",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Aleister the Invoker of Madness",
+        "s": "Unlimited",
+        "why": "also a Spellcaster"
+      }
+    ],
+    "Cold Wave": [
+      {
+        "name": "Heat Wave",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Normal Spell"
+      },
+      {
+        "name": "Timidity",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      },
+      {
+        "name": "Soundproofed",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      }
+    ],
+    "Confiscation": [
+      {
+        "name": "Hieroglyph Lithograph",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Normal Spell"
+      },
+      {
+        "name": "Abyssal Designator",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Normal Spell"
+      },
+      {
+        "name": "Tremendous Fire",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      }
+    ],
+    "Cross-Sheep": [
+      {
+        "name": "Link Spider",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Dark Templar @Ignister",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Cyberse Contract Witch",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Crossout Designator": [
+      {
+        "name": "Fist of Fate",
+        "s": "Unlimited",
+        "why": "also a Quick-Play Spell"
+      },
+      {
+        "name": "Metaltronus",
+        "s": "Unlimited",
+        "why": "also a Quick-Play Spell"
+      },
+      {
+        "name": "Blizzard",
+        "s": "Unlimited",
+        "why": "also a Quick-Play Spell"
+      }
+    ],
+    "Crystal Wing Synchro Dragon": [
+      {
+        "name": "Clear Wing Synchro Dragon",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Dragon"
+      },
+      {
+        "name": "Crystal Clear Wing Synchro Dragon",
+        "s": "Unlimited",
+        "why": "also a Dragon"
+      },
+      {
+        "name": "Supreme King Dragon Clear Wing",
+        "s": "Unlimited",
+        "why": "also a Dragon"
+      }
+    ],
+    "Crystron Halqifibrax": [
+      {
+        "name": "Crystron Halqifibrax Prism",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Crystron)"
+      },
+      {
+        "name": "Junk Connector",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "T.G. Trident Launcher",
+        "s": "Unlimited",
+        "why": "also a Machine"
+      }
+    ],
+    "Cupsy★Yummy Way": [
+      {
+        "name": "Lollipo★Yummy Way",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Yummy)"
+      },
+      {
+        "name": "Cooky★Yummy Way",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Yummy)"
+      },
+      {
+        "name": "Cupsy☆Yummy",
+        "s": "Limited",
+        "why": "similar effect text, same archetype (Yummy)"
+      }
+    ],
+    "Curious, the Lightsworn Dominion": [
+      {
+        "name": "X-Krawler Synaphysis",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "X-Krawler Qualiark",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "X-Krawler Neurogos",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "CXyz Gimmick Puppet Fanatix Machinix": [
+      {
+        "name": "Gimmick Puppet Fantasix Machinix",
+        "s": "Unlimited",
+        "why": "also a Machine"
+      },
+      {
+        "name": "CXyz Skypalace Babylon",
+        "s": "Unlimited",
+        "why": "same archetype (CXyz), also a Machine"
+      },
+      {
+        "name": "Number C15: Gimmick Puppet Giant Hunter",
+        "s": "Unlimited",
+        "why": "also a Machine"
+      }
+    ],
+    "Cyber-Stein": [
+      {
+        "name": "The Ascended of Thunder",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Mystic Tomato",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "UFO Turtle",
+        "s": "Unlimited",
+        "why": "also a Machine"
+      }
+    ],
+    "D/D/D Wave High King Caesar": [
+      {
+        "name": "D/D/D Wave King Caesar",
+        "s": "Unlimited",
+        "why": "same archetype (D/D), also a Fiend"
+      },
+      {
+        "name": "D/D/D Marksman King Tell",
+        "s": "Unlimited",
+        "why": "same archetype (D/D), also a Fiend"
+      },
+      {
+        "name": "D/D/D Stone King Darius",
+        "s": "Unlimited",
+        "why": "same archetype (D/D), also a Fiend"
+      }
+    ],
+    "Dandylion": [
+      {
+        "name": "Dandy Whitelion",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Plant"
+      },
+      {
+        "name": "Metabo Globster",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Cloudian - Sheep Cloud",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Delinquent Duo": [
+      {
+        "name": "Dark Magic Veil",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      },
+      {
+        "name": "Upstart Goblin",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      },
+      {
+        "name": "The Secret of the Bandit",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      }
+    ],
+    "Dimension Fusion": [
+      {
+        "name": "Rain of Mercy",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Normal Spell"
+      },
+      {
+        "name": "Ancient Leaf",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Normal Spell"
+      },
+      {
+        "name": "Psychic Path",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      }
+    ],
+    "Dimension Shifter": [
+      {
+        "name": "Skull Meister",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Effect Veiler",
+        "s": "Unlimited",
+        "why": "also a Spellcaster"
+      },
+      {
+        "name": "Banisher of the Light",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Dimensional Barrier": [
+      {
+        "name": "Forbidden Apocrypha",
+        "s": "Unlimited",
+        "why": "also a Normal Trap"
+      },
+      {
+        "name": "Simul Archfiends",
+        "s": "Unlimited",
+        "why": "also a Normal Trap"
+      },
+      {
+        "name": "Grisaille Prison",
+        "s": "Unlimited",
+        "why": "also a Normal Trap"
+      }
+    ],
+    "Djinn Releaser of Rituals": [
+      {
+        "name": "Djinn Demolisher of Rituals",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Djinn)"
+      },
+      {
+        "name": "Djinn Cursenchanter of Rituals",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Djinn)"
+      },
+      {
+        "name": "Djinn Presider of Rituals",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Djinn)"
+      }
+    ],
+    "Eclipse Wyvern": [
+      {
+        "name": "Dread Dragon",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Dragon"
+      },
+      {
+        "name": "Lightpulsar Dragon",
+        "s": "Unlimited",
+        "why": "also a Dragon"
+      },
+      {
+        "name": "Nebula Dragon",
+        "s": "Unlimited",
+        "why": "also a Dragon"
+      }
+    ],
+    "Elfnote Tinia": [
+      {
+        "name": "Elfnote Fortuna",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Elfnote)"
+      },
+      {
+        "name": "Elfnote Lucina",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Elfnote)"
+      },
+      {
+        "name": "Elfnote Regina",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Elfnote)"
+      }
+    ],
+    "Evilswarm Ouroboros": [
+      {
+        "name": "Evilswarm Ophion",
+        "s": "Unlimited",
+        "why": "same archetype (Lswarm), also a Dragon"
+      },
+      {
+        "name": "Evilswarm Bahamut",
+        "s": "Unlimited",
+        "why": "same archetype (Lswarm), also a Dragon"
+      },
+      {
+        "name": "Adreus, Keeper of Armageddon",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "F.A. Dawn Dragster": [
+      {
+        "name": "F.A. Motorhome Transport",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (F.A.)"
+      },
+      {
+        "name": "Avenging Knight Parshath",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Blackwing Armed Wing",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Fiber Jar": [
+      {
+        "name": "Rigorous Reaver",
+        "s": "Unlimited",
+        "why": "also a Plant"
+      },
+      {
+        "name": "Morphing Jar",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Naturia Ragweed",
+        "s": "Unlimited",
+        "why": "also a Plant"
+      }
+    ],
+    "Fishborg Blaster": [
+      {
+        "name": "Fishborg Launcher",
+        "s": "Unlimited",
+        "why": "same archetype (Fishborg), also a Fish"
+      },
+      {
+        "name": "Royal Swamp Eel",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Fish"
+      },
+      {
+        "name": "Lightserpent",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Fossil Dyna Pachycephalo": [
+      {
+        "name": "Vanity's Fiend",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Majesty's Fiend",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Snowman Eater",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Giant Trunade": [
+      {
+        "name": "Spiritualism",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Normal Spell"
+      },
+      {
+        "name": "Murmur of the Forest",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Normal Spell"
+      },
+      {
+        "name": "Harpie's Feather Duster",
+        "s": "Limited",
+        "why": "also a Normal Spell"
+      }
+    ],
+    "Gimmick Puppet Nightmare": [
+      {
+        "name": "Gimmick Puppet Des Troy",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Gimmick Puppet)"
+      },
+      {
+        "name": "Gimmick Puppet Dreary Doll",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Gimmick Puppet)"
+      },
+      {
+        "name": "Gimmick Puppet Humpty Dumpty",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Gimmick Puppet)"
+      }
+    ],
+    "Gozen Match": [
+      {
+        "name": "Battle of the Elements",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Destructive Daruma Karma Cannon",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Weighbridge",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Graceful Charity": [
+      {
+        "name": "Trade-In",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      },
+      {
+        "name": "Necklace of Command",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Pot of Avarice",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      }
+    ],
+    "Grinder Golem": [
+      {
+        "name": "Lava Golem",
+        "s": "Unlimited",
+        "why": "also a Fiend"
+      },
+      {
+        "name": "Radian, the Multidimensional Kaiju",
+        "s": "Unlimited",
+        "why": "also a Fiend"
+      },
+      {
+        "name": "Raviel, Lord of Phantasms",
+        "s": "Unlimited",
+        "why": "also a Fiend"
+      }
+    ],
+    "Guardragon Agarpain": [
+      {
+        "name": "Guardragon Pisty",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Guardragon)"
+      },
+      {
+        "name": "Gravity Controller",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Hieratic Seal of the Heavenly Spheres",
+        "s": "Unlimited",
+        "why": "also a Dragon"
+      }
+    ],
+    "Guardragon Elpy": [
+      {
+        "name": "Guardragon Pisty",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Guardragon)"
+      },
+      {
+        "name": "Triple Burst Dragon",
+        "s": "Unlimited",
+        "why": "also a Dragon"
+      },
+      {
+        "name": "Hieratic Seal of the Heavenly Spheres",
+        "s": "Unlimited",
+        "why": "also a Dragon"
+      }
+    ],
+    "Harpie's Feather Storm": [
+      {
+        "name": "Gryphon Wing",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Harpie)"
+      },
+      {
+        "name": "Harpie Lady Elegance",
+        "s": "Unlimited",
+        "why": "same archetype (Harpie), also a Normal Trap"
+      },
+      {
+        "name": "Icarus Attack",
+        "s": "Unlimited",
+        "why": "also a Normal Trap"
+      }
+    ],
+    "Heavy Storm": [
+      {
+        "name": "Harpie's Feather Duster",
+        "s": "Limited",
+        "why": "similar effect text, also a Normal Spell"
+      },
+      {
+        "name": "De-Spell",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Normal Spell"
+      },
+      {
+        "name": "A Wingbeat of Giant Dragon",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Normal Spell"
+      }
+    ],
+    "Heavymetalfoes Electrumite": [
+      {
+        "name": "Heavymetalfoes Amalgam",
+        "s": "Unlimited",
+        "why": "same archetype (Metalfoes), also a Psychic"
+      },
+      {
+        "name": "Exceed the Pendulum",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Beyond the Pendulum",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Herald of the Arc Light": [
+      {
+        "name": "Stardust Dragon",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Legendary Six Samurai - Shi En",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Stardust Spark Dragon",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Hot Red Dragon Archfiend King Calamity": [
+      {
+        "name": "Hot Red Dragon Archfiend Abyss",
+        "s": "Unlimited",
+        "why": "same archetype (Archfiend), also a Dragon"
+      },
+      {
+        "name": "Hot Red Dragon Archfiend Bane",
+        "s": "Unlimited",
+        "why": "same archetype (Archfiend), also a Dragon"
+      },
+      {
+        "name": "Scarred Dragon Archfiend",
+        "s": "Unlimited",
+        "why": "same archetype (Archfiend), also a Dragon"
+      }
+    ],
+    "Imperial Order": [
+      {
+        "name": "Red Screen",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Continuous Trap"
+      },
+      {
+        "name": "Ursarctic Quint Charge",
+        "s": "Unlimited",
+        "why": "also a Continuous Trap"
+      },
+      {
+        "name": "Rare Metalmorph",
+        "s": "Unlimited",
+        "why": "also a Continuous Trap"
+      }
+    ],
+    "Isolde, Two Tales of the Noble Knights": [
+      {
+        "name": "Arcana Extra Joker",
+        "s": "Unlimited",
+        "why": "also a Warrior"
+      },
+      {
+        "name": "Magical Musketeer Max",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Xtra HERO Cross Crusader",
+        "s": "Unlimited",
+        "why": "also a Warrior"
+      }
+    ],
+    "Jowgen the Spiritualist": [
+      {
+        "name": "Vanity's Fiend",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Majesty's Fiend",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Photon Cerberus",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "K9-04 Noroi": [
+      {
+        "name": "K9-17 Izuna",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (K9)"
+      },
+      {
+        "name": "K9-66b Lantern",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (K9)"
+      },
+      {
+        "name": "K9-66a Jokul",
+        "s": "Limited",
+        "why": "similar effect text, same archetype (K9)"
+      }
+    ],
+    "Kaiser Colosseum": [
+      {
+        "name": "Chain Energy",
+        "s": "Unlimited",
+        "why": "also a Continuous Spell"
+      },
+      {
+        "name": "Fengsheng Mirror",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Tornado",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Kashtira Arise-Heart": [
+      {
+        "name": "Kashtira Shangri-Ira",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Dingirsu, the Orcust of the Evening Star",
+        "s": "Unlimited",
+        "why": "also a Machine"
+      },
+      {
+        "name": "Cyber Dragon Infinity",
+        "s": "Unlimited",
+        "why": "also a Machine"
+      }
+    ],
+    "Kelbek the Ancient Vanguard": [
+      {
+        "name": "Keldo the Sacred Protector",
+        "s": "Limited",
+        "why": "same archetype (Exchange of the Spirit), also a Fairy"
+      },
+      {
+        "name": "Mudora the Sword Oracle",
+        "s": "Limited",
+        "why": "same archetype (Exchange of the Spirit), also a Fairy"
+      },
+      {
+        "name": "Despair from the Dark",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Kewl Tune Rotary": [
+      {
+        "name": "Kewl Tune Mix",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Kewl Tune)"
+      },
+      {
+        "name": "Kewl Tune Reco",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Kewl Tune)"
+      },
+      {
+        "name": "Kewl Tune Clip",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Kewl Tune)"
+      }
+    ],
+    "King of the Feral Imps": [
+      {
+        "name": "Adreus, Keeper of Armageddon",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Gauntlet Launcher",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Night Papilloperative",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Knightmare Goblin": [
+      {
+        "name": "Knightmare Phoenix",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Knightmare)"
+      },
+      {
+        "name": "Knightmare Cerberus",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Knightmare)"
+      },
+      {
+        "name": "Knightmare Unicorn",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Knightmare)"
+      }
+    ],
+    "Knightmare Gryphon": [
+      {
+        "name": "Knightmare Phoenix",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Knightmare)"
+      },
+      {
+        "name": "Knightmare Cerberus",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Knightmare)"
+      },
+      {
+        "name": "Knightmare Unicorn",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Knightmare)"
+      }
+    ],
+    "Knightmare Mermaid": [
+      {
+        "name": "Knightmare Phoenix",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Knightmare)"
+      },
+      {
+        "name": "Knightmare Cerberus",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Knightmare)"
+      },
+      {
+        "name": "Knightmare Unicorn",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Knightmare)"
+      }
+    ],
+    "Last Turn": [
+      {
+        "name": "Bubble Crash",
+        "s": "Unlimited",
+        "why": "also a Normal Trap"
+      },
+      {
+        "name": "The Grave of Enkindling",
+        "s": "Unlimited",
+        "why": "also a Normal Trap"
+      },
+      {
+        "name": "Altar for Tribute",
+        "s": "Unlimited",
+        "why": "also a Normal Trap"
+      }
+    ],
+    "Last Will": [
+      {
+        "name": "Pot of Generosity",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Normal Spell"
+      },
+      {
+        "name": "Secret Pass to the Treasures",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      },
+      {
+        "name": "Pot of Avarice",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      }
+    ],
+    "Lavalval Chain": [
+      {
+        "name": "Number 10: Illumiknight",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Adreus, Keeper of Armageddon",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Lavalval Ignis",
+        "s": "Unlimited",
+        "why": "same archetype (Laval)"
+      }
+    ],
+    "Level Eater": [
+      {
+        "name": "Mad Mauler",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Catche Eve L2",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Air Armor Ninja",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Link Decoder": [
+      {
+        "name": "Clock Spartoi",
+        "s": "Unlimited",
+        "why": "also a Cyberse"
+      },
+      {
+        "name": "Space Insulator",
+        "s": "Unlimited",
+        "why": "also a Cyberse"
+      },
+      {
+        "name": "Cyberse Wicckid",
+        "s": "Unlimited",
+        "why": "also a Cyberse"
+      }
+    ],
+    "Linkross": [
+      {
+        "name": "Link Devotee",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Cyberse"
+      },
+      {
+        "name": "V-LAN Hydra",
+        "s": "Unlimited",
+        "why": "also a Cyberse"
+      },
+      {
+        "name": "Space Insulator",
+        "s": "Unlimited",
+        "why": "also a Cyberse"
+      }
+    ],
+    "Magical Scientist": [
+      {
+        "name": "Mystic Lamp",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Spellcaster"
+      },
+      {
+        "name": "Jinzo #7",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Leghul",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Magicians' Souls": [
+      {
+        "name": "Magician of Dark Illusion",
+        "s": "Unlimited",
+        "why": "same archetype (Dark Magician), also a Spellcaster"
+      },
+      {
+        "name": "Dark Magician Girl the Magician's Apprentice",
+        "s": "Unlimited",
+        "why": "same archetype (Dark Magician), also a Spellcaster"
+      },
+      {
+        "name": "Magician's Robe",
+        "s": "Unlimited",
+        "why": "same archetype (Dark Magician), also a Spellcaster"
+      }
+    ],
+    "Maliss <Q> White Binder": [
+      {
+        "name": "Maliss <Q> Hearts Crypter",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Maliss)"
+      },
+      {
+        "name": "Maliss <Q> Red Ransom",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Maliss)"
+      },
+      {
+        "name": "Maliss <P> White Rabbit",
+        "s": "Limited",
+        "why": "similar effect text, same archetype (Maliss)"
+      }
+    ],
+    "Mass Driver": [
+      {
+        "name": "Tremendous Fire",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Sparks",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Final Flame",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Maxx \"C\"": [
+      {
+        "name": "Retaliating \"C\"",
+        "s": "Unlimited",
+        "why": "same archetype (\"C\"), also an Insect"
+      },
+      {
+        "name": "Confronting the \"C\"",
+        "s": "Unlimited",
+        "why": "same archetype (\"C\"), also an Insect"
+      },
+      {
+        "name": "Barrier Resonator",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Mecha Phantom Beast Auroradon": [
+      {
+        "name": "Mecha Phantom Beast Dracossack",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Mecha Phantom Beast)"
+      },
+      {
+        "name": "Mecha Phantom Beast Hamstrat",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Mecha Phantom Beast)"
+      },
+      {
+        "name": "Mecha Phantom Beast Coltwing",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Mecha Phantom Beast)"
+      }
+    ],
+    "Moon of the Closed Heaven": [
+      {
+        "name": "Underworld Goddess of the Closed World",
+        "s": "Unlimited",
+        "why": "also a Fiend"
+      },
+      {
+        "name": "I:P Masquerena",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Berserker of the Tenyi",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Mystic Mine": [
+      {
+        "name": "Array of Revealing Light",
+        "s": "Unlimited",
+        "why": "also a Field Spell"
+      },
+      {
+        "name": "Boot Sector Launch",
+        "s": "Unlimited",
+        "why": "also a Field Spell"
+      },
+      {
+        "name": "Savage Colosseum",
+        "s": "Unlimited",
+        "why": "also a Field Spell"
+      }
+    ],
+    "Naturia Beast": [
+      {
+        "name": "Naturia Leodrake",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Naturia)"
+      },
+      {
+        "name": "Naturia Barkion",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Naturia)"
+      },
+      {
+        "name": "Naturia Landoise",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Naturia)"
+      }
+    ],
+    "Naturia Rosewhip": [
+      {
+        "name": "Naturia Spiderfang",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Naturia)"
+      },
+      {
+        "name": "Chachaka Archer",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Naturia Vein",
+        "s": "Unlimited",
+        "why": "same archetype (Naturia), also a Plant"
+      }
+    ],
+    "Number 16: Shock Master": [
+      {
+        "name": "Adreus, Keeper of Armageddon",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Number 10: Illumiknight",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Number 20: Giga-Brilliant",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Number 41: Bagooska the Terribly Tired Tapir": [
+      {
+        "name": "Mechquipped Angineer",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Gagaga Samurai",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Photon Papilloperative",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Number 42: Galaxy Tomahawk": [
+      {
+        "name": "Mecha Phantom Beast Dracossack",
+        "s": "Unlimited",
+        "why": "also a Machine"
+      },
+      {
+        "name": "Number C6: Chronomaly Chaos Atlandis",
+        "s": "Unlimited",
+        "why": "also a Machine"
+      },
+      {
+        "name": "Wind-Up Arsenal Zenmaioh",
+        "s": "Unlimited",
+        "why": "also a Machine"
+      }
+    ],
+    "Number 60: Dugares the Timeless": [
+      {
+        "name": "Tellarknight Ptolemaeus",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Heroic Champion - Excalibur",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Number 34: Terror-Byte",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Number 67: Pair-a-Dice Smasher": [
+      {
+        "name": "Number 7: Lucky Straight",
+        "s": "Unlimited",
+        "why": "also a Fairy"
+      },
+      {
+        "name": "Number 85: Crazy Box",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Number 104: Masquerade",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Number 86: Heroic Champion - Rhongomyniad": [
+      {
+        "name": "Heroic Champion - Excalibur",
+        "s": "Unlimited",
+        "why": "same archetype (Heroic), also a Warrior"
+      },
+      {
+        "name": "Heroic Champion - Kusanagi",
+        "s": "Unlimited",
+        "why": "same archetype (Heroic), also a Warrior"
+      },
+      {
+        "name": "Heroic Champion - Gandiva",
+        "s": "Unlimited",
+        "why": "same archetype (Heroic), also a Warrior"
+      }
+    ],
+    "Number 89: Diablosis the Mind Hacker": [
+      {
+        "name": "Kashtira Shangri-Ira",
+        "s": "Unlimited",
+        "why": "also a Psychic"
+      },
+      {
+        "name": "Number 11: Big Eye",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Phantom Fortress Enterblathnir",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Number 95: Galaxy-Eyes Dark Matter Dragon": [
+      {
+        "name": "Galaxy-Eyes Full Armor Photon Dragon",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Galaxy-Eyes)"
+      },
+      {
+        "name": "Number C107: Neo Galaxy-Eyes Tachyon Dragon",
+        "s": "Unlimited",
+        "why": "same archetype (Galaxy-Eyes), also a Dragon"
+      },
+      {
+        "name": "Neo Galaxy-Eyes Photon Dragon",
+        "s": "Unlimited",
+        "why": "same archetype (Galaxy-Eyes), also a Dragon"
+      }
+    ],
+    "Number S0: Utopic ZEXAL": [
+      {
+        "name": "Number F0: Utopic Future Slash",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Utopia)"
+      },
+      {
+        "name": "Number 99: Utopic Dragon",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Utopia)"
+      },
+      {
+        "name": "Number F0: Utopic Draco Future",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Utopia)"
+      }
+    ],
+    "Original Sinful Spoils - Snake-Eye": [
+      {
+        "name": "Divine Temple of the Snake-Eye",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Snake-Eye)"
+      },
+      {
+        "name": "Sinful Spoils of Subversion - Snake-Eye",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Normal Spell"
+      },
+      {
+        "name": "Dramatic Snake-Eye Chase",
+        "s": "Unlimited",
+        "why": "same archetype (Snake-Eye)"
+      }
+    ],
+    "Outer Entity Azathot": [
+      {
+        "name": "Galaxy-Eyes Cipher Blade Dragon",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Gaia Dragon, the Thunder Charger",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "D/D/D Marksman King Tell",
+        "s": "Unlimited",
+        "why": "also a Fiend"
+      }
+    ],
+    "Painful Choice": [
+      {
+        "name": "Chosen One",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Normal Spell"
+      },
+      {
+        "name": "Monster Reincarnation",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      }
+    ],
+    "Phantasmal Lord Ultimitl Bishbaalkin": [
+      {
+        "name": "Ultimaya Tzolkin",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Dragon"
+      },
+      {
+        "name": "Tyrant Red Dragon Archfiend",
+        "s": "Unlimited",
+        "why": "also a Dragon"
+      },
+      {
+        "name": "Trident Dragion",
+        "s": "Unlimited",
+        "why": "also a Dragon"
+      }
+    ],
+    "Pharaonic Advent": [
+      {
+        "name": "Dweller in the Depths",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Mei-Kou, Master of Barriers",
+        "s": "Unlimited",
+        "why": "also a Spellcaster"
+      },
+      {
+        "name": "Veidos the Eruption Dragon of Extinction",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Phoenixian Cluster Amaryllis": [
+      {
+        "name": "Seed of Flame",
+        "s": "Unlimited",
+        "why": "also a Plant"
+      },
+      {
+        "name": "Worm Jetelikpse",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Revival Rose",
+        "s": "Unlimited",
+        "why": "also a Plant"
+      }
+    ],
+    "Pot of Greed": [
+      {
+        "name": "Pot of Avarice",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Greed)"
+      },
+      {
+        "name": "Moray of Greed",
+        "s": "Unlimited",
+        "why": "same archetype (Greed), also a Normal Spell"
+      },
+      {
+        "name": "Pot of Extravagance",
+        "s": "Unlimited",
+        "why": "same archetype (Greed), also a Normal Spell"
+      }
+    ],
+    "Prank-Kids Meow-Meow-Mu": [
+      {
+        "name": "Prank-Kids Dodo-Doodle-Doo",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Prank-Kids)"
+      },
+      {
+        "name": "Prank-Kids Bow-Wow-Bark",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Prank-Kids)"
+      },
+      {
+        "name": "Prank-Kids Rip-Roarin-Roaster",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Prank-Kids)"
+      }
+    ],
+    "Predaplant Verte Anaconda": [
+      {
+        "name": "Predaplant Darlingtonia Cobra",
+        "s": "Unlimited",
+        "why": "same archetype (Predaplant), also a Plant"
+      },
+      {
+        "name": "Predaplant Chimerafflesia",
+        "s": "Unlimited",
+        "why": "same archetype (Predaplant), also a Plant"
+      },
+      {
+        "name": "Predaplant Ambulomelides",
+        "s": "Unlimited",
+        "why": "same archetype (Predaplant), also a Plant"
+      }
+    ],
+    "Protectcode Talker": [
+      {
+        "name": "Accesscode Talker",
+        "s": "Unlimited",
+        "why": "same archetype (Code Talker), also a Cyberse"
+      },
+      {
+        "name": "Benghalancer the Resurgent",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Marincess Coral Triangle",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Cyberse"
+      }
+    ],
+    "PSY-Framelord Omega": [
+      {
+        "name": "PSY-Framelord Zeta",
+        "s": "Unlimited",
+        "why": "same archetype (PSY-Frame), also a Psychic"
+      },
+      {
+        "name": "Leo, the Keeper of the Sacred Tree",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Ecclesia and the Dark Dragon",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Red Reboot": [
+      {
+        "name": "Borrel Reboot",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Counter Trap"
+      },
+      {
+        "name": "Wiretap",
+        "s": "Unlimited",
+        "why": "also a Counter Trap"
+      },
+      {
+        "name": "Trap Jammer",
+        "s": "Unlimited",
+        "why": "also a Counter Trap"
+      }
+    ],
+    "Red-Eyes Dark Dragoon": [
+      {
+        "name": "Meteor Black Dragon",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Red-Eyes)"
+      },
+      {
+        "name": "Meteor Black Comet Dragon",
+        "s": "Unlimited",
+        "why": "same archetype (Red-Eyes)"
+      },
+      {
+        "name": "Red-Eyes Black Dragon Exceed",
+        "s": "Unlimited",
+        "why": "same archetype (Red-Eyes)"
+      }
+    ],
+    "Reprodocus": [
+      {
+        "name": "Underclock Taker",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Sylvan Dancepione",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Mudragon of the Swamp",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Return from the Different Dimension": [
+      {
+        "name": "Double Trap Hole",
+        "s": "Unlimited",
+        "why": "also a Normal Trap"
+      },
+      {
+        "name": "Over Limit",
+        "s": "Unlimited",
+        "why": "also a Normal Trap"
+      },
+      {
+        "name": "Gift of The Mystical Elf",
+        "s": "Unlimited",
+        "why": "also a Normal Trap"
+      }
+    ],
+    "Rivalry of Warlords": [
+      {
+        "name": "Destructive Daruma Karma Cannon",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Weighbridge",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "And the Band Played On",
+        "s": "Unlimited",
+        "why": "also a Continuous Trap"
+      }
+    ],
+    "Ronintoadin": [
+      {
+        "name": "Dupe Frog",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Frog)"
+      },
+      {
+        "name": "Tradetoad",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Frog)"
+      },
+      {
+        "name": "Des Frog",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Frog)"
+      }
+    ],
+    "Royal Oppression": [
+      {
+        "name": "Solemn Wishes",
+        "s": "Unlimited",
+        "why": "also a Continuous Trap"
+      },
+      {
+        "name": "Lose 1 Turn",
+        "s": "Unlimited",
+        "why": "also a Continuous Trap"
+      },
+      {
+        "name": "Type Zero Magic Crusher",
+        "s": "Unlimited",
+        "why": "also a Continuous Trap"
+      }
+    ],
+    "Saryuja Skull Dread": [
+      {
+        "name": "Link Disciple",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Link Spider",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Tri-Brigade Ferrijit the Barren Blossom",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Secret Village of the Spellcasters": [
+      {
+        "name": "Magical Dimension",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Grand Spiritual Art - Ichirin",
+        "s": "Unlimited",
+        "why": "also a Field Spell"
+      },
+      {
+        "name": "Magician's Right Hand",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Self-Destruct Button": [
+      {
+        "name": "Life Equalizer",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Normal Trap"
+      },
+      {
+        "name": "Destruction Ring",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Normal Trap"
+      },
+      {
+        "name": "Psychic Trigger",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Normal Trap"
+      }
+    ],
+    "Simorgh, Bird of Sovereignty": [
+      {
+        "name": "Tri-Brigade Shuraig the Ominous Omen",
+        "s": "Unlimited",
+        "why": "also a Winged Beast"
+      },
+      {
+        "name": "Dragunity Knight - Romulus",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Raidraptor - Wise Strix",
+        "s": "Unlimited",
+        "why": "also a Winged Beast"
+      }
+    ],
+    "Sixth Sense": [
+      {
+        "name": "Skull Dice",
+        "s": "Unlimited",
+        "why": "also a Normal Trap"
+      },
+      {
+        "name": "Level Conversion Lab",
+        "s": "Unlimited",
+        "why": "also a Normal Trap"
+      },
+      {
+        "name": "Dice It",
+        "s": "Unlimited",
+        "why": "also a Normal Trap"
+      }
+    ],
+    "Smoke Grenade of the Thief": [
+      {
+        "name": "The Cheerful Coffin",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Final Destiny",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Heart of Clear Water",
+        "s": "Unlimited",
+        "why": "also an Equip Spell"
+      }
+    ],
+    "Soul Charge": [
+      {
+        "name": "Dark Magic Veil",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      },
+      {
+        "name": "Upstart Goblin",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      },
+      {
+        "name": "Soul Exchange",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      }
+    ],
+    "Spell Canceller": [
+      {
+        "name": "Gora Turtle of Illusion",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Obsidian Dragon",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Cyber Phoenix",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Machine"
+      }
+    ],
+    "Splash Mage": [
+      {
+        "name": "Cyberse Wicckid",
+        "s": "Unlimited",
+        "why": "also a Cyberse"
+      },
+      {
+        "name": "Clock Spartoi",
+        "s": "Unlimited",
+        "why": "also a Cyberse"
+      },
+      {
+        "name": "Cyberse Witch",
+        "s": "Unlimited",
+        "why": "also a Cyberse"
+      }
+    ],
+    "Spright Elf": [
+      {
+        "name": "Spright Sprind",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Spright)"
+      },
+      {
+        "name": "Berserker of the Tenyi",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "I:P Masquerena",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "SPYRAL Master Plan": [
+      {
+        "name": "SPYRAL Quik-Fix",
+        "s": "Unlimited",
+        "why": "same archetype (SPYRAL)"
+      },
+      {
+        "name": "SPYRAL Sleeper",
+        "s": "Unlimited",
+        "why": "same archetype (SPYRAL)"
+      },
+      {
+        "name": "SPYGAL Misty",
+        "s": "Unlimited",
+        "why": "same archetype (SPYRAL), also a Spellcaster"
+      }
+    ],
+    "Summon Limit": [
+      {
+        "name": "Imperial Iron Wall",
+        "s": "Unlimited",
+        "why": "also a Continuous Trap"
+      },
+      {
+        "name": "Mask of Restrict",
+        "s": "Unlimited",
+        "why": "also a Continuous Trap"
+      },
+      {
+        "name": "Non-Fusion Area",
+        "s": "Unlimited",
+        "why": "also a Continuous Trap"
+      }
+    ],
+    "Superheavy Samurai Scarecrow": [
+      {
+        "name": "Superheavy Samurai Helper",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Superheavy)"
+      },
+      {
+        "name": "Superheavy Samurai Fist",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Superheavy)"
+      },
+      {
+        "name": "Platinum Gadget",
+        "s": "Unlimited",
+        "why": "also a Machine"
+      }
+    ],
+    "Supreme King Dragon Starving Venom": [
+      {
+        "name": "Beast-Eyes Pendulum Dragon",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Dragon"
+      },
+      {
+        "name": "Starving Venom Fusion Dragon",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Dragon"
+      },
+      {
+        "name": "World Chalice Guardragon Almarduke",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Dragon"
+      }
+    ],
+    "Tearlaments Kitkallos": [
+      {
+        "name": "Tearlaments Rulkallos",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Tearlaments)"
+      },
+      {
+        "name": "Tearlaments Kaleido-Heart",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Tearlaments Reinoheart",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Tearlaments)"
+      }
+    ],
+    "Tempest Magician": [
+      {
+        "name": "Arcanite Magician",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Spellcaster"
+      },
+      {
+        "name": "Explosive Magician",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Spellcaster"
+      },
+      {
+        "name": "Gaia Knight, the Force of Earth",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "The Forceful Sentry": [
+      {
+        "name": "Fengsheng Mirror",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      },
+      {
+        "name": "Gather Your Mind",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      },
+      {
+        "name": "Chain Energy",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "The Tyrant Neptune": [
+      {
+        "name": "Fox Fire",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Maju Garzett",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Great Maju Garzett",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "There Can Be Only One": [
+      {
+        "name": "Brutal Beast Battle",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Weighbridge",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Evenly Matched",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Topologic Gumblar Dragon": [
+      {
+        "name": "Topologic Bomber Dragon",
+        "s": "Unlimited",
+        "why": "also a Cyberse"
+      },
+      {
+        "name": "Topologic Zeroboros",
+        "s": "Unlimited",
+        "why": "also a Cyberse"
+      },
+      {
+        "name": "Topologic Blaster Dragon",
+        "s": "Unlimited",
+        "why": "also a Cyberse"
+      }
+    ],
+    "Trap Dustshoot": [
+      {
+        "name": "Hero Medal",
+        "s": "Unlimited",
+        "why": "also a Normal Trap"
+      },
+      {
+        "name": "Dramatic Rescue",
+        "s": "Unlimited",
+        "why": "also a Normal Trap"
+      },
+      {
+        "name": "Spiritual Water Art - Aoi",
+        "s": "Unlimited",
+        "why": "also a Normal Trap"
+      }
+    ],
+    "Triple Tactics Talent": [
+      {
+        "name": "Triple Tactics Thrust",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Normal Spell"
+      },
+      {
+        "name": "Change of Heart",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      },
+      {
+        "name": "Mind Control",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      }
+    ],
+    "Trishula, Dragon of the Ice Barrier": [
+      {
+        "name": "Trishula, Zero Dragon of the Ice Barrier",
+        "s": "Unlimited",
+        "why": "same archetype (Ice Barrier), also a Dragon"
+      },
+      {
+        "name": "Gungnir, Dragon of the Ice Barrier",
+        "s": "Unlimited",
+        "why": "same archetype (Ice Barrier), also a Dragon"
+      },
+      {
+        "name": "Crystron Phoenix",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "True King of All Calamities": [
+      {
+        "name": "Tornado Dragon",
+        "s": "Unlimited",
+        "why": "also a Wyrm"
+      },
+      {
+        "name": "Number 81: Superdreadnought Rail Cannon Super Dora",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Sacred Tree Beast, Hyperyton",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Ultimate Offering": [
+      {
+        "name": "Escalation of the Monarchs",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Continuous Trap"
+      },
+      {
+        "name": "Free-Range Monsters",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Ultimeat Offering",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Continuous Trap"
+      }
+    ],
+    "Union Carrier": [
+      {
+        "name": "Platinum Gadget",
+        "s": "Unlimited",
+        "why": "also a Machine"
+      },
+      {
+        "name": "Fiendsmith's Agnumday",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Neo Super Quantal Mech King Blaster Magna",
+        "s": "Unlimited",
+        "why": "also a Machine"
+      }
+    ],
+    "Vanity's Emptiness": [
+      {
+        "name": "Imperial Iron Wall",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Continuous Trap"
+      },
+      {
+        "name": "Mask of Restrict",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Continuous Trap"
+      },
+      {
+        "name": "And the Band Played On",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Continuous Trap"
+      }
+    ],
+    "Varudras, the Final Bringer of the End Times": [
+      {
+        "name": "Tornado Dragon",
+        "s": "Unlimited",
+        "why": "also a Wyrm"
+      },
+      {
+        "name": "Dark Requiem Xyz Dragon",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Norito the Moral Leader",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Victory Dragon": [
+      {
+        "name": "Chimaera, the Master of Beasts",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Golem Dragon",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Dragon"
+      },
+      {
+        "name": "Dark Horus",
+        "s": "Unlimited",
+        "why": "also a Dragon"
+      }
+    ],
+    "Wind-Up Hunter": [
+      {
+        "name": "Wind-Up Magician",
+        "s": "Unlimited",
+        "why": "same archetype (Wind-Up)"
+      },
+      {
+        "name": "Wind-Up Knight",
+        "s": "Unlimited",
+        "why": "same archetype (Wind-Up)"
+      },
+      {
+        "name": "Lightserpent",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "XX-Saber Gottoms": [
+      {
+        "name": "X-Saber Souza",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (X-Saber)"
+      },
+      {
+        "name": "X-Saber Urbellum",
+        "s": "Unlimited",
+        "why": "same archetype (X-Saber)"
+      },
+      {
+        "name": "XX-Saber Hyunlei",
+        "s": "Unlimited",
+        "why": "same archetype (X-Saber)"
+      }
+    ],
+    "Zenna's Deceiving Doll Maidens": [
+      {
+        "name": "Accesscode Talker",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Berserker of the Tenyi",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Underworld Goddess of the Closed World",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Zoodiac Broadbull": [
+      {
+        "name": "Zoodiac Drident",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Zoodiac)"
+      },
+      {
+        "name": "Zoodiac Tigermortar",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Zoodiac)"
+      },
+      {
+        "name": "Zoodiac Chakanine",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Zoodiac)"
+      }
+    ],
+    "\"A Case for K9\"": [
+      {
+        "name": "K9-X Forced Release",
+        "s": "Unlimited",
+        "why": "same archetype (K9)"
+      },
+      {
+        "name": "K9-LC Release Restraint",
+        "s": "Unlimited",
+        "why": "same archetype (K9)"
+      },
+      {
+        "name": "Runick Fountain",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Astrograph Sorcerer": [
+      {
+        "name": "Chronograph Sorcerer",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Magician)"
+      },
+      {
+        "name": "Astrograph Sorcerer, the Starfrost Magician",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Magician)"
+      },
+      {
+        "name": "Supreme King Gate Magician",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Magician)"
+      }
+    ],
+    "Bonfire": [
+      {
+        "name": "Fossil Dig",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      },
+      {
+        "name": "Reinforcement of the Army",
+        "s": "Limited",
+        "why": "also a Normal Spell"
+      },
+      {
+        "name": "Extinguishing the Ashened",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      }
+    ],
+    "Branded Fusion": [
+      {
+        "name": "Branded Loss",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Branded)"
+      },
+      {
+        "name": "Branded in White",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Branded)"
+      },
+      {
+        "name": "Polymerization",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Normal Spell"
+      }
+    ],
+    "Branded in High Spirits": [
+      {
+        "name": "Branded in Red",
+        "s": "Unlimited",
+        "why": "same archetype (Branded), also a Quick-Play Spell"
+      },
+      {
+        "name": "The Fallen & The Virtuous",
+        "s": "Unlimited",
+        "why": "same archetype (Branded), also a Quick-Play Spell"
+      },
+      {
+        "name": "Branded Lost",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Branded)"
+      }
+    ],
+    "Branded Opening": [
+      {
+        "name": "Branded in Red",
+        "s": "Unlimited",
+        "why": "same archetype (Branded), also a Quick-Play Spell"
+      },
+      {
+        "name": "Light of the Branded",
+        "s": "Unlimited",
+        "why": "same archetype (Branded), also a Quick-Play Spell"
+      },
+      {
+        "name": "Branded Fusion",
+        "s": "Limited",
+        "why": "same archetype (Branded)"
+      }
+    ],
+    "Brilliant Fusion": [
+      {
+        "name": "Gem-Knight Fusion",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Gem-)"
+      },
+      {
+        "name": "Particle Fusion",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Gem-)"
+      },
+      {
+        "name": "Absorb Fusion",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Gem-)"
+      }
+    ],
+    "Bystial Druiswurm": [
+      {
+        "name": "Bystial Saronir",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Bystial)"
+      },
+      {
+        "name": "Bystial Baldrake",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Bystial)"
+      },
+      {
+        "name": "Bystial Magnamhut",
+        "s": "Limited",
+        "why": "similar effect text, same archetype (Bystial)"
+      }
+    ],
+    "Bystial Magnamhut": [
+      {
+        "name": "Bystial Druiswurm",
+        "s": "Limited",
+        "why": "similar effect text, same archetype (Bystial)"
+      },
+      {
+        "name": "Bystial Baldrake",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Bystial)"
+      },
+      {
+        "name": "Bystial Saronir",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Bystial)"
+      }
+    ],
+    "Card Destruction": [
+      {
+        "name": "Royal Tribute",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      },
+      {
+        "name": "Dark World Dealings",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      },
+      {
+        "name": "The Law of the Normal",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      }
+    ],
+    "Card of Demise": [
+      {
+        "name": "Dark Ruler No More",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Normal Spell"
+      },
+      {
+        "name": "Allure of Darkness",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      },
+      {
+        "name": "Card of Sanctity",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      }
+    ],
+    "Chain Strike": [
+      {
+        "name": "Mystical Wind Typhoon",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Quick-Play Spell"
+      },
+      {
+        "name": "Miraculous Rebirth",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Quick-Play Spell"
+      },
+      {
+        "name": "Surprise Chain",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Quick-Play Spell"
+      }
+    ],
+    "Chaos Space": [
+      {
+        "name": "Chaos Seed",
+        "s": "Unlimited",
+        "why": "same archetype (Chaos), also a Normal Spell"
+      },
+      {
+        "name": "Chaos Zone",
+        "s": "Unlimited",
+        "why": "same archetype (Chaos)"
+      },
+      {
+        "name": "Allure of Darkness",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      }
+    ],
+    "Chicken Game": [
+      {
+        "name": "Soul Taker",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Mausoleum of the Emperor",
+        "s": "Unlimited",
+        "why": "also a Field Spell"
+      },
+      {
+        "name": "Dark Ruler No More",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Cupsy☆Yummy": [
+      {
+        "name": "Lollipo☆Yummy",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Yummy)"
+      },
+      {
+        "name": "Cooky☆Yummy",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Yummy)"
+      },
+      {
+        "name": "Marshmao☆Yummy",
+        "s": "Unlimited",
+        "why": "same archetype (Yummy), also a Beast"
+      }
+    ],
+    "Daigusto Emeral": [
+      {
+        "name": "Daigusto Phoenix",
+        "s": "Unlimited",
+        "why": "same archetype (Gusto)"
+      },
+      {
+        "name": "Leviair the Sea Dragon",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Castel, the Skyblaster Musketeer",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Divine Wind of Mist Valley": [
+      {
+        "name": "Shrine of Mist Valley",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Mist Valley)"
+      },
+      {
+        "name": "Wind-Up Factory",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Shinobird Power Spot",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Dracotail Mululu": [
+      {
+        "name": "Dracotail Faimena",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Dracotail)"
+      },
+      {
+        "name": "Dracotail Urgula",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Dracotail)"
+      },
+      {
+        "name": "Dracotail Pan",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Dracotail)"
+      }
+    ],
+    "Droll & Lock Bird": [
+      {
+        "name": "Effect Veiler",
+        "s": "Unlimited",
+        "why": "also a Spellcaster"
+      },
+      {
+        "name": "Rose Fairy",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Skull Meister",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Exodia the Forbidden One": [
+      {
+        "name": "Exodia Necross",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Exodia)"
+      },
+      {
+        "name": "Left Leg of the Forbidden One",
+        "s": "Limited",
+        "why": "similar effect text, same archetype (Exodia)"
+      },
+      {
+        "name": "Left Arm of the Forbidden One",
+        "s": "Limited",
+        "why": "similar effect text, same archetype (Exodia)"
+      }
+    ],
+    "Ext Ryzeal": [
+      {
+        "name": "Ice Ryzeal",
+        "s": "Semi-Limited",
+        "why": "similar effect text, same archetype (Ryzeal)"
+      },
+      {
+        "name": "Star Ryzeal",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Ryzeal)"
+      },
+      {
+        "name": "Sword Ryzeal",
+        "s": "Semi-Limited",
+        "why": "similar effect text, same archetype (Ryzeal)"
+      }
+    ],
+    "Fairy Tail - Snow": [
+      {
+        "name": "Ghostrick Witch",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Spellcaster"
+      },
+      {
+        "name": "Swarm of Scarabs",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Golem Sentry",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Fiendsmith's Lacrima": [
+      {
+        "name": "Fiendsmith's Desirae",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Fiendsmith)"
+      },
+      {
+        "name": "Fiendsmith's Rextremende",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Fiendsmith)"
+      },
+      {
+        "name": "Fiendsmith Engraver",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Fiendsmith)"
+      }
+    ],
+    "Final Countdown": [
+      {
+        "name": "Ancient Leaf",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      },
+      {
+        "name": "Tremendous Fire",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      },
+      {
+        "name": "Red Medicine",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      }
+    ],
+    "Foolish Burial": [
+      {
+        "name": "Hidden Armory",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      },
+      {
+        "name": "Dragon Shrine",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      },
+      {
+        "name": "Tuning",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      }
+    ],
+    "Gateway of the Six": [
+      {
+        "name": "Shien's Dojo",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Six Samurai)"
+      },
+      {
+        "name": "Six Samurai United",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Six Samurai)"
+      },
+      {
+        "name": "Temple of the Six",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Six Samurai)"
+      }
+    ],
+    "Gem-Knight Master Diamond": [
+      {
+        "name": "Gem-Knight Lady Brilliant Diamond",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Gem-)"
+      },
+      {
+        "name": "Gem-Knight Lady Lapis Lazuli",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Gem-)"
+      },
+      {
+        "name": "Gem-Knight Prismaura",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Gem-)"
+      }
+    ],
+    "Gold Sarcophagus": [
+      {
+        "name": "Ledger of Legerdemain",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Normal Spell"
+      },
+      {
+        "name": "Dust Barrier",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Different Dimension Capsule",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      }
+    ],
+    "Griffoh": [
+      {
+        "name": "Black Chaos",
+        "s": "Unlimited",
+        "why": "same archetype (Light and Darkness Ritual)"
+      },
+      {
+        "name": "Skull Archfiend of Chaos",
+        "s": "Unlimited",
+        "why": "same archetype (Light and Darkness Ritual), also a Fiend"
+      },
+      {
+        "name": "Celtic Mystic",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Light and Darkness Ritual)"
+      }
+    ],
+    "Harpie's Feather Duster": [
+      {
+        "name": "Six Strike - Triple Impact",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Normal Spell"
+      },
+      {
+        "name": "Scarlet Security",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Normal Spell"
+      },
+      {
+        "name": "Earthbound Whirlwind",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Normal Spell"
+      }
+    ],
+    "Infernity Launcher": [
+      {
+        "name": "Wave-Motion Inferno",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Infernity)"
+      },
+      {
+        "name": "ZERO-MAX",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Infernity)"
+      },
+      {
+        "name": "Infernity Paranoia",
+        "s": "Unlimited",
+        "why": "same archetype (Infernity)"
+      }
+    ],
+    "Instant Fusion": [
+      {
+        "name": "Ready Fusion",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Normal Spell"
+      },
+      {
+        "name": "Dark Magic Veil",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      },
+      {
+        "name": "Polymerization",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      }
+    ],
+    "Into the Void": [
+      {
+        "name": "Contract with the Void",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Normal Spell"
+      },
+      {
+        "name": "Left Arm Offering",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Normal Spell"
+      },
+      {
+        "name": "Allure of Darkness",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      }
+    ],
+    "K9-66a Jokul": [
+      {
+        "name": "K9-66b Lantern",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (K9)"
+      },
+      {
+        "name": "K9-17 Izuna",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (K9)"
+      },
+      {
+        "name": "K9-ØØ Lupis",
+        "s": "Unlimited",
+        "why": "same archetype (K9)"
+      }
+    ],
+    "Keldo the Sacred Protector": [
+      {
+        "name": "Mudora the Sword Oracle",
+        "s": "Limited",
+        "why": "similar effect text, same archetype (Exchange of the Spirit)"
+      },
+      {
+        "name": "Sakitama",
+        "s": "Unlimited",
+        "why": "also a Fairy"
+      },
+      {
+        "name": "World Soul - Carbon",
+        "s": "Unlimited",
+        "why": "also a Fairy"
+      }
+    ],
+    "Ketu Dracotail": [
+      {
+        "name": "Rahu Dracotail",
+        "s": "Limited",
+        "why": "similar effect text, same archetype (Dracotail)"
+      },
+      {
+        "name": "Polymerization",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      },
+      {
+        "name": "Dark Fusion",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      }
+    ],
+    "Left Arm of the Forbidden One": [
+      {
+        "name": "Right Arm of the Forbidden One",
+        "s": "Limited",
+        "why": "similar effect text, same archetype (Exodia)"
+      },
+      {
+        "name": "Left Leg of the Forbidden One",
+        "s": "Limited",
+        "why": "similar effect text, same archetype (Exodia)"
+      },
+      {
+        "name": "Right Leg of the Forbidden One",
+        "s": "Limited",
+        "why": "similar effect text, same archetype (Exodia)"
+      }
+    ],
+    "Left Leg of the Forbidden One": [
+      {
+        "name": "Right Leg of the Forbidden One",
+        "s": "Limited",
+        "why": "similar effect text, same archetype (Exodia)"
+      },
+      {
+        "name": "Left Arm of the Forbidden One",
+        "s": "Limited",
+        "why": "similar effect text, same archetype (Exodia)"
+      },
+      {
+        "name": "Right Arm of the Forbidden One",
+        "s": "Limited",
+        "why": "similar effect text, same archetype (Exodia)"
+      }
+    ],
+    "Linkuriboh": [
+      {
+        "name": "Linguriboh",
+        "s": "Unlimited",
+        "why": "same archetype (Kuriboh), also a Cyberse"
+      },
+      {
+        "name": "Ghostrick Festival",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Kuriboh - Multiply!",
+        "s": "Unlimited",
+        "why": "same archetype (Kuriboh)"
+      }
+    ],
+    "Magical Explosion": [
+      {
+        "name": "Secret Barrel",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Normal Trap"
+      },
+      {
+        "name": "Full Salvo",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Normal Trap"
+      },
+      {
+        "name": "Destruction of Destiny",
+        "s": "Unlimited",
+        "why": "also a Normal Trap"
+      }
+    ],
+    "Magical Mid-Breaker Field": [
+      {
+        "name": "Heat Wave",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Chicken Game",
+        "s": "Limited",
+        "why": "also a Field Spell"
+      },
+      {
+        "name": "Gravekeeper's Inscription",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Maliss <P> Dormouse": [
+      {
+        "name": "Maliss <P> Chessy Cat",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Maliss)"
+      },
+      {
+        "name": "Maliss <P> March Hare",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Maliss)"
+      },
+      {
+        "name": "Maliss <P> White Rabbit",
+        "s": "Limited",
+        "why": "similar effect text, same archetype (Maliss)"
+      }
+    ],
+    "Maliss <P> White Rabbit": [
+      {
+        "name": "Maliss <P> Dormouse",
+        "s": "Limited",
+        "why": "similar effect text, same archetype (Maliss)"
+      },
+      {
+        "name": "Maliss <P> March Hare",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Maliss)"
+      },
+      {
+        "name": "Maliss <P> Chessy Cat",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Maliss)"
+      }
+    ],
+    "Mathmech Circular": [
+      {
+        "name": "Mathmech Diameter",
+        "s": "Unlimited",
+        "why": "same archetype (Mathmech), also a Cyberse"
+      },
+      {
+        "name": "Mathmech Sigma",
+        "s": "Unlimited",
+        "why": "same archetype (Mathmech), also a Cyberse"
+      },
+      {
+        "name": "Mathmech Nabla",
+        "s": "Unlimited",
+        "why": "same archetype (Mathmech), also a Cyberse"
+      }
+    ],
+    "Miscellaneousaurus": [
+      {
+        "name": "Souleating Oviraptor",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Dinosaur"
+      },
+      {
+        "name": "Babycerasaurus",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Dinosaur"
+      },
+      {
+        "name": "Tyranno Infinity",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Dinosaur"
+      }
+    ],
+    "Monster Gate": [
+      {
+        "name": "Reasoning",
+        "s": "Limited",
+        "why": "similar effect text, also a Normal Spell"
+      },
+      {
+        "name": "Pot of Duality",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      },
+      {
+        "name": "Enchanting Fitting Room",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      }
+    ],
+    "Monster Reborn": [
+      {
+        "name": "Hydor, the Base of All Things",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      },
+      {
+        "name": "One-Kuri-Way",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      },
+      {
+        "name": "Zombie Reborn",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      }
+    ],
+    "Mudora the Sword Oracle": [
+      {
+        "name": "Keldo the Sacred Protector",
+        "s": "Limited",
+        "why": "similar effect text, same archetype (Exchange of the Spirit)"
+      },
+      {
+        "name": "The Weather Painter Snow",
+        "s": "Unlimited",
+        "why": "also a Fairy"
+      },
+      {
+        "name": "World Soul - Carbon",
+        "s": "Unlimited",
+        "why": "also a Fairy"
+      }
+    ],
+    "Naturia Sacred Tree": [
+      {
+        "name": "Spiritual Earth Art - Kurogane",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Sealing Ceremony of Mokuton",
+        "s": "Unlimited",
+        "why": "also a Continuous Trap"
+      },
+      {
+        "name": "Overdoom Line",
+        "s": "Unlimited",
+        "why": "also a Continuous Trap"
+      }
+    ],
+    "Number 40: Gimmick Puppet of Strings": [
+      {
+        "name": "Number C40: Gimmick Puppet of Dark Strings",
+        "s": "Limited",
+        "why": "similar effect text, same archetype (Gimmick Puppet)"
+      },
+      {
+        "name": "Number 88: Gimmick Puppet of Leo",
+        "s": "Unlimited",
+        "why": "same archetype (Gimmick Puppet), also a Machine"
+      },
+      {
+        "name": "Number C15: Gimmick Puppet Giant Hunter",
+        "s": "Unlimited",
+        "why": "same archetype (Gimmick Puppet), also a Machine"
+      }
+    ],
+    "Number C40: Gimmick Puppet of Dark Strings": [
+      {
+        "name": "Number 40: Gimmick Puppet of Strings",
+        "s": "Limited",
+        "why": "similar effect text, same archetype (Gimmick Puppet)"
+      },
+      {
+        "name": "Number C15: Gimmick Puppet Giant Hunter",
+        "s": "Unlimited",
+        "why": "same archetype (Gimmick Puppet), also a Machine"
+      },
+      {
+        "name": "Number 15: Gimmick Puppet Giant Grinder",
+        "s": "Unlimited",
+        "why": "same archetype (Gimmick Puppet), also a Machine"
+      }
+    ],
+    "Obedience Schooled": [
+      {
+        "name": "Unexpected Dai",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      },
+      {
+        "name": "Onslaught of the Fire Kings",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      },
+      {
+        "name": "Unicorn Beacon",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      }
+    ],
+    "One Day of Peace": [
+      {
+        "name": "Dark World Dealings",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Normal Spell"
+      },
+      {
+        "name": "Dark Ruler No More",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      },
+      {
+        "name": "Gravekeeper's Inscription",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      }
+    ],
+    "One for One": [
+      {
+        "name": "Tribute Doll",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Normal Spell"
+      },
+      {
+        "name": "Kuji-Kiri Curse",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      },
+      {
+        "name": "Xyz Reception",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      }
+    ],
+    "Perfectron Hydradrive Dragon": [
+      {
+        "name": "Accesscode Talker",
+        "s": "Unlimited",
+        "why": "also a Cyberse"
+      },
+      {
+        "name": "Five-Headed Link Dragon",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Topologic Trisbaena",
+        "s": "Unlimited",
+        "why": "also a Cyberse"
+      }
+    ],
+    "Phantom of Yubel": [
+      {
+        "name": "Yubel - The Loving Defender Forever",
+        "s": "Unlimited",
+        "why": "also a Fiend"
+      },
+      {
+        "name": "Necroquip Princess",
+        "s": "Unlimited",
+        "why": "also a Fiend"
+      },
+      {
+        "name": "Gladiator Beast Tamer Editor",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Pot of Prosperity": [
+      {
+        "name": "Pot of Sloth",
+        "s": "Unlimited",
+        "why": "same archetype (Greed), also a Normal Spell"
+      },
+      {
+        "name": "Pot of Extravagance",
+        "s": "Unlimited",
+        "why": "same archetype (Greed), also a Normal Spell"
+      },
+      {
+        "name": "Pot of Desires",
+        "s": "Unlimited",
+        "why": "same archetype (Greed), also a Normal Spell"
+      }
+    ],
+    "Prohibited Power Patron Portal - Terminus": [
+      {
+        "name": "Plundered Power Patron Plane - Vidolia",
+        "s": "Unlimited",
+        "why": "same archetype (Power Patron)"
+      },
+      {
+        "name": "Prohibitive Power Patron Purview - Vilaea",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Power Patron)"
+      },
+      {
+        "name": "Soul Release",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      }
+    ],
+    "PSY-Framegear Gamma": [
+      {
+        "name": "PSY-Framegear Delta",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (PSY-Frame)"
+      },
+      {
+        "name": "PSY-Framegear Epsilon",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (PSY-Frame)"
+      },
+      {
+        "name": "PSY-Framegear Beta",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (PSY-Frame)"
+      }
+    ],
+    "Radiant Typhoon Chant": [
+      {
+        "name": "Radiant Typhoon Ascendance",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Radiant Typhoon)"
+      },
+      {
+        "name": "Radiant Typhoon Manifestation",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Radiant Typhoon)"
+      },
+      {
+        "name": "Radiant Typhoon Vision",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Radiant Typhoon)"
+      }
+    ],
+    "Rahu Dracotail": [
+      {
+        "name": "Ketu Dracotail",
+        "s": "Limited",
+        "why": "similar effect text, same archetype (Dracotail)"
+      },
+      {
+        "name": "Polymerization",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Normal Spell"
+      },
+      {
+        "name": "Fusion Destiny",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      }
+    ],
+    "Reasoning": [
+      {
+        "name": "Monster Gate",
+        "s": "Limited",
+        "why": "similar effect text, also a Normal Spell"
+      },
+      {
+        "name": "World Legacy Survivor",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      },
+      {
+        "name": "Enchanting Fitting Room",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      }
+    ],
+    "Reinforcement of the Army": [
+      {
+        "name": "Fossil Dig",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Normal Spell"
+      },
+      {
+        "name": "Gladiator Proving Ground",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Normal Spell"
+      },
+      {
+        "name": "Shien's Smoke Signal",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Normal Spell"
+      }
+    ],
+    "Right Arm of the Forbidden One": [
+      {
+        "name": "Left Arm of the Forbidden One",
+        "s": "Limited",
+        "why": "similar effect text, same archetype (Exodia)"
+      },
+      {
+        "name": "Right Leg of the Forbidden One",
+        "s": "Limited",
+        "why": "similar effect text, same archetype (Exodia)"
+      },
+      {
+        "name": "Left Leg of the Forbidden One",
+        "s": "Limited",
+        "why": "similar effect text, same archetype (Exodia)"
+      }
+    ],
+    "Right Leg of the Forbidden One": [
+      {
+        "name": "Left Leg of the Forbidden One",
+        "s": "Limited",
+        "why": "similar effect text, same archetype (Exodia)"
+      },
+      {
+        "name": "Right Arm of the Forbidden One",
+        "s": "Limited",
+        "why": "similar effect text, same archetype (Exodia)"
+      },
+      {
+        "name": "Left Arm of the Forbidden One",
+        "s": "Limited",
+        "why": "similar effect text, same archetype (Exodia)"
+      }
+    ],
+    "Ryzeal Detonator": [
+      {
+        "name": "Ryzeal Duo Drive",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Ryzeal)"
+      },
+      {
+        "name": "Light Dragon @Ignister",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Chronomaly Vimana",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Sangen Kaimen": [
+      {
+        "name": "Sangen Summoning",
+        "s": "Limited",
+        "why": "same archetype (Sangen)"
+      },
+      {
+        "name": "Sangen Furo",
+        "s": "Unlimited",
+        "why": "same archetype (Sangen)"
+      },
+      {
+        "name": "Mitsurugi Prayers",
+        "s": "Unlimited",
+        "why": "also a Quick-Play Spell"
+      }
+    ],
+    "Sangen Summoning": [
+      {
+        "name": "Sangen Kaimen",
+        "s": "Limited",
+        "why": "same archetype (Sangen)"
+      },
+      {
+        "name": "Sangen Furo",
+        "s": "Unlimited",
+        "why": "same archetype (Sangen)"
+      },
+      {
+        "name": "Dragon Ravine",
+        "s": "Unlimited",
+        "why": "also a Field Spell"
+      }
+    ],
+    "Sekka's Light": [
+      {
+        "name": "Pot of Avarice",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      },
+      {
+        "name": "The Humble Sentry",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Normal Spell"
+      },
+      {
+        "name": "Draw of Fate",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      }
+    ],
+    "Set Rotation": [
+      {
+        "name": "Hey, Trunade!",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Super Polymerization",
+        "s": "Unlimited",
+        "why": "also a Quick-Play Spell"
+      },
+      {
+        "name": "Left Arm Offering",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Skill Drain": [
+      {
+        "name": "Mind Drain",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Continuous Trap"
+      },
+      {
+        "name": "Soul Drain",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Continuous Trap"
+      },
+      {
+        "name": "Spiritual Swords of Revealing Light",
+        "s": "Unlimited",
+        "why": "also a Continuous Trap"
+      }
+    ],
+    "Sky Striker Mecha - Hornet Drones": [
+      {
+        "name": "Sky Striker Mobilize - Linkage!",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Sky Striker)"
+      },
+      {
+        "name": "Sky Striker Mecha - Shark Cannon",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Sky Striker)"
+      },
+      {
+        "name": "Sky Striker Mecha - Widow Anchor",
+        "s": "Unlimited",
+        "why": "same archetype (Sky Striker), also a Quick-Play Spell"
+      }
+    ],
+    "Slash Draw": [
+      {
+        "name": "Solar Recharge",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      },
+      {
+        "name": "Pot of Sloth",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      },
+      {
+        "name": "Tuning",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      }
+    ],
+    "Solemn Judgment": [
+      {
+        "name": "Solemn Scolding",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Solemn)"
+      },
+      {
+        "name": "Solemn Warning",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Solemn)"
+      },
+      {
+        "name": "Solemn Strike",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Solemn)"
+      }
+    ],
+    "Striker Dragon": [
+      {
+        "name": "Overburst Dragon",
+        "s": "Unlimited",
+        "why": "also a Dragon"
+      },
+      {
+        "name": "Trisborrel Dragon",
+        "s": "Unlimited",
+        "why": "also a Dragon"
+      },
+      {
+        "name": "Triple Burst Dragon",
+        "s": "Unlimited",
+        "why": "also a Dragon"
+      }
+    ],
+    "Substitoad": [
+      {
+        "name": "Tradetoad",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Frog)"
+      },
+      {
+        "name": "Flip Flop Frog",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Frog)"
+      },
+      {
+        "name": "Unifrog",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Frog)"
+      }
+    ],
+    "Summon Sorceress": [
+      {
+        "name": "Twin Triangle Dragon",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Akashic Magician",
+        "s": "Unlimited",
+        "why": "also a Spellcaster"
+      },
+      {
+        "name": "Cyberse Contract Witch",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Sunavalon Dryas": [
+      {
+        "name": "Sunavalon Dryades",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Sunavalon)"
+      },
+      {
+        "name": "Sunavalon Dryanome",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Sunavalon)"
+      },
+      {
+        "name": "Sunavalon Melias",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Sunavalon)"
+      }
+    ],
+    "Sunvine Healer": [
+      {
+        "name": "Sunvine Thrasher",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Sunvine)"
+      },
+      {
+        "name": "Sunvine Gardna",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Sunvine)"
+      },
+      {
+        "name": "Sunavalon Dryades",
+        "s": "Unlimited",
+        "why": "also a Plant"
+      }
+    ],
+    "Superdreadnought Rail Cannon Gustav Max": [
+      {
+        "name": "Number 81: Superdreadnought Rail Cannon Super Dora",
+        "s": "Unlimited",
+        "why": "same archetype (Train), also a Machine"
+      },
+      {
+        "name": "Superdimensional Robot Galaxy Destroyer",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Machine"
+      },
+      {
+        "name": "Superdreadnought Rail Cannon Juggernaut Liebe",
+        "s": "Unlimited",
+        "why": "same archetype (Train), also a Machine"
+      }
+    ],
+    "Synchro Overtake": [
+      {
+        "name": "Synchro Overtop",
+        "s": "Unlimited",
+        "why": "same archetype (Synchro), also a Normal Spell"
+      },
+      {
+        "name": "Synchro Rumble",
+        "s": "Unlimited",
+        "why": "same archetype (Synchro), also a Normal Spell"
+      },
+      {
+        "name": "Variety Comes Out",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      }
+    ],
+    "T.G. Hyper Librarian": [
+      {
+        "name": "T.G. Wonder Magician",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (T.G.)"
+      },
+      {
+        "name": "Fabled Ragin",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "T.G. Over Dragonar",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (T.G.)"
+      }
+    ],
+    "Tearlaments Havnis": [
+      {
+        "name": "Tearlaments Scheiren",
+        "s": "Limited",
+        "why": "similar effect text, same archetype (Tearlaments)"
+      },
+      {
+        "name": "Tearlaments Merrli",
+        "s": "Limited",
+        "why": "similar effect text, same archetype (Tearlaments)"
+      },
+      {
+        "name": "Tearlaments Reinoheart",
+        "s": "Unlimited",
+        "why": "same archetype (Tearlaments)"
+      }
+    ],
+    "Tearlaments Merrli": [
+      {
+        "name": "Tearlaments Havnis",
+        "s": "Limited",
+        "why": "similar effect text, same archetype (Tearlaments)"
+      },
+      {
+        "name": "Tearlaments Scheiren",
+        "s": "Limited",
+        "why": "similar effect text, same archetype (Tearlaments)"
+      },
+      {
+        "name": "Tearlaments Reinoheart",
+        "s": "Unlimited",
+        "why": "same archetype (Tearlaments)"
+      }
+    ],
+    "Tearlaments Scheiren": [
+      {
+        "name": "Tearlaments Havnis",
+        "s": "Limited",
+        "why": "similar effect text, same archetype (Tearlaments)"
+      },
+      {
+        "name": "Tearlaments Merrli",
+        "s": "Limited",
+        "why": "similar effect text, same archetype (Tearlaments)"
+      },
+      {
+        "name": "Tearlaments Reinoheart",
+        "s": "Unlimited",
+        "why": "same archetype (Tearlaments)"
+      }
+    ],
+    "Tenpai Dragon Chundra": [
+      {
+        "name": "Tenpai Dragon Fadra",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Tenpai Dragon)"
+      },
+      {
+        "name": "Tenpai Dragon Paidra",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Tenpai Dragon)"
+      },
+      {
+        "name": "Tenpai Dragon Genroku",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Tenpai Dragon)"
+      }
+    ],
+    "Terraforming": [
+      {
+        "name": "Left Arm Offering",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Normal Spell"
+      },
+      {
+        "name": "Magical Contract Door",
+        "s": "Unlimited",
+        "why": "similar effect text, also a Normal Spell"
+      },
+      {
+        "name": "Hidden Armory",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      }
+    ],
+    "That Grass Looks Greener": [
+      {
+        "name": "Charge of the Light Brigade",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      },
+      {
+        "name": "Magical Mallet",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      },
+      {
+        "name": "Tuning",
+        "s": "Unlimited",
+        "why": "also a Normal Spell"
+      }
+    ],
+    "Toon Bookmark": [
+      {
+        "name": "Shadow Toon",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Toon)"
+      },
+      {
+        "name": "Toon Table of Contents",
+        "s": "Limited",
+        "why": "similar effect text, same archetype (Toon)"
+      },
+      {
+        "name": "Mimicat",
+        "s": "Unlimited",
+        "why": "same archetype (Toon), also a Normal Spell"
+      }
+    ],
+    "Toon Table of Contents": [
+      {
+        "name": "Toon Bookmark",
+        "s": "Limited",
+        "why": "similar effect text, same archetype (Toon)"
+      },
+      {
+        "name": "Shadow Toon",
+        "s": "Unlimited",
+        "why": "same archetype (Toon), also a Normal Spell"
+      },
+      {
+        "name": "Mimicat",
+        "s": "Unlimited",
+        "why": "same archetype (Toon), also a Normal Spell"
+      }
+    ],
+    "Vanquish Soul Hollie Sue": [
+      {
+        "name": "Vanquish Soul Razen",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Vanquish Soul)"
+      },
+      {
+        "name": "Vanquish Soul Caesar Valius",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Vanquish Soul)"
+      },
+      {
+        "name": "Vanquish Soul Jiaolong",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Vanquish Soul)"
+      }
+    ],
+    "Yummy★Snatchy": [
+      {
+        "name": "I:P Masquerena",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Link Devotee",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      },
+      {
+        "name": "Marshmao☆Yummy",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Yummy)"
+      }
+    ],
+    "Zoodiac Ratpier": [
+      {
+        "name": "Zoodiac Thoroughblade",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Zoodiac)"
+      },
+      {
+        "name": "Zoodiac Kataroost",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Zoodiac)"
+      },
+      {
+        "name": "Zoodiac Bunnyblast",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Zoodiac)"
+      }
+    ],
+    "Dracotail Arthalion": [
+      {
+        "name": "Dracotail Gulamel",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Dracotail)"
+      },
+      {
+        "name": "Dracotail Shaulas",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Dracotail)"
+      },
+      {
+        "name": "Guardian Chimera",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Dracotail Lukias": [
+      {
+        "name": "Dracotail Faimena",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Dracotail)"
+      },
+      {
+        "name": "Dracotail Phryxul",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Dracotail)"
+      },
+      {
+        "name": "Dracotail Urgula",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Dracotail)"
+      }
+    ],
+    "Ice Ryzeal": [
+      {
+        "name": "Star Ryzeal",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Ryzeal)"
+      },
+      {
+        "name": "Ext Ryzeal",
+        "s": "Limited",
+        "why": "similar effect text, same archetype (Ryzeal)"
+      },
+      {
+        "name": "Sword Ryzeal",
+        "s": "Semi-Limited",
+        "why": "similar effect text, same archetype (Ryzeal)"
+      }
+    ],
+    "Maliss in Underground": [
+      {
+        "name": "Maliss in the Mirror",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Maliss)"
+      },
+      {
+        "name": "Sorcerous Spell Wall",
+        "s": "Unlimited",
+        "why": "also a Field Spell"
+      },
+      {
+        "name": "TGX300",
+        "s": "Unlimited",
+        "why": "similar effect text"
+      }
+    ],
+    "Purrely Sleepy Memory": [
+      {
+        "name": "Purrely Pretty Memory",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Purrely)"
+      },
+      {
+        "name": "Purrely Delicious Memory",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Purrely)"
+      },
+      {
+        "name": "Purrely Happy Memory",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Purrely)"
+      }
+    ],
+    "Sky Striker Mobilize - Engage!": [
+      {
+        "name": "Sky Striker Maneuver - Scissors Cross",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Sky Striker)"
+      },
+      {
+        "name": "Sky Striker Maneuver - Afterburners!",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Sky Striker)"
+      },
+      {
+        "name": "Sky Striker Maneuver - Jamming Waves!",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Sky Striker)"
+      }
+    ],
+    "Sword Ryzeal": [
+      {
+        "name": "Node Ryzeal",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Ryzeal)"
+      },
+      {
+        "name": "Ice Ryzeal",
+        "s": "Semi-Limited",
+        "why": "similar effect text, same archetype (Ryzeal)"
+      },
+      {
+        "name": "Star Ryzeal",
+        "s": "Unlimited",
+        "why": "similar effect text, same archetype (Ryzeal)"
+      }
+    ]
+  },
+  "tournaments": {
+    "decks": 20,
+    "savedAt": "2026-11-07T00:08:14.973Z",
+    "minCards": 3,
+    "archetypes": {
+      "@Ignister": {
+        "using": 2,
+        "with": [
+          [
+            "Dominus",
+            2
+          ],
+          [
+            "Maliss",
+            2
+          ],
+          [
+            "Mulcharmy",
+            2
+          ]
+        ],
+        "e": [
+          [
+            "@Ignister Maliss",
+            "San Salvador WCQ Regional",
+            "Runner-Up"
+          ],
+          [
+            "@Ignister Maliss",
+            "Panama City WCQ Regional",
+            "Top 8"
+          ]
+        ]
+      },
+      "Phantasm": {
+        "using": 1,
+        "with": [
+          [
+            "Mulcharmy",
+            1
+          ]
+        ],
+        "e": [
+          [
+            "Sacred Beasts",
+            "Eclubens WCQ Regional",
+            "Top 4"
+          ]
+        ]
+      },
+      "Sky Striker": {
+        "using": 3,
+        "with": [
+          [
+            "Branded",
+            3
+          ],
+          [
+            "Radiant Typhoon",
+            3
+          ],
+          [
+            "Forbidden",
+            2
+          ],
+          [
+            "Mulcharmy",
+            1
+          ]
+        ],
+        "e": [
+          [
+            "Sky Striker",
+            "Cluj-Napoca WCQ Regional",
+            "Top 8"
+          ],
+          [
+            "Sky Striker",
+            "Panama City WCQ Regional",
+            "Winner"
+          ],
+          [
+            "Radiant Typhoon Sky Striker",
+            "Panama City WCQ Regional",
+            "Top 8"
+          ]
+        ]
+      },
+      "Magistus": {
+        "using": 1,
+        "with": [
+          [
+            "Endymion",
+            1
+          ],
+          [
+            "Fairy Tail",
+            1
+          ],
+          [
+            "Mulcharmy",
+            1
+          ]
+        ],
+        "e": [
+          [
+            "Magistus Fairy Tail",
+            "Panama City WCQ Regional",
+            "Top 8"
+          ]
+        ]
+      },
+      "Branded": {
+        "using": 3,
+        "with": [
+          [
+            "Radiant Typhoon",
+            3
+          ],
+          [
+            "Sky Striker",
+            3
+          ],
+          [
+            "Forbidden",
+            2
+          ],
+          [
+            "Mulcharmy",
+            1
+          ]
+        ],
+        "e": [
+          [
+            "Sky Striker",
+            "Cluj-Napoca WCQ Regional",
+            "Top 8"
+          ],
+          [
+            "Sky Striker",
+            "Panama City WCQ Regional",
+            "Winner"
+          ],
+          [
+            "Radiant Typhoon Sky Striker",
+            "Panama City WCQ Regional",
+            "Top 8"
+          ]
+        ]
+      },
+      "Invoked": {
+        "using": 1,
+        "with": [
+          [
+            "Aleister",
+            1
+          ],
+          [
+            "Mulcharmy",
+            1
+          ]
+        ],
+        "e": [
+          [
+            "Invoked",
+            "Panama City WCQ Regional",
+            "Top 4"
+          ]
+        ]
+      },
+      "Aleister": {
+        "using": 1,
+        "with": [
+          [
+            "Invoked",
+            1
+          ],
+          [
+            "Mulcharmy",
+            1
+          ]
+        ],
+        "e": [
+          [
+            "Invoked",
+            "Panama City WCQ Regional",
+            "Top 4"
+          ]
+        ]
+      },
+      "Dark Magician": {
+        "using": 1,
+        "with": [
+          [
+            "Diabellstar",
+            1
+          ],
+          [
+            "Kuriboh",
+            1
+          ],
+          [
+            "Light and Darkness Ritual",
+            1
+          ],
+          [
+            "Mulcharmy",
+            1
+          ],
+          [
+            "Prophecy",
+            1
+          ],
+          [
+            "Sinful Spoils",
+            1
+          ]
+        ],
+        "e": [
+          [
+            "Azamina Dark Magician Light and Darkness Ritual",
+            "San Salvador WCQ Regional",
+            "Winner"
+          ]
+        ]
+      },
+      "Prophecy": {
+        "using": 1,
+        "with": [
+          [
+            "Dark Magician",
+            1
+          ],
+          [
+            "Diabellstar",
+            1
+          ],
+          [
+            "Kuriboh",
+            1
+          ],
+          [
+            "Light and Darkness Ritual",
+            1
+          ],
+          [
+            "Mulcharmy",
+            1
+          ],
+          [
+            "Sinful Spoils",
+            1
+          ]
+        ],
+        "e": [
+          [
+            "Azamina Dark Magician Light and Darkness Ritual",
+            "San Salvador WCQ Regional",
+            "Winner"
+          ]
+        ]
+      },
+      "Angelechy": {
+        "using": 4,
+        "with": [
+          [
+            "Dominus",
+            3
+          ],
+          [
+            "Mulcharmy",
+            3
+          ],
+          [
+            "Elfnote",
+            1
+          ],
+          [
+            "Power Patron",
+            1
+          ]
+        ],
+        "e": [
+          [
+            "Angelechy",
+            "Graz WCQ Regional",
+            "Top 4"
+          ],
+          [
+            "Angelechy",
+            "Panama City WCQ Regional",
+            "Top 4"
+          ],
+          [
+            "Angelechy Elfnote",
+            "San Salvador WCQ Regional",
+            "Top 8"
+          ]
+        ]
+      },
+      "Kuriboh": {
+        "using": 2,
+        "with": [
+          [
+            "Light and Darkness Ritual",
+            2
+          ],
+          [
+            "Mulcharmy",
+            2
+          ],
+          [
+            "Ars Magna",
+            1
+          ],
+          [
+            "Artmage",
+            1
+          ],
+          [
+            "Dark Magician",
+            1
+          ],
+          [
+            "Diabellstar",
+            1
+          ],
+          [
+            "Medius",
+            1
+          ],
+          [
+            "Pendulum",
+            1
+          ]
+        ],
+        "e": [
+          [
+            "Ars Magna Power Patron Light and Darkness Ritual",
+            "The Side Deck Remote Duel WCQ Regional",
+            "Winner"
+          ],
+          [
+            "Azamina Dark Magician Light and Darkness Ritual",
+            "San Salvador WCQ Regional",
+            "Winner"
+          ]
+        ]
+      },
+      "Ars Magna": {
+        "using": 7,
+        "with": [
+          [
+            "Medius",
+            7
+          ],
+          [
+            "Mulcharmy",
+            7
+          ],
+          [
+            "Power Patron",
+            7
+          ],
+          [
+            "Elfnote",
+            5
+          ],
+          [
+            "Artmage",
+            3
+          ],
+          [
+            "Pendulum",
+            2
+          ],
+          [
+            "DoomZ",
+            1
+          ],
+          [
+            "Kuriboh",
+            1
+          ]
+        ],
+        "e": [
+          [
+            "Ars Magna Elfnote",
+            "Cluj-Napoca WCQ Regional",
+            "Top 8"
+          ],
+          [
+            "Ars Magna Power Patron Artmage",
+            "Cluj-Napoca WCQ Regional",
+            "Top 8"
+          ],
+          [
+            "Ars Magna Elfnote",
+            "Cluj-Napoca WCQ Regional",
+            "Top 8"
+          ]
+        ]
+      },
+      "Artmage": {
+        "using": 3,
+        "with": [
+          [
+            "Ars Magna",
+            3
+          ],
+          [
+            "Medius",
+            3
+          ],
+          [
+            "Mulcharmy",
+            3
+          ],
+          [
+            "Power Patron",
+            3
+          ],
+          [
+            "Pendulum",
+            2
+          ],
+          [
+            "DoomZ",
+            1
+          ],
+          [
+            "Elfnote",
+            1
+          ],
+          [
+            "Kuriboh",
+            1
+          ]
+        ],
+        "e": [
+          [
+            "Ars Magna Power Patron Artmage",
+            "Cluj-Napoca WCQ Regional",
+            "Top 8"
+          ],
+          [
+            "Ars Magna Elfnote",
+            "Panama City WCQ Regional",
+            "Runner-Up"
+          ],
+          [
+            "Ars Magna Power Patron Light and Darkness Ritual",
+            "The Side Deck Remote Duel WCQ Regional",
+            "Winner"
+          ]
+        ]
+      },
+      "Pendulum": {
+        "using": 2,
+        "with": [
+          [
+            "Ars Magna",
+            2
+          ],
+          [
+            "Artmage",
+            2
+          ],
+          [
+            "Medius",
+            2
+          ],
+          [
+            "Mulcharmy",
+            2
+          ],
+          [
+            "Power Patron",
+            2
+          ],
+          [
+            "DoomZ",
+            1
+          ],
+          [
+            "Kuriboh",
+            1
+          ],
+          [
+            "Light and Darkness Ritual",
+            1
+          ]
+        ],
+        "e": [
+          [
+            "Ars Magna Power Patron Artmage",
+            "Cluj-Napoca WCQ Regional",
+            "Top 8"
+          ],
+          [
+            "Ars Magna Power Patron Light and Darkness Ritual",
+            "The Side Deck Remote Duel WCQ Regional",
+            "Winner"
+          ]
+        ]
+      },
+      "Light and Darkness Ritual": {
+        "using": 2,
+        "with": [
+          [
+            "Kuriboh",
+            2
+          ],
+          [
+            "Mulcharmy",
+            2
+          ],
+          [
+            "Ars Magna",
+            1
+          ],
+          [
+            "Artmage",
+            1
+          ],
+          [
+            "Dark Magician",
+            1
+          ],
+          [
+            "Diabellstar",
+            1
+          ],
+          [
+            "Medius",
+            1
+          ],
+          [
+            "Pendulum",
+            1
+          ]
+        ],
+        "e": [
+          [
+            "Ars Magna Power Patron Light and Darkness Ritual",
+            "The Side Deck Remote Duel WCQ Regional",
+            "Winner"
+          ],
+          [
+            "Azamina Dark Magician Light and Darkness Ritual",
+            "San Salvador WCQ Regional",
+            "Winner"
+          ]
+        ]
+      },
+      "Endymion": {
+        "using": 1,
+        "with": [
+          [
+            "Fairy Tail",
+            1
+          ],
+          [
+            "Magistus",
+            1
+          ],
+          [
+            "Mulcharmy",
+            1
+          ]
+        ],
+        "e": [
+          [
+            "Magistus Fairy Tail",
+            "Panama City WCQ Regional",
+            "Top 8"
+          ]
+        ]
+      },
+      "Sinful Spoils": {
+        "using": 1,
+        "with": [
+          [
+            "Dark Magician",
+            1
+          ],
+          [
+            "Diabellstar",
+            1
+          ],
+          [
+            "Kuriboh",
+            1
+          ],
+          [
+            "Light and Darkness Ritual",
+            1
+          ],
+          [
+            "Mulcharmy",
+            1
+          ],
+          [
+            "Prophecy",
+            1
+          ]
+        ],
+        "e": [
+          [
+            "Azamina Dark Magician Light and Darkness Ritual",
+            "San Salvador WCQ Regional",
+            "Winner"
+          ]
+        ]
+      },
+      "Diabellstar": {
+        "using": 1,
+        "with": [
+          [
+            "Dark Magician",
+            1
+          ],
+          [
+            "Kuriboh",
+            1
+          ],
+          [
+            "Light and Darkness Ritual",
+            1
+          ],
+          [
+            "Mulcharmy",
+            1
+          ],
+          [
+            "Prophecy",
+            1
+          ],
+          [
+            "Sinful Spoils",
+            1
+          ]
+        ],
+        "e": [
+          [
+            "Azamina Dark Magician Light and Darkness Ritual",
+            "San Salvador WCQ Regional",
+            "Winner"
+          ]
+        ]
+      },
+      "Dominus": {
+        "using": 5,
+        "with": [
+          [
+            "Mulcharmy",
+            4
+          ],
+          [
+            "Angelechy",
+            3
+          ],
+          [
+            "@Ignister",
+            2
+          ],
+          [
+            "Maliss",
+            2
+          ]
+        ],
+        "e": [
+          [
+            "@Ignister Maliss",
+            "San Salvador WCQ Regional",
+            "Runner-Up"
+          ],
+          [
+            "Angelechy",
+            "Graz WCQ Regional",
+            "Top 4"
+          ],
+          [
+            "Angelechy",
+            "Panama City WCQ Regional",
+            "Top 4"
+          ]
+        ]
+      },
+      "DoomZ": {
+        "using": 1,
+        "with": [
+          [
+            "Ars Magna",
+            1
+          ],
+          [
+            "Artmage",
+            1
+          ],
+          [
+            "Medius",
+            1
+          ],
+          [
+            "Mulcharmy",
+            1
+          ],
+          [
+            "Pendulum",
+            1
+          ],
+          [
+            "Power Patron",
+            1
+          ]
+        ],
+        "e": [
+          [
+            "Ars Magna Power Patron Artmage",
+            "Cluj-Napoca WCQ Regional",
+            "Top 8"
+          ]
+        ]
+      },
+      "Elfnote": {
+        "using": 6,
+        "with": [
+          [
+            "Mulcharmy",
+            6
+          ],
+          [
+            "Power Patron",
+            6
+          ],
+          [
+            "Ars Magna",
+            5
+          ],
+          [
+            "Medius",
+            5
+          ],
+          [
+            "Angelechy",
+            1
+          ],
+          [
+            "Artmage",
+            1
+          ]
+        ],
+        "e": [
+          [
+            "Ars Magna Elfnote",
+            "Cluj-Napoca WCQ Regional",
+            "Top 8"
+          ],
+          [
+            "Ars Magna Elfnote",
+            "Cluj-Napoca WCQ Regional",
+            "Top 8"
+          ],
+          [
+            "Ars Magna Elfnote",
+            "Panama City WCQ Regional",
+            "Runner-Up"
+          ]
+        ]
+      },
+      "Fairy Tail": {
+        "using": 1,
+        "with": [
+          [
+            "Endymion",
+            1
+          ],
+          [
+            "Magistus",
+            1
+          ],
+          [
+            "Mulcharmy",
+            1
+          ]
+        ],
+        "e": [
+          [
+            "Magistus Fairy Tail",
+            "Panama City WCQ Regional",
+            "Top 8"
+          ]
+        ]
+      },
+      "Forbidden": {
+        "using": 2,
+        "with": [
+          [
+            "Branded",
+            2
+          ],
+          [
+            "Radiant Typhoon",
+            2
+          ],
+          [
+            "Sky Striker",
+            2
+          ],
+          [
+            "Mulcharmy",
+            1
+          ]
+        ],
+        "e": [
+          [
+            "Sky Striker",
+            "Cluj-Napoca WCQ Regional",
+            "Top 8"
+          ],
+          [
+            "Radiant Typhoon Sky Striker",
+            "Panama City WCQ Regional",
+            "Top 8"
+          ]
+        ]
+      },
+      "Power Patron": {
+        "using": 8,
+        "with": [
+          [
+            "Mulcharmy",
+            8
+          ],
+          [
+            "Ars Magna",
+            7
+          ],
+          [
+            "Medius",
+            7
+          ],
+          [
+            "Elfnote",
+            6
+          ],
+          [
+            "Artmage",
+            3
+          ],
+          [
+            "Pendulum",
+            2
+          ],
+          [
+            "Angelechy",
+            1
+          ],
+          [
+            "DoomZ",
+            1
+          ]
+        ],
+        "e": [
+          [
+            "Ars Magna Elfnote",
+            "Cluj-Napoca WCQ Regional",
+            "Top 8"
+          ],
+          [
+            "Ars Magna Power Patron Artmage",
+            "Cluj-Napoca WCQ Regional",
+            "Top 8"
+          ],
+          [
+            "Ars Magna Elfnote",
+            "Cluj-Napoca WCQ Regional",
+            "Top 8"
+          ]
+        ]
+      },
+      "Maliss": {
+        "using": 2,
+        "with": [
+          [
+            "@Ignister",
+            2
+          ],
+          [
+            "Dominus",
+            2
+          ],
+          [
+            "Mulcharmy",
+            2
+          ]
+        ],
+        "e": [
+          [
+            "@Ignister Maliss",
+            "San Salvador WCQ Regional",
+            "Runner-Up"
+          ],
+          [
+            "@Ignister Maliss",
+            "Panama City WCQ Regional",
+            "Top 8"
+          ]
+        ]
+      },
+      "Medius": {
+        "using": 7,
+        "with": [
+          [
+            "Ars Magna",
+            7
+          ],
+          [
+            "Mulcharmy",
+            7
+          ],
+          [
+            "Power Patron",
+            7
+          ],
+          [
+            "Elfnote",
+            5
+          ],
+          [
+            "Artmage",
+            3
+          ],
+          [
+            "Pendulum",
+            2
+          ],
+          [
+            "DoomZ",
+            1
+          ],
+          [
+            "Kuriboh",
+            1
+          ]
+        ],
+        "e": [
+          [
+            "Ars Magna Elfnote",
+            "Cluj-Napoca WCQ Regional",
+            "Top 8"
+          ],
+          [
+            "Ars Magna Power Patron Artmage",
+            "Cluj-Napoca WCQ Regional",
+            "Top 8"
+          ],
+          [
+            "Ars Magna Elfnote",
+            "Cluj-Napoca WCQ Regional",
+            "Top 8"
+          ]
+        ]
+      },
+      "Mulcharmy": {
+        "using": 17,
+        "with": [
+          [
+            "Power Patron",
+            8
+          ],
+          [
+            "Ars Magna",
+            7
+          ],
+          [
+            "Medius",
+            7
+          ],
+          [
+            "Elfnote",
+            6
+          ],
+          [
+            "Dominus",
+            4
+          ],
+          [
+            "Angelechy",
+            3
+          ],
+          [
+            "Artmage",
+            3
+          ],
+          [
+            "@Ignister",
+            2
+          ]
+        ],
+        "e": [
+          [
+            "@Ignister Maliss",
+            "San Salvador WCQ Regional",
+            "Runner-Up"
+          ],
+          [
+            "Ars Magna Elfnote",
+            "Cluj-Napoca WCQ Regional",
+            "Top 8"
+          ],
+          [
+            "Sky Striker",
+            "Cluj-Napoca WCQ Regional",
+            "Top 8"
+          ]
+        ]
+      },
+      "Radiant Typhoon": {
+        "using": 3,
+        "with": [
+          [
+            "Branded",
+            3
+          ],
+          [
+            "Sky Striker",
+            3
+          ],
+          [
+            "Forbidden",
+            2
+          ],
+          [
+            "Mulcharmy",
+            1
+          ]
+        ],
+        "e": [
+          [
+            "Sky Striker",
+            "Cluj-Napoca WCQ Regional",
+            "Top 8"
+          ],
+          [
+            "Sky Striker",
+            "Panama City WCQ Regional",
+            "Winner"
+          ],
+          [
+            "Radiant Typhoon Sky Striker",
+            "Panama City WCQ Regional",
+            "Top 8"
+          ]
+        ]
+      }
+    }
+  }
+}
