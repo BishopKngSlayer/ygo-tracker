@@ -3963,6 +3963,8 @@
   <button class="btn btn-dim" id="voiceBtn" onclick="toggleVoice()">🎤 Voice</button>
   <button class="btn btn-dim" onclick="openTutorial()" style="border-color:rgba(201,162,39,0.3);color:var(--gold);">📖 Tutorial</button>
   <button class="btn btn-dim" onclick="openPartners()" style="border-color:rgba(0,200,120,0.35);color:#44ddaa;">🤝 Partners</button>
+  <button class="btn btn-dim"  onclick="openLadder()" style="border-color:rgba(201,162,39,0.35);color:var(--gold);">🏆 Ladder</button>
+  <button class="btn btn-dim" onclick="window.open(DISCORD_INVITE,'_blank','noopener')" style="border-color:rgba(88,101,242,0.5);color:#99aaff;" title="Join the Discord server">💬 Discord</button>
 </div>
 
 <div id="matchBanner">
@@ -4294,6 +4296,7 @@
       <button class="roster-io-btn" onclick="document.getElementById('rosterImportFile').click()" style="border-color:rgba(120,180,255,0.4);color:#99ccff;" title="Import roster from JSON file">⬆ Import</button>
       <input type="file" id="rosterImportFile" accept=".json" style="display:none" onchange="rosterImport(event)">
       <button class="roster-io-btn" onclick="rosterCopyText()" style="border-color:rgba(201,162,39,0.4);color:var(--gold);" title="Copy all names to clipboard">📋 Copy Names</button>
+      <button class="roster-io-btn" onclick="discordPostLeaderboard(true)" style="border-color:rgba(88,101,242,0.5);color:#99aaff;" title="Post the leaderboard to your Discord channel (set up in Mode → Rules)">📣 Discord</button>
       <button class="roster-io-btn clear"  onclick="rosterClearAll()">&#x1F5D1; Clear All</button>
       <button class="roster-io-btn" id="rosterSoundBtn" onclick="toggleSoundPanel()" style="border-color:rgba(80,180,255,0.4);color:#88ccff;" title="Sound settings">&#x1F50A; Sounds</button>
       <span class="roster-save-dot" id="rosterSaveDot" title="Saved"></span>
@@ -4523,6 +4526,27 @@
         </div>
         <label class="rule-toggle">
           <input type="checkbox" id="rule-lowlp-on" onchange="toggleRule('lowlp')" checked>
+          <span class="rule-slider"></span>
+        </label>
+      </div>
+
+      <div class="rule-row">
+        <div class="rule-info">
+          <div class="rule-name">💬 Discord Posting</div>
+          <div class="rule-desc">Post duel results and the leaderboard to your Discord server when a duel ends. Paste a channel webhook URL (Server Settings → Integrations → Webhooks). Saved only on this device — never shared or synced.</div>
+          <div class="rule-sub" id="rule-discord-sub" style="display:none;flex-direction:column;align-items:stretch;gap:8px;margin-top:8px;">
+            <input type="password" class="rule-input" id="rule-discord-webhook" placeholder="https://discord.com/api/webhooks/…" autocomplete="off" oninput="saveDiscordSettings()" style="width:100%;letter-spacing:normal;">
+            <label style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--dim);cursor:pointer;">
+              <input type="checkbox" id="rule-discord-lb" checked onchange="saveDiscordSettings()"> Include leaderboard with each result
+            </label>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <button class="tourn-btn view" type="button" onclick="discordTest()">🧪 Test Webhook</button>
+              <button class="tourn-btn play" type="button" onclick="discordPostLeaderboard(true)">🏆 Post Leaderboard Now</button>
+            </div>
+          </div>
+        </div>
+        <label class="rule-toggle">
+          <input type="checkbox" id="rule-discord-on" onchange="toggleRule('discord')">
           <span class="rule-slider"></span>
         </label>
       </div>
@@ -7008,6 +7032,7 @@
     if (e.key === 'Escape') {
       var _escModals = [
         { id: 'duelWizard',       fn: function(){ closeWizard(); } },
+        { id: 'ladderModal',      fn: function(){ closeLadder(); } },
         { id: 'rosterModal',      fn: function(){ closeRoster(); } },
         { id: 'cardSearchModal',  fn: function(){ if(_collViewActive){toggleCollectionView(false);}else{closeCardSearch();} } },
         { id: 'rulingsModal',     fn: function(){ closeRulings(); } },
@@ -7451,6 +7476,17 @@
       + '<button class="summary-btn dim" onclick="closeSummary(true)">&#x2715; New Game</button>';
     playSound('win');
     document.getElementById('summaryOverlay').classList.add('show');
+    // Discord: post duel result (host device with webhook configured only)
+    try {
+      var modeLabel = gameMode === 'bestof' ? 'Best of X' : gameMode === 'tournament' ? 'Tournament' : gameMode === 'koth' ? 'King of the Hill' : 'Standard Duel';
+      var dLines = ['**Mode:** ' + modeLabel + ' · **Turns:** ' + Math.max(0, globalTurnNum - 1) + ' · **Time:** ' + _fmtClock(gameSeconds)];
+      players.forEach(function(p, i) {
+        var rk = p.name.trim().toLowerCase();
+        var rr = roster[rk] || {w:0, l:0};
+        dLines.push((i === wi ? '👑 ' : '💀 ') + '**' + p.name + '** — ' + p.lp.toLocaleString() + ' LP · ' + (rr.w||0) + 'W-' + (rr.l||0) + 'L');
+      });
+      discordPostDuelResult('🏆 ' + winner.name + ' wins!', dLines);
+    } catch(e) {}
   }
 
   function closeSummary(newGame) {
@@ -8118,6 +8154,12 @@
       gameRules.lowLPWarning = document.getElementById('rule-lowlp-on').checked;
       document.getElementById('rule-lowlp-sub').style.display = gameRules.lowLPWarning ? 'flex' : 'none';
     }
+    if (key === 'discord') {
+      var dOn = document.getElementById('rule-discord-on').checked;
+      document.getElementById('rule-discord-sub').style.display = dOn ? 'flex' : 'none';
+      saveDiscordSettings();
+      return;
+    }
     saveRules();
   }
 
@@ -8150,6 +8192,99 @@
     if (lpOn) lpOn.checked = gameRules.lowLPWarning;
     if (lpV)  lpV.value    = gameRules.lowLPThreshold;
     if (lpS)  lpS.style.display = gameRules.lowLPWarning ? 'flex' : 'none';
+    loadDiscordUI();
+  }
+
+  /* ━━ DISCORD INTEGRATION ━━━━━━━━━━━━━━━━━━━ */
+  var DISCORD_INVITE = 'https://discord.gg/vTJnQcgpa3';
+  var _discord = { enabled:false, webhook:'', includeLb:true };
+  try { var _ds = JSON.parse(localStorage.getItem('ygo_discord') || 'null'); if (_ds) _discord = Object.assign(_discord, _ds); } catch(e) {}
+
+  function saveDiscordSettings() {
+    var on = document.getElementById('rule-discord-on');
+    var wh = document.getElementById('rule-discord-webhook');
+    var lb = document.getElementById('rule-discord-lb');
+    if (on) _discord.enabled   = on.checked;
+    if (wh) _discord.webhook   = wh.value.trim();
+    if (lb) _discord.includeLb = lb.checked;
+    try { localStorage.setItem('ygo_discord', JSON.stringify(_discord)); } catch(e) {}
+  }
+
+  function loadDiscordUI() {
+    var on  = document.getElementById('rule-discord-on');
+    var wh  = document.getElementById('rule-discord-webhook');
+    var lb  = document.getElementById('rule-discord-lb');
+    var sub = document.getElementById('rule-discord-sub');
+    if (on)  on.checked  = _discord.enabled;
+    if (wh)  wh.value    = _discord.webhook;
+    if (lb)  lb.checked  = _discord.includeLb;
+    if (sub) sub.style.display = _discord.enabled ? 'flex' : 'none';
+  }
+
+  function _discordReady() {
+    return _discord.enabled && /^https:\/\/(discord\.com|discordapp\.com)\/api\/webhooks\//.test(_discord.webhook);
+  }
+
+  function _discordSend(payload, quiet) {
+    if (!_discordReady()) { if (!quiet) showToast('Enable Discord posting and paste a webhook URL first', 'warning'); return; }
+    fetch(_discord.webhook, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).then(function(r) {
+      if (r.ok) { if (!quiet) showToast('Posted to Discord', 'heal'); }
+      else if (!quiet) showToast('Discord post failed (' + r.status + ')', 'warning');
+    }).catch(function() { if (!quiet) showToast('Discord post failed — check connection', 'warning'); });
+  }
+
+  function _fmtClock(secs) {
+    secs = Math.max(0, secs || 0);
+    var m = Math.floor(secs / 60), s = secs % 60;
+    return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+  }
+
+  function _leaderboardEmbed() {
+    var medals = ['🥇','🥈','🥉'];
+    var lines = Object.keys(roster).map(function(k) { return roster[k]; })
+      .filter(function(r) { return (r.w||0) + (r.l||0) + (r.f||0) > 0; })
+      .sort(function(a, b) { return (b.w||0) - (a.w||0) || (a.l||0) - (b.l||0); })
+      .slice(0, 10)
+      .map(function(r, i) {
+        var duels = (r.w||0) + (r.l||0) + (r.f||0);
+        var pct = duels ? Math.round((r.w||0) / duels * 100) : 0;
+        var rank = medals[i] || '`#' + (i+1) + '`';
+        return rank + ' **' + r.name + '** — ' + (r.w||0) + 'W · ' + (r.l||0) + 'L' + (r.f ? ' · ' + r.f + 'F' : '') + ' (' + pct + '%)';
+      });
+    return {
+      title: '🏆 Leaderboard',
+      description: lines.length ? lines.join('\n') : '_No duels recorded yet._',
+      color: 0xC9A227,
+      footer: { text: 'Y.U.G.I.O.H. · Checkmate Gaming' },
+      timestamp: new Date().toISOString()
+    };
+  }
+
+  function discordPostLeaderboard(manual) {
+    if (manual) saveDiscordSettings();
+    _discordSend({ username: 'Y.U.G.I.O.H.', embeds: [_leaderboardEmbed()] }, !manual);
+  }
+
+  function discordTest() {
+    saveDiscordSettings();
+    _discordSend({ username: 'Y.U.G.I.O.H.', content: '✅ Webhook connected — duel results will post here.\nJoin the server: ' + DISCORD_INVITE });
+  }
+
+  function discordPostDuelResult(title, lines) {
+    if (!_discordReady()) return;
+    var embeds = [{
+      title: title,
+      description: lines.join('\n'),
+      color: 0x5865F2,
+      footer: { text: 'Y.U.G.I.O.H. · Checkmate Gaming' },
+      timestamp: new Date().toISOString()
+    }];
+    if (_discord.includeLb) embeds.push(_leaderboardEmbed());
+    _discordSend({ username: 'Y.U.G.I.O.H.', embeds: embeds }, true);
   }
 
   function openModeModal() {
@@ -8804,6 +8939,16 @@
       roster[k].name = p.name.trim();
     });
     rosterSave();
+    // Discord: post team battle result
+    try {
+      var dLines = ['**Mode:** Team Battle · ' + matchCtx.format.toUpperCase() + ' · **Time:** ' + _fmtClock(gameSeconds)];
+      matchCtx.teams.forEach(function(team, ti) {
+        var names = team.map(function(pi) { return players[pi] ? players[pi].name : '?'; }).join(', ');
+        var lpStr = matchCtx.separateLP ? '' : ' — ' + (teamLP[ti] || 0).toLocaleString() + ' LP';
+        dLines.push((ti === winTeamIdx ? '👑 ' : '💀 ') + '**' + matchCtx.teamNames[ti] + '**' + lpStr + ': ' + names);
+      });
+      discordPostDuelResult('🏆 ' + winName + ' wins!', dLines);
+    } catch(e) {}
     var grid = document.getElementById('summaryGrid');
     grid.innerHTML = matchCtx.teams.map(function(team, ti) {
       var isWin = (ti === winTeamIdx);
@@ -14014,6 +14159,45 @@
     </div>
   </div>
 </div>
+
+
+<!-- ═══ Duel Ladder (wager points leaderboard, data from leaderboard.json, written by the Discord bot) ═══ -->
+<style>
+  #ladderModal {
+    display:none; position:fixed; inset:0; z-index:400;
+    background:rgba(0,0,0,0.88); backdrop-filter:blur(12px);
+    align-items:center; justify-content:center;
+  }
+  #ladderModal.open { display:flex; }
+  #ladderBody { padding:14px 18px; overflow:auto; color:var(--text); }
+  #ladderBody .lb-rk { color:var(--gold); }
+  #ladderBody h4 { color:var(--gold); font-family:'Cinzel Decorative',serif; font-size:12px; letter-spacing:2px; }
+</style>
+<div id="ladderModal" onclick="if(event.target===this)closeLadder()">
+  <div class="roster-wrap">
+    <div class="roster-header">
+      <span class="roster-title">&#x1F3C6; Duel Ladder</span>
+      <button class="roster-close" onclick="closeLadder()">&#x2715;</button>
+    </div>
+    <div id="ladderBody">Loading&#x2026;</div>
+  </div>
+</div>
+<script src="leaderboard.js"></script>
+<script>
+  var _ladderMounted = false;
+  function openLadder() {
+    document.getElementById('ladderModal').classList.add('open');
+    if (!_ladderMounted && window.YGOLeaderboard) {
+      _ladderMounted = true;
+      YGOLeaderboard.mount(document.getElementById('ladderBody'));
+    } else if (!window.YGOLeaderboard) {
+      document.getElementById('ladderBody').textContent = 'Leaderboard script not found. Make sure leaderboard.js is uploaded next to index.html.';
+    }
+  }
+  function closeLadder() {
+    document.getElementById('ladderModal').classList.remove('open');
+  }
+</script>
 
 </body>
 </html>
