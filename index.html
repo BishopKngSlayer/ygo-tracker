@@ -3543,6 +3543,7 @@
   <button class="timer-btn start" id="timerToggleBtn" onclick="timerToggle()">▶ Start</button>
   <button class="timer-btn" onclick="confirmNewGame()" style="border-color:rgba(255,80,80,0.35);color:#ff8888;">✕ New Game</button>
   <div class="timer-sep"></div>
+  <button class="timer-btn" id="soundToggleBtn" onclick="toggleMasterSound()" title="Toggle all sounds on/off" style="font-size:16px;min-width:32px;padding:2px 6px;">🔊</button>
   <button class="timer-btn menu-toggle" id="menuToggleBtn" onclick="toggleGameMenu()" title="Menu">☰ Menu</button>
 </div>
 <input type="hidden" id="startingLPInput" value="8000">
@@ -4862,7 +4863,7 @@
     grid.innerHTML = '';
     // scale LP font size and row height inversely with player count
     const cols = players.length;
-    const lpSize = { 1: '22vw', 2: '13vw', 3: '9.6vw', 4: '8vw', 5: '6.7vw', 6: '5.8vw' };
+    const lpSize = { 1: '22vw', 2: '13vw', 3: '7vw', 4: '5.2vw', 5: '4.2vw', 6: '3.5vw' };
     grid.style.setProperty('--lp-font-size', lpSize[cols] || '4vw');
     grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
 
@@ -7097,7 +7098,33 @@
     });
   }
   function _setFirstPlayer(idx) {
-    activeTurn = idx;
+    // Reorder players array so the winner is in slot 0
+    if (idx > 0 && idx < players.length) {
+      var winner = players.splice(idx, 1)[0];
+      players.unshift(winner);
+      // Fix turn order badges
+      players.forEach(function(p, i) { p.turnOrder = i + 1; });
+      // Reindex dependent arrays — keep them aligned with new player order
+      var oldPanelState = panelState.splice(idx, 1)[0];
+      panelState.unshift(oldPanelState);
+      var oldCollapsed = cardCollapsed.splice(idx, 1)[0];
+      cardCollapsed.unshift(oldCollapsed);
+      var oldRotation = cardRotations.splice(idx, 1)[0];
+      cardRotations.unshift(oldRotation);
+      var oldBigHit = biggestHit.splice(idx, 1)[0];
+      biggestHit.unshift(oldBigHit);
+      // Update sparkline histories
+      if (sparkHistory.length > idx) {
+        var oldSpark = sparkHistory.splice(idx, 1)[0];
+        sparkHistory.unshift(oldSpark);
+      }
+      // Fix game log target indices
+      gameLog.forEach(function(entry) {
+        if (entry.target === idx) entry.target = 0;
+        else if (entry.target < idx) entry.target = entry.target + 1;
+      });
+    }
+    activeTurn = 0; // winner is always slot 0 now
     currentPhase = 1;
     render();
     closeCoinDice();
@@ -8920,6 +8947,42 @@
     _ttsAnnouncerEnabled = !_ttsAnnouncerEnabled;
     localStorage.setItem('yugioh_tts_announcer', _ttsAnnouncerEnabled);
     renderSoundSettings();
+  }
+
+  // Master sound mute toggle (button in timer bar)
+  var _masterSoundMuted = localStorage.getItem('yugioh_master_muted') === 'true';
+  var _savedVolume = _soundVolume;
+  (function() {
+    if (_masterSoundMuted) {
+      _savedVolume = _soundVolume;
+      _soundVolume = 0;
+      _ttsAnnouncerEnabled = false;
+      var btn = document.getElementById('soundToggleBtn');
+      if (btn) btn.textContent = '🔇';
+    }
+  })();
+  function toggleMasterSound() {
+    _masterSoundMuted = !_masterSoundMuted;
+    localStorage.setItem('yugioh_master_muted', _masterSoundMuted);
+    var btn = document.getElementById('soundToggleBtn');
+    if (_masterSoundMuted) {
+      _savedVolume = _soundVolume || _savedVolume || 0.7;
+      _soundVolume = 0;
+      _ttsAnnouncerEnabled = false;
+      localStorage.setItem('yugioh_tts_announcer', 'false');
+      if (btn) btn.textContent = '🔇';
+    } else {
+      _soundVolume = _savedVolume || 0.7;
+      _ttsAnnouncerEnabled = true;
+      localStorage.setItem('yugioh_tts_announcer', 'true');
+      localStorage.setItem('yugioh_builtin_sounds', 'true');
+      _builtinSoundsEnabled = true;
+      if (btn) btn.textContent = '🔊';
+    }
+    var volSlider = document.getElementById('soundVolumeSlider');
+    if (volSlider) volSlider.value = Math.round(_soundVolume * 100);
+    var volVal = document.getElementById('soundVolumeVal');
+    if (volVal) volVal.textContent = Math.round(_soundVolume * 100) + '%';
   }
 
   function renderSoundSettings() {
