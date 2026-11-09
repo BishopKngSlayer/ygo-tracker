@@ -5725,17 +5725,54 @@
     var slots = document.getElementById('wizSlots');
     if (!slots) return;
     var rosterNames = Object.values(roster).map(function(r) { return r.name; }).sort(function(a,b) { return a.localeCompare(b); });
+    // Build ladder lookup from leaderboard.js data
+    var ladderData = (window.YGOLeaderboard && YGOLeaderboard.get()) || null;
+    var ladderMap = {};  // normalized name → player obj
+    var ladderOnly = []; // names on ladder but NOT in roster
+    if (ladderData && ladderData.players) {
+      ladderData.players.forEach(function(p) {
+        ladderMap[p.name.trim().toLowerCase()] = p;
+      });
+      // Find ladder names not already in roster
+      var rosterLower = rosterNames.map(function(n) { return n.trim().toLowerCase(); });
+      ladderData.players.forEach(function(p) {
+        if (rosterLower.indexOf(p.name.trim().toLowerCase()) === -1) {
+          ladderOnly.push(p.name);
+        }
+      });
+      ladderOnly.sort(function(a,b) { return a.localeCompare(b); });
+    }
+    function _wizBadge(name) {
+      var lp = ladderMap[name.trim().toLowerCase()];
+      if (!lp) return '';
+      var parts = [];
+      if (lp.linked) parts.push('🔗');
+      if (lp.ranked) parts.push('⚔️');
+      else parts.push('🏁 ' + (lp.wins + lp.losses) + '/' + ((ladderData.rules && ladderData.rules.placementGames) || 5));
+      if (lp.tier) parts.push(lp.tier);
+      return parts.length ? '  (' + parts.join(' · ') + ')' : '';
+    }
     var selects = Array.from(slots.querySelectorAll('select'));
     selects.forEach(function(sel, idx) {
       var chosen = selects.map(function(s, si) { return si !== idx ? s.value : ''; }).filter(Boolean);
       var current = prev && prev[idx] ? prev[idx] : '';
-      sel.innerHTML = '<option value="">— Select —</option>'
-        + rosterNames
-            .filter(function(n) { return chosen.indexOf(n) === -1 || n === current; })
-            .map(function(n) {
-              return '<option value="' + escHtml(n) + '"' + (n === current ? ' selected' : '') + '>' + escHtml(n) + '</option>';
-            }).join('')
-        + '<option value="__new__">➕ New…</option>';
+      var html = '<option value="">— Select —</option>';
+      // Roster names (with ladder badges if applicable)
+      var rosterOpts = rosterNames
+          .filter(function(n) { return chosen.indexOf(n) === -1 || n === current; })
+          .map(function(n) {
+            return '<option value="' + escHtml(n) + '"' + (n === current ? ' selected' : '') + '>' + escHtml(n) + escHtml(_wizBadge(n)) + '</option>';
+          }).join('');
+      if (rosterOpts) html += '<optgroup label="Roster">' + rosterOpts + '</optgroup>';
+      // Ladder-only names (not in roster)
+      var ladderOpts = ladderOnly
+          .filter(function(n) { return chosen.indexOf(n) === -1 || n === current; })
+          .map(function(n) {
+            return '<option value="' + escHtml(n) + '"' + (n === current ? ' selected' : '') + '>' + escHtml(n) + escHtml(_wizBadge(n)) + '</option>';
+          }).join('');
+      if (ladderOpts) html += '<optgroup label="🏆 Ladder">' + ladderOpts + '</optgroup>';
+      html += '<option value="__new__">➕ New…</option>';
+      sel.innerHTML = html;
       if (current && current !== '__new__') sel.value = current;
     });
   }
