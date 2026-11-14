@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-12T07:07:46.773Z",
+  "updated": "2026-11-14T07:05:47.203Z",
   "banlist": {
     "current": "2026-10-19",
     "upcoming": null,
@@ -6119,315 +6119,267 @@
   },
   "tournaments": {
     "decks": 20,
-    "savedAt": "2026-11-07T00:08:14.973Z",
+    "savedAt": "2026-11-14T07:04:45.992Z",
     "minCards": 3,
     "archetypes": {
-      "@Ignister": {
-        "using": 2,
-        "with": [
-          [
-            "Dominus",
-            2
-          ],
-          [
-            "Maliss",
-            2
-          ],
-          [
-            "Mulcharmy",
-            2
-          ]
-        ],
-        "e": [
-          [
-            "@Ignister Maliss",
-            "San Salvador WCQ Regional",
-            "Runner-Up"
-          ],
-          [
-            "@Ignister Maliss",
-            "Panama City WCQ Regional",
-            "Top 8"
-          ]
-        ]
-      },
-      "Phantasm": {
+      "Stardust": {
         "using": 1,
         "with": [
           [
-            "Mulcharmy",
+            "Forbidden",
+            1
+          ],
+          [
+            "Junk",
+            1
+          ],
+          [
+            "Synchro",
             1
           ]
         ],
         "e": [
           [
-            "Sacred Beasts",
-            "Eclubens WCQ Regional",
+            "Synchron",
+            "Christchurch WCQ Regional",
             "Top 4"
           ]
         ]
       },
-      "Sky Striker": {
+      "Magician": {
+        "using": 2,
+        "with": [
+          [
+            "Radiant Typhoon",
+            2
+          ],
+          [
+            "Forbidden",
+            1
+          ],
+          [
+            "Greed",
+            1
+          ],
+          [
+            "Sky Striker",
+            1
+          ]
+        ],
+        "e": [
+          [
+            "Dark Time Wizard Sky Striker",
+            "Weston-Super-Mare WCQ Regional",
+            "Top 8"
+          ],
+          [
+            "Dark Time Wizard Radiant Typhoon",
+            "Bern WCQ Regional",
+            "Top 8"
+          ]
+        ]
+      },
+      "Despia": {
         "using": 3,
         "with": [
+          [
+            "Albaz Dragon",
+            3
+          ],
           [
             "Branded",
             3
           ],
           [
-            "Radiant Typhoon",
+            "Mulcharmy",
             3
           ],
           [
-            "Forbidden",
-            2
+            "Dogmatika",
+            1
           ],
           [
-            "Mulcharmy",
+            "Dracotail",
             1
           ]
         ],
         "e": [
           [
-            "Sky Striker",
-            "Cluj-Napoca WCQ Regional",
+            "Branded Dracotail",
+            "Guayaquil WCQ Regional",
             "Top 8"
           ],
           [
-            "Sky Striker",
-            "Panama City WCQ Regional",
-            "Winner"
+            "Despia Branded",
+            "Carcassonne WCQ Regional",
+            "Top 4"
           ],
           [
-            "Radiant Typhoon Sky Striker",
-            "Panama City WCQ Regional",
+            "Despia Branded",
+            "Bologna WCQ Regional",
             "Top 8"
           ]
         ]
       },
-      "Magistus": {
+      "Sky Striker": {
         "using": 1,
         "with": [
           [
-            "Endymion",
+            "Greed",
             1
           ],
           [
-            "Fairy Tail",
+            "Magician",
             1
           ],
           [
-            "Mulcharmy",
+            "Radiant Typhoon",
             1
           ]
         ],
         "e": [
           [
-            "Magistus Fairy Tail",
-            "Panama City WCQ Regional",
+            "Dark Time Wizard Sky Striker",
+            "Weston-Super-Mare WCQ Regional",
             "Top 8"
+          ]
+        ]
+      },
+      "Ashtra": {
+        "using": 1,
+        "with": [
+          [
+            "Dominus",
+            1
+          ],
+          [
+            "Greed",
+            1
+          ],
+          [
+            "Mulcharmy",
+            1
+          ],
+          [
+            "Penguin",
+            1
+          ],
+          [
+            "Synchro",
+            1
+          ]
+        ],
+        "e": [
+          [
+            "Synchron Ashtra",
+            "Christchurch WCQ Regional",
+            "Top 4"
+          ]
+        ]
+      },
+      "Albaz Dragon": {
+        "using": 4,
+        "with": [
+          [
+            "Branded",
+            4
+          ],
+          [
+            "Mulcharmy",
+            4
+          ],
+          [
+            "Despia",
+            3
+          ],
+          [
+            "Dracotail",
+            2
+          ],
+          [
+            "Dogmatika",
+            1
+          ]
+        ],
+        "e": [
+          [
+            "Branded Dracotail",
+            "Guayaquil WCQ Regional",
+            "Top 8"
+          ],
+          [
+            "Branded Dracotail",
+            "Christchurch WCQ Regional",
+            "Runner-Up"
+          ],
+          [
+            "Despia Branded",
+            "Carcassonne WCQ Regional",
+            "Top 4"
           ]
         ]
       },
       "Branded": {
-        "using": 3,
+        "using": 4,
         "with": [
           [
-            "Radiant Typhoon",
+            "Albaz Dragon",
+            4
+          ],
+          [
+            "Mulcharmy",
+            4
+          ],
+          [
+            "Despia",
             3
           ],
           [
-            "Sky Striker",
-            3
-          ],
-          [
-            "Forbidden",
+            "Dracotail",
             2
           ],
           [
-            "Mulcharmy",
+            "Dogmatika",
             1
           ]
         ],
         "e": [
           [
-            "Sky Striker",
-            "Cluj-Napoca WCQ Regional",
+            "Branded Dracotail",
+            "Guayaquil WCQ Regional",
             "Top 8"
           ],
           [
-            "Sky Striker",
-            "Panama City WCQ Regional",
-            "Winner"
+            "Branded Dracotail",
+            "Christchurch WCQ Regional",
+            "Runner-Up"
           ],
           [
-            "Radiant Typhoon Sky Striker",
-            "Panama City WCQ Regional",
-            "Top 8"
-          ]
-        ]
-      },
-      "Invoked": {
-        "using": 1,
-        "with": [
-          [
-            "Aleister",
-            1
-          ],
-          [
-            "Mulcharmy",
-            1
-          ]
-        ],
-        "e": [
-          [
-            "Invoked",
-            "Panama City WCQ Regional",
+            "Despia Branded",
+            "Carcassonne WCQ Regional",
             "Top 4"
-          ]
-        ]
-      },
-      "Aleister": {
-        "using": 1,
-        "with": [
-          [
-            "Invoked",
-            1
-          ],
-          [
-            "Mulcharmy",
-            1
-          ]
-        ],
-        "e": [
-          [
-            "Invoked",
-            "Panama City WCQ Regional",
-            "Top 4"
-          ]
-        ]
-      },
-      "Dark Magician": {
-        "using": 1,
-        "with": [
-          [
-            "Diabellstar",
-            1
-          ],
-          [
-            "Kuriboh",
-            1
-          ],
-          [
-            "Light and Darkness Ritual",
-            1
-          ],
-          [
-            "Mulcharmy",
-            1
-          ],
-          [
-            "Prophecy",
-            1
-          ],
-          [
-            "Sinful Spoils",
-            1
-          ]
-        ],
-        "e": [
-          [
-            "Azamina Dark Magician Light and Darkness Ritual",
-            "San Salvador WCQ Regional",
-            "Winner"
-          ]
-        ]
-      },
-      "Prophecy": {
-        "using": 1,
-        "with": [
-          [
-            "Dark Magician",
-            1
-          ],
-          [
-            "Diabellstar",
-            1
-          ],
-          [
-            "Kuriboh",
-            1
-          ],
-          [
-            "Light and Darkness Ritual",
-            1
-          ],
-          [
-            "Mulcharmy",
-            1
-          ],
-          [
-            "Sinful Spoils",
-            1
-          ]
-        ],
-        "e": [
-          [
-            "Azamina Dark Magician Light and Darkness Ritual",
-            "San Salvador WCQ Regional",
-            "Winner"
           ]
         ]
       },
       "Angelechy": {
-        "using": 4,
+        "using": 1,
         "with": [
           [
             "Dominus",
-            3
-          ],
-          [
-            "Mulcharmy",
-            3
-          ],
-          [
-            "Elfnote",
-            1
-          ],
-          [
-            "Power Patron",
             1
           ]
         ],
         "e": [
           [
             "Angelechy",
-            "Graz WCQ Regional",
+            "Brasilia WCQ Regional",
             "Top 4"
-          ],
-          [
-            "Angelechy",
-            "Panama City WCQ Regional",
-            "Top 4"
-          ],
-          [
-            "Angelechy Elfnote",
-            "San Salvador WCQ Regional",
-            "Top 8"
           ]
         ]
       },
       "Kuriboh": {
-        "using": 2,
+        "using": 1,
         "with": [
-          [
-            "Light and Darkness Ritual",
-            2
-          ],
-          [
-            "Mulcharmy",
-            2
-          ],
           [
             "Ars Magna",
             1
@@ -6437,11 +6389,11 @@
             1
           ],
           [
-            "Dark Magician",
+            "Cyclone",
             1
           ],
           [
-            "Diabellstar",
+            "Greed",
             1
           ],
           [
@@ -6449,19 +6401,70 @@
             1
           ],
           [
+            "Mulcharmy",
+            1
+          ],
+          [
             "Pendulum",
+            1
+          ],
+          [
+            "Power Patron",
             1
           ]
         ],
         "e": [
           [
-            "Ars Magna Power Patron Light and Darkness Ritual",
-            "The Side Deck Remote Duel WCQ Regional",
-            "Winner"
+            "Ars Magna Power Patron Artmage",
+            "Puebla WCQ Regional",
+            "Runner-Up"
+          ]
+        ]
+      },
+      "Temple of the Kings": {
+        "using": 1,
+        "with": [
+          [
+            "Apophis",
+            1
           ],
           [
-            "Azamina Dark Magician Light and Darkness Ritual",
-            "San Salvador WCQ Regional",
+            "Dominus",
+            1
+          ],
+          [
+            "Mulcharmy",
+            1
+          ]
+        ],
+        "e": [
+          [
+            "Odion",
+            "Mechelen WCQ Regional",
+            "Winner"
+          ]
+        ]
+      },
+      "Apophis": {
+        "using": 1,
+        "with": [
+          [
+            "Dominus",
+            1
+          ],
+          [
+            "Mulcharmy",
+            1
+          ],
+          [
+            "Temple of the Kings",
+            1
+          ]
+        ],
+        "e": [
+          [
+            "Odion",
+            "Mechelen WCQ Regional",
             "Winner"
           ]
         ]
@@ -6482,19 +6485,127 @@
             7
           ],
           [
-            "Elfnote",
-            5
+            "Artmage",
+            4
           ],
           [
-            "Artmage",
-            3
+            "Elfnote",
+            4
           ],
           [
             "Pendulum",
+            3
+          ],
+          [
+            "Cyclone",
+            1
+          ],
+          [
+            "Greed",
+            1
+          ]
+        ],
+        "e": [
+          [
+            "Ars Magna Power Patron Artmage",
+            "Puebla WCQ Regional",
+            "Winner"
+          ],
+          [
+            "Ars Magna Elfnote",
+            "Guayaquil WCQ Regional",
+            "Winner"
+          ],
+          [
+            "Ars Magna Power Patron Artmage",
+            "Puebla WCQ Regional",
+            "Runner-Up"
+          ]
+        ]
+      },
+      "Artmage": {
+        "using": 4,
+        "with": [
+          [
+            "Ars Magna",
+            4
+          ],
+          [
+            "Medius",
+            4
+          ],
+          [
+            "Mulcharmy",
+            4
+          ],
+          [
+            "Power Patron",
+            4
+          ],
+          [
+            "Pendulum",
+            3
+          ],
+          [
+            "Cyclone",
+            1
+          ],
+          [
+            "Elfnote",
+            1
+          ],
+          [
+            "Greed",
+            1
+          ]
+        ],
+        "e": [
+          [
+            "Ars Magna Power Patron Artmage",
+            "Puebla WCQ Regional",
+            "Winner"
+          ],
+          [
+            "Ars Magna Elfnote",
+            "Guayaquil WCQ Regional",
+            "Winner"
+          ],
+          [
+            "Ars Magna Power Patron Artmage",
+            "Puebla WCQ Regional",
+            "Runner-Up"
+          ]
+        ]
+      },
+      "Greed": {
+        "using": 4,
+        "with": [
+          [
+            "Dominus",
             2
           ],
           [
-            "DoomZ",
+            "Mulcharmy",
+            2
+          ],
+          [
+            "Ars Magna",
+            1
+          ],
+          [
+            "Artmage",
+            1
+          ],
+          [
+            "Ashtra",
+            1
+          ],
+          [
+            "Blitzclique",
+            1
+          ],
+          [
+            "Cyclone",
             1
           ],
           [
@@ -6504,23 +6615,23 @@
         ],
         "e": [
           [
-            "Ars Magna Elfnote",
-            "Cluj-Napoca WCQ Regional",
-            "Top 8"
-          ],
-          [
             "Ars Magna Power Patron Artmage",
-            "Cluj-Napoca WCQ Regional",
-            "Top 8"
+            "Puebla WCQ Regional",
+            "Runner-Up"
           ],
           [
-            "Ars Magna Elfnote",
-            "Cluj-Napoca WCQ Regional",
+            "Synchron Ashtra",
+            "Christchurch WCQ Regional",
+            "Top 4"
+          ],
+          [
+            "Blitzclique",
+            "Mechelen WCQ Regional",
             "Top 8"
           ]
         ]
       },
-      "Artmage": {
+      "Pendulum": {
         "using": 3,
         "with": [
           [
@@ -6528,6 +6639,10 @@
             3
           ],
           [
+            "Artmage",
+            3
+          ],
+          [
             "Medius",
             3
           ],
@@ -6540,15 +6655,11 @@
             3
           ],
           [
-            "Pendulum",
-            2
-          ],
-          [
-            "DoomZ",
+            "Cyclone",
             1
           ],
           [
-            "Elfnote",
+            "Greed",
             1
           ],
           [
@@ -6559,192 +6670,54 @@
         "e": [
           [
             "Ars Magna Power Patron Artmage",
-            "Cluj-Napoca WCQ Regional",
-            "Top 8"
+            "Puebla WCQ Regional",
+            "Winner"
           ],
           [
-            "Ars Magna Elfnote",
-            "Panama City WCQ Regional",
+            "Ars Magna Power Patron Artmage",
+            "Puebla WCQ Regional",
             "Runner-Up"
           ],
           [
-            "Ars Magna Power Patron Light and Darkness Ritual",
-            "The Side Deck Remote Duel WCQ Regional",
-            "Winner"
-          ]
-        ]
-      },
-      "Pendulum": {
-        "using": 2,
-        "with": [
-          [
-            "Ars Magna",
-            2
-          ],
-          [
-            "Artmage",
-            2
-          ],
-          [
-            "Medius",
-            2
-          ],
-          [
-            "Mulcharmy",
-            2
-          ],
-          [
-            "Power Patron",
-            2
-          ],
-          [
-            "DoomZ",
-            1
-          ],
-          [
-            "Kuriboh",
-            1
-          ],
-          [
-            "Light and Darkness Ritual",
-            1
-          ]
-        ],
-        "e": [
-          [
             "Ars Magna Power Patron Artmage",
-            "Cluj-Napoca WCQ Regional",
-            "Top 8"
-          ],
-          [
-            "Ars Magna Power Patron Light and Darkness Ritual",
-            "The Side Deck Remote Duel WCQ Regional",
-            "Winner"
-          ]
-        ]
-      },
-      "Light and Darkness Ritual": {
-        "using": 2,
-        "with": [
-          [
-            "Kuriboh",
-            2
-          ],
-          [
-            "Mulcharmy",
-            2
-          ],
-          [
-            "Ars Magna",
-            1
-          ],
-          [
-            "Artmage",
-            1
-          ],
-          [
-            "Dark Magician",
-            1
-          ],
-          [
-            "Diabellstar",
-            1
-          ],
-          [
-            "Medius",
-            1
-          ],
-          [
-            "Pendulum",
-            1
-          ]
-        ],
-        "e": [
-          [
-            "Ars Magna Power Patron Light and Darkness Ritual",
-            "The Side Deck Remote Duel WCQ Regional",
-            "Winner"
-          ],
-          [
-            "Azamina Dark Magician Light and Darkness Ritual",
-            "San Salvador WCQ Regional",
-            "Winner"
-          ]
-        ]
-      },
-      "Endymion": {
-        "using": 1,
-        "with": [
-          [
-            "Fairy Tail",
-            1
-          ],
-          [
-            "Magistus",
-            1
-          ],
-          [
-            "Mulcharmy",
-            1
-          ]
-        ],
-        "e": [
-          [
-            "Magistus Fairy Tail",
-            "Panama City WCQ Regional",
+            "Puebla WCQ Regional",
             "Top 8"
           ]
         ]
       },
-      "Sinful Spoils": {
+      "Blitzclique": {
         "using": 1,
         "with": [
           [
-            "Dark Magician",
+            "Dominus",
             1
           ],
           [
-            "Diabellstar",
-            1
-          ],
-          [
-            "Kuriboh",
-            1
-          ],
-          [
-            "Light and Darkness Ritual",
-            1
-          ],
-          [
-            "Mulcharmy",
-            1
-          ],
-          [
-            "Prophecy",
+            "Greed",
             1
           ]
         ],
         "e": [
           [
-            "Azamina Dark Magician Light and Darkness Ritual",
-            "San Salvador WCQ Regional",
-            "Winner"
+            "Blitzclique",
+            "Mechelen WCQ Regional",
+            "Top 8"
           ]
         ]
       },
-      "Diabellstar": {
+      "Penguin": {
         "using": 1,
         "with": [
           [
-            "Dark Magician",
+            "Ashtra",
             1
           ],
           [
-            "Kuriboh",
+            "Dominus",
             1
           ],
           [
-            "Light and Darkness Ritual",
+            "Greed",
             1
           ],
           [
@@ -6752,19 +6725,67 @@
             1
           ],
           [
-            "Prophecy",
-            1
-          ],
-          [
-            "Sinful Spoils",
+            "Synchro",
             1
           ]
         ],
         "e": [
           [
-            "Azamina Dark Magician Light and Darkness Ritual",
-            "San Salvador WCQ Regional",
-            "Winner"
+            "Synchron Ashtra",
+            "Christchurch WCQ Regional",
+            "Top 4"
+          ]
+        ]
+      },
+      "Junk": {
+        "using": 1,
+        "with": [
+          [
+            "Forbidden",
+            1
+          ],
+          [
+            "Stardust",
+            1
+          ],
+          [
+            "Synchro",
+            1
+          ]
+        ],
+        "e": [
+          [
+            "Synchron",
+            "Christchurch WCQ Regional",
+            "Top 4"
+          ]
+        ]
+      },
+      "Dogmatika": {
+        "using": 1,
+        "with": [
+          [
+            "Albaz Dragon",
+            1
+          ],
+          [
+            "Branded",
+            1
+          ],
+          [
+            "Despia",
+            1
+          ],
+          [
+            "Mulcharmy",
+            1
+          ]
+        ],
+        "e": [
+          [
+            "Despia Branded",
+            "Bologna WCQ Regional",
+            "Top 8"
           ]
         ]
       },
@@ -6773,97 +6794,106 @@
         "with": [
           [
             "Mulcharmy",
-            4
-          ],
-          [
-            "Angelechy",
             3
           ],
           [
-            "@Ignister",
+            "Greed",
             2
           ],
           [
-            "Maliss",
-            2
+            "Angelechy",
+            1
+          ],
+          [
+            "Apophis",
+            1
+          ],
+          [
+            "Ashtra",
+            1
+          ],
+          [
+            "Blitzclique",
+            1
+          ],
+          [
+            "Penguin",
+            1
+          ],
+          [
+            "Radiant Typhoon",
+            1
           ]
         ],
         "e": [
           [
-            "@Ignister Maliss",
-            "San Salvador WCQ Regional",
-            "Runner-Up"
-          ],
-          [
-            "Angelechy",
-            "Graz WCQ Regional",
+            "Synchron Ashtra",
+            "Christchurch WCQ Regional",
             "Top 4"
           ],
           [
-            "Angelechy",
-            "Panama City WCQ Regional",
+            "Odion",
+            "Mechelen WCQ Regional",
+            "Winner"
+          ],
+          [
+            "Radiant Typhoon",
+            "Mechelen WCQ Regional",
             "Top 4"
           ]
         ]
       },
-      "DoomZ": {
-        "using": 1,
+      "Dracotail": {
+        "using": 2,
         "with": [
           [
-            "Ars Magna",
-            1
+            "Albaz Dragon",
+            2
           ],
           [
-            "Artmage",
-            1
-          ],
-          [
-            "Medius",
-            1
+            "Branded",
+            2
           ],
           [
             "Mulcharmy",
-            1
+            2
           ],
           [
-            "Pendulum",
-            1
-          ],
-          [
-            "Power Patron",
+            "Despia",
             1
           ]
         ],
         "e": [
           [
-            "Ars Magna Power Patron Artmage",
-            "Cluj-Napoca WCQ Regional",
+            "Branded Dracotail",
+            "Guayaquil WCQ Regional",
             "Top 8"
+          ],
+          [
+            "Branded Dracotail",
+            "Christchurch WCQ Regional",
+            "Runner-Up"
           ]
         ]
       },
       "Elfnote": {
-        "using": 6,
+        "using": 4,
         "with": [
           [
-            "Mulcharmy",
-            6
-          ],
-          [
-            "Power Patron",
-            6
-          ],
-          [
             "Ars Magna",
-            5
+            4
           ],
           [
             "Medius",
-            5
+            4
           ],
           [
-            "Angelechy",
-            1
+            "Mulcharmy",
+            4
+          ],
+          [
+            "Power Patron",
+            4
           ],
           [
             "Artmage",
@@ -6873,41 +6903,17 @@
         "e": [
           [
             "Ars Magna Elfnote",
-            "Cluj-Napoca WCQ Regional",
-            "Top 8"
+            "Guayaquil WCQ Regional",
+            "Winner"
           ],
           [
             "Ars Magna Elfnote",
-            "Cluj-Napoca WCQ Regional",
-            "Top 8"
+            "Mechelen WCQ Regional",
+            "Top 4"
           ],
           [
             "Ars Magna Elfnote",
-            "Panama City WCQ Regional",
-            "Runner-Up"
-          ]
-        ]
-      },
-      "Fairy Tail": {
-        "using": 1,
-        "with": [
-          [
-            "Endymion",
-            1
-          ],
-          [
-            "Magistus",
-            1
-          ],
-          [
-            "Mulcharmy",
-            1
-          ]
-        ],
-        "e": [
-          [
-            "Magistus Fairy Tail",
-            "Panama City WCQ Regional",
+            "Mechelen WCQ Regional",
             "Top 8"
           ]
         ]
@@ -6916,42 +6922,86 @@
         "using": 2,
         "with": [
           [
-            "Branded",
-            2
+            "Junk",
+            1
+          ],
+          [
+            "Magician",
+            1
           ],
           [
             "Radiant Typhoon",
-            2
+            1
           ],
           [
-            "Sky Striker",
-            2
+            "Stardust",
+            1
           ],
           [
-            "Mulcharmy",
+            "Synchro",
             1
           ]
         ],
         "e": [
           [
-            "Sky Striker",
-            "Cluj-Napoca WCQ Regional",
-            "Top 8"
+            "Synchron",
+            "Christchurch WCQ Regional",
+            "Top 4"
           ],
           [
-            "Radiant Typhoon Sky Striker",
-            "Panama City WCQ Regional",
+            "Dark Time Wizard Radiant Typhoon",
+            "Bern WCQ Regional",
             "Top 8"
           ]
         ]
       },
-      "Power Patron": {
-        "using": 8,
+      "Cyclone": {
+        "using": 1,
         "with": [
           [
-            "Mulcharmy",
-            8
+            "Ars Magna",
+            1
           ],
+          [
+            "Artmage",
+            1
+          ],
+          [
+            "Greed",
+            1
+          ],
+          [
+            "Kuriboh",
+            1
+          ],
+          [
+            "Medius",
+            1
+          ],
+          [
+            "Mulcharmy",
+            1
+          ],
+          [
+            "Pendulum",
+            1
+          ],
+          [
+            "Power Patron",
+            1
+          ]
+        ],
+        "e": [
+          [
+            "Ars Magna Power Patron Artmage",
+            "Puebla WCQ Regional",
+            "Runner-Up"
+          ]
+        ]
+      },
+      "Power Patron": {
+        "using": 7,
+        "with": [
           [
             "Ars Magna",
             7
@@ -6961,70 +7011,45 @@
             7
           ],
           [
-            "Elfnote",
-            6
+            "Mulcharmy",
+            7
           ],
           [
             "Artmage",
-            3
+            4
+          ],
+          [
+            "Elfnote",
+            4
           ],
           [
             "Pendulum",
-            2
+            3
           ],
           [
-            "Angelechy",
+            "Cyclone",
             1
           ],
           [
-            "DoomZ",
+            "Greed",
             1
           ]
         ],
         "e": [
           [
+            "Ars Magna Power Patron Artmage",
+            "Puebla WCQ Regional",
+            "Winner"
+          ],
+          [
             "Ars Magna Elfnote",
-            "Cluj-Napoca WCQ Regional",
-            "Top 8"
+            "Guayaquil WCQ Regional",
+            "Winner"
           ],
           [
             "Ars Magna Power Patron Artmage",
-            "Cluj-Napoca WCQ Regional",
-            "Top 8"
-          ],
-          [
-            "Ars Magna Elfnote",
-            "Cluj-Napoca WCQ Regional",
-            "Top 8"
-          ]
-        ]
-      },
-      "Maliss": {
-        "using": 2,
-        "with": [
-          [
-            "@Ignister",
-            2
-          ],
-          [
-            "Dominus",
-            2
-          ],
-          [
-            "Mulcharmy",
-            2
-          ]
-        ],
-        "e": [
-          [
-            "@Ignister Maliss",
-            "San Salvador WCQ Regional",
+            "Puebla WCQ Regional",
             "Runner-Up"
-          ],
-          [
-            "@Ignister Maliss",
-            "Panama City WCQ Regional",
-            "Top 8"
           ]
         ]
       },
@@ -7044,51 +7069,47 @@
             7
           ],
           [
-            "Elfnote",
-            5
+            "Artmage",
+            4
           ],
           [
-            "Artmage",
-            3
+            "Elfnote",
+            4
           ],
           [
             "Pendulum",
-            2
+            3
           ],
           [
-            "DoomZ",
+            "Cyclone",
             1
           ],
           [
-            "Kuriboh",
+            "Greed",
             1
           ]
         ],
         "e": [
           [
+            "Ars Magna Power Patron Artmage",
+            "Puebla WCQ Regional",
+            "Winner"
+          ],
+          [
             "Ars Magna Elfnote",
-            "Cluj-Napoca WCQ Regional",
-            "Top 8"
+            "Guayaquil WCQ Regional",
+            "Winner"
           ],
           [
             "Ars Magna Power Patron Artmage",
-            "Cluj-Napoca WCQ Regional",
-            "Top 8"
-          ],
-          [
-            "Ars Magna Elfnote",
-            "Cluj-Napoca WCQ Regional",
-            "Top 8"
+            "Puebla WCQ Regional",
+            "Runner-Up"
           ]
         ]
       },
       "Mulcharmy": {
-        "using": 17,
+        "using": 15,
         "with": [
-          [
-            "Power Patron",
-            8
-          ],
           [
             "Ars Magna",
             7
@@ -7098,78 +7119,139 @@
             7
           ],
           [
-            "Elfnote",
-            6
+            "Power Patron",
+            7
           ],
           [
-            "Dominus",
+            "Albaz Dragon",
             4
           ],
           [
-            "Angelechy",
-            3
-          ],
-          [
             "Artmage",
-            3
+            4
           ],
           [
-            "@Ignister",
-            2
+            "Branded",
+            4
+          ],
+          [
+            "Elfnote",
+            4
+          ],
+          [
+            "Despia",
+            3
           ]
         ],
         "e": [
           [
-            "@Ignister Maliss",
-            "San Salvador WCQ Regional",
-            "Runner-Up"
+            "Ars Magna Power Patron Artmage",
+            "Puebla WCQ Regional",
+            "Winner"
           ],
           [
             "Ars Magna Elfnote",
-            "Cluj-Napoca WCQ Regional",
-            "Top 8"
+            "Guayaquil WCQ Regional",
+            "Winner"
           ],
           [
-            "Sky Striker",
-            "Cluj-Napoca WCQ Regional",
-            "Top 8"
+            "Ars Magna Power Patron Artmage",
+            "Puebla WCQ Regional",
+            "Runner-Up"
           ]
         ]
       },
-      "Radiant Typhoon": {
-        "using": 3,
+      "Synchro": {
+        "using": 2,
         "with": [
           [
-            "Branded",
-            3
+            "Ashtra",
+            1
           ],
           [
-            "Sky Striker",
-            3
+            "Dominus",
+            1
           ],
           [
             "Forbidden",
-            2
+            1
+          ],
+          [
+            "Greed",
+            1
+          ],
+          [
+            "Junk",
+            1
           ],
           [
             "Mulcharmy",
+            1
+          ],
+          [
+            "Penguin",
+            1
+          ],
+          [
+            "Stardust",
             1
           ]
         ],
         "e": [
           [
-            "Sky Striker",
-            "Cluj-Napoca WCQ Regional",
-            "Top 8"
+            "Synchron",
+            "Christchurch WCQ Regional",
+            "Top 4"
+          ],
+          [
+            "Synchron Ashtra",
+            "Christchurch WCQ Regional",
+            "Top 4"
+          ]
+        ]
+      },
+      "Radiant Typhoon": {
+        "using": 4,
+        "with": [
+          [
+            "Magician",
+            2
+          ],
+          [
+            "Mulcharmy",
+            2
+          ],
+          [
+            "Dominus",
+            1
+          ],
+          [
+            "Forbidden",
+            1
+          ],
+          [
+            "Greed",
+            1
           ],
           [
             "Sky Striker",
-            "Panama City WCQ Regional",
+            1
+          ]
+        ],
+        "e": [
+          [
+            "Radiant Typhoon",
+            "Christchurch WCQ Regional",
             "Winner"
           ],
           [
-            "Radiant Typhoon Sky Striker",
-            "Panama City WCQ Regional",
+            "Radiant Typhoon",
+            "Mechelen WCQ Regional",
+            "Top 4"
+          ],
+          [
+            "Dark Time Wizard Sky Striker",
+            "Weston-Super-Mare WCQ Regional",
             "Top 8"
           ]
         ]
