@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-15T02:38:50.849Z",
+  "updated": "2026-11-15T03:56:13.057Z",
   "month": "2026-11",
   "rules": {
     "cap": 3,
@@ -48,9 +48,9 @@
     {
       "rank": 2,
       "name": "BishopKngSlayer",
-      "rating": 1467,
+      "rating": 1482,
       "points": 150,
-      "wins": 7,
+      "wins": 8,
       "losses": 11,
       "tier": "Bronze",
       "ranked": true,
@@ -59,11 +59,11 @@
     {
       "rank": 3,
       "name": "MacMetaslayerUDC",
-      "rating": 1456,
+      "rating": 1440,
       "points": 140,
       "wins": 4,
-      "losses": 7,
-      "tier": "Bronze",
+      "losses": 8,
+      "tier": "Rookie",
       "ranked": true,
       "linked": true
     },
@@ -115,6 +115,11 @@
   "recent": [
     {
       "kind": "rated",
+      "summary": "BishopKngSlayer defeated MacMetaslayerUDC. BishopKngSlayer +0 pts (monthly cap), rating ±15. BishopKngSlayer has earned from MacMetaslayerUDC 3/3 times this month.",
+      "at": "2026-11-15 03:50:12Z"
+    },
+    {
+      "kind": "rated",
       "summary": "BishopKngSlayer defeated MacMetaslayerUDC. BishopKngSlayer +0 pts (monthly cap), rating ±17. BishopKngSlayer has earned from MacMetaslayerUDC 3/3 times this month.",
       "at": "2026-11-15 02:32:50Z"
     },
@@ -157,11 +162,6 @@
       "kind": "rated",
       "summary": "BishopKngSlayer defeated BrakerGaming. BishopKngSlayer +10 pts, rating ±21. BishopKngSlayer has earned from BrakerGaming 1/3 times this month.",
       "at": "2026-11-06 17:55:48Z"
-    },
-    {
-      "kind": "wager_win",
-      "summary": "Upset! BishopKngSlayer beat MacMetaslayerUDC on a 15-point wager (40% odds). BishopKngSlayer +0 pts (monthly cap reached before approval), rating ±19.",
-      "at": "2026-11-06 03:02:01Z"
     }
   ]
 }
