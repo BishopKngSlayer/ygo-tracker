@@ -3543,7 +3543,14 @@
   <button class="timer-btn start" id="timerToggleBtn" onclick="timerToggle()">▶ Start</button>
   <button class="timer-btn" onclick="confirmNewGame()" style="border-color:rgba(255,80,80,0.35);color:#ff8888;">✕ New Game</button>
   <div class="timer-sep"></div>
-  <button class="timer-btn" id="soundToggleBtn" onclick="toggleMasterSound()" title="Toggle all sounds on/off" style="font-size:16px;min-width:32px;padding:2px 6px;">🔊</button>
+  <div style="position:relative;display:inline-block;" id="soundMenuWrap">
+    <button class="timer-btn" id="soundToggleBtn" onclick="toggleSoundMenu()" title="Sound options" style="font-size:16px;min-width:32px;padding:2px 6px;">🔊</button>
+    <div id="soundDropMenu" style="display:none;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:6px;background:var(--bg,#1a1a2e);border:1px solid rgba(255,255,255,0.15);border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.5);min-width:160px;z-index:9999;overflow:hidden;">
+      <button onclick="toggleMasterSound();closeSoundMenu()" id="soundMuteOption" style="display:flex;align-items:center;gap:8px;width:100%;padding:10px 14px;background:none;border:none;color:var(--text,#eee);font-size:13px;cursor:pointer;text-align:left;font-family:inherit;" onmouseover="this.style.background='rgba(255,255,255,0.07)'" onmouseout="this.style.background='none'">🔇 Mute</button>
+      <div style="border-top:1px solid rgba(255,255,255,0.08);"></div>
+      <button onclick="openSoundSettingsModal();closeSoundMenu()" style="display:flex;align-items:center;gap:8px;width:100%;padding:10px 14px;background:none;border:none;color:var(--text,#eee);font-size:13px;cursor:pointer;text-align:left;font-family:inherit;" onmouseover="this.style.background='rgba(255,255,255,0.07)'" onmouseout="this.style.background='none'">⚙️ Sound Settings</button>
+    </div>
+  </div>
   <button class="timer-btn menu-toggle" id="menuToggleBtn" onclick="toggleGameMenu()" title="Menu">☰ Menu</button>
 </div>
 <input type="hidden" id="startingLPInput" value="8000">
@@ -3916,6 +3923,24 @@
         <span class="sound-volume-label">Volume</span>
         <input type="range" id="soundVolumeSlider" min="0" max="100" value="70" oninput="soundVolumeChange(this.value)">
         <span id="soundVolumeVal">70%</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Sound Settings Modal -->
+<div id="soundSettingsModal" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;" onclick="if(event.target===this)closeSoundSettingsModal()">
+  <div style="background:var(--bg,#1a1a2e);border:1px solid rgba(255,255,255,0.12);border-radius:12px;width:92vw;max-width:420px;max-height:80vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,0.6);">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px 10px;border-bottom:1px solid rgba(255,255,255,0.06);">
+      <span style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;color:#88ccff;text-transform:uppercase;">🔊 Sound Settings</span>
+      <button onclick="closeSoundSettingsModal()" style="background:none;border:none;color:var(--dim,#888);font-size:18px;cursor:pointer;padding:2px 6px;">✕</button>
+    </div>
+    <div style="padding:14px 16px 10px;">
+      <div id="soundSettingsModalRows"></div>
+      <div class="sound-volume-row">
+        <span class="sound-volume-label">Volume</span>
+        <input type="range" id="soundVolumeSliderModal" min="0" max="100" value="70" oninput="soundVolumeChange(this.value)">
+        <span id="soundVolumeValModal">70%</span>
       </div>
     </div>
   </div>
@@ -9072,7 +9097,121 @@
     if (volVal) volVal.textContent = Math.round(_soundVolume * 100) + '%';
   }
 
+  /* ── Sound dropdown menu + modal ───────────────────────────── */
+  function toggleSoundMenu() {
+    var menu = document.getElementById('soundDropMenu');
+    if (!menu) return;
+    var open = menu.style.display !== 'none';
+    menu.style.display = open ? 'none' : 'block';
+    // Update mute label
+    var muteBtn = document.getElementById('soundMuteOption');
+    if (muteBtn) muteBtn.innerHTML = _masterSoundMuted ? '🔊 Sound On' : '🔇 Mute';
+  }
+  function closeSoundMenu() {
+    var menu = document.getElementById('soundDropMenu');
+    if (menu) menu.style.display = 'none';
+  }
+  // Close sound menu when clicking elsewhere
+  document.addEventListener('click', function(e) {
+    var wrap = document.getElementById('soundMenuWrap');
+    if (wrap && !wrap.contains(e.target)) closeSoundMenu();
+  });
+  function openSoundSettingsModal() {
+    var modal = document.getElementById('soundSettingsModal');
+    if (modal) { modal.style.display = 'flex'; renderSoundSettingsModal(); }
+  }
+  function closeSoundSettingsModal() {
+    var modal = document.getElementById('soundSettingsModal');
+    if (modal) modal.style.display = 'none';
+  }
+  function renderSoundSettingsModal() {
+    var container = document.getElementById('soundSettingsModalRows');
+    if (!container) return;
+    var volSlider = document.getElementById('soundVolumeSliderModal');
+    if (volSlider) volSlider.value = Math.round(_soundVolume * 100);
+    var volVal = document.getElementById('soundVolumeValModal');
+    if (volVal) volVal.textContent = Math.round(_soundVolume * 100) + '%';
+
+    var events = [
+      { key: 'duelStart', label: '🌟  Duel Start' },
+      { key: 'damage',    label: '⚔️  Damage' },
+      { key: 'heal',      label: '💚  Heal' },
+      { key: 'attack',    label: '🗡️  Attack' },
+      { key: 'chain',     label: '🔗  Chain' },
+      { key: 'eliminate', label: '💀  Eliminate' },
+      { key: 'nextTurn',  label: '▶  Next Turn' },
+      { key: 'nextPhase', label: '⟶  Next Phase' },
+      { key: 'win',       label: '🏆  Win / End' },
+      { key: 'coin',      label: '🪙  Coin Flip' },
+      { key: 'dice',      label: '🎲  Dice Roll' },
+    ];
+
+    // Sound Pack selector
+    var packHTML = '<div style="margin-bottom:12px;">'
+      + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">'
+      + '<span style="font-family:\'Cinzel\',serif;font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;">Sound Pack</span>'
+      + (_soundPackLoading ? '<span style="font-size:9px;color:var(--gold);animation:pulse 1s ease infinite;">Loading...</span>' : '')
+      + '</div>'
+      + '<select onchange="loadSoundPack(this.value)" style="width:100%;padding:6px 8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:4px;color:var(--text);font-size:12px;cursor:pointer;">'
+      + '<option value=""' + (!_currentSoundPack ? ' selected' : '') + '>None (built-in only)</option>';
+    _soundPacks.forEach(function(p) {
+      packHTML += '<option value="' + p.id + '"' + (_currentSoundPack === p.id ? ' selected' : '') + '>' + p.name + ' — ' + p.desc + '</option>';
+    });
+    packHTML += '</select></div>';
+
+    // Built-in sound + TTS toggles
+    var togglesHTML = '<div style="display:flex;gap:12px;margin-bottom:12px;">'
+      + '<label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;color:var(--text);">'
+      +   '<input type="checkbox" ' + (_builtinSoundsEnabled ? 'checked' : '') + ' onchange="toggleBuiltinSounds()" style="accent-color:var(--gold);cursor:pointer;"> Built-in SFX'
+      + '</label>'
+      + '<label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;color:var(--text);">'
+      +   '<input type="checkbox" ' + (_ttsAnnouncerEnabled ? 'checked' : '') + ' onchange="toggleTTSAnnouncer()" style="accent-color:var(--gold);cursor:pointer;"> TTS Announcer'
+      + '</label>'
+      + '</div>';
+
+    container.innerHTML = packHTML + togglesHTML + events.map(function(ev) {
+      var mapped  = _soundMap[ev.key] || '';
+      var isPack = mapped.indexOf('_pack_') === 0;
+      var hasFile = mapped && _soundFiles.indexOf(mapped) !== -1;
+      var fileLabel;
+      if (isPack && _currentSoundPack) {
+        var packName = _soundPacks.reduce(function(a,p){ return p.id === _currentSoundPack ? p.name : a; }, _currentSoundPack);
+        fileLabel = '<span style="font-family:monospace;font-size:10px;color:#ab88ff;flex:1;">&#x1F3B5; ' + packName + '</span>';
+      } else if (hasFile) {
+        fileLabel = '<span style="font-family:monospace;font-size:10px;color:var(--gold);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="' + mapped + '">' + mapped + '</span>';
+      } else {
+        fileLabel = _builtinSoundsEnabled
+          ? '<span style="font-family:\'Cinzel\',serif;font-size:9px;color:#66bb6a;flex:1;">&#x2714; built-in</span>'
+          : '<span style="font-family:\'Cinzel\',serif;font-size:9px;color:var(--dim);flex:1;">— none —</span>';
+      }
+      return '<div class="sound-row">'
+        + '<span class="sound-row-label">' + ev.label + '</span>'
+        + fileLabel
+        + '<button class="sound-test-btn" onclick="playSound(\''+ev.key+'\')" title="Test">&#x25B6;</button>'
+        + '<button class="sound-test-btn" onclick="uploadSoundForEvent(\''+ev.key+'\')" title="Upload custom" style="color:#88ccff;border-color:rgba(100,180,255,0.3);">&#x1F4C2;</button>'
+        + (hasFile ? '<button class="sound-test-btn" onclick="_clearSoundEvent(\''+ev.key+'\')" title="Remove" style="color:#ff8888;border-color:rgba(255,80,80,0.3);">&#x2715;</button>' : '')
+        + '</div>';
+    }).join('');
+
+    var _userSoundFiles = _soundFiles.filter(function(f) { return f.indexOf('_pack_') !== 0; });
+    if (_userSoundFiles.length) {
+      container.innerHTML += '<div style="border-top:1px solid rgba(255,255,255,0.05);margin-top:8px;padding-top:8px;">'
+        + '<div style="font-family:\'Cinzel\',serif;font-size:8px;letter-spacing:2px;color:var(--dim);margin-bottom:6px;">STORED FILES (' + _userSoundFiles.length + ')</div>'
+        + _userSoundFiles.map(function(f) {
+            return '<div style="display:flex;align-items:center;gap:6px;padding:3px 0;">'
+              + '<span style="font-family:monospace;font-size:10px;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;">' + f + '</span>'
+              + '<button class="sound-test-btn" onclick="deleteSoundFile(\''+f.replace(/'/g,"\\'")+'\')">&#x1F5D1;</button>'
+              + '</div>';
+          }).join('')
+        + '</div>';
+    }
+  }
+
   function renderSoundSettings() {
+    // Also refresh the modal if it's open
+    if (document.getElementById('soundSettingsModal') && document.getElementById('soundSettingsModal').style.display === 'flex') {
+      renderSoundSettingsModal();
+    }
     var container = document.getElementById('soundSettingsRows');
     if (!container) return;
     var volSlider = document.getElementById('soundVolumeSlider');
@@ -9166,7 +9305,14 @@
   function soundVolumeChange(val) {
     _soundVolume = parseInt(val) / 100;
     localStorage.setItem('yugioh_soundvolume', _soundVolume);
-    document.getElementById('soundVolumeVal').textContent = val + '%';
+    var v1 = document.getElementById('soundVolumeVal');
+    var v2 = document.getElementById('soundVolumeValModal');
+    if (v1) v1.textContent = val + '%';
+    if (v2) v2.textContent = val + '%';
+    var s1 = document.getElementById('soundVolumeSlider');
+    var s2 = document.getElementById('soundVolumeSliderModal');
+    if (s1) s1.value = val;
+    if (s2) s2.value = val;
   }
 
   // Restore volume from storage
