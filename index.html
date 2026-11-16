@@ -4769,6 +4769,14 @@
     duelStart: '',
     attack:    '',
   };
+  var _currentSoundPack = localStorage.getItem('yugioh_sound_pack') || '';
+  var _soundPackLoading = false;
+  var _soundPackEvents = ['damage','heal','eliminate','nextTurn','nextPhase','win','coin','dice','chain','duelStart','attack'];
+  var _soundPacks = [
+    { id: 'anime', name: 'Anime', desc: 'Dramatic, punchy anime-style effects' },
+    { id: 'retro', name: 'Retro 8-Bit', desc: 'Classic chiptune / NES-style bleeps and bloops' },
+    { id: 'dark',  name: 'Dark Cinematic', desc: 'Heavy, ominous, cinematic sound design' },
+  ];
   let logEventId = 0;
   let dmgTypeState = {}; // key: "i" -> 'battle'|'effect', default 'effect'
   let lpHistory    = {}; // key: i -> [{lp, teamLP}] for undo
@@ -8700,6 +8708,84 @@
   // Keep scanSoundsFolder as a no-op shim (called on folder link, now optional)
   function scanSoundsFolder() { /* sounds now stored in IDB, no folder scan needed */ }
 
+  /* ── Sound Pack System ─────────────────────────────────────── */
+  function loadSoundPack(packId) {
+    if (_soundPackLoading) return;
+    if (!packId) {
+      // "None" selected — clear pack sounds
+      _currentSoundPack = '';
+      localStorage.setItem('yugioh_sound_pack', '');
+      // Clear pack-loaded buffers and map entries
+      _soundPackEvents.forEach(function(ev) {
+        var pkey = '_pack_' + ev;
+        delete _soundBuffers[pkey];
+        if (_soundMap[ev] === pkey) _soundMap[ev] = '';
+      });
+      localStorage.setItem('yugioh_soundmap', JSON.stringify(_soundMap));
+      renderSoundSettings();
+      return;
+    }
+    _soundPackLoading = true;
+    _currentSoundPack = packId;
+    localStorage.setItem('yugioh_sound_pack', packId);
+    renderSoundSettings();
+
+    var baseUrl = (location.href.indexOf('github.io') !== -1)
+      ? location.href.replace(/\/[^/]*$/, '/sounds/' + packId + '/')
+      : 'sounds/' + packId + '/';
+
+    var loaded = 0;
+    var total = _soundPackEvents.length;
+
+    _soundPackEvents.forEach(function(ev) {
+      var url = baseUrl + ev + '.mp3';
+      fetch(url).then(function(resp) {
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        return resp.arrayBuffer();
+      }).then(function(arrayBuf) {
+        // Store in IDB under _pack_ prefix so it doesn't clash with user uploads
+        var idbKey = '_pack_' + ev;
+        return _idbPut('sounds', idbKey, arrayBuf).then(function() {
+          var ctx = _getAudioCtx();
+          return ctx.decodeAudioData(arrayBuf.slice(0)).then(function(decoded) {
+            _soundBuffers[idbKey] = decoded;
+            if (_soundFiles.indexOf(idbKey) === -1) _soundFiles.push(idbKey);
+            // Map this event to the pack file (only if user hasn't uploaded a custom one, or if pack is overriding)
+            _soundMap[ev] = idbKey;
+          });
+        });
+      }).catch(function(err) {
+        console.warn('Sound pack: failed to load ' + ev + '.mp3 for pack "' + packId + '":', err.message);
+      }).finally(function() {
+        loaded++;
+        if (loaded >= total) {
+          _soundPackLoading = false;
+          localStorage.setItem('yugioh_soundmap', JSON.stringify(_soundMap));
+          _soundFiles.sort();
+          renderSoundSettings();
+        }
+      });
+    });
+  }
+
+  // On startup, if a pack was selected, re-load its buffers from IDB
+  (function() {
+    if (!_currentSoundPack) return;
+    _soundPackEvents.forEach(function(ev) {
+      var idbKey = '_pack_' + ev;
+      _idbGet('sounds', idbKey).then(function(buf) {
+        if (!buf) return;
+        try {
+          var ctx = _getAudioCtx();
+          ctx.decodeAudioData(buf.slice(0)).then(function(decoded) {
+            _soundBuffers[idbKey] = decoded;
+            if (_soundFiles.indexOf(idbKey) === -1) _soundFiles.push(idbKey);
+          }).catch(function(){});
+        } catch(e) {}
+      });
+    });
+  })();
+
   function playSound(event) {
     // 1) Try user-uploaded sound first
     var fname = _soundMap[event];
@@ -9005,6 +9091,19 @@
       { key: 'dice',      label: '🎲  Dice Roll' },
     ];
 
+    // Sound Pack selector
+    var packHTML = '<div style="margin-bottom:12px;">'
+      + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">'
+      + '<span style="font-family:\'Cinzel\',serif;font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;">Sound Pack</span>'
+      + (_soundPackLoading ? '<span style="font-size:9px;color:var(--gold);animation:pulse 1s ease infinite;">Loading...</span>' : '')
+      + '</div>'
+      + '<select onchange="loadSoundPack(this.value)" style="width:100%;padding:6px 8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:4px;color:var(--text);font-size:12px;cursor:pointer;">'
+      + '<option value=""' + (!_currentSoundPack ? ' selected' : '') + '>None (built-in only)</option>';
+    _soundPacks.forEach(function(p) {
+      packHTML += '<option value="' + p.id + '"' + (_currentSoundPack === p.id ? ' selected' : '') + '>' + p.name + ' — ' + p.desc + '</option>';
+    });
+    packHTML += '</select></div>';
+
     // Built-in sound + TTS toggles
     var togglesHTML = '<div style="display:flex;gap:12px;margin-bottom:12px;">'
       + '<label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;color:var(--text);">'
@@ -9015,14 +9114,21 @@
       + '</label>'
       + '</div>';
 
-    container.innerHTML = togglesHTML + events.map(function(ev) {
+    container.innerHTML = packHTML + togglesHTML + events.map(function(ev) {
       var mapped  = _soundMap[ev.key] || '';
+      var isPack = mapped.indexOf('_pack_') === 0;
       var hasFile = mapped && _soundFiles.indexOf(mapped) !== -1;
-      var fileLabel = hasFile
-        ? '<span style="font-family:monospace;font-size:10px;color:var(--gold);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="' + mapped + '">' + mapped + '</span>'
-        : (_builtinSoundsEnabled
+      var fileLabel;
+      if (isPack && _currentSoundPack) {
+        var packName = _soundPacks.reduce(function(a,p){ return p.id === _currentSoundPack ? p.name : a; }, _currentSoundPack);
+        fileLabel = '<span style="font-family:monospace;font-size:10px;color:#ab88ff;flex:1;">&#x1F3B5; ' + packName + '</span>';
+      } else if (hasFile) {
+        fileLabel = '<span style="font-family:monospace;font-size:10px;color:var(--gold);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="' + mapped + '">' + mapped + '</span>';
+      } else {
+        fileLabel = _builtinSoundsEnabled
           ? '<span style="font-family:\'Cinzel\',serif;font-size:9px;color:#66bb6a;flex:1;">&#x2714; built-in</span>'
-          : '<span style="font-family:\'Cinzel\',serif;font-size:9px;color:var(--dim);flex:1;">— none —</span>');
+          : '<span style="font-family:\'Cinzel\',serif;font-size:9px;color:var(--dim);flex:1;">— none —</span>';
+      }
       return '<div class="sound-row">'
         + '<span class="sound-row-label">' + ev.label + '</span>'
         + fileLabel
@@ -9032,10 +9138,11 @@
         + '</div>';
     }).join('');
 
-    if (_soundFiles.length) {
+    var _userSoundFiles = _soundFiles.filter(function(f) { return f.indexOf('_pack_') !== 0; });
+    if (_userSoundFiles.length) {
       container.innerHTML += '<div style="border-top:1px solid rgba(255,255,255,0.05);margin-top:8px;padding-top:8px;">'
-        + '<div style="font-family:\'Cinzel\',serif;font-size:8px;letter-spacing:2px;color:var(--dim);margin-bottom:6px;">STORED FILES (' + _soundFiles.length + ')</div>'
-        + _soundFiles.map(function(f) {
+        + '<div style="font-family:\'Cinzel\',serif;font-size:8px;letter-spacing:2px;color:var(--dim);margin-bottom:6px;">STORED FILES (' + _userSoundFiles.length + ')</div>'
+        + _userSoundFiles.map(function(f) {
             return '<div style="display:flex;align-items:center;gap:6px;padding:3px 0;">'
               + '<span style="font-family:monospace;font-size:10px;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;">' + f + '</span>'
               + '<button class="sound-test-btn" onclick="deleteSoundFile(\''+f.replace(/'/g,"\\'")+'\')">&#x1F5D1;</button>'

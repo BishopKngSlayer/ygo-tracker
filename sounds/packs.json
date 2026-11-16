@@ -1,0 +1,22 @@
+{
+  "packs": [
+    {
+      "id": "anime",
+      "name": "Anime",
+      "description": "Dramatic, punchy anime-style effects",
+      "events": ["damage","heal","eliminate","nextTurn","nextPhase","win","coin","dice","chain","duelStart","attack"]
+    },
+    {
+      "id": "retro",
+      "name": "Retro 8-Bit",
+      "description": "Classic chiptune / NES-style bleeps and bloops",
+      "events": ["damage","heal","eliminate","nextTurn","nextPhase","win","coin","dice","chain","duelStart","attack"]
+    },
+    {
+      "id": "dark",
+      "name": "Dark Cinematic",
+      "description": "Heavy, ominous, cinematic sound design",
+      "events": ["damage","heal","eliminate","nextTurn","nextPhase","win","coin","dice","chain","duelStart","attack"]
+    }
+  ]
+}
