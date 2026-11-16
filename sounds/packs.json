@@ -1,6 +1,12 @@
 {
   "packs": [
     {
+      "id": "duelmonsters",
+      "name": "Duel Monsters",
+      "description": "Classic Yu-Gi-Oh! Duel Monsters anime SFX",
+      "events": ["damage","heal","eliminate","nextTurn","nextPhase","win","coin","dice","chain","duelStart","attack"]
+    },
+    {
       "id": "anime",
       "name": "Anime",
       "description": "Dramatic, punchy anime-style effects",
