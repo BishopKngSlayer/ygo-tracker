@@ -8768,7 +8768,7 @@
 
     _soundPackEvents.forEach(function(ev) {
       var url = baseUrl + ev + '.mp3';
-      fetch(url).then(function(resp) {
+      fetch(url, {cache: 'no-store'}).then(function(resp) {
         if (!resp.ok) throw new Error('HTTP ' + resp.status);
         return resp.arrayBuffer();
       }).then(function(arrayBuf) {
