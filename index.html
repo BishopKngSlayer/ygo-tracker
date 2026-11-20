@@ -7822,7 +7822,11 @@
   var _discord = { enabled:false, webhook:'', includeLb:true };
   try { var _ds = JSON.parse(localStorage.getItem('ygo_discord') || 'null'); if (_ds) _discord = Object.assign(_discord, _ds); } catch(e) {}
 
+  // Settings are read from the Mode → Rules fields. Until those fields have been filled from storage,
+  // reading them would save blanks over the real webhook (the 📣 Discord button on the Roster did exactly that).
+  var _discordUILoaded = false;
   function saveDiscordSettings() {
+    if (!_discordUILoaded) return;
     var on = document.getElementById('rule-discord-on');
     var wh = document.getElementById('rule-discord-webhook');
     var lb = document.getElementById('rule-discord-lb');
@@ -7841,7 +7845,10 @@
     if (wh)  wh.value    = _discord.webhook;
     if (lb)  lb.checked  = _discord.includeLb;
     if (sub) sub.style.display = _discord.enabled ? 'flex' : 'none';
+    if (on && wh && lb) _discordUILoaded = true;
   }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', loadDiscordUI);
+  else loadDiscordUI();
 
   function _discordReady() {
     return _discord.enabled && /^https:\/\/(discord\.com|discordapp\.com)\/api\/webhooks\//.test(_discord.webhook);
@@ -12206,7 +12213,7 @@
       if (cntM) {
         var numStr = cntM[1] || cntM[2];
         var cnt = wordsToNum(numStr||'');
-        if (!isNaN(cnt) && cnt >= 2 && cnt <= 6) {
+        if (!isNaN(cnt) && cnt >= 2 && cnt <= 8) {
           setPlayerCount(cnt); setResult(cnt+' players set ✓','ok'); return;
         }
       }
@@ -13067,8 +13074,8 @@
       <div class="tutorial-slide-icon">🏆</div>
       <div class="tutorial-slide-title">GAME MODES</div>
       <div class="tutorial-slide-body">
-        Standard 1v1, Best-of-3/5, King of the Hill, Round Robin, Swiss, and Team Duels — all from the <strong>Mode</strong> menu.<br><br>
-        Supports 2-6 players with automatic bracket and match tracking.
+        Best of X, single-elimination Tournaments (up to 16, Best of 1 or 3), Team Battles, and King of the Hill — all from the <strong>Mode</strong> menu.<br><br>
+        Supports 2–8 players on one board, with automatic brackets and match tracking.
       </div>
     </div>
 
@@ -13224,7 +13231,7 @@
     <div class="vcmd-row"><span class="vcmd-example">"surrender"</span><span class="vcmd-desc">Active player concedes</span></div>
     <div class="vcmd-row"><span class="vcmd-example">"eliminate player 2"</span><span class="vcmd-desc">Manually eliminate a player</span></div>
     <div class="vcmd-row"><span class="vcmd-example">"revive"</span><span class="vcmd-desc">Second chance for active player</span></div>
-    <div class="vcmd-row"><span class="vcmd-example">"three players"</span><span class="vcmd-desc">Set player count (2–6)</span></div>
+    <div class="vcmd-row"><span class="vcmd-example">"three players"</span><span class="vcmd-desc">Set player count (2–8)</span></div>
     <div class="vcmd-row"><span class="vcmd-example">"new duel"</span><span class="vcmd-desc">Open the Duel Start wizard</span></div>
     <div class="vcmd-row"><span class="vcmd-example">"new game"</span><span class="vcmd-desc">Confirm and start a new game</span></div>
     <div class="vcmd-row"><span class="vcmd-example">"rematch"</span><span class="vcmd-desc">Same players, fresh LP</span></div>
