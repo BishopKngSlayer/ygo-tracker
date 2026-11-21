@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-20T18:24:51.540Z",
+  "updated": "2026-11-21T00:34:43.802Z",
   "month": "2026-11",
   "rules": {
     "cap": 3,
@@ -47,23 +47,23 @@
     },
     {
       "rank": 2,
-      "name": "BishopKngSlayer",
-      "rating": 1466,
-      "points": 150,
-      "wins": 10,
-      "losses": 14,
+      "name": "MacMetaslayerUDC",
+      "rating": 1473,
+      "points": 140,
+      "wins": 8,
+      "losses": 10,
       "tier": "Bronze",
       "ranked": true,
       "linked": true
     },
     {
       "rank": 3,
-      "name": "MacMetaslayerUDC",
-      "rating": 1457,
-      "points": 140,
-      "wins": 7,
-      "losses": 10,
-      "tier": "Bronze",
+      "name": "BishopKngSlayer",
+      "rating": 1450,
+      "points": 150,
+      "wins": 10,
+      "losses": 15,
+      "tier": "Rookie",
       "ranked": true,
       "linked": true
     },
@@ -115,6 +115,11 @@
   "recent": [
     {
       "kind": "rated",
+      "summary": "MacMetaslayerUDC defeated BishopKngSlayer. MacMetaslayerUDC +0 pts (monthly cap), rating ±16. MacMetaslayerUDC has earned from BishopKngSlayer 3/3 times this month.",
+      "at": "2026-11-20 18:31:59Z"
+    },
+    {
+      "kind": "rated",
       "summary": "BishopKngSlayer defeated MacMetaslayerUDC. BishopKngSlayer +0 pts (monthly cap), rating ±17. BishopKngSlayer has earned from MacMetaslayerUDC 3/3 times this month.",
       "at": "2026-11-17 15:49:59Z"
     },
@@ -157,11 +162,6 @@
       "kind": "rated",
       "summary": "MacMetaslayerUDC defeated BishopKngSlayer. MacMetaslayerUDC +10 pts, rating ±17. MacMetaslayerUDC has earned from BishopKngSlayer 3/3 times this month.",
       "at": "2026-11-07 21:59:42Z"
-    },
-    {
-      "kind": "rated",
-      "summary": "MacMetaslayerUDC defeated BishopKngSlayer. MacMetaslayerUDC +10 pts, rating ±19. MacMetaslayerUDC has earned from BishopKngSlayer 2/3 times this month.",
-      "at": "2026-11-07 21:55:24Z"
     }
   ]
 }
