@@ -7355,10 +7355,9 @@
     /* radius & angle config */
     var isMobile = window.innerWidth <= 480;
     var radius = isMobile ? 110 : 140;
-    /* items spread in a 270° arc from top-left, radiating from bottom-right corner */
-    var startAngle = 180;  /* degrees — straight left */
-    var sweep = 180;       /* 180° arc from left to straight up */
-    var angleStep = count > 1 ? sweep / (count - 1) : 0;
+    /* full 360° circle, evenly spaced */
+    var startAngle = -90;  /* start at top (12 o'clock) */
+    var angleStep = 360 / count;
 
     items.forEach(function(item, i) {
       if (_radialOpen) {
