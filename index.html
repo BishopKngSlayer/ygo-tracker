@@ -5256,10 +5256,11 @@
     });
     updateTurnLabel();
     updateHeaderVisibility();
-    // Hide duel button when a duel is in progress
+    // Hide duel button when a duel is in progress or wizard/radial is open
     var duelBtn = document.getElementById('duelStartBtn');
     if (duelBtn) {
-      duelBtn.style.display = dueling ? 'none' : '';
+      var wizOpen = document.getElementById('duelWizard') && document.getElementById('duelWizard').classList.contains('open');
+      duelBtn.style.display = (dueling || wizOpen || _radialOpen) ? 'none' : '';
     }
     // Auto-focus battle ATK input when in battle phase
     if (currentPhase === 3) {
