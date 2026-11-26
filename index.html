@@ -6209,8 +6209,10 @@
       var k = p.name.trim().toLowerCase();
       return roster[k] ? {w:roster[k].w, l:roster[k].l, f:roster[k].f||0} : {w:0, l:0, f:0};
     });
+    dueling = true;
     closeWizard();
     render();
+    timerStart();
     playSound('duelStart');
     var goingFirst = players[activeTurn].name;
     showToast('⚔️ ' + goingFirst + ' goes first! It\'s time to Duel!', 'info', 3000);
@@ -6235,8 +6237,10 @@
       var k = p.name.trim().toLowerCase();
       return roster[k] ? {w:roster[k].w, l:roster[k].l, f:roster[k].f||0} : {w:0, l:0, f:0};
     });
+    dueling = true;
     closeWizard();
     render();
+    timerStart();
     playSound('duelStart');
     showToast('⚔️ It\'s time to Duel!', 'info', 2500);
   }
