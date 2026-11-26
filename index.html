@@ -205,7 +205,8 @@
     color: var(--gold); font-size: 24px;
     display: flex; align-items: center; justify-content: center;
     cursor: pointer; box-shadow: 0 4px 24px rgba(0,0,0,0.5), 0 0 20px rgba(201,162,39,0.15);
-    transition: bottom 0.4s cubic-bezier(0.34,1.56,0.64,1), right 0.4s cubic-bezier(0.34,1.56,0.64,1),
+    transition: bottom 0.45s cubic-bezier(0.34,1.56,0.64,1), right 0.45s cubic-bezier(0.34,1.56,0.64,1),
+                width 0.3s ease, height 0.3s ease,
                 transform 0.3s cubic-bezier(0.34,1.56,0.64,1), border-color 0.3s, box-shadow 0.3s;
     -webkit-tap-highlight-color: transparent;
   }
@@ -214,10 +215,11 @@
     border-color: var(--gold);
   }
   .radial-fab.open {
-    bottom: calc(25vh - 30px); right: calc(25vw - 30px);
+    bottom: calc(50vh - 35px); right: calc(50vw - 35px);
+    width: 70px; height: 70px;
     transform: rotate(45deg);
     border-color: var(--gold-light);
-    box-shadow: 0 4px 28px rgba(0,0,0,0.6), 0 0 36px rgba(201,162,39,0.4);
+    box-shadow: 0 4px 28px rgba(0,0,0,0.6), 0 0 50px rgba(201,162,39,0.5);
   }
   .radial-fab-icon {
     transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
@@ -226,8 +228,8 @@
 
   .radial-backdrop {
     position: fixed; inset: 0; z-index: 9997;
-    background: radial-gradient(circle at 75% 75%, rgba(10,10,20,0.75) 0%, rgba(5,5,12,0.92) 100%);
-    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    background: radial-gradient(circle at 50% 50%, rgba(10,10,20,0.7) 0%, rgba(5,5,12,0.94) 100%);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
     opacity: 0; pointer-events: none;
     transition: opacity 0.35s ease;
   }
@@ -238,18 +240,18 @@
     bottom: 28px; right: 28px;
     width: 60px; height: 60px;
     pointer-events: none;
-    transition: bottom 0.4s cubic-bezier(0.34,1.56,0.64,1), right 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    transition: bottom 0.45s cubic-bezier(0.34,1.56,0.64,1), right 0.45s cubic-bezier(0.34,1.56,0.64,1);
   }
   .radial-ring.open {
-    bottom: calc(25vh - 30px); right: calc(25vw - 30px);
+    bottom: calc(50vh - 30px); right: calc(50vw - 30px);
   }
 
   .radial-item {
     position: absolute;
     left: 50%; top: 50%;
-    width: 56px; height: 56px; margin: -28px 0 0 -28px;
+    width: 68px; height: 68px; margin: -34px 0 0 -34px;
     border-radius: 50%;
-    background: rgba(13,13,26,0.92);
+    background: rgba(13,13,26,0.94);
     border: 1.5px solid rgba(201,162,39,0.35);
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
@@ -260,19 +262,19 @@
     transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1),
                 opacity 0.3s ease,
                 border-color 0.2s, background 0.2s, box-shadow 0.2s;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+    box-shadow: 0 2px 14px rgba(0,0,0,0.5);
   }
   .radial-item:hover {
     border-color: var(--gold);
-    background: rgba(201,162,39,0.12);
-    box-shadow: 0 0 18px rgba(201,162,39,0.3), 0 2px 12px rgba(0,0,0,0.4);
+    background: rgba(201,162,39,0.14);
+    box-shadow: 0 0 22px rgba(201,162,39,0.35), 0 2px 14px rgba(0,0,0,0.5);
   }
   .radial-item:active { transform: translate(var(--tx), var(--ty)) scale(0.9) !important; }
-  .radial-item .ri-icon { font-size: 20px; line-height: 1; }
+  .radial-item .ri-icon { font-size: 24px; line-height: 1; }
   .radial-item .ri-label {
-    font-family: 'Cinzel', serif; font-size: 7px; font-weight: 600;
+    font-family: 'Cinzel', serif; font-size: 8px; font-weight: 600;
     letter-spacing: 1px; text-transform: uppercase;
-    margin-top: 2px; color: var(--dim); white-space: nowrap;
+    margin-top: 3px; color: var(--dim); white-space: nowrap;
     transition: color 0.2s;
   }
   .radial-item:hover .ri-label { color: var(--gold-light); }
@@ -302,14 +304,49 @@
   }
   .radial-logo.open { opacity: 1; transform: scale(1); }
 
+  /* ━━ DUEL START BUTTON ━━━━━━━━━━━━━━━━━━━━━ */
+  .duel-start-btn {
+    position: fixed; bottom: 28px; left: 28px; z-index: 9996;
+    width: auto; padding: 14px 28px;
+    border-radius: 30px;
+    background: linear-gradient(135deg, #1a0a00 0%, #0d0d1a 100%);
+    border: 2px solid rgba(201,162,39,0.7);
+    color: var(--gold-light);
+    font-family: 'Cinzel Decorative', 'Cinzel', serif;
+    font-size: 16px; font-weight: 700;
+    letter-spacing: 4px; text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(201,162,39,0.2), 0 4px 20px rgba(0,0,0,0.5);
+    animation: duelPulse 2s ease-in-out infinite;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .duel-start-btn:hover {
+    transform: scale(1.06);
+    box-shadow: 0 0 36px rgba(201,162,39,0.5), 0 4px 24px rgba(0,0,0,0.6);
+  }
+  .duel-start-btn:active { transform: scale(0.96); }
+
+  @keyframes duelPulse {
+    0%, 100% {
+      box-shadow: 0 0 20px rgba(201,162,39,0.2), 0 4px 20px rgba(0,0,0,0.5);
+      border-color: rgba(201,162,39,0.5);
+    }
+    50% {
+      box-shadow: 0 0 40px rgba(201,162,39,0.6), 0 0 60px rgba(240,208,96,0.2), 0 4px 20px rgba(0,0,0,0.5);
+      border-color: var(--gold-light);
+    }
+  }
+
   @media (max-width: 480px) {
     .radial-fab { width: 52px; height: 52px; bottom: 20px; right: 20px; font-size: 22px; }
-    .radial-fab.open { bottom: calc(25vh - 26px); right: calc(25vw - 26px); }
+    .radial-fab.open { bottom: calc(50vh - 26px); right: calc(50vw - 26px); }
     .radial-ring { bottom: 20px; right: 20px; width: 52px; height: 52px; }
-    .radial-ring.open { bottom: calc(25vh - 26px); right: calc(25vw - 26px); }
-    .radial-item { width: 48px; height: 48px; margin: -24px 0 0 -24px; }
-    .radial-item .ri-icon { font-size: 17px; }
-    .radial-item .ri-label { font-size: 6px; }
+    .radial-ring.open { bottom: calc(50vh - 26px); right: calc(50vw - 26px); }
+    .radial-item { width: 58px; height: 58px; margin: -29px 0 0 -29px; }
+    .radial-item .ri-icon { font-size: 20px; }
+    .radial-item .ri-label { font-size: 7px; }
+    .duel-start-btn { bottom: 20px; left: 20px; padding: 12px 22px; font-size: 14px; letter-spacing: 3px; }
   }
   .btn {
     font-family: 'Cinzel', serif;
@@ -3699,7 +3736,6 @@
 <!-- ━━ RADIAL MENU ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
 <div class="radial-backdrop" id="radialBackdrop" onclick="toggleRadialMenu()"></div>
 <div class="radial-ring" id="radialRing">
-  <div class="radial-item" data-accent="gold" onclick="openDuelWizard();toggleRadialMenu()"><span class="ri-icon">⚔️</span><span class="ri-label">Duel</span></div>
   <div class="radial-item" data-accent="gold" onclick="openModeModal();toggleRadialMenu()"><span class="ri-icon">🏆</span><span class="ri-label">Mode</span></div>
   <div class="radial-item" data-accent="gold" onclick="openCalc();toggleRadialMenu()"><span class="ri-icon">🧮</span><span class="ri-label">Calc</span></div>
   <div class="radial-item" onclick="openLog();toggleRadialMenu()"><span class="ri-icon">📜</span><span class="ri-label">Log</span></div>
@@ -3715,6 +3751,7 @@
 <button class="radial-fab" id="radialFab" onclick="toggleRadialMenu()" title="Menu">
   <span class="radial-fab-icon">✦</span>
 </button>
+<button class="duel-start-btn" onclick="openDuelWizard()" title="Start a new duel">⚔️ DUEL</button>
 
 <div id="matchBanner">
   <span class="banner-label" id="bannerModeLabel"></span>
@@ -7354,7 +7391,7 @@
 
     /* radius & angle config */
     var isMobile = window.innerWidth <= 480;
-    var radius = isMobile ? 110 : 140;
+    var radius = isMobile ? 130 : 180;
     /* full 360° circle, evenly spaced */
     var startAngle = -90;  /* start at top (12 o'clock) */
     var angleStep = 360 / count;
