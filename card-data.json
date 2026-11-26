@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-25T16:23:20.140Z",
+  "updated": "2026-11-26T16:21:19.713Z",
   "banlist": {
     "current": "2026-10-19",
     "upcoming": null,
@@ -3260,7 +3260,7 @@
         "why": "same archetype (Dark Magician), also a Spellcaster"
       },
       {
-        "name": "Magician's Robe",
+        "name": "Palladium Oracle Mana",
         "s": "Unlimited",
         "why": "same archetype (Dark Magician), also a Spellcaster"
       }
@@ -3988,7 +3988,7 @@
       {
         "name": "Cyber Phoenix",
         "s": "Unlimited",
-        "why": "similar effect text, also a Machine"
+        "why": "also a Machine"
       }
     ],
     "Splash Mage": [
@@ -4219,12 +4219,12 @@
         "why": "similar effect text, also a Normal Spell"
       },
       {
-        "name": "Change of Heart",
+        "name": "Mind Control",
         "s": "Unlimited",
         "why": "also a Normal Spell"
       },
       {
-        "name": "Mind Control",
+        "name": "Pot of Avarice",
         "s": "Unlimited",
         "why": "also a Normal Spell"
       }
@@ -5482,9 +5482,9 @@
         "why": "similar effect text, also a Normal Spell"
       },
       {
-        "name": "Shien's Smoke Signal",
+        "name": "Preparation of Rites",
         "s": "Unlimited",
-        "why": "similar effect text, also a Normal Spell"
+        "why": "also a Normal Spell"
       }
     ],
     "Right Arm of the Forbidden One": [
@@ -6132,6 +6132,10 @@
           [
             "Mulcharmy",
             2
+          ],
+          [
+            "Yo-kai Girl",
+            2
           ]
         ],
         "e": [
@@ -6160,6 +6164,10 @@
           ],
           [
             "Mulcharmy",
+            2
+          ],
+          [
+            "Yo-kai Girl",
             2
           ],
           [
@@ -6194,6 +6202,10 @@
           [
             "Radiant Typhoon",
             1
+          ],
+          [
+            "Yo-kai Girl",
+            1
           ]
         ],
         "e": [
@@ -6222,6 +6234,10 @@
           [
             "Witchcrafter",
             1
+          ],
+          [
+            "Yo-kai Girl",
+            1
           ]
         ],
         "e": [
@@ -6245,6 +6261,10 @@
           ],
           [
             "Despia",
+            2
+          ],
+          [
+            "Yo-kai Girl",
             2
           ],
           [
@@ -6287,6 +6307,10 @@
           ],
           [
             "Despia",
+            2
+          ],
+          [
+            "Yo-kai Girl",
             2
           ],
           [
@@ -6369,6 +6393,10 @@
           ],
           [
             "Mulcharmy",
+            3
+          ],
+          [
+            "Yo-kai Girl",
             3
           ]
         ],
@@ -6455,6 +6483,10 @@
             9
           ],
           [
+            "Yo-kai Girl",
+            8
+          ],
+          [
             "Elfnote",
             5
           ],
@@ -6468,10 +6500,6 @@
           ],
           [
             "Kuriboh",
-            2
-          ],
-          [
-            "Light and Darkness Ritual",
             2
           ]
         ],
@@ -6544,6 +6572,60 @@
             "Ars Magna Power Patron",
             "Heredia WCQ Regional",
             "Winner"
+          ]
+        ]
+      },
+      "Yo-kai Girl": {
+        "using": 18,
+        "with": [
+          [
+            "Mulcharmy",
+            18
+          ],
+          [
+            "Ars Magna",
+            8
+          ],
+          [
+            "Medius",
+            8
+          ],
+          [
+            "Power Patron",
+            8
+          ],
+          [
+            "Dominus",
+            5
+          ],
+          [
+            "Elfnote",
+            5
+          ],
+          [
+            "Angelechy",
+            3
+          ],
+          [
+            "Albaz Dragon",
+            2
+          ]
+        ],
+        "e": [
+          [
+            "Ars Magna Elfnote",
+            "Ljubljana WCQ Regional",
+            "Top 8"
+          ],
+          [
+            "Unchained",
+            "Hoorn WCQ Regional",
+            "Top 4"
+          ],
+          [
+            "Despia Branded",
+            "Hoorn WCQ Regional",
+            "Top 8"
           ]
         ]
       },
@@ -6709,6 +6791,10 @@
           [
             "Tri-Brigade",
             1
+          ],
+          [
+            "Yo-kai Girl",
+            1
           ]
         ],
         "e": [
@@ -6737,6 +6823,10 @@
           [
             "Witchcrafter",
             1
+          ],
+          [
+            "Yo-kai Girl",
+            1
           ]
         ],
         "e": [
@@ -6752,6 +6842,10 @@
         "with": [
           [
             "Mulcharmy",
+            5
+          ],
+          [
+            "Yo-kai Girl",
             5
           ],
           [
@@ -6803,6 +6897,10 @@
           [
             "Power Patron",
             1
+          ],
+          [
+            "Yo-kai Girl",
+            1
           ]
         ],
         "e": [
@@ -6835,106 +6933,16 @@
           [
             "Power Patron",
             1
+          ],
+          [
+            "Yo-kai Girl",
+            1
           ]
         ],
         "e": [
           [
             "Ars Magna DoomZ",
             "Toronto WCQ Regional",
-            "Top 8"
-          ]
-        ]
-      },
-      "Dracotail": {
-        "using": 1,
-        "with": [
-          [
-            "Albaz Dragon",
-            1
-          ],
-          [
-            "Branded",
-            1
-          ],
-          [
-            "Despia",
-            1
-          ],
-          [
-            "Mulcharmy",
-            1
-          ]
-        ],
-        "e": [
-          [
-            "Branded Dracotail",
-            "Hoorn WCQ Regional",
-            "Runner-Up"
-          ]
-        ]
-      },
-      "Elfnote": {
-        "using": 5,
-        "with": [
-          [
-            "Ars Magna",
-            5
-          ],
-          [
-            "Medius",
-            5
-          ],
-          [
-            "Mulcharmy",
-            5
-          ],
-          [
-            "Power Patron",
-            5
-          ]
-        ],
-        "e": [
-          [
-            "Ars Magna Elfnote",
-            "Ljubljana WCQ Regional",
-            "Top 8"
-          ],
-          [
-            "Ars Magna Elfnote",
-            "Hoorn WCQ Regional",
-            "Top 4"
-          ],
-          [
-            "Ars Magna Elfnote",
-            "Doha WCQ Regional",
-            "Top 8"
-          ]
-        ]
-      },
-      "Fairy Tail": {
-        "using": 1,
-        "with": [
-          [
-            "Endymion",
-            1
-          ],
-          [
-            "Magistus",
-            1
-          ],
-          [
-            "Mulcharmy",
-            1
-          ],
-          [
-            "Witchcrafter",
-            1
-          ]
-        ],
-        "e": [
-          [
-            "Witchcrafter Magistus Fairy Tail",
-            "Spanish Fork WCQ Regional",
             "Top 8"
           ]
         ]
@@ -6988,6 +6996,112 @@
           ]
         ]
       },
+      "Dracotail": {
+        "using": 1,
+        "with": [
+          [
+            "Albaz Dragon",
+            1
+          ],
+          [
+            "Branded",
+            1
+          ],
+          [
+            "Despia",
+            1
+          ],
+          [
+            "Mulcharmy",
+            1
+          ],
+          [
+            "Yo-kai Girl",
+            1
+          ]
+        ],
+        "e": [
+          [
+            "Branded Dracotail",
+            "Hoorn WCQ Regional",
+            "Runner-Up"
+          ]
+        ]
+      },
+      "Elfnote": {
+        "using": 5,
+        "with": [
+          [
+            "Ars Magna",
+            5
+          ],
+          [
+            "Medius",
+            5
+          ],
+          [
+            "Mulcharmy",
+            5
+          ],
+          [
+            "Power Patron",
+            5
+          ],
+          [
+            "Yo-kai Girl",
+            5
+          ]
+        ],
+        "e": [
+          [
+            "Ars Magna Elfnote",
+            "Ljubljana WCQ Regional",
+            "Top 8"
+          ],
+          [
+            "Ars Magna Elfnote",
+            "Hoorn WCQ Regional",
+            "Top 4"
+          ],
+          [
+            "Ars Magna Elfnote",
+            "Doha WCQ Regional",
+            "Top 8"
+          ]
+        ]
+      },
+      "Fairy Tail": {
+        "using": 1,
+        "with": [
+          [
+            "Endymion",
+            1
+          ],
+          [
+            "Magistus",
+            1
+          ],
+          [
+            "Mulcharmy",
+            1
+          ],
+          [
+            "Witchcrafter",
+            1
+          ],
+          [
+            "Yo-kai Girl",
+            1
+          ]
+        ],
+        "e": [
+          [
+            "Witchcrafter Magistus Fairy Tail",
+            "Spanish Fork WCQ Regional",
+            "Top 8"
+          ]
+        ]
+      },
       "Power Patron": {
         "using": 9,
         "with": [
@@ -7004,6 +7118,10 @@
             9
           ],
           [
+            "Yo-kai Girl",
+            8
+          ],
+          [
             "Elfnote",
             5
           ],
@@ -7017,10 +7135,6 @@
           ],
           [
             "Kuriboh",
-            2
-          ],
-          [
-            "Light and Darkness Ritual",
             2
           ]
         ],
@@ -7058,6 +7172,10 @@
             9
           ],
           [
+            "Yo-kai Girl",
+            8
+          ],
+          [
             "Elfnote",
             5
           ],
@@ -7071,10 +7189,6 @@
           ],
           [
             "Kuriboh",
-            2
-          ],
-          [
-            "Light and Darkness Ritual",
             2
           ]
         ],
@@ -7099,6 +7213,10 @@
       "Mulcharmy": {
         "using": 20,
         "with": [
+          [
+            "Yo-kai Girl",
+            18
+          ],
           [
             "Ars Magna",
             9
@@ -7125,10 +7243,6 @@
           ],
           [
             "Angelechy",
-            3
-          ],
-          [
-            "Artmage",
             3
           ]
         ],
@@ -7164,6 +7278,10 @@
           [
             "Sky Striker",
             1
+          ],
+          [
+            "Yo-kai Girl",
+            1
           ]
         ],
         "e": [
@@ -7183,6 +7301,10 @@
           ],
           [
             "Toon",
+            1
+          ],
+          [
+            "Yo-kai Girl",
             1
           ]
         ],
@@ -7211,6 +7333,10 @@
           ],
           [
             "Mulcharmy",
+            1
+          ],
+          [
+            "Yo-kai Girl",
             1
           ]
         ],
