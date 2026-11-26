@@ -3751,7 +3751,7 @@
 <button class="radial-fab" id="radialFab" onclick="toggleRadialMenu()" title="Menu">
   <span class="radial-fab-icon">✦</span>
 </button>
-<button class="duel-start-btn" onclick="openDuelWizard()" title="Start a new duel">⚔️ DUEL</button>
+<button class="duel-start-btn" id="duelStartBtn" onclick="openDuelWizard()" title="Start a new duel">⚔️ DUEL</button>
 
 <div id="matchBanner">
   <span class="banner-label" id="bannerModeLabel"></span>
@@ -5256,6 +5256,12 @@
     });
     updateTurnLabel();
     updateHeaderVisibility();
+    // Hide duel button when game is active
+    var duelBtn = document.getElementById('duelStartBtn');
+    if (duelBtn) {
+      var gameActive = players.length > 0 && players.some(function(p) { return p.lp < MAX_LP || activeTurn >= 0; });
+      duelBtn.style.display = gameActive ? 'none' : '';
+    }
     // Auto-focus battle ATK input when in battle phase
     if (currentPhase === 3) {
       setTimeout(function() { var a = document.getElementById('batk-' + activeTurn); if (a && !a.value) a.focus(); }, 80);
@@ -5922,6 +5928,9 @@
     if (cs) cs.value = players.length;
     wizRenderSlots();
     wiz.classList.add('open');
+    // Hide duel start button
+    var db = document.getElementById('duelStartBtn');
+    if (db) db.style.display = 'none';
   }
 
   function closeWizard() {
@@ -7388,6 +7397,12 @@
     fab.classList.toggle('open', _radialOpen);
     backdrop.classList.toggle('open', _radialOpen);
     ring.classList.toggle('open', _radialOpen);
+
+    /* hide duel button when radial is open */
+    var duelBtn = document.getElementById('duelStartBtn');
+    if (duelBtn && duelBtn.style.display !== 'none') {
+      duelBtn.style.visibility = _radialOpen ? 'hidden' : 'visible';
+    }
 
     /* radius & angle config */
     var isMobile = window.innerWidth <= 480;
