@@ -3705,7 +3705,7 @@
   </div>
   <div class="timer-sep"></div>
   <button class="timer-btn start" id="timerToggleBtn" onclick="timerToggle()">▶ Start</button>
-  <button class="timer-btn" onclick="confirmNewGame()" style="border-color:rgba(255,80,80,0.35);color:#ff8888;">✕ New Game</button>
+  <button class="timer-btn" onclick="confirmNewGame()" style="border-color:rgba(255,80,80,0.35);color:#ff8888;display:none;">✕ New Game</button>
   <div class="timer-sep"></div>
   <div style="position:relative;display:inline-block;" id="soundMenuWrap">
     <button class="timer-btn" id="soundToggleBtn" onclick="toggleSoundMenu()" title="Sound options" style="font-size:16px;min-width:32px;padding:2px 6px;">🔊</button>
@@ -5256,11 +5256,10 @@
     });
     updateTurnLabel();
     updateHeaderVisibility();
-    // Hide duel button when game is active
+    // Hide duel button when a duel is in progress
     var duelBtn = document.getElementById('duelStartBtn');
     if (duelBtn) {
-      var gameActive = players.length > 0 && players.some(function(p) { return p.lp < MAX_LP || activeTurn >= 0; });
-      duelBtn.style.display = gameActive ? 'none' : '';
+      duelBtn.style.display = dueling ? 'none' : '';
     }
     // Auto-focus battle ATK input when in battle phase
     if (currentPhase === 3) {
