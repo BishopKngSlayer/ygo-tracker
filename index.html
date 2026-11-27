@@ -289,6 +289,82 @@
   .radial-item[data-accent="discord"] { border-color: rgba(88,101,242,0.5); }
   .radial-item[data-accent="discord"] .ri-label { color: #99aaff; }
 
+  /* ━━ DUEL TYPE RADIAL ━━━━━━━━━━━━━━━━━━━━ */
+  .duel-radial-backdrop {
+    display: none; position: fixed; inset: 0; z-index: 9999;
+    background: rgba(0,0,0,0.65); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  }
+  .duel-radial-backdrop.open { display: block; animation: fadeIn 0.2s ease; }
+  .duel-radial-ring {
+    position: fixed; z-index: 10000;
+    top: 50%; left: 50%;
+    width: 0; height: 0;
+    pointer-events: none;
+  }
+  .duel-radial-item {
+    position: absolute;
+    left: 0; top: 0;
+    width: 72px; height: 72px; margin: -36px 0 0 -36px;
+    border-radius: 50%;
+    background: rgba(13,13,26,0.94);
+    border: 1.5px solid rgba(201,162,39,0.35);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    cursor: pointer; pointer-events: auto;
+    text-decoration: none; color: var(--text);
+    transform: translate(0,0) scale(0);
+    opacity: 0;
+    transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1),
+                opacity 0.3s ease,
+                border-color 0.2s, background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 14px rgba(0,0,0,0.5);
+  }
+  .duel-radial-item:hover {
+    border-color: var(--gold);
+    background: rgba(201,162,39,0.14);
+    box-shadow: 0 0 22px rgba(201,162,39,0.35), 0 2px 14px rgba(0,0,0,0.5);
+  }
+  .duel-radial-item:active { transform: translate(var(--tx), var(--ty)) scale(0.9) !important; }
+  .duel-radial-item .dri-icon { font-size: 24px; line-height: 1; }
+  .duel-radial-item .dri-label {
+    font-family: 'Cinzel', serif; font-size: 7px; font-weight: 600;
+    letter-spacing: 1px; text-transform: uppercase;
+    margin-top: 3px; color: var(--dim); white-space: nowrap;
+    transition: color 0.2s;
+  }
+  .duel-radial-item:hover .dri-label { color: var(--gold-light); }
+  .duel-radial-item.open {
+    opacity: 1;
+    transform: translate(var(--tx), var(--ty)) scale(1);
+  }
+  /* Accent colors for duel radial */
+  .duel-radial-item[data-accent="gold"] { border-color: rgba(201,162,39,0.5); }
+  .duel-radial-item[data-accent="gold"] .dri-label { color: var(--gold); }
+  .duel-radial-item[data-accent="blue"] { border-color: rgba(100,160,255,0.5); }
+  .duel-radial-item[data-accent="blue"] .dri-label { color: #88bbff; }
+  .duel-radial-item[data-accent="green"] { border-color: rgba(0,200,120,0.4); }
+  .duel-radial-item[data-accent="green"] .dri-label { color: #44ddaa; }
+  .duel-radial-item[data-accent="purple"] { border-color: rgba(180,120,255,0.5); }
+  .duel-radial-item[data-accent="purple"] .dri-label { color: #bb99ff; }
+  /* Center label shown when duel radial is open */
+  .duel-radial-center {
+    position: fixed; z-index: 10001;
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
+    font-family: 'Cinzel Decorative', 'Cinzel', serif;
+    font-size: 14px; font-weight: 700; letter-spacing: 4px;
+    color: var(--gold-light); text-transform: uppercase;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s ease 0.15s;
+    text-shadow: 0 0 20px rgba(201,162,39,0.4);
+  }
+  .duel-radial-center.open { opacity: 1; }
+  @media (max-width: 480px) {
+    .duel-radial-item { width: 62px; height: 62px; margin: -31px 0 0 -31px; }
+    .duel-radial-item .dri-icon { font-size: 20px; }
+    .duel-radial-item .dri-label { font-size: 6px; }
+    .duel-radial-center { font-size: 11px; letter-spacing: 3px; }
+  }
+
   .radial-item.open {
     opacity: 1;
     transform: translate(var(--tx), var(--ty)) scale(1);
@@ -3754,7 +3830,16 @@
 <button class="radial-fab" id="radialFab" onclick="toggleRadialMenu()" title="Menu">
   <span class="radial-fab-icon">✦</span>
 </button>
-<button class="duel-start-btn" id="duelStartBtn" onclick="openDuelWizard()" title="Start a new duel">⚔️ DUEL</button>
+<button class="duel-start-btn" id="duelStartBtn" title="Start a new duel">⚔️ DUEL</button>
+<div class="duel-radial-backdrop" id="duelRadialBackdrop" onclick="closeDuelRadial()"></div>
+<div class="duel-radial-ring" id="duelRadialRing">
+  <div class="duel-radial-item" data-accent="gold" onclick="duelRadialPick('quick')"><span class="dri-icon">⚔️</span><span class="dri-label">Quick Duel</span></div>
+  <div class="duel-radial-item" data-accent="blue" onclick="duelRadialPick('bestof')"><span class="dri-icon">🎮</span><span class="dri-label">Best of X</span></div>
+  <div class="duel-radial-item" data-accent="gold" onclick="duelRadialPick('tournament')"><span class="dri-icon">🏆</span><span class="dri-label">Tournament</span></div>
+  <div class="duel-radial-item" data-accent="green" onclick="duelRadialPick('team')"><span class="dri-icon">🤝</span><span class="dri-label">Team Battle</span></div>
+  <div class="duel-radial-item" data-accent="purple" onclick="duelRadialPick('koth')"><span class="dri-icon">👑</span><span class="dri-label">King of Hill</span></div>
+</div>
+<div class="duel-radial-center" id="duelRadialCenter">⚔️ DUEL</div>
 
 <div id="matchBanner">
   <span class="banner-label" id="bannerModeLabel"></span>
@@ -5265,7 +5350,7 @@
     if (duelBtn) {
       var wizOpen = document.getElementById('duelWizard') && document.getElementById('duelWizard').classList.contains('open');
       // Only show duel button if _duelBtnVisible flag is true AND nothing else is covering it
-      if (_duelBtnVisible && !wizOpen && !_radialOpen) {
+      if (_duelBtnVisible && !wizOpen && !_radialOpen && !_duelRadialOpen) {
         duelBtn.style.display = '';
       } else {
         duelBtn.style.display = 'none';
@@ -7447,7 +7532,116 @@
   /* close radial on Escape */
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape' && _radialOpen) toggleRadialMenu();
+    if (e.key === 'Escape' && _duelRadialOpen) closeDuelRadial();
   });
+
+  /* ━━ DUEL TYPE RADIAL ━━━━━━━━━━━━━━━━━━━━ */
+  var _duelRadialOpen = false;
+  var _duelTapTimer = null;
+  var _duelTapCount = 0;
+
+  /* Attach tap/double-tap handler to duel button */
+  (function() {
+    var btn = document.getElementById('duelStartBtn');
+    if (!btn) return;
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      _duelTapCount++;
+      if (_duelTapCount === 1) {
+        _duelTapTimer = setTimeout(function() {
+          _duelTapCount = 0;
+          /* single tap: open duel type radial */
+          openDuelRadial();
+        }, 280);
+      } else if (_duelTapCount >= 2) {
+        clearTimeout(_duelTapTimer);
+        _duelTapCount = 0;
+        /* double tap: quick duel */
+        openDuelWizard();
+      }
+    });
+  })();
+
+  function openDuelRadial() {
+    _duelRadialOpen = true;
+    var backdrop = document.getElementById('duelRadialBackdrop');
+    var ring = document.getElementById('duelRadialRing');
+    var center = document.getElementById('duelRadialCenter');
+    var items = ring.querySelectorAll('.duel-radial-item');
+    var count = items.length;
+    var duelBtn = document.getElementById('duelStartBtn');
+
+    backdrop.classList.add('open');
+    center.classList.add('open');
+
+    /* hide the duel button itself */
+    if (duelBtn) duelBtn.style.visibility = 'hidden';
+
+    /* position items in a circle centered on screen */
+    var isMobile = window.innerWidth <= 480;
+    var radius = isMobile ? 110 : 140;
+    var startAngle = -90; /* 12 o'clock */
+    var angleStep = 360 / count;
+
+    items.forEach(function(item, i) {
+      var angle = (startAngle + angleStep * i) * (Math.PI / 180);
+      var tx = Math.cos(angle) * radius;
+      var ty = Math.sin(angle) * radius;
+      item.style.setProperty('--tx', tx + 'px');
+      item.style.setProperty('--ty', ty + 'px');
+      item.style.transitionDelay = (i * 0.04) + 's';
+      void item.offsetWidth;
+      item.classList.add('open');
+    });
+  }
+
+  function closeDuelRadial() {
+    _duelRadialOpen = false;
+    var backdrop = document.getElementById('duelRadialBackdrop');
+    var ring = document.getElementById('duelRadialRing');
+    var center = document.getElementById('duelRadialCenter');
+    var items = ring.querySelectorAll('.duel-radial-item');
+    var duelBtn = document.getElementById('duelStartBtn');
+
+    backdrop.classList.remove('open');
+    center.classList.remove('open');
+
+    items.forEach(function(item, i) {
+      item.style.transitionDelay = ((items.length - 1 - i) * 0.025) + 's';
+      item.classList.remove('open');
+    });
+
+    /* restore duel button visibility */
+    if (duelBtn && _duelBtnVisible) duelBtn.style.visibility = 'visible';
+  }
+
+  function duelRadialPick(type) {
+    closeDuelRadial();
+    switch (type) {
+      case 'quick':
+        openDuelWizard();
+        break;
+      case 'bestof':
+        openModeModal();
+        switchModeTab('bestof');
+        break;
+      case 'tournament':
+        openModeModal();
+        switchModeTab('tournament');
+        renderTournamentSlots();
+        break;
+      case 'team':
+        openModeModal();
+        switchModeTab('team');
+        renderModeModal();
+        break;
+      case 'koth':
+        openModeModal();
+        switchModeTab('koth');
+        renderKothModal();
+        break;
+    }
+  }
 
   function toggleFullscreen() {
     if (!document.fullscreenElement) {
