@@ -284,6 +284,8 @@
   .radial-item[data-accent="gold"] .ri-label { color: var(--gold); }
   .radial-item[data-accent="green"] { border-color: rgba(0,200,120,0.4); }
   .radial-item[data-accent="green"] .ri-label { color: #44ddaa; }
+  .radial-item[data-accent="red"] { border-color: rgba(255,80,80,0.5); }
+  .radial-item[data-accent="red"] .ri-label { color: #ff8888; }
   .radial-item[data-accent="discord"] { border-color: rgba(88,101,242,0.5); }
   .radial-item[data-accent="discord"] .ri-label { color: #99aaff; }
 
@@ -3736,6 +3738,7 @@
 <!-- ━━ RADIAL MENU ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
 <div class="radial-backdrop" id="radialBackdrop" onclick="toggleRadialMenu()"></div>
 <div class="radial-ring" id="radialRing">
+  <div class="radial-item" data-accent="red" onclick="confirmNewGame();toggleRadialMenu()"><span class="ri-icon">🔄</span><span class="ri-label">New Game</span></div>
   <div class="radial-item" data-accent="gold" onclick="openModeModal();toggleRadialMenu()"><span class="ri-icon">🏆</span><span class="ri-label">Mode</span></div>
   <div class="radial-item" data-accent="gold" onclick="openCalc();toggleRadialMenu()"><span class="ri-icon">🧮</span><span class="ri-label">Calc</span></div>
   <div class="radial-item" onclick="openLog();toggleRadialMenu()"><span class="ri-icon">📜</span><span class="ri-label">Log</span></div>
