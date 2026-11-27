@@ -4890,6 +4890,7 @@
   let roster = {};      // name-keyed persistent stats: {name, w, l, duels}
   let lpOverTime  = []; // per player array of LP snapshots for sparkline
   let dueling = false;  // has the game started (first LP change)
+  var _duelBtnVisible = true; // controls duel start button visibility
   let duels = [];       // completed duel stats for summary
   let biggestHit = [];  // per player max single damage received
   let firstBlood  = null; // index of first player to take damage
@@ -5260,7 +5261,12 @@
     var duelBtn = document.getElementById('duelStartBtn');
     if (duelBtn) {
       var wizOpen = document.getElementById('duelWizard') && document.getElementById('duelWizard').classList.contains('open');
-      duelBtn.style.display = (dueling || wizOpen || _radialOpen) ? 'none' : '';
+      // Only show duel button if _duelBtnVisible flag is true AND nothing else is covering it
+      if (_duelBtnVisible && !wizOpen && !_radialOpen) {
+        duelBtn.style.display = '';
+      } else {
+        duelBtn.style.display = 'none';
+      }
     }
     // Auto-focus battle ATK input when in battle phase
     if (currentPhase === 3) {
@@ -5667,6 +5673,7 @@
     _duelHistory = [];
     if (gameMode !== "koth") _kothQueue = [];
     updateMatchBanner();
+    _duelBtnVisible = true;
     initPlayers(players.length);
     const header = document.getElementById('siteHeader');
     if (header) header.classList.remove('hidden');
@@ -5928,7 +5935,8 @@
     if (cs) cs.value = players.length;
     wizRenderSlots();
     wiz.classList.add('open');
-    // Hide duel start button
+    // Hide duel start button for the duration of the duel
+    _duelBtnVisible = false;
     var db = document.getElementById('duelStartBtn');
     if (db) db.style.display = 'none';
   }
@@ -8167,6 +8175,7 @@
   }
   function closeModeModal() {
     document.getElementById('modeModal').classList.remove('open');
+    _duelBtnVisible = false; // hide duel button when any game mode starts
   }
   function switchModeTab(name) {
     document.querySelectorAll('.mode-tab').forEach(function(t) { t.classList.remove('active'); });
