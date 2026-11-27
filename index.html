@@ -5184,7 +5184,7 @@
           <div class="player-name-wrap">
             <div class="turn-order-badge">${p.turnOrder}</div>
             <input class="player-name" value="${p.name.replace(/"/g, '&quot;')}" maxlength="18"
-              onchange="rosterOnNameChange(${i},this.value)">
+              onchange="rosterOnNameChange(${i},this.value)" ${!_duelBtnVisible ? 'readonly style="pointer-events:none;opacity:0.7;"' : ''}>
           </div>
           ${(() => { const isW = !p.eliminated && players.length > 1 && players.filter(pl => !pl.eliminated).length === 1; return isW ? '<span class="winner-crown">👑</span>' : ''; })()}
           ${!p.eliminated ? `<button class="btn-surrender" onclick="surrenderPlayer(${i})" title="Forfeit (concede)">🏳️</button>` : ''}
@@ -5312,9 +5312,8 @@
 
         </div>
 
-        <div class="counter-tokens" id="tokens-${i}">
+        <div class="counter-tokens" id="tokens-${i}" style="display:none;">
           ${(counterTokens[i]||[]).map((t,ti)=>`<span class="counter-token" title="${t.name}">${t.name} <strong>${t.count}</strong> <button class="token-adj" onclick="adjToken(${i},${ti},1)">+</button><button class="token-adj" onclick="adjToken(${i},${ti},-1)">−</button><button class="token-adj" onclick="removeToken(${i},${ti})">✕</button></span>`).join('')}
-          <button class="add-token-btn" onclick="promptAddToken(${i})">+ Counter</button>
         </div>
         ${i === activeTurn ? `
         <div class="phase-indicator">
@@ -5336,8 +5335,9 @@
     var duelBtn = document.getElementById('duelStartBtn');
     if (duelBtn) {
       var wizOpen = document.getElementById('duelWizard') && document.getElementById('duelWizard').classList.contains('open');
+      var tutOpen = document.getElementById('tutorialOverlay') && document.getElementById('tutorialOverlay').classList.contains('open');
       // Only show duel button if _duelBtnVisible flag is true AND nothing else is covering it
-      if (_duelBtnVisible && !wizOpen && !_radialOpen && !_duelRadialOpen) {
+      if (_duelBtnVisible && !wizOpen && !_radialOpen && !_duelRadialOpen && !tutOpen) {
         duelBtn.style.display = '';
       } else {
         duelBtn.style.display = 'none';
@@ -7551,15 +7551,16 @@
 
     backdrop.classList.add('open');
 
-    /* keep duel button visible on top as the center hub */
+    /* keep duel button visible on top as the center hub, relabel as Quick Duel */
     if (duelBtn) {
       duelBtn.style.zIndex = '10002';
       duelBtn.style.animation = 'none';
+      duelBtn.textContent = '⚔️ QUICK DUEL';
     }
 
     /* position items in a circle centered on screen */
     var isMobile = window.innerWidth <= 480;
-    var radius = isMobile ? 110 : 140;
+    var radius = isMobile ? 130 : 170;
     var startAngle = -90; /* 12 o'clock */
     var angleStep = 360 / count;
 
@@ -7589,10 +7590,11 @@
       item.classList.remove('open');
     });
 
-    /* restore duel button z-index and pulse animation */
+    /* restore duel button z-index, label, and pulse animation */
     if (duelBtn) {
       duelBtn.style.zIndex = '';
       duelBtn.style.animation = '';
+      duelBtn.textContent = '⚔️ DUEL';
     }
   }
 
@@ -12113,6 +12115,9 @@
     overlay.classList.add('open');
     _renderTutorialDots();
     _showTutorialSlide(0);
+    // Hide duel button behind tutorial
+    var db = document.getElementById('duelStartBtn');
+    if (db) db.style.display = 'none';
     // Close menu if open
     var menu = document.getElementById('gameMenu');
     if (menu && !menu.classList.contains('collapsed')) toggleGameMenu();
@@ -12121,6 +12126,7 @@
   function closeTutorial() {
     document.getElementById('tutorialOverlay').classList.remove('open');
     localStorage.setItem('ygo_tutorial_done', '1');
+    render(); // restore duel button if appropriate
   }
 
   function tutorialNext() {
