@@ -346,18 +346,6 @@
   .duel-radial-item[data-accent="green"] .dri-label { color: #44ddaa; }
   .duel-radial-item[data-accent="purple"] { border-color: rgba(180,120,255,0.5); }
   .duel-radial-item[data-accent="purple"] .dri-label { color: #bb99ff; }
-  /* Center label shown when duel radial is open */
-  .duel-radial-center {
-    position: fixed; z-index: 10001;
-    top: 50%; left: 50%; transform: translate(-50%, -50%);
-    font-family: 'Cinzel Decorative', 'Cinzel', serif;
-    font-size: 14px; font-weight: 700; letter-spacing: 4px;
-    color: var(--gold-light); text-transform: uppercase;
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.3s ease 0.15s;
-    text-shadow: 0 0 20px rgba(201,162,39,0.4);
-  }
-  .duel-radial-center.open { opacity: 1; }
   @media (max-width: 480px) {
     .duel-radial-item { width: 62px; height: 62px; margin: -31px 0 0 -31px; }
     .duel-radial-item .dri-icon { font-size: 20px; }
@@ -3839,7 +3827,6 @@
   <div class="duel-radial-item" data-accent="green" onclick="duelRadialPick('team')"><span class="dri-icon">🤝</span><span class="dri-label">Team Battle</span></div>
   <div class="duel-radial-item" data-accent="purple" onclick="duelRadialPick('koth')"><span class="dri-icon">👑</span><span class="dri-label">King of Hill</span></div>
 </div>
-<div class="duel-radial-center" id="duelRadialCenter">⚔️ DUEL</div>
 
 <div id="matchBanner">
   <span class="banner-label" id="bannerModeLabel"></span>
@@ -7537,27 +7524,19 @@
 
   /* ━━ DUEL TYPE RADIAL ━━━━━━━━━━━━━━━━━━━━ */
   var _duelRadialOpen = false;
-  var _duelTapTimer = null;
-  var _duelTapCount = 0;
 
-  /* Attach tap/double-tap handler to duel button */
+  /* Attach handler to duel button — tap opens radial, tap again = quick duel */
   (function() {
     var btn = document.getElementById('duelStartBtn');
     if (!btn) return;
     btn.addEventListener('click', function(e) {
       e.preventDefault();
-      _duelTapCount++;
-      if (_duelTapCount === 1) {
-        _duelTapTimer = setTimeout(function() {
-          _duelTapCount = 0;
-          /* single tap: open duel type radial */
-          openDuelRadial();
-        }, 280);
-      } else if (_duelTapCount >= 2) {
-        clearTimeout(_duelTapTimer);
-        _duelTapCount = 0;
-        /* double tap: quick duel */
+      if (_duelRadialOpen) {
+        /* second tap while radial is open: quick duel */
+        closeDuelRadial();
         openDuelWizard();
+      } else {
+        openDuelRadial();
       }
     });
   })();
@@ -7566,16 +7545,17 @@
     _duelRadialOpen = true;
     var backdrop = document.getElementById('duelRadialBackdrop');
     var ring = document.getElementById('duelRadialRing');
-    var center = document.getElementById('duelRadialCenter');
     var items = ring.querySelectorAll('.duel-radial-item');
     var count = items.length;
     var duelBtn = document.getElementById('duelStartBtn');
 
     backdrop.classList.add('open');
-    center.classList.add('open');
 
-    /* hide the duel button itself */
-    if (duelBtn) duelBtn.style.visibility = 'hidden';
+    /* keep duel button visible on top as the center hub */
+    if (duelBtn) {
+      duelBtn.style.zIndex = '10002';
+      duelBtn.style.animation = 'none';
+    }
 
     /* position items in a circle centered on screen */
     var isMobile = window.innerWidth <= 480;
@@ -7599,20 +7579,21 @@
     _duelRadialOpen = false;
     var backdrop = document.getElementById('duelRadialBackdrop');
     var ring = document.getElementById('duelRadialRing');
-    var center = document.getElementById('duelRadialCenter');
     var items = ring.querySelectorAll('.duel-radial-item');
     var duelBtn = document.getElementById('duelStartBtn');
 
     backdrop.classList.remove('open');
-    center.classList.remove('open');
 
     items.forEach(function(item, i) {
       item.style.transitionDelay = ((items.length - 1 - i) * 0.025) + 's';
       item.classList.remove('open');
     });
 
-    /* restore duel button visibility */
-    if (duelBtn && _duelBtnVisible) duelBtn.style.visibility = 'visible';
+    /* restore duel button z-index and pulse animation */
+    if (duelBtn) {
+      duelBtn.style.zIndex = '';
+      duelBtn.style.animation = '';
+    }
   }
 
   function duelRadialPick(type) {
