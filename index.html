@@ -7355,15 +7355,42 @@
       + '<button class="summary-btn dim" onclick="closeSummary(true)">&#x2715; New Game</button>';
     playSound('win');
     document.getElementById('summaryOverlay').classList.add('show');
-    // Discord: post duel result (host device with webhook configured only)
+    // Where a finished duel goes (one place decides, so it never posts twice or gets skipped):
+    //  - challenge link: Omega gets it through Firebase below, and the Discord post is marked so Omega skips it
+    //  - webhook on this device: the post goes to the results channel; Omega reads it there and asks to confirm
+    //  - no webhook: a 1v1 goes to Omega through Firebase (new names get a placeholder profile on the Omega side)
     try {
       var modeLabel = gameMode === 'bestof' ? 'Best of X' : gameMode === 'tournament' ? 'Tournament' : gameMode === 'koth' ? 'King of the Hill' : 'Standard Duel';
       var dLines = ['**Mode:** ' + modeLabel + ' · **Turns:** ' + Math.max(0, globalTurnNum - 1) + ' · **Time:** ' + _fmtClock(gameSeconds)];
       players.forEach(function(p, i) {
         dLines.push((i === wi ? '👑 ' : '💀 ') + '**' + p.name + '** — ' + p.lp.toLocaleString() + ' LP' + _ladderTag(p.name));
       });
-      discordPostDuelResult('🏆 ' + winner.name + ' wins!', dLines);
-    } catch(e) {}
+      // In a Best-of, the wager is settled by the game that decides the match; earlier games are marked so the bot skips them.
+      var boCtx = (gameMode === 'bestof' && matchCtx) ? matchCtx : null;
+      var deciding = !boCtx || Math.max(boCtx.scores[0], boCtx.scores[1]) >= boCtx.winsNeeded;
+      var viaChallenge = !!(_challenge && _challenge.slot !== null);
+      if (viaChallenge) {
+        dLines.push('🔗 **Challenge link:** this result goes to Omega for both duelists to confirm.');
+      } else if (window._wagerDuel && players.length === 2) {
+        if (deciding) {
+          dLines.push('⚔️ **Wager challenge**');
+          if (boCtx) dLines.push('**Match:** ' + boCtx.names[0] + ' ' + boCtx.scores[0] + '–' + boCtx.scores[1] + ' ' + boCtx.names[1]);
+        } else {
+          dLines.push('⚔️ Wager match: game ' + boCtx.duelNum + ' (settled when the match ends)');
+        }
+      }
+      if (_discordReady()) {
+        discordPostDuelResult('🏆 ' + winner.name + ' wins!', dLines);
+      } else if (!viaChallenge && players.length === 2 && gameMode !== 'team' && !(window._wagerDuel && !deciding)) {
+        var loserP = players[wi === 0 ? 1 : 0];
+        sendResultViaServer({
+          winner: winner.name, loser: loserP.name, ts: Date.now(), mode: modeLabel,
+          wager: !!(window._wagerDuel && deciding),
+          score: (window._wagerDuel && deciding && boCtx) ? 'Match: ' + boCtx.names[0] + ' ' + boCtx.scores[0] + '–' + boCtx.scores[1] + ' ' + boCtx.names[1] : null
+        });
+      }
+      if (window._wagerDuel && deciding && typeof setWagerDuel === 'function') setWagerDuel(false);
+    } catch(e) { console.warn('Result post failed:', e); }
     // Challenge link from Omega: this duel settles a wager.
     try {
       if (_challenge) _chEndShown = true;
@@ -7374,6 +7401,50 @@
       }
     } catch(e) { console.warn('Challenge result failed:', e); }
   }
+
+  /* ━━ RESULTS WITHOUT A WEBHOOK ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     Devices without Discord posting send 1v1 results to Firebase (/results). The Discord bot picks them up
+     and DMs both players to confirm. Only duelists linked to Discord count. Unsent results are kept on this
+     device and retried the next time the tracker opens. */
+  var _OUTBOX_KEY = 'ygo_result_outbox';
+  function _outboxGet() { try { return JSON.parse(localStorage.getItem(_OUTBOX_KEY) || '[]'); } catch (e) { return []; } }
+  function _outboxSet(list) { try { localStorage.setItem(_OUTBOX_KEY, JSON.stringify(list.slice(-20))); } catch (e) {} }
+  function _resultsRef() {
+    if (!window.firebase || !firebase.initializeApp) return null;
+    try {
+      if (!firebase.apps.length) firebase.initializeApp(_fbConfig);
+      return firebase.database().ref('results');
+    } catch (e) { return null; }
+  }
+  function _pushOutboxItem(item, quiet) {
+    var ref = _resultsRef();
+    if (!ref) { if (!quiet) showToast('📴 Saved on this device. It will be sent next time you are online.', 'info'); return; }
+    ref.child(item.id).set(item.data).then(function () {
+      _outboxSet(_outboxGet().filter(function (x) { return x.id !== item.id; }));
+      if (!quiet) showToast('📨 Sent to Omega. ' + item.data.loser + ' (or a mod) confirms it in Discord.', 'heal');
+    }).catch(function (err) {
+      // Permission denied usually means it was already delivered (results can't be overwritten): drop it.
+      if (err && /permission/i.test(String(err.code || err.message))) _outboxSet(_outboxGet().filter(function (x) { return x.id !== item.id; }));
+      else if (!quiet) showToast('📴 Couldn\'t reach the server. Saved; it will retry next time the tracker opens.', 'info');
+    });
+  }
+  function sendResultViaServer(data) {
+    // Names on the ladder are sent with the ladder's spelling. Anyone not on it yet still goes through:
+    // Omega makes a placeholder profile and a mod confirms, so a new duelist's first games aren't lost.
+    var lad = window.YGOLeaderboard && YGOLeaderboard.get();
+    if (lad) {
+      var w = YGOLeaderboard.find(data.winner), l = YGOLeaderboard.find(data.loser);
+      if (w) data.winner = w.name;
+      if (l) data.loser = l.name;
+    }
+    var ref = _resultsRef();
+    var id = ref ? ref.push().key : ('r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8));
+    var item = { id: id, data: data };
+    var box = _outboxGet(); box.push(item); _outboxSet(box);
+    _pushOutboxItem(item, false);
+  }
+  // Retry anything left over from last time (closed tab, no signal).
+  setTimeout(function () { _outboxGet().forEach(function (it) { _pushOutboxItem(it, true); }); }, 5000);
 
   function closeSummary(newGame) {
     document.getElementById('summaryOverlay').classList.remove('show');
@@ -7390,6 +7461,7 @@
       }
       // KotH cleanup
       if (gameMode === 'koth') { _kothQueue = []; }
+      if (typeof setWagerDuel === 'function') setWagerDuel(false);
       gameMode = 'standard'; matchCtx = null; updateMatchBanner(); resetGame();
     }
   }
@@ -9973,6 +10045,7 @@
       matchCtx:     matchCtx ? JSON.parse(JSON.stringify(matchCtx)) : null,
       teamLP:       teamLP.slice(),
       MAX_LP:       MAX_LP,
+      wagerDuel:    !!window._wagerDuel,
       ts:           Date.now()
     };
   }
@@ -10004,6 +10077,11 @@
     currentPhase  = snap.currentPhase != null ? snap.currentPhase : currentPhase;
     globalTurnNum = snap.globalTurnNum|| globalTurnNum;
     gameMode      = snap.gameMode     || 'standard';
+    if (typeof snap.wagerDuel === 'boolean' && typeof setWagerDuel === 'function' && snap.wagerDuel !== !!window._wagerDuel) {
+      window._wagerDuel = snap.wagerDuel;
+      var _wt = document.getElementById('wagerDuelToggle'); if (_wt) _wt.checked = window._wagerDuel;
+      var _wb = document.getElementById('wagerBadge'); if (_wb) _wb.style.display = window._wagerDuel ? 'flex' : 'none';
+    }
     matchCtx      = snap.matchCtx     || null;
     teamLP        = snap.teamLP       || [];
     if (snap.MAX_LP) MAX_LP = snap.MAX_LP;
@@ -14053,6 +14131,8 @@
 </div>
 
 
+<div id="wagerBadge" onclick="setWagerDuel(false)" title="Wager challenge is on. Tap to turn it off." style="display:none;position:fixed;top:8px;left:50%;transform:translateX(-50%);z-index:350;align-items:center;gap:6px;padding:4px 12px;border-radius:999px;border:1px solid rgba(201,162,39,0.6);background:rgba(20,16,4,0.9);color:var(--gold);font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;cursor:pointer;">&#x2694;&#xFE0F; WAGER</div>
+
 <!-- ═══ Duel Ladder (wager points leaderboard, data from leaderboard.json, written by the Discord bot) ═══ -->
 <style>
   #ladderModal {
@@ -14071,6 +14151,10 @@
       <span class="roster-title">&#x1F3C6; Duel Ladder</span>
       <button class="roster-close" onclick="closeLadder()">&#x2715;</button>
     </div>
+    <label id="wagerToggleRow" style="display:flex;align-items:center;gap:10px;margin:12px 18px 0;padding:10px 12px;border:1px solid rgba(201,162,39,0.35);border-radius:6px;background:rgba(201,162,39,0.06);cursor:pointer;font-family:'Rajdhani',sans-serif;color:var(--text);">
+      <input type="checkbox" id="wagerDuelToggle" onchange="setWagerDuel(this.checked)" style="width:18px;height:18px;accent-color:var(--gold);">
+      <span><b style="color:var(--gold);">&#x2694;&#xFE0F; Wager challenge</b><br><span style="font-size:12px;color:var(--dim);">This game is an accepted wager. The result settles the wager on Discord instead of counting as a regular match. In Best of 3/5 the match result settles it. 1v1 only; turns off once it's settled. You can also set this in the game setup window.</span></span>
+    </label>
     <div id="ladderBody">Loading&#x2026;</div>
   </div>
 </div>
@@ -14089,6 +14173,42 @@
   function closeLadder() {
     document.getElementById('ladderModal').classList.remove('open');
   }
+
+  /* ── Wager toggle: marks the next 1v1 result post as a wager so the bot settles the accepted wager ── */
+  window._wagerDuel = false;
+  function setWagerDuel(on) {
+    if (on && typeof players !== 'undefined' && players.length !== 2) {
+      showToast('Wagers are 1v1 only. Set the board to 2 players first.', 'warning');
+      on = false;
+    }
+    window._wagerDuel = !!on;
+    var t = document.getElementById('wagerDuelToggle'); if (t) t.checked = window._wagerDuel;
+    var b = document.getElementById('wagerBadge'); if (b) b.style.display = window._wagerDuel ? 'flex' : 'none';
+    if (on) showToast('⚔️ Wager challenge on: this result will settle the wager', 'heal');
+    if (typeof fbSyncPushSoon === 'function') fbSyncPushSoon();
+  }
+
+  /* ── Ladder data elsewhere in the tracker: roster tags and name suggestions ── */
+  (function () {
+    var dl = document.createElement('datalist'); dl.id = 'ladderNameList'; document.body.appendChild(dl);
+    function fillNames(d) {
+      dl.innerHTML = '';
+      ((d && d.players) || []).forEach(function(p) { var o = document.createElement('option'); o.value = p.name; dl.appendChild(o); });
+    }
+    window.addEventListener('ygo-ladder', function(e) {
+      fillNames(e.detail);
+      var rm = document.getElementById('rosterModal');
+      if (rm && rm.classList.contains('open') && typeof renderRoster === 'function') renderRoster();
+    });
+    if (window.YGOLeaderboard && YGOLeaderboard.get()) fillNames(YGOLeaderboard.get());
+    // Any player-name box suggests ladder names while typing, so the same person isn't entered two ways.
+    document.addEventListener('focusin', function(e) {
+      var el = e.target;
+      if (el && el.tagName === 'INPUT' && (el.id === 'rosterAddInput' || el.classList.contains('player-name') || el.classList.contains('roster-row-name-input') || (el.classList.contains('assign-select') && el.type === 'text'))) {
+        el.setAttribute('list', 'ladderNameList'); el.setAttribute('autocomplete', 'off');
+      }
+    });
+  })();
 </script>
 
 </body>
