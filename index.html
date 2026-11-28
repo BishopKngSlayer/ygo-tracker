@@ -371,6 +371,119 @@
   .radial-logo.open { opacity: 1; transform: scale(1); }
 
   /* ━━ DUEL START BUTTON ━━━━━━━━━━━━━━━━━━━━━ */
+  /* ═══════════ TOUCH VIEW (tablets & phones) — body.touch-ui; PC layout is untouched ═══════════ */
+  body.touch-ui #siteHeader { display:none; }
+  body.touch-ui .timer-bar { gap:8px; padding:6px 10px; flex-wrap:nowrap; justify-content:space-between; }
+  body.touch-ui .timer-sep { display:none; }
+  body.touch-ui .timer-block { gap:0; flex-direction:column; align-items:flex-start; min-width:0; }
+  body.touch-ui .timer-label { font-size:8px; letter-spacing:1.5px; }
+  body.touch-ui .timer-value { font-size:18px !important; min-width:0 !important; }
+  body.touch-ui .timer-btn { min-height:40px; padding:6px 12px; font-size:12px; white-space:nowrap; }
+
+  /* Menu becomes a drop-down panel over the board instead of pushing it down */
+  body.touch-ui #gameMenu {
+    position:fixed; left:8px; right:8px; top:var(--touch-menu-top, 56px); z-index:320;
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:8px;
+    padding:12px; max-height:calc(100dvh - var(--touch-menu-top, 56px) - 16px); overflow-y:auto;
+    background:rgba(8,8,18,0.97); border:1px solid rgba(201,162,39,0.35); border-radius:10px;
+    box-shadow:0 12px 40px rgba(0,0,0,0.7); opacity:1; transition:none;
+  }
+  body.touch-ui #gameMenu.collapsed { display:none; }
+  body.touch-ui #gameMenu .menu-logo { display:none; }
+  body.touch-ui #gameMenu .btn { min-height:50px; font-size:12px; letter-spacing:1.5px; justify-content:center; padding:8px 10px; }
+  body.touch-ui #gameMenu button[onclick="openShortcutModal()"] { display:none; }
+
+  /* Cards size their text to the card itself */
+  body.touch-ui .grid { gap:8px; padding:8px; }
+  body.touch-ui .player-card { padding:10px 12px; }
+  body.touch-ui .player-card:not(.eliminated):hover { transform:none; }   /* a moved card would also move its bottom sheet */
+  body.touch-ui .player-header { margin-bottom:4px; min-height:0; flex-wrap:nowrap; gap:4px; }
+  body.touch-ui .player-name, body.touch-ui .player-card.active .player-name { font-size:clamp(18px, 3.4vw, 34px); }
+  body.touch-ui .player-name-wrap { min-width:0; flex:1; }
+  body.touch-ui .btn-surrender, body.touch-ui .btn-collapse, body.touch-ui .btn-rotate, body.touch-ui .btn-elim { min-width:34px; min-height:34px; font-size:15px; }
+  body.touch-ui .phase-badge { flex-direction:row; justify-content:center; gap:8px; margin:0; }
+  body.touch-ui .phase-badge-icon { font-size:24px; animation:none; }
+  body.touch-ui .phase-badge-name { font-size:10px; }
+  /* The life point area is its own size reference: the number grows to fill whatever space the card has left */
+  body.touch-ui .lp-display { container-type:size; min-height:56px; margin:2px 0; flex:1 1 0; overflow:hidden; justify-content:center; }
+  body.touch-ui .lp-value { font-size:min(22cqw, 72cqh); overflow:visible; }
+  body.touch-ui .lp-label { font-size:8px; letter-spacing:4px; }
+  body.touch-ui .lp-sparkline { display:none; }
+  body.touch-ui .lp-bar-track { margin:4px 0 8px; }
+  body.touch-ui .toggle-btn { min-height:52px; font-size:26px; }
+  body.touch-ui .phase-indicator { margin-top:8px; padding-top:6px; }
+  body.touch-ui .phase-label-row { display:none; }
+  body.touch-ui .phase-step { min-height:38px; font-size:9px; padding:4px 1px; display:flex; align-items:center; justify-content:center; }
+  body.touch-ui .preset-btn, body.touch-ui .dmg-type-btn, body.touch-ui .undo-btn, body.touch-ui .battle-apply-btn { min-height:44px; }
+  body.touch-ui .battle-input { min-height:44px; font-size:18px; }
+
+  .sheet-head { display:none; }
+  /* Bottom bar: big thumb buttons, no keyboard hints */
+  body.touch-ui .turn-controls { padding:8px 10px calc(8px + env(safe-area-inset-bottom)); gap:8px; flex-wrap:nowrap; }
+  body.touch-ui .turn-controls kbd { display:none; }
+  body.touch-ui .turn-controls .btn { flex:1; min-height:52px; font-size:14px; justify-content:center; }
+  body.touch-ui #turnLabel { display:none; }
+
+  /* Phones: damage/heal panels open as a sheet above the bottom bar, so every card stays visible */
+  @media (max-width: 640px), (max-height: 500px) {
+    body.touch-ui .panels-container.visible {
+      position:fixed; left:8px; right:8px; bottom:calc(76px + env(safe-area-inset-bottom)); z-index:260;
+      max-height:min(62dvh, 460px); overflow-y:auto; grid-template-columns:1fr;
+      padding:10px; margin:0; background:rgba(10,10,22,0.98); border:1px solid rgba(201,162,39,0.4); border-radius:10px;
+      box-shadow:0 -10px 40px rgba(0,0,0,0.75);
+    }
+    body.touch-ui .panels-container.visible .sheet-head {
+      display:flex; align-items:center; justify-content:space-between; gap:8px;
+      font-family:'Cinzel',serif; font-size:12px; letter-spacing:1.5px; color:var(--gold); padding:0 2px 6px;
+      border-bottom:1px solid rgba(201,162,39,0.2); margin-bottom:4px;
+    }
+    body.touch-ui .sheet-head b { color:#e8e8ff; font-size:15px; }
+    body.touch-ui .sheet-close { min-width:40px; min-height:36px; background:none; border:1px solid rgba(255,255,255,0.15); border-radius:6px; color:var(--dim); font-size:16px; }
+  }
+  @media (max-height: 500px) {
+    body.touch-ui .panels-container.visible { bottom:calc(64px + env(safe-area-inset-bottom)); max-height:calc(100dvh - 120px); }
+  }
+
+  /* Phones held upright: stack the cards (2 players = one above the other; 3+ = two columns) */
+  @media (max-width: 640px) and (orientation: portrait) {
+    body.touch-ui .grid { grid-auto-flow:row; grid-template-columns:1fr !important; grid-template-rows:none; grid-auto-rows:minmax(0,1fr); overflow-y:auto; }
+    body.touch-ui .grid:has(> .player-card:nth-child(3)) { grid-template-columns:1fr 1fr !important; }
+    body.touch-ui .timer-bar .timer-block:nth-child(3) { display:none; }   /* turn time: game time is enough on a phone */
+    body.touch-ui .timer-btn { padding:6px 8px; font-size:10px; letter-spacing:1px; min-height:38px; }
+    body.touch-ui .timer-value { font-size:16px !important; }
+    /* Half-height cards: drop the extras so the life points keep their room */
+    body.touch-ui .phase-badge, body.touch-ui .lp-label, body.touch-ui .add-token-btn, body.touch-ui .biggest-hit-badge, body.touch-ui .battle-panel-title { display:none; }
+    body.touch-ui .battle-panel { margin:2px 0; padding:6px; }
+    body.touch-ui .battle-panel .battle-input { min-height:38px; }
+    body.touch-ui .phase-indicator { margin-top:4px; padding-top:4px; }
+    body.touch-ui .phase-step { min-height:34px; }
+    /* 3+ players on a phone: quarter-screen cards, so the phase row goes too (Next Phase is at the bottom) */
+    body.touch-ui .grid:has(> .player-card:nth-child(3)) .phase-indicator,
+    body.touch-ui .grid:has(> .player-card:nth-child(3)) .lp-diff { display:none; }
+    body.touch-ui .grid:has(> .player-card:nth-child(3)) .toggle-btn { min-height:44px; font-size:22px; padding:6px 0; }
+    body.touch-ui .grid:has(> .player-card:nth-child(3)) .btn-rotate,
+    body.touch-ui .grid:has(> .player-card:nth-child(3)) .btn-collapse { display:none; }
+    body.touch-ui .grid:has(> .player-card:nth-child(3)) .btn-surrender,
+    body.touch-ui .grid:has(> .player-card:nth-child(3)) .btn-elim { min-width:26px; min-height:30px; font-size:12px; padding:2px; }
+    body.touch-ui .grid:has(> .player-card:nth-child(3)) .turn-order-badge { display:none; }
+    body.touch-ui .grid:has(> .player-card:nth-child(3)) .player-name { font-size:15px !important; }
+  }
+  /* Phones on their side: very little height */
+  @media (max-height: 500px) {
+    body.touch-ui .phase-badge { display:none; }
+    body.touch-ui .phase-indicator { display:none; }      /* use Next Phase at the bottom instead */
+    body.touch-ui .lp-label, body.touch-ui .add-token-btn { display:none; }
+    body.touch-ui .player-name, body.touch-ui .player-card.active .player-name { font-size:18px; }
+    body.touch-ui .lp-value { font-size:min(17cqw, 34cqh); }
+    body.touch-ui .player-card { padding:6px 10px; }
+    body.touch-ui .timer-bar { padding:4px 10px; }
+    body.touch-ui .timer-btn { min-height:34px; }
+    body.touch-ui .toggle-btn { min-height:44px; font-size:22px; }
+    body.touch-ui .phase-step { min-height:32px; }
+    body.touch-ui .turn-controls .btn { min-height:44px; }
+    body.touch-ui .timer-value { font-size:15px !important; }
+  }
+
   .duel-start-btn {
     position: fixed; top: 50%; left: 50%; z-index: 9996;
     transform: translate(-50%, -50%);
@@ -3812,6 +3925,7 @@
   <div class="radial-item" id="radialVoiceBtn" onclick="toggleVoice();toggleRadialMenu()"><span class="ri-icon">🎤</span><span class="ri-label">Voice</span></div>
   <div class="radial-item" data-accent="gold" onclick="openTutorial();toggleRadialMenu()"><span class="ri-icon">📖</span><span class="ri-label">Guide</span></div>
   <div class="radial-item" data-accent="green" onclick="openPartners();toggleRadialMenu()"><span class="ri-icon">🤝</span><span class="ri-label">Partners</span></div>
+  <div class="radial-item" id="radialViewBtn" onclick="cycleViewMode();toggleRadialMenu()"><span class="ri-icon">🖥️</span><span class="ri-label">View: PC</span></div>
   <div class="radial-item" data-accent="gold" onclick="openLadder();toggleRadialMenu()"><span class="ri-icon">🏆</span><span class="ri-label">Ladder</span></div>
   <div class="radial-item" data-accent="discord" onclick="window.open(DISCORD_INVITE,'_blank','noopener');toggleRadialMenu()"><span class="ri-icon">💬</span><span class="ri-label">Discord</span></div>
 </div>
@@ -4155,7 +4269,7 @@
       <span style="flex:1"></span>
       <button class="roster-io-btn" onclick="rosterExport()" style="border-color:rgba(80,220,120,0.4);color:#66dd88;" title="Download roster as JSON file">⬇ Export</button>
       <button class="roster-io-btn" onclick="document.getElementById('rosterImportFile').click()" style="border-color:rgba(120,180,255,0.4);color:#99ccff;" title="Import roster from JSON file">⬆ Import</button>
-      <input type="file" id="rosterImportFile" accept=".json" style="display:none" onchange="rosterImport(event)">
+      <input type="file" id="rosterImportFile" accept=".json,.csv,.txt,text/csv,text/plain,application/json" style="display:none" onchange="rosterImport(event)">
       <button class="roster-io-btn" onclick="rosterCopyText()" style="border-color:rgba(201,162,39,0.4);color:var(--gold);" title="Copy all names to clipboard">📋 Copy Names</button>
       <button class="roster-io-btn" onclick="discordPostLeaderboard(true)" style="border-color:rgba(88,101,242,0.5);color:#99aaff;" title="Post the official ladder standings to your Discord channel (set up in Mode → Rules)">📣 Discord</button>
       <button class="roster-io-btn clear"  onclick="rosterClearAll()">&#x1F5D1; Clear All</button>
@@ -5279,6 +5393,7 @@
 
         <!-- Side-by-side panels -->
         <div class="panels-container ${anyOpen ? 'visible' : ''}" id="panels-${i}">
+          <div class="sheet-head"><span>${escHtml(p.name)} · Life Points <b id="sheet-lp-${i}">${p.lp.toLocaleString()}</b></span><button class="sheet-close" onclick="closeLPPanels(${i})" title="Close">✕</button></div>
 
           <div class="lp-panel minus-panel ${minusOpen ? '' : 'hidden-panel'}" id="minus-panel-${i}">
             <div class="panel-label-row">
@@ -5391,6 +5506,21 @@
   })();
 
   /* ── Panel toggle ─────────────────────── */
+  /** Damage/heal panels open as a bottom sheet in touch view on phones. */
+  function _lpSheetMode() {
+    return document.body.classList.contains('touch-ui') && window.matchMedia('(max-width: 640px), (max-height: 500px)').matches;
+  }
+  function _syncPanelDom(i) {
+    var st = panelState[i], mo = st === 'minus' || st === 'both', po = st === 'plus' || st === 'both';
+    var card = document.getElementById('card-' + i); if (!card) return;
+    var a = card.querySelector('.minus-toggle'), b = card.querySelector('.plus-toggle');
+    if (a) a.classList.toggle('open', mo); if (b) b.classList.toggle('open', po);
+    var pc = document.getElementById('panels-' + i); if (pc) pc.classList.toggle('visible', mo || po);
+    var mp = document.getElementById('minus-panel-' + i); if (mp) mp.classList.toggle('hidden-panel', !mo);
+    var pp = document.getElementById('plus-panel-' + i); if (pp) pp.classList.toggle('hidden-panel', !po);
+  }
+  function closeLPPanels(i) { panelState[i] = null; _syncPanelDom(i); }
+
   function togglePanel(i, side) {
     const cur = panelState[i];
     if (side === 'minus') {
@@ -5405,6 +5535,10 @@
       else                      panelState[i] = 'plus';
     }
 
+    if (_lpSheetMode()) {
+      // Phones: the panel opens as a sheet at the bottom, so close any other player's sheet first.
+      for (var _k = 0; _k < panelState.length; _k++) if (_k !== i && panelState[_k]) { panelState[_k] = null; _syncPanelDom(_k); }
+    }
     const state     = panelState[i];
     const minusOpen = state === 'minus' || state === 'both';
     const plusOpen  = state === 'plus'  || state === 'both';
@@ -5678,6 +5812,8 @@
       v.className = `lp-value ${getLPClass(lp)} lp-pop`;
       setTimeout(() => v.classList.remove('lp-pop'), 300);
     }
+    const sh = document.getElementById(`sheet-lp-${i}`);
+    if (sh) sh.textContent = lp.toLocaleString();
     if (b) { b.style.width = pct + '%'; b.style.background = getLPColor(lp); }
   }
 
@@ -6391,20 +6527,29 @@
     return `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
   }
 
+  /* The clock counts from a start time instead of adding 1 every second, so a phone or tablet that slows
+     the page down in the background still shows the right time. */
+  var _clk = { g: 0, t: 0, at: 0 };   // seconds at 'at' (local ms) while running
+  function _clkRebase(atMs) { _clk = { g: gameSeconds, t: turnSeconds, at: atMs != null ? atMs : Date.now() }; }
+  function _clkSample() {
+    if (!timerRunning) return;
+    var el = Math.max(0, Math.floor((Date.now() - _clk.at) / 1000));
+    gameSeconds = _clk.g + el; turnSeconds = _clk.t + el;
+  }
   function timerTick() {
-    gameSeconds++;
-    turnSeconds++;
+    _clkSample();
     document.getElementById('gameTimerDisplay').textContent = fmt(gameSeconds);
     const td = document.getElementById('turnTimerDisplay');
     td.textContent = fmt(turnSeconds);
-    td.classList.toggle('overtime', turnSeconds >= 600);
+    var _overtimeSecs = (gameRules.turnTimeMinutes || 10) * 60;
+    td.classList.toggle('overtime', turnSeconds >= _overtimeSecs);
     // Sync in-card turn timer (shown when turnTimeLimit rule is active)
     if (gameRules.turnTimeLimit) {
       const inCard = document.getElementById('lp-turn-timer-' + activeTurn);
       if (inCard) {
         inCard.textContent = fmt(turnSeconds);
         inCard.classList.toggle('running', timerRunning);
-        inCard.classList.toggle('overtime', turnSeconds >= 600);
+        inCard.classList.toggle('overtime', turnSeconds >= _overtimeSecs);
       }
       const warnEl = document.getElementById('lp-turn-timer-warn-' + activeTurn);
       if (warnEl) {
@@ -6453,8 +6598,9 @@
 
   function timerStart() {
     if (timerRunning) return;
+    _clkRebase();
     timerRunning = true;
-    timerInterval = setInterval(timerTick, 1000);
+    timerInterval = setInterval(timerTick, 250);
     var btn = document.getElementById('timerToggleBtn');
     if (btn) { btn.textContent = '⏸ Pause'; btn.classList.remove('start'); btn.classList.add('pause'); }
     document.getElementById('gameTimerDisplay').classList.add('running');
@@ -6464,6 +6610,7 @@
 
   function timerPause() {
     if (!timerRunning) return;
+    _clkSample();
     timerRunning = false;
     clearInterval(timerInterval);
     timerInterval = null;
@@ -6491,6 +6638,7 @@
       var co = document.getElementById('chainOverlay');
       if (co) co.classList.remove('active');
     }
+    _clkSample();
     // log this turn for the current player
     const dur = turnSeconds;
     // guard against activeTurn being out of bounds
@@ -6503,6 +6651,7 @@
     });
     globalTurnNum++;
     turnSeconds = 0;
+    _clkRebase();
     const td = document.getElementById('turnTimerDisplay');
     if (td) { td.textContent = '00:00'; td.classList.remove('overtime'); }
     newActiveFn();
@@ -7748,6 +7897,31 @@
     }
   }
 
+  /* ── View mode: PC (default), Touch (bigger buttons, bottom sheets for damage/heal), or Auto (Touch on tablets/phones).
+        Saved per device. Choosing Touch only adds a class to <body>; the PC layout is untouched. ── */
+  function _viewPref() { try { return localStorage.getItem('ygo_view') || 'pc'; } catch (e) { return 'pc'; } }
+  function _autoIsTouch() {
+    try { return window.matchMedia('(pointer: coarse)').matches || (navigator.maxTouchPoints > 1 && /Macintosh|iPad|iPhone|Android/.test(navigator.userAgent)); }
+    catch (e) { return false; }
+  }
+  function applyViewMode() {
+    var pref = _viewPref();
+    var touch = pref === 'touch' || (pref === 'auto' && _autoIsTouch());
+    document.body.classList.toggle('touch-ui', touch);
+    var label = (touch ? '📱' : '🖥️') + ' View: ' + (pref === 'auto' ? 'Auto (' + (touch ? 'Touch' : 'PC') + ')' : pref === 'touch' ? 'Touch' : 'PC');
+    var b = document.getElementById('viewModeBtn'); if (b) b.textContent = label;
+    var r = document.getElementById('radialViewBtn'); if (r) { var ic = r.querySelector('.ri-icon'), lb = r.querySelector('.ri-label'); if (ic) ic.textContent = touch ? '📱' : '🖥️'; if (lb) lb.textContent = pref === 'auto' ? 'View: Auto' : pref === 'touch' ? 'View: Touch' : 'View: PC'; }
+    return touch;
+  }
+  function cycleViewMode() {
+    var next = { pc: 'touch', touch: 'auto', auto: 'pc' }[_viewPref()] || 'pc';
+    try { localStorage.setItem('ygo_view', next); } catch (e) {}
+    var touch = applyViewMode();
+    if (typeof render === 'function') render();
+    if (typeof showToast === 'function') showToast(next === 'auto' ? 'View: Auto (' + (touch ? 'touch' : 'PC') + ' on this device)' : next === 'touch' ? 'Touch view: bigger buttons, damage and heal open at the bottom' : 'PC view', 'info');
+  }
+  (function () { applyViewMode(); })();
+
   function toggleFullscreen() {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen().catch(function() {});
@@ -7974,13 +8148,51 @@
   }
 
   // ── Roster Import (load from JSON file) ────────────────────
+  // ── Roster Import (load from JSON file) ────────────────────
+  // Accepts: Export files, the Link Folder file (yugioh-roster.json), JSON arrays,
+  // CSV (name[,wins,losses,forfeits] with or without a header row), or one name per line.
+  function _parseRosterFile(text) {
+    text = String(text || '').replace(/^\uFEFF/, '').trim();
+    var out = {};
+    var add = function(name, w, l, f) {
+      name = String(name || '').trim().replace(/^"(.*)"$/, '$1').trim();
+      if (!name) return;
+      out[rosterKey(name)] = { name: name, w: parseInt(w) || 0, l: parseInt(l) || 0, f: parseInt(f) || 0 };
+    };
+    try {
+      var j = JSON.parse(text);
+      if (j && j.roster && typeof j.roster === 'object') j = j.roster;      // Link Folder file
+      if (Array.isArray(j)) { j.forEach(function(x) { if (typeof x === 'string') add(x); else if (x) add(x.name, x.w, x.l, x.f); }); return out; }
+      if (j && typeof j === 'object') return j;                              // Export file
+    } catch (e) { /* not JSON, fall through to CSV/text */ }
+    var lines = text.split(/\r?\n/).map(function(l) { return l.trim(); }).filter(Boolean);
+    if (lines.length === 1 && lines[0].indexOf(',') !== -1 && !/\d/.test(lines[0])) {
+      lines[0].split(',').forEach(function(n) { add(n); });                 // "Mac, Bossos, Bishop"
+      return out;
+    }
+    var sep = lines.some(function(l) { return l.indexOf('\t') !== -1; }) ? '\t' : (lines.some(function(l) { return l.indexOf(';') !== -1 && l.indexOf(',') === -1; }) ? ';' : ',');
+    var cols = function(l) { return l.split(sep).map(function(c) { return c.trim().replace(/^"(.*)"$/, '$1'); }); };
+    var idx = { name: 0, w: 1, l: 2, f: 3 };
+    var head = cols(lines[0]).map(function(c) { return c.toLowerCase(); });
+    if (head.some(function(c) { return /^(name|player|duelist)/.test(c); })) {
+      var find = function(re, d) { var i = head.findIndex(function(c) { return re.test(c); }); return i === -1 ? d : i; };
+      idx = { name: find(/^(name|player|duelist)/, 0), w: find(/^(w|wins?)$/, -1), l: find(/^(l|loss|losses)$/, -1), f: find(/^(f|forfeits?)$/, -1) };
+      lines = lines.slice(1);
+    }
+    lines.forEach(function(l) {
+      var c = cols(l);
+      add(c[idx.name], idx.w >= 0 ? c[idx.w] : 0, idx.l >= 0 ? c[idx.l] : 0, idx.f >= 0 ? c[idx.f] : 0);
+    });
+    return out;
+  }
+
   function rosterImport(event) {
     var file = event.target.files[0];
     if (!file) return;
     var reader = new FileReader();
     reader.onload = function(e) {
       try {
-        var data = JSON.parse(e.target.result);
+        var data = _parseRosterFile(e.target.result);
         if (!data || typeof data !== 'object') throw new Error('Invalid format');
         // Merge: imported entries overwrite existing by key, new entries are added
         var added = 0, updated = 0;
@@ -10529,6 +10741,7 @@
         _cardDbReady = true;
         var d = stored.date ? new Date(stored.date).toLocaleDateString() : '?';
         _setCardDbStatus('📦 ' + _cardDb.length.toLocaleString() + ' CARDS  ·  ' + d, '#88cc88');
+        _cardDbCheckForUpdate(stored);   // keep ban list / Genesys points current
       } else {
         _setCardDbStatus('⬇️ DOWNLOADING DB…', 'var(--gold)');
         cardDbDownload(false);
@@ -10536,6 +10749,25 @@
     }).catch(function() {
       _setCardDbStatus('⬇️ DOWNLOADING DB…', 'var(--gold)');
       cardDbDownload(false);
+    });
+  }
+
+  // ── Freshness: ask YGOPRODeck for its database version (tiny request) and
+  //    re-download in the background when it changed. The cached cards stay usable meanwhile.
+  //    If the version check fails, fall back to refreshing anything older than 7 days.
+  function _cardDbFetchVersion() {
+    return fetch('https://db.ygoprodeck.com/api/v7/checkDBVer.php', { cache: 'no-store' })
+      .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function(j) { var row = Array.isArray(j) ? j[0] : j; return (row && row.database_version) ? String(row.database_version) : null; });
+  }
+  function _cardDbCheckForUpdate(stored) {
+    _cardDbFetchVersion().then(function(v) {
+      if (v && v !== stored.version) {
+        _setCardDbStatus('⬇️ UPDATING CARD DATA…', 'var(--gold)');
+        cardDbDownload(false);
+      }
+    }).catch(function() {
+      if (Date.now() - (stored.date || 0) > 7 * 864e5) cardDbDownload(false);
     });
   }
 
@@ -10585,14 +10817,22 @@
         var d = new Date().toLocaleDateString();
         _setCardDbStatus('📦 ' + _cardDb.length.toLocaleString() + ' CARDS  ·  ' + d, '#88cc88');
 
-        // Persist to IDB
-        _cardIdbPut({ cards: _cardDb, date: Date.now() });
+        // Persist to IDB, with YGOPRODeck's version so we know when it changes
+        var _saved = _cardDb;
+        _cardDbFetchVersion()
+          .then(function(v) { _cardIdbPut({ cards: _saved, date: Date.now(), version: v }); })
+          .catch(function() { _cardIdbPut({ cards: _saved, date: Date.now(), version: null }); });
       })
       .catch(function(err) {
         _cardDbLoading = false;
+        console.warn('Card DB download failed:', err);
+        if (_cardDb && _cardDb.length) {   // background update failed: keep using the cached cards
+          _cardDbReady = true;
+          _setCardDbStatus('📦 ' + _cardDb.length.toLocaleString() + ' CARDS  ·  update failed, using saved copy', '#ccaa66');
+          return;
+        }
         _cardDbReady = false;
         _setCardDbStatus('⚠️ DB UNAVAILABLE — LIVE SEARCH', '#ff8888');
-        console.warn('Card DB download failed:', err);
       });
   }
 
