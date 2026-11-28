@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-28T05:08:12.296Z",
+  "updated": "2026-11-28T05:14:32.066Z",
   "month": "2026-11",
   "rules": {
     "cap": 3,
@@ -165,6 +165,28 @@
       "tier": null,
       "ranked": false,
       "linked": true
+    },
+    {
+      "rank": null,
+      "name": "Diamond",
+      "rating": 1500,
+      "points": 100,
+      "wins": 0,
+      "losses": 0,
+      "tier": null,
+      "ranked": false,
+      "linked": false
+    },
+    {
+      "rank": null,
+      "name": "Future",
+      "rating": 1500,
+      "points": 100,
+      "wins": 0,
+      "losses": 0,
+      "tier": null,
+      "ranked": false,
+      "linked": false
     },
     {
       "rank": null,
