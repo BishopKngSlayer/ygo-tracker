@@ -5015,7 +5015,14 @@
   var _lastHostPushTs = 0;     // timestamp of last host push
   var _fbApplying    = false;  // guard against sync loops
   var _fbMySlot      = 0;      // which player index am I? host=0, guest=1
-  var _fbGuestSlot   = 1;      // which slot is the remote guest? always 1
+  var _fbGuestSlot   = 1;      // which slot is the remote guest? (the other one)
+  var _fbSpectator   = false;  // watching only: never push state
+  // Merge, not overwrite: each player's LP carries a change counter (_v). When two devices sync, the higher
+  // counter wins per player; on a tie the host's copy wins, so both devices always end up the same.
+  // _fbGameId changes with every new game so a fresh board replaces the old one instead of merging into it.
+  var _fbSig = [];
+  var _fbGotHost = false;   // guest: don't push until the host's board has arrived (or we'd send a blank one)
+  var _fbGameId = 'g' + Date.now().toString(36);
   // Hardcoded Firebase config — no setup needed
   var _fbConfig = {
     apiKey: "AIzaSyC0U5MUfEm4cgcYxDc7Dg5tJZIdw_TJZsA",
@@ -5075,6 +5082,8 @@
 
   /* ── Init ─────────────────────────────── */
   function initPlayers(count) {
+    _fbGameId = 'g' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    _fbSig = [];
     players    = Array.from({ length: count }, (_, i) => ({
       name: `Player ${i + 1}`, lp: MAX_LP, eliminated: false, forfeited: false, turnOrder: i + 1, prevLP: MAX_LP
     }));
@@ -7354,6 +7363,15 @@
       });
       discordPostDuelResult('🏆 ' + winner.name + ' wins!', dLines);
     } catch(e) {}
+    // Challenge link from Omega: this duel settles a wager.
+    try {
+      if (_challenge) _chEndShown = true;
+      if (_challenge && _challenge.slot !== null) {
+        if (sub) sub.textContent = _challenge.sent ? 'Wager #' + _challenge.wagerId + ': result already sent to Omega.'
+                                                   : 'Wager #' + _challenge.wagerId + ': sending the result to Omega. Both duelists confirm by DM.';
+        _chSendResult(wi);
+      }
+    } catch(e) { console.warn('Challenge result failed:', e); }
   }
 
   function closeSummary(newGame) {
@@ -9865,8 +9883,40 @@
     return Math.floor(100000 + Math.random() * 900000).toString();
   }
 
+  // Bump a player's change counter when their LP / elimination changed on THIS device since the last sync.
+  function _fbStamp() {
+    players.forEach(function(p, i) {
+      if (!p) return;
+      var sig = p.lp + '|' + !!p.eliminated + '|' + !!p.forfeited;
+      if (_fbSig[i] !== undefined && _fbSig[i] !== sig) p._v = (p._v || 0) + 1;
+      _fbSig[i] = sig;
+    });
+  }
+  // Combine an incoming players array with ours (see _fbSig above). hostWinsTie: we are the host.
+  function _fbMerge(incoming, incomingGameId, hostWinsTie) {
+    if (!incoming || !incoming.length) return players;
+    _fbStamp();   // count any local change that hasn't been pushed yet
+    var sameGame = incomingGameId && incomingGameId === _fbGameId;
+    var merged = JSON.parse(JSON.stringify(incoming));
+    if (sameGame) {
+      merged.forEach(function(inc, i) {
+        var loc = players[i];
+        if (!inc || !loc || String(loc.name) !== String(inc.name)) return;
+        var lv = loc._v || 0, iv = inc._v || 0;
+        if (lv > iv || (lv === iv && hostWinsTie)) {
+          inc.lp = loc.lp; inc.prevLP = loc.prevLP; inc.eliminated = loc.eliminated; inc.forfeited = loc.forfeited; inc._v = lv;
+        }
+      });
+    }
+    if (incomingGameId) _fbGameId = incomingGameId;
+    _fbSig = merged.map(function(p) { return p ? (p.lp + '|' + !!p.eliminated + '|' + !!p.forfeited) : undefined; });
+    return merged;
+  }
+
   function _getGameSnapshot() {
+    _fbStamp();
     return {
+      gameId:       _fbGameId,
       players:      JSON.parse(JSON.stringify(players)),
       activeTurn:   activeTurn,
       currentPhase: currentPhase,
@@ -9892,17 +9942,16 @@
 
   // Guest pushes full game state so host sees all changes (LP, phases, turns)
   function fbPushGuestState() {
-    if (_fbIsHost || !_fbDb || !_fbRoom || _fbApplying) return;
+    if (_fbIsHost || _fbSpectator || !_fbGotHost || !_fbDb || !_fbRoom || _fbApplying) return;
     _fbDb.ref('rooms/' + _fbRoom + '/guest').set(_getGameSnapshot()).catch(function(e) { console.warn('Guest push failed:', e); });
   }
 
   function _applySnapshot(snap) {
     if (!snap) return;
     _fbApplying = true;
-    // Guest preserves their own LP/eliminated — host's snapshot may be stale for their slot
-    var savedLP   = (!_fbIsHost && _fbRoom && players[_fbMySlot]) ? players[_fbMySlot].lp        : null;
-    var savedElim = (!_fbIsHost && _fbRoom && players[_fbMySlot]) ? players[_fbMySlot].eliminated : null;
-    players       = snap.players      || players;
+    _fbGotHost = true;
+    // Merge per player (newer change wins; host wins ties) instead of trusting either side blindly
+    players       = snap.players ? _fbMerge(snap.players, snap.gameId, _fbIsHost) : players;
     activeTurn    = snap.activeTurn   != null ? snap.activeTurn : activeTurn;
     currentPhase  = snap.currentPhase != null ? snap.currentPhase : currentPhase;
     globalTurnNum = snap.globalTurnNum|| globalTurnNum;
@@ -9910,15 +9959,11 @@
     matchCtx      = snap.matchCtx     || null;
     teamLP        = snap.teamLP       || [];
     if (snap.MAX_LP) MAX_LP = snap.MAX_LP;
-    // Restore guest's own LP so it doesn't get overwritten by stale host data
-    if (savedLP !== null && players[_fbMySlot]) {
-      players[_fbMySlot].lp        = savedLP;
-      players[_fbMySlot].eliminated = savedElim;
-    }
     render();
     updateMatchBanner();
     renderTurnLabel();
     _fbApplying = false;
+    _chCheckEnd();
   }
 
   function renderTurnLabel() {
@@ -9929,12 +9974,15 @@
     }
   }
 
-  function hostRoom() {
+  // codeOverride / slot: used by challenge links (fixed room code, and the host may be either duelist).
+  function hostRoom(codeOverride, slot) {
     if (!_fbInit()) { alert('Firebase connection failed. Check your internet connection.'); return; }
-    var code = _genRoomCode();
+    var code = (typeof codeOverride === 'string' && codeOverride) ? codeOverride : _genRoomCode();
     _fbRoom   = code;
     _fbIsHost = true;
-    _fbMySlot = 0;
+    _fbSpectator = false;
+    _fbMySlot = (slot === 1) ? 1 : 0;
+    _fbGuestSlot = _fbMySlot === 0 ? 1 : 0;
     // Ensure 2 players for remote duel
     if (players.length < 2) { initPlayers(2); }
     fbPushState();
@@ -9945,8 +9993,8 @@
       // Only apply if guest's timestamp is newer than our last push
       if (data.ts && data.ts > (_lastHostPushTs || 0)) {
         _fbApplying = true;
-        // Apply guest's full state
-        players       = data.players      || players;
+        // Apply guest's state, merged per player (host wins ties)
+        players       = data.players ? _fbMerge(data.players, data.gameId, true) : players;
         activeTurn    = data.activeTurn   != null ? data.activeTurn : activeTurn;
         currentPhase  = data.currentPhase != null ? data.currentPhase : currentPhase;
         globalTurnNum = data.globalTurnNum|| globalTurnNum;
@@ -9958,6 +10006,7 @@
         updateMatchBanner();
         renderTurnLabel();
         _fbApplying = false;
+        _chCheckEnd();
       }
       // Update guest connected indicator
       var gName = data.players && data.players[_fbGuestSlot] ? data.players[_fbGuestSlot].name : 'Guest';
@@ -9970,13 +10019,16 @@
     if (stab) { stab.style.color = '#44ff88'; stab.style.borderBottomColor = '#44ff88'; stab.textContent = '🟢 Live'; }
   }
 
-  function joinRoom(codeOverride) {
+  // slot: which duelist this device is (challenge links); null = just watching. Default: slot 1.
+  function joinRoom(codeOverride, slot) {
     if (!_fbInit()) { alert('Firebase connection failed. Check your internet connection.'); return; }
     var code = codeOverride || (document.getElementById('joinCodeInput') ? document.getElementById('joinCodeInput').value.trim().toUpperCase() : '');
     if (!code || code.length !== 6) { alert('Enter a valid 6-digit room code'); return; }
     _fbRoom   = code;
     _fbIsHost = false;
-    _fbMySlot = 1;
+    _fbGotHost = false;
+    _fbSpectator = (slot === null);
+    _fbMySlot = (slot === 0 || slot === 1) ? slot : (slot === null ? -1 : 1);
     // Listen to host state
     _fbListener = _fbDb.ref('rooms/' + code + '/state').on('value', function(snapshot) {
       var data = snapshot.val();
@@ -10000,7 +10052,7 @@
       if (_fbListener) _fbDb.ref('rooms/' + _fbRoom + '/state').off('value', _fbListener);
       if (_fbGuestListener) _fbDb.ref('rooms/' + _fbRoom + '/guest').off('value', _fbGuestListener);
     }
-    _fbRoom = null; _fbIsHost = false; _fbListener = null; _fbGuestListener = null; _fbMySlot = 0;
+    _fbRoom = null; _fbIsHost = false; _fbListener = null; _fbGuestListener = null; _fbMySlot = 0; _fbGuestSlot = 1; _fbSpectator = false;
     _updateSyncDot();
     _renderSyncPanel();
     var stab3 = document.getElementById('mtab-sync');
@@ -10029,6 +10081,201 @@
         setTimeout(function() { joinRoom(roomCode.toUpperCase()); }, 800);
       }
     } catch(e) {}
+  })();
+
+  /* ━━ CHALLENGE LINKS (from Omega) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     Omega makes a room for each accepted wager: rooms/<code>/challenge = { wagerId, stake, status, players:[a,b] }.
+     Opening ?challenge=<code> asks which duelist is holding this device, sets up both names and syncs both
+     phones through that room. The first device to open it hosts; if the host leaves, the next one takes over
+     from the saved board. When the duel ends the result goes to /results under ch<code>w<wagerId>, so Omega
+     knows which wager it settles; both players confirm by DM and a mod approves, like any wager. */
+  var _challenge = null;   // { code, wagerId, stake, players:[a,b], slot (0/1, null = watching), sent }
+  var _CH_KEY = 'yugioh_challenge_';
+
+  function _chSaved(code) { try { return JSON.parse(localStorage.getItem(_CH_KEY + code) || 'null'); } catch (e) { return null; } }
+  function _chSave(code, v) { try { localStorage.setItem(_CH_KEY + code, JSON.stringify(v)); } catch (e) {} }
+
+  function _chOverlay(html) {
+    var o = document.getElementById('challengeOverlay');
+    if (!o) {
+      o = document.createElement('div');
+      o.id = 'challengeOverlay';
+      o.style.cssText = 'position:fixed;inset:0;z-index:100000;display:flex;align-items:center;justify-content:center;background:rgba(4,6,14,0.88);backdrop-filter:blur(6px);padding:20px;';
+      document.body.appendChild(o);
+    }
+    o.innerHTML = '<div style="max-width:420px;width:100%;background:linear-gradient(160deg,#141a2e,#0b0f1c);border:1px solid rgba(212,175,55,0.45);border-radius:18px;padding:26px 22px;text-align:center;color:#e8e6df;font-family:inherit;box-shadow:0 20px 60px rgba(0,0,0,0.6);">' + html + '</div>';
+    o.style.display = 'flex';
+    return o;
+  }
+  function _chCloseOverlay() { var o = document.getElementById('challengeOverlay'); if (o) o.style.display = 'none'; }
+
+  function _chBadge() {
+    var b = document.getElementById('challengeBadge');
+    if (!_challenge) { if (b) b.remove(); return; }
+    if (!b) {
+      b = document.createElement('div');
+      b.id = 'challengeBadge';
+      b.style.cssText = 'position:fixed;top:8px;left:50%;transform:translateX(-50%);z-index:9000;padding:5px 14px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:0.5px;color:#f5d76e;background:rgba(20,16,4,0.85);border:1px solid rgba(212,175,55,0.6);pointer-events:none;white-space:nowrap;';
+      document.body.appendChild(b);
+    }
+    var me = _challenge.slot === null ? 'Watching' : 'You: ' + _challenge.players[_challenge.slot];
+    b.textContent = '⚔️ Wager #' + _challenge.wagerId + ' · ' + _challenge.stake + ' pts · ' + me + (_challenge.sent ? ' · result sent ✓' : '');
+  }
+
+  function _chStopped(title, body) {
+    _chOverlay('<div style="font-size:34px;margin-bottom:8px;">⚔️</div><div style="font-size:18px;font-weight:800;margin-bottom:10px;color:#f5d76e;">' + escHtml(title) + '</div>'
+      + '<div style="font-size:14px;line-height:1.5;opacity:0.85;margin-bottom:18px;">' + body + '</div>'
+      + '<button class="summary-btn gold" onclick="_chCloseOverlay()">OK</button>');
+  }
+
+  function openChallenge(code) {
+    if (!_fbInit()) { _chStopped('No connection', 'Couldn\'t reach the server. Check your internet and open the link again.'); return; }
+    _fbDb.ref('rooms/' + code + '/challenge').once('value').then(function (snap) {
+      var ch = snap.val();
+      if (!ch || !ch.players || ch.players.length !== 2) {
+        _chStopped('Challenge link not active', 'This wager was already settled, voided or cancelled. Check <b>/wager list</b> in Discord for your current wagers.');
+        return;
+      }
+      if (ch.status === 'played') {
+        _chStopped('Result already sent', 'The result for wager #' + ch.wagerId + ' is waiting for confirmation. Check your Discord DMs to <b>Confirm</b> or <b>Dispute</b> it.');
+        return;
+      }
+      var base = { code: code, wagerId: ch.wagerId, stake: ch.stake, players: ch.players.slice(0, 2), sent: false };
+      var saved = _chSaved(code);
+      if (saved && saved.wagerId === ch.wagerId && (saved.slot === 0 || saved.slot === 1 || saved.slot === null)) {
+        _chStart(Object.assign(base, { slot: saved.slot, sent: !!saved.sent }));
+        return;
+      }
+      var btn = function (i) {
+        return '<button class="summary-btn gold" style="display:block;width:100%;margin:8px 0;font-size:15px;padding:12px;" onclick="_chPick(' + i + ')">' + escHtml(ch.players[i]) + '</button>';
+      };
+      window._chPending = base;
+      _chOverlay('<div style="font-size:34px;margin-bottom:6px;">⚔️</div>'
+        + '<div style="font-size:12px;letter-spacing:2px;opacity:0.7;margin-bottom:4px;">WAGER #' + ch.wagerId + ' · ' + ch.stake + ' PTS</div>'
+        + '<div style="font-size:19px;font-weight:800;margin-bottom:16px;">' + escHtml(ch.players[0]) + ' <span style="color:#f5d76e;">vs</span> ' + escHtml(ch.players[1]) + '</div>'
+        + '<div style="font-size:14px;opacity:0.85;margin-bottom:8px;">Which duelist are you?</div>'
+        + btn(0) + btn(1)
+        + '<button class="summary-btn dim" style="display:block;width:100%;margin-top:12px;" onclick="_chPick(null)">👀 Just watching</button>'
+        + '<div style="font-size:11px;opacity:0.55;margin-top:14px;line-height:1.4;">Each duelist opens this link on their own device. Life points stay in sync, and the result goes to Omega when the duel ends.</div>');
+    }).catch(function (e) {
+      console.warn('Challenge load failed:', e);
+      _chStopped('Couldn\'t load the challenge', 'Check your internet and open the link again.');
+    });
+  }
+
+  function _chPick(slot) {
+    var base = window._chPending; window._chPending = null;
+    if (!base) return;
+    _chStart(Object.assign(base, { slot: slot }));
+  }
+
+  function _chStart(ch) {
+    _challenge = ch;
+    _chSave(ch.code, { wagerId: ch.wagerId, slot: ch.slot, sent: ch.sent });
+    _chCloseOverlay();
+    if (_fbRoom) leaveRoom();
+    var room = _fbDb.ref('rooms/' + ch.code);
+    if (ch.slot === null) {           // watching: listen only
+      joinRoom(ch.code, null);
+      _chBadge();
+      return;
+    }
+    // First device in hosts. onDisconnect frees the claim so the other duelist can take over if this tab closes.
+    room.child('host').transaction(function (cur) {
+      return cur ? undefined : { slot: ch.slot, ts: Date.now() };
+    }).then(function (res) {
+      if (res.committed) {
+        room.child('host').onDisconnect().remove();
+        return room.child('state').once('value').then(function (st) { _chHost(ch, st.val()); });
+      }
+      joinRoom(ch.code, ch.slot);
+      showToast('⚔️ Joined wager #' + ch.wagerId + ' as ' + ch.players[ch.slot] + '.', 'info', 3500);
+      _chBadge();
+    }).catch(function (e) {
+      console.warn('Challenge host claim failed:', e);
+      joinRoom(ch.code, ch.slot);
+      _chBadge();
+    });
+  }
+
+  function _chHost(ch, existing) {
+    if (existing && existing.players && existing.players.length === 2) {
+      // Taking over a duel already in progress: carry on from the saved board.
+      _applySnapshot(existing);
+      hostRoom(ch.code, ch.slot);
+      showToast('⚔️ Back in wager #' + ch.wagerId + ': the board is where you left it.', 'info', 3500);
+      _chBadge();
+      return;
+    }
+    // Fresh duel: both names set, a coin flip for who goes first, then it starts.
+    if (gameMode !== 'standard' || matchCtx) { gameMode = 'standard'; matchCtx = null; updateMatchBanner(); }
+    var inp = document.getElementById('startingLPInput');
+    if (inp) MAX_LP = parseInt(inp.value) || MAX_LP;
+    initPlayers(2);
+    players[0].name = ch.players[0];
+    players[1].name = ch.players[1];
+    activeTurn = Math.random() < 0.5 ? 0 : 1;
+    currentPhase = 1;
+    _duelBtnVisible = false;
+    var dbtn = document.getElementById('duelStartBtn');
+    if (dbtn) dbtn.style.display = 'none';
+    dueling = true;
+    render();
+    timerStart();
+    hostRoom(ch.code, ch.slot);
+    try { playSound('duelStart'); } catch (e) {}
+    showToast('🪙 ' + players[activeTurn].name + ' goes first! Wager #' + ch.wagerId + ' is on.', 'info', 4000);
+    _chBadge();
+  }
+
+  /** A synced update ended the duel (the other device dealt the last hit): show the result here too. */
+  var _chEndShown = false;
+  function _chCheckEnd() {
+    if (!_challenge || _chEndShown || gameMode !== 'standard' || players.length !== 2) return;
+    var alive = players.filter(function(p) { return !p.eliminated; });
+    if (alive.length !== 1) return;
+    var ov = document.getElementById('summaryOverlay');
+    if (ov && ov.classList.contains('show')) return;
+    _chEndShown = true;
+    checkWinCondition();
+  }
+
+  /** Called when a duel ends: send the result for the challenge's wager (once per device). */
+  function _chSendResult(winnerIdx) {
+    if (!_challenge || _challenge.slot === null || _challenge.sent || players.length !== 2) return false;
+    var names = _challenge.players;
+    // Map board slots to the ladder names (by name if someone renamed a slot, else by position).
+    var idxOf = function (i) {
+      var n = String(players[i].name || '').trim().toLowerCase();
+      var m = names.findIndex(function (x) { return x.trim().toLowerCase() === n; });
+      return m >= 0 ? m : i;
+    };
+    var w = idxOf(winnerIdx), l = idxOf(winnerIdx === 0 ? 1 : 0);
+    if (w === l) { w = winnerIdx; l = winnerIdx === 0 ? 1 : 0; }
+    var data = { winner: names[w], loser: names[l], ts: Date.now(), mode: 'Challenge (wager #' + _challenge.wagerId + ')', wager: true,
+                 score: players[winnerIdx].lp.toLocaleString() + ' LP left' };
+    var key = 'ch' + _challenge.code + 'w' + _challenge.wagerId;
+    var ch = _challenge;
+    _fbDb.ref('results/' + key).set(data).then(function () {
+      ch.sent = true; _chSave(ch.code, { wagerId: ch.wagerId, slot: ch.slot, sent: true }); _chBadge();
+      showToast('📨 Sent to Omega: ' + data.winner + ' won wager #' + ch.wagerId + '. You\'ll both get a DM to confirm.', 'heal', 5000);
+    }).catch(function (err) {
+      if (err && /permission/i.test(String(err.code || err.message))) {   // already sent from the other device
+        ch.sent = true; _chSave(ch.code, { wagerId: ch.wagerId, slot: ch.slot, sent: true }); _chBadge();
+        showToast('📨 The result for wager #' + ch.wagerId + ' was already sent. Check your Discord DMs to confirm it.', 'info', 5000);
+      } else {
+        showToast('📴 Couldn\'t send the wager result. Report it in Discord with /wager report.', 'warning', 6000);
+      }
+    });
+    return true;
+  }
+
+  // Open a challenge link on load
+  (function () {
+    try {
+      var c = new URLSearchParams(window.location.search).get('challenge');
+      if (c && /^\d{6}$/.test(c)) setTimeout(function () { openChallenge(c); }, 900);
+    } catch (e) {}
   })();
 
 
