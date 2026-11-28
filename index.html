@@ -5345,8 +5345,9 @@
     if (duelBtn) {
       var wizOpen = document.getElementById('duelWizard') && document.getElementById('duelWizard').classList.contains('open');
       var tutOpen = document.getElementById('tutorialOverlay') && document.getElementById('tutorialOverlay').classList.contains('open');
+      var modeOpen = document.getElementById('modeModal') && document.getElementById('modeModal').classList.contains('open');
       // Only show duel button if _duelBtnVisible flag is true AND nothing else is covering it
-      if (_duelBtnVisible && !wizOpen && !_radialOpen && !_duelRadialOpen && !tutOpen) {
+      if (_duelBtnVisible && !wizOpen && !_radialOpen && !_duelRadialOpen && !tutOpen && !modeOpen) {
         duelBtn.style.display = '';
       } else {
         duelBtn.style.display = 'none';
@@ -8384,6 +8385,46 @@
     if (panel) panel.classList.add('active');
   }
 
+  function _handleNewPlayerSelect(sel) {
+    if (sel.value !== '__new__') return;
+    var name = prompt('Enter new player name:');
+    if (!name || !name.trim()) {
+      sel.value = '';
+      return;
+    }
+    name = name.trim();
+    var key = rosterKey(name);
+    // Add to roster if not already there
+    if (!roster[key]) {
+      roster[key] = { name: name, w: 0, l: 0, duels: 0 };
+      localStorage.setItem('yugioh_roster', JSON.stringify(roster));
+    }
+    // Figure out which modal context we're in and re-render
+    var kothModal = document.getElementById('kothModal');
+    if (kothModal && kothModal.classList.contains('open')) {
+      renderKothModal();
+      var kSel = document.getElementById('koth-add-select');
+      if (kSel) kSel.value = name;
+      if (typeof kothAddFromSelect === 'function') kothAddFromSelect();
+      return;
+    }
+    // Mode modal (Best of X, Tournament, Team Battle)
+    var selId = sel.id;
+    var slotIdx = sel.dataset ? sel.dataset.slot : null;
+    var isTournament = sel.closest && sel.closest('#tourn-slots');
+    renderModeModal();
+    if (isTournament) {
+      // Tournament selects have data-slot but no fixed id
+      var tournSelects = document.querySelectorAll('#tourn-slots select');
+      if (slotIdx !== null && tournSelects[parseInt(slotIdx)]) {
+        tournSelects[parseInt(slotIdx)].value = name;
+      }
+    } else if (selId) {
+      var restored = document.getElementById(selId);
+      if (restored) restored.value = name;
+    }
+  }
+
   function renderModeModal() {
     // populate player dropdowns from roster
     var rosterNames = Object.values(roster)
@@ -8404,8 +8445,9 @@
       var cur = sel.value;
       sel.innerHTML = rosterNames.map(function(n) {
         return '<option value="' + n + '"' + (n === cur ? ' selected' : '') + '>' + n + '</option>';
-      }).join('');
+      }).join('') + '<option value="__new__">＋ New Player</option>';
       if (!cur && players[idx]) sel.value = players[idx].name;
+      sel.onchange = function() { _handleNewPlayerSelect(this); };
     });
 
     // Tournament — render dropdown slots
@@ -8445,7 +8487,9 @@
               var def = players[ti * count + (si - 1)];
               var autoSel = cur ? (n === cur) : (def && def.name === n);
               return '<option value="' + n + '"' + (autoSel ? ' selected' : '') + '>' + n + '</option>';
-            }).join('');
+            }).join('')
+          + '<option value="__new__">＋ New Player</option>';
+        sel.onchange = function() { _handleNewPlayerSelect(this); };
       }
     });
 
@@ -8457,7 +8501,9 @@
         solSel.innerHTML = '<option value="">— Choose Solo —</option>'
           + rosterNames.map(function(n) {
               return '<option value="' + n + '"' + (n === curSolo ? ' selected' : '') + '>' + n + '</option>';
-            }).join('');
+            }).join('')
+          + '<option value="__new__">＋ New Player</option>';
+        solSel.onchange = function() { _handleNewPlayerSelect(this); };
       }
     }
   }
@@ -8574,8 +8620,10 @@
             .filter(function(n) { return chosen.indexOf(n) === -1 || n === current; })
             .map(function(n) {
               return '<option value="' + n + '"' + (n === current ? ' selected' : '') + '>' + n + '</option>';
-            }).join('');
+            }).join('')
+        + '<option value="__new__">＋ New Player</option>';
       if (current) sel.value = current;
+      sel.onchange = function() { _handleNewPlayerSelect(this); refreshTournamentSlots(); };
     });
   }
 
@@ -13520,7 +13568,9 @@
       sel.innerHTML = '<option value="">— Add player —</option>'
         + rosterNames.map(function(n) {
             return '<option value="' + n + '">' + n + '</option>';
-          }).join('');
+          }).join('')
+        + '<option value="__new__">＋ New Player</option>';
+      sel.onchange = function() { _handleNewPlayerSelect(this); };
     }
     _renderKothQueue();
   }
