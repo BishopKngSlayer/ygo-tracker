@@ -5340,24 +5340,55 @@
     });
     updateTurnLabel();
     updateHeaderVisibility();
-    // Hide duel button when a duel is in progress or wizard/radial is open
-    var duelBtn = document.getElementById('duelStartBtn');
-    if (duelBtn) {
-      var wizOpen = document.getElementById('duelWizard') && document.getElementById('duelWizard').classList.contains('open');
-      var tutOpen = document.getElementById('tutorialOverlay') && document.getElementById('tutorialOverlay').classList.contains('open');
-      var modeOpen = document.getElementById('modeModal') && document.getElementById('modeModal').classList.contains('open');
-      // Only show duel button if _duelBtnVisible flag is true AND nothing else is covering it
-      if (_duelBtnVisible && !wizOpen && !_radialOpen && !_duelRadialOpen && !tutOpen && !modeOpen) {
-        duelBtn.style.display = '';
-      } else {
-        duelBtn.style.display = 'none';
-      }
-    }
+    _syncDuelBtn();
     // Auto-focus battle ATK input when in battle phase
     if (currentPhase === 3) {
       setTimeout(function() { var a = document.getElementById('batk-' + activeTurn); if (a && !a.value) a.focus(); }, 80);
     }
   }
+
+  /* ── Duel button: shown ONLY on the idle screen right before a duel begins ──
+     One function decides, from the real state, so it can't end up floating over a tournament bracket, a
+     summary, a menu, a modal or a live board. It re-checks whenever the page changes (see the observer). */
+  var _DUELBTN_COVERS = ['playersModal','voiceCmdModal','transferModal','shortcutModal','rosterModal','partnerModal','modeModal',
+    'logModal','ladderModal','confirmModal','cardSearchModal','cardDetailOverlay','calcModal','bracketModal','allDmgModal',
+    'summaryOverlay','duelWizard','tutorialOverlay','rulesModal','matchHistoryModal','forgeModal','deckModal','collectionModal'];
+  function _duelBtnCovered() {
+    for (var i = 0; i < _DUELBTN_COVERS.length; i++) {
+      var el = document.getElementById(_DUELBTN_COVERS[i]);
+      if (el && (el.classList.contains('open') || el.classList.contains('show'))) return true;
+    }
+    // Anything else that is a full-screen layer and currently open (deck builder, challenge picker, other modals).
+    var layers = document.querySelectorAll('[id$="Modal"].open,[id$="Overlay"].open,[id$="Overlay"].show,[id$="Wizard"].open,[id$="Forge"].open,#challengeOverlay');
+    for (var j = 0; j < layers.length; j++) if (layers[j].id !== 'duelRadialBackdrop' && layers[j].id !== 'radialBackdrop') return true;
+    return false;
+  }
+  function _duelBtnShouldShow() {
+    if (!_duelBtnVisible || dueling) return false;
+    if (gameMode !== 'standard' || matchCtx) return false;               // tournament, best-of, team, king of the hill
+    if (typeof timerRunning !== 'undefined' && timerRunning) return false;
+    if (_radialOpen) return false;
+    if (_duelRadialOpen) return true;                                     // the type picker uses the button as its hub
+    return !_duelBtnCovered();
+  }
+  function _syncDuelBtn() {
+    var b = document.getElementById('duelStartBtn');
+    if (!b) return;
+    var show = _duelBtnShouldShow();
+    b.style.display = show ? '' : 'none';
+    if (show) b.style.visibility = '';
+    if (!show && _duelRadialOpen && typeof closeDuelRadial === 'function') closeDuelRadial();
+  }
+  (function () {
+    var pending = false;
+    function later() { if (pending) return; pending = true; requestAnimationFrame(function () { pending = false; try { _syncDuelBtn(); } catch (e) {} }); }
+    function start() {
+      var mo = new MutationObserver(later);
+      mo.observe(document.body, { attributes: true, subtree: true, attributeFilter: ['class'], childList: true });
+      setInterval(later, 1500);   // safety net for state that changes without touching a class
+    }
+    if (document.body) start(); else document.addEventListener('DOMContentLoaded', start);
+  })();
 
   /* ── Panel toggle ─────────────────────── */
   function togglePanel(i, side) {
@@ -8497,6 +8528,30 @@
     }
   }
 
+  /* Everyone you can pick for a duel: this device's roster plus everyone on the Omega ladder, so people who
+     only exist on the ladder (they joined in Discord, or played at a tournament) are always in the list. */
+  function _addLadderNames(list) {
+    var d = window.YGOLeaderboard && YGOLeaderboard.get();
+    if (!d || !d.players) return list;
+    var have = {}; list.forEach(function (n) { have[String(n).trim().toLowerCase()] = 1; });
+    d.players.forEach(function (p) { var k = String(p.name).trim().toLowerCase(); if (!have[k]) { have[k] = 1; list.push(p.name); } });
+    return list;
+  }
+  function _allPickNames() {
+    return _addLadderNames(Object.values(roster).map(function (r) { return r.name; })).sort(function (a, b) { return a.localeCompare(b); });
+  }
+  /* "Name  (🔗 · ⚔️ · Gold)" for ladder members, plain name otherwise. */
+  function _pickLabel(name) {
+    var d = window.YGOLeaderboard && YGOLeaderboard.get();
+    var lp = d && YGOLeaderboard.find ? YGOLeaderboard.find(name) : null;
+    if (!lp) return name;
+    var parts = [];
+    if (lp.linked) parts.push('🔗');
+    if (lp.ranked) parts.push('⚔️'); else parts.push('🏁 ' + (lp.wins + lp.losses) + '/' + ((d.rules && d.rules.placementGames) || 5));
+    if (lp.tier) parts.push(lp.tier);
+    return name + '  (' + parts.join(' · ') + ')';
+  }
+
   function renderModeModal() {
     // populate player dropdowns from roster
     var rosterNames = Object.values(roster)
@@ -8509,6 +8564,7 @@
         rosterNames.push(p.name.trim());
       }
     });
+    _addLadderNames(rosterNames);
 
     // Best of — refresh player selects
     ['bo-p1','bo-p2'].forEach(function(id, idx) {
@@ -8516,7 +8572,7 @@
       if (!sel) return;
       var cur = sel.value;
       sel.innerHTML = rosterNames.map(function(n) {
-        return '<option value="' + n + '"' + (n === cur ? ' selected' : '') + '>' + n + '</option>';
+        return '<option value="' + n + '"' + (n === cur ? ' selected' : '') + '>' + _pickLabel(n) + '</option>';
       }).join('') + '<option value="__new__">＋ New Player</option>';
       if (!cur && players[idx]) sel.value = players[idx].name;
       sel.onchange = function() { _handleNewPlayerSelect(this); };
@@ -8558,7 +8614,7 @@
           + rosterNames.map(function(n) {
               var def = players[ti * count + (si - 1)];
               var autoSel = cur ? (n === cur) : (def && def.name === n);
-              return '<option value="' + n + '"' + (autoSel ? ' selected' : '') + '>' + n + '</option>';
+              return '<option value="' + n + '"' + (autoSel ? ' selected' : '') + '>' + _pickLabel(n) + '</option>';
             }).join('')
           + '<option value="__new__">＋ New Player</option>';
         sel.onchange = function() { _handleNewPlayerSelect(this); };
@@ -8572,7 +8628,7 @@
         var curSolo = solSel.value;
         solSel.innerHTML = '<option value="">— Choose Solo —</option>'
           + rosterNames.map(function(n) {
-              return '<option value="' + n + '"' + (n === curSolo ? ' selected' : '') + '>' + n + '</option>';
+              return '<option value="' + n + '"' + (n === curSolo ? ' selected' : '') + '>' + _pickLabel(n) + '</option>';
             }).join('')
           + '<option value="__new__">＋ New Player</option>';
         solSel.onchange = function() { _handleNewPlayerSelect(this); };
@@ -8648,7 +8704,7 @@
     var container = document.getElementById('tourn-slots');
     if (!container) return;
     var count = parseInt(document.getElementById('tourn-count').value) || 4;
-    var rosterNames = Object.values(roster).map(function(r) { return r.name; }).sort();
+    var rosterNames = _allPickNames();
 
     // Preserve current selections
     var prev = Array.from(container.querySelectorAll('select')).map(function(s) { return s.value; });
@@ -8680,7 +8736,7 @@
   function _fillTournamentOptions(prev) {
     var container = document.getElementById('tourn-slots');
     if (!container) return;
-    var rosterNames = Object.values(roster).map(function(r) { return r.name; }).sort();
+    var rosterNames = _allPickNames();
     var selects = Array.from(container.querySelectorAll('select'));
 
     // Collect all currently chosen values (excluding the select being built)
@@ -8691,7 +8747,7 @@
         + rosterNames
             .filter(function(n) { return chosen.indexOf(n) === -1 || n === current; })
             .map(function(n) {
-              return '<option value="' + n + '"' + (n === current ? ' selected' : '') + '>' + n + '</option>';
+              return '<option value="' + n + '"' + (n === current ? ' selected' : '') + '>' + _pickLabel(n) + '</option>';
             }).join('')
         + '<option value="__new__">＋ New Player</option>';
       if (current) sel.value = current;
@@ -13641,11 +13697,12 @@
       if (!rosterNames.find(function(n) { return n.trim().toLowerCase() === k; }))
         rosterNames.push(p.name.trim());
     });
+    _addLadderNames(rosterNames);
     var sel = document.getElementById('koth-add-select');
     if (sel) {
       sel.innerHTML = '<option value="">— Add player —</option>'
         + rosterNames.map(function(n) {
-            return '<option value="' + n + '">' + n + '</option>';
+            return '<option value="' + n + '">' + _pickLabel(n) + '</option>';
           }).join('')
         + '<option value="__new__">＋ New Player</option>';
       sel.onchange = function() { _handleNewPlayerSelect(this); };
@@ -14197,6 +14254,7 @@
     }
     window.addEventListener('ygo-ladder', function(e) {
       fillNames(e.detail);
+      try { var mm = document.getElementById('modeModal'); if (mm && mm.classList.contains('open')) { renderModeModal(); if (document.getElementById('tourn-slots')) renderTournamentSlots(); } } catch (x) {}
       var rm = document.getElementById('rosterModal');
       if (rm && rm.classList.contains('open') && typeof renderRoster === 'function') renderRoster();
     });
