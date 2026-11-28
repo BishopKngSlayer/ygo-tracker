@@ -4363,7 +4363,12 @@
     <!-- Tournament -->
     <div class="mode-panel" id="mpanel-tournament">
       <div class="mode-section-title">Single Elimination Tournament</div>
-      <p class="mode-info">Choose how many participants, then select each one from the roster. Byes are assigned automatically for non-power-of-2 counts.</p>
+      <p class="mode-info">Choose how many participants, then select each one from the roster. Byes are assigned automatically for non-power-of-2 counts. The bracket posts to Discord as you play.</p>
+      <div id="tourn-discord"></div>
+      <div class="mode-field" style="align-items:center;gap:12px;">
+        <label style="flex:none;">Name</label>
+        <input class="mode-select" id="tourn-name" maxlength="60" placeholder="Tournament name (optional)" autocomplete="off">
+      </div>
       <div class="mode-field">
         <label>Number of Participants</label>
         <select class="mode-select" id="tourn-count" onchange="renderTournamentSlots()">
@@ -7642,6 +7647,7 @@
       // KotH cleanup
       if (gameMode === 'koth') { _kothQueue = []; }
       if (typeof setWagerDuel === 'function') setWagerDuel(false);
+      if (gameMode === 'tournament' && matchCtx && !matchCtx.champion) tournPublish('cancelled');
       gameMode = 'standard'; matchCtx = null; updateMatchBanner(); resetGame();
     }
   }
@@ -8911,8 +8917,113 @@
     updateMatchBanner();
   }
 
+  /* ━━ TOURNAMENT SYNC WITH DISCORD (Omega) ━━━━━━━━━━━━━━━━━━━━━━━━━━
+     The active bracket lives at rooms/TRNACTIVE/tournament in Firebase. This tracker publishes its bracket there
+     after every result so Omega can post the live bracket, round announcements and the champion in Discord.
+     A mod can also start one in Discord (/tournament start): it shows up here as "Load Discord tournament". */
+  var _TOURN_PATH = 'rooms/TRNACTIVE/tournament';
+  var _discordTourn = null, _tournToastId = null, _tournListening = false;
+
+  function tournRoundLabel(ri, total) {
+    var fromEnd = total - 1 - ri;
+    if (fromEnd <= 0) return 'Final';
+    if (fromEnd === 1) return 'Semifinals';
+    if (fromEnd === 2) return 'Quarterfinals';
+    return 'Round ' + (ri + 1);
+  }
+  function _tournRef() {
+    if (!window.firebase || !firebase.initializeApp) return null;
+    try {
+      if (!firebase.apps.length) firebase.initializeApp(_fbConfig);
+      return firebase.database().ref(_TOURN_PATH);
+    } catch (e) { return null; }
+  }
+  function tournPublish(forceStatus) {
+    if (!matchCtx || !matchCtx.rounds || matchCtx.noSync) return;
+    var ref = _tournRef();
+    if (!ref) return;
+    var send = function () {
+      var status = forceStatus || (matchCtx && matchCtx.champion ? 'done' : 'live');
+      var t = matchCtx;
+      var data = JSON.parse(JSON.stringify({
+        id: t.tid, name: t.tname || 'Tournament', status: status, source: t.tsource || 'tracker', bo3: !!t.bo3,
+        entrants: t.entrants, rounds: t.rounds, champion: t.champion || null, ts: Date.now()
+      }));
+      ref.set(data).catch(function () { /* offline or no permission: the tournament still plays normally here */ });
+    };
+    if (matchCtx.tid) { send(); return; }
+    // First publish of a tracker-started tournament: don't overwrite one that is already running in Discord.
+    matchCtx.tid = 'T' + Date.now().toString(36);
+    ref.once('value').then(function (snap) {
+      var v = snap.val();
+      if (v && v.id !== matchCtx.tid && (v.status === 'ready' || v.status === 'live') && !v.champion) {
+        matchCtx.noSync = true;
+        showToast('⚠️ "' + (v.name || 'A tournament') + '" is already running in Discord. This one plays here only.', 'info', 6000);
+        return;
+      }
+      send();
+    }).catch(function () { matchCtx.noSync = true; });
+  }
+  function _tournNormalize(raw) {
+    var list = function (v) { return Array.isArray(v) ? v : (v && typeof v === 'object' ? Object.keys(v).sort(function (a, b) { return a - b; }).map(function (k) { return v[k]; }) : []); };
+    var rounds = list(raw.rounds).map(function (r) {
+      return list(r).map(function (m) {
+        m = m || {};
+        return { p1: m.p1 || null, p2: m.p2 || null, winner: m.winner || null,
+                 scores: { p1: Number(m.scores && m.scores.p1) || 0, p2: Number(m.scores && m.scores.p2) || 0 }, game: 1 };
+      });
+    });
+    return { rounds: rounds, entrants: list(raw.entrants).filter(Boolean) };
+  }
+  function renderDiscordTournCard() {
+    var box = document.getElementById('tourn-discord');
+    if (!box) return;
+    var t = _discordTourn;
+    if (!t || (gameMode === 'tournament' && matchCtx && !matchCtx.champion)) { box.innerHTML = ''; return; }
+    var esc = function (x) { return String(x).replace(/[&<>"]/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); };
+    var n = _tournNormalize(t).entrants.length;
+    box.innerHTML = '<div style="border:1px solid rgba(204,136,255,.45);background:rgba(204,136,255,.08);border-radius:8px;padding:10px 12px;margin-bottom:10px;">'
+      + '<div style="font-family:\'Cinzel\',serif;font-size:10px;letter-spacing:2px;color:#cc88ff;">READY FROM DISCORD</div>'
+      + '<div style="margin:4px 0 8px;font-size:14px;">' + esc(t.name || 'Tournament') + ' &middot; ' + n + ' players &middot; ' + (t.bo3 ? 'Best of 3' : 'Single game') + '</div>'
+      + '<button class="mode-start-btn" onclick="loadDiscordTournament()">&#x1F4E5; Load Discord tournament</button></div>';
+  }
+  function loadDiscordTournament() {
+    var raw = _discordTourn;
+    if (!raw) { showToast('No Discord tournament is waiting.', 'info'); return; }
+    var n = _tournNormalize(raw);
+    if (!n.rounds.length) { showToast('That tournament looks empty. Ask a mod to start it again.', 'info'); return; }
+    gameMode = 'tournament';
+    matchCtx = { entrants: n.entrants, rounds: n.rounds, currentRound: null, currentMatch: null, champion: null,
+                 bo3: !!raw.bo3, tid: raw.id, tname: raw.name || 'Tournament', tsource: 'omega' };
+    _discordTourn = null;
+    renderDiscordTournCard();
+    tournPublish();                      // status becomes "live": Discord now follows this device
+    closeModeModal();
+    updateMatchBanner();
+    renderBracket();
+    openBracketModal();
+    setTimeout(loadNextTournamentMatch, 400);
+  }
+  function tournListen() {
+    if (_tournListening) return;
+    var ref = _tournRef();
+    if (!ref) return;
+    _tournListening = true;
+    ref.on('value', function (snap) {
+      var v = snap.val();
+      _discordTourn = (v && v.source === 'omega' && v.status === 'ready' && v.rounds) ? v : null;
+      renderDiscordTournCard();
+      if (_discordTourn && _discordTourn.id !== _tournToastId) {
+        _tournToastId = _discordTourn.id;
+        showToast('🏆 Tournament ready from Discord: ' + (_discordTourn.name || '') + '. Open ☰ Modes → Tournament to load it.', 'info', 7000);
+      }
+    }, function () { _tournListening = false; });
+  }
+  window.addEventListener('load', function () { setTimeout(tournListen, 1200); setTimeout(tournListen, 6000); });
+
   // ── Tournament ──────────────────────────────
   function renderTournamentSlots() {
+    renderDiscordTournCard();
     var container = document.getElementById('tourn-slots');
     if (!container) return;
     var count = parseInt(document.getElementById('tourn-count').value) || 4;
@@ -8986,6 +9097,10 @@
     var bo3 = fmtEl && fmtEl.value === 'bo3';
     gameMode = 'tournament';
     matchCtx = buildBracket(unique, bo3);
+    var nmEl = document.getElementById('tourn-name');
+    matchCtx.tname = (nmEl && nmEl.value.trim()) || 'Tracker Tournament';
+    matchCtx.tsource = 'tracker';
+    tournPublish();
     closeModeModal();
     updateMatchBanner();
     renderBracket();
@@ -8996,16 +9111,19 @@
   function buildBracket(names, bo3) {
     // Seed players (shuffle for randomness)
     var seeded = names.slice().sort(function() { return Math.random() - 0.5; });
-    // Pad to next power of 2 with byes
+    // Next power of 2. Byes go one per match, against a real player, so no first-round
+    // match is ever empty (two byes in one match would leave the bracket stuck).
     var size = 1;
     while (size < seeded.length) size *= 2;
-    while (seeded.length < size) seeded.push(null); // null = bye
+    var byes = size - seeded.length;
 
     // Build rounds array
     var rounds = [];
     var current = [];
-    for (var i = 0; i < size; i += 2) {
-      current.push({ p1: seeded[i], p2: seeded[i+1], winner: seeded[i+1] === null ? seeded[i] : null, scores: {p1:0, p2:0}, game: 1 });
+    for (var k = 0; k < size / 2; k++) {
+      var a = seeded.shift();
+      var b = k < byes ? null : seeded.shift();   // null = bye
+      current.push({ p1: a, p2: b, winner: b === null ? a : null, scores: {p1:0, p2:0}, game: 1 });
     }
     rounds.push(current);
     var sz = current.length;
@@ -9083,10 +9201,7 @@
     var mi = matchCtx.currentMatch;
     var match = matchCtx.rounds[ri][mi];
     var loser  = players.find(function(p) { return p !== winner; });
-    var roundNames = ['Round 1','Round 2','Quarterfinals','Semifinals','Finals'];
-    var roundLabel = roundNames[ri] || ('Round ' + (ri+1));
-    if (matchCtx.rounds.length <= 2) roundLabel = ri === 0 ? 'Semifinals' : 'Final';
-    if (matchCtx.rounds.length === 1) roundLabel = 'Final';
+    var roundLabel = tournRoundLabel(ri, matchCtx.rounds.length);
 
     // ── Bo3: track game scores ──────────────────────────────────
     if (matchCtx.bo3) {
@@ -9128,6 +9243,7 @@
             + '<button class="summary-btn view" onclick="openBracketModal();closeSummary(false);" style="background:none;border:1px solid rgba(255,255,255,0.15);color:var(--dim);font-family:\'Cinzel\',serif;font-size:10px;letter-spacing:2px;padding:8px 16px;border-radius:3px;cursor:pointer;">&#x1F3C6; Bracket</button>';
         }
       }
+      tournPublish();
       renderBracket();
       updateMatchBanner();
       return;
@@ -9152,6 +9268,7 @@
           + '<button class="summary-btn view" onclick="openBracketModal();closeSummary(false);" style="background:none;border:1px solid rgba(255,255,255,0.15);color:var(--dim);font-family:\'Cinzel\',serif;font-size:10px;letter-spacing:2px;padding:8px 16px;border-radius:3px;cursor:pointer;">&#x1F3C6; Bracket</button>';
       }
     }
+    tournPublish();
     renderBracket();
     updateMatchBanner();
   }
