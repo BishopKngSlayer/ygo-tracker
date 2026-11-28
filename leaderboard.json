@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-25T16:20:13.678Z",
+  "updated": "2026-11-28T01:37:54.998Z",
   "month": "2026-11",
   "rules": {
     "cap": 3,
@@ -124,7 +124,29 @@
     },
     {
       "rank": null,
+      "name": "Hobo LT.DAN",
+      "rating": 1500,
+      "points": 100,
+      "wins": 0,
+      "losses": 0,
+      "tier": null,
+      "ranked": false,
+      "linked": true
+    },
+    {
+      "rank": null,
       "name": "JD_YGO",
+      "rating": 1500,
+      "points": 100,
+      "wins": 0,
+      "losses": 0,
+      "tier": null,
+      "ranked": false,
+      "linked": true
+    },
+    {
+      "rank": null,
+      "name": "JunkRatt",
       "rating": 1500,
       "points": 100,
       "wins": 0,
