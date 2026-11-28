@@ -6198,8 +6198,9 @@
     if (db) db.style.display = 'none';
   }
 
-  function closeWizard() {
+  function closeWizard(startingGame) {
     document.getElementById('duelWizard').classList.remove('open');
+    if (!startingGame) _duelBtnVisible = true;
   }
 
   function _wizGoToStep(n) {
@@ -6475,7 +6476,7 @@
       return roster[k] ? {w:roster[k].w, l:roster[k].l, f:roster[k].f||0} : {w:0, l:0, f:0};
     });
     dueling = true;
-    closeWizard();
+    closeWizard(true);
     render();
     timerStart();
     playSound('duelStart');
@@ -6503,7 +6504,7 @@
       return roster[k] ? {w:roster[k].w, l:roster[k].l, f:roster[k].f||0} : {w:0, l:0, f:0};
     });
     dueling = true;
-    closeWizard();
+    closeWizard(true);
     render();
     timerStart();
     playSound('duelStart');
@@ -8695,7 +8696,6 @@
   }
   function closeModeModal() {
     document.getElementById('modeModal').classList.remove('open');
-    _duelBtnVisible = false; // hide duel button when any game mode starts
   }
   function switchModeTab(name) {
     document.querySelectorAll('.mode-tab').forEach(function(t) { t.classList.remove('active'); });
@@ -8721,8 +8721,8 @@
       localStorage.setItem('yugioh_roster', JSON.stringify(roster));
     }
     // Figure out which modal context we're in and re-render
-    var kothModal = document.getElementById('kothModal');
-    if (kothModal && kothModal.classList.contains('open')) {
+    var kothPanel = document.getElementById('mpanel-koth');
+    if (kothPanel && kothPanel.classList.contains('active')) {
       renderKothModal();
       var kSel = document.getElementById('koth-add-select');
       if (kSel) kSel.value = name;
@@ -8864,6 +8864,7 @@
     var needed = Math.ceil(parseInt(fmt) / 2);
     gameMode = 'bestof';
     matchCtx = { winsNeeded: needed, format: fmt, names: [p1name, p2name], scores: [0,0], duelNum: 1 };
+    _duelBtnVisible = false;
     closeModeModal();
     // init 2-player game with those names
     MAX_LP = parseInt(document.getElementById('startingLPInput').value) || 8000;
@@ -9101,6 +9102,7 @@
     matchCtx.tname = (nmEl && nmEl.value.trim()) || 'Tracker Tournament';
     matchCtx.tsource = 'tracker';
     tournPublish();
+    _duelBtnVisible = false;
     closeModeModal();
     updateMatchBanner();
     renderBracket();
@@ -9382,6 +9384,7 @@
       ],
       teamNames: ['Team A', 'Team B']
     };
+    _duelBtnVisible = false;
     closeModeModal();
     // Scale LP: shared mode inflates pool (8000 × count); separate keeps 8000 each
     var baseLp = parseInt(document.getElementById('startingLPInput').value) || 8000;
@@ -9451,6 +9454,7 @@
       ],
       teamNames: ['Team', soloName]
     };
+    _duelBtnVisible = false;
     closeModeModal();
 
     // MAX_LP = team pool (for shared LP bar scaling); solo uses baseLp
@@ -14126,6 +14130,7 @@
       duelNum:    1,
       allTime:    {} // name -> wins
     };
+    _duelBtnVisible = false;
     closeModeModal();
     _kothSetupMatch(champion, challenger);
     updateMatchBanner();

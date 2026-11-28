@@ -1,5 +1,5 @@
 /* ── YGO Tracker Service Worker ── */
-const CACHE_NAME = 'ygo-tracker-v27';
+const CACHE_NAME = 'ygo-tracker-v28';
 
 // Core files to cache on install (relative paths work with GitHub Pages subpaths)
 const PRECACHE = [
